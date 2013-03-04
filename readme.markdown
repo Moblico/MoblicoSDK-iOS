@@ -9,12 +9,12 @@ The MoblicoSDK has been designed to be easy to use with a simple block based int
 
 	<img src="http://developer.moblico.com/sdks/ios/docs/docs/images/DragSDK2.png" alt="Drag MoblicoSDK.framework to Frameworks" title="Drag MoblicoSDK.framework">
 	
-	<img src="http://developer.moblico.com/sdks/ios/docsdocs/images/Copy2.png" alt="Enable Copy items into destination group's folder" title="Enable Copy">
+	<img src="http://developer.moblico.com/sdks/ios/docs/docs/images/Copy2.png" alt="Enable Copy items into destination group's folder" title="Enable Copy">
 4. Add Security.framework to the project using the _Link Binary With Libraries_ target build phase.
 
-	<img src="http://developer.moblico.com/sdks/ios/docsdocs/images/AddItems2.png" alt="Add Items to Link Binary With Libraries build phase" title="Add Items">
+	<img src="http://developer.moblico.com/sdks/ios/docs/docs/images/AddItems2.png" alt="Add Items to Link Binary With Libraries build phase" title="Add Items">
 	
-	<img src="http://developer.moblico.com/sdks/ios/docsdocs/images/OK2.png" alt="Add Security.framework" title="Add Security.framework">
+	<img src="http://developer.moblico.com/sdks/ios/docs/docs/images/OK2.png" alt="Add Security.framework" title="Add Security.framework">
 5. Configure MLCServiceManager with your Moblico API Key.
 
 	    [MLCServiceManager setAPIKey:@"YOUR_API_KEY"];
