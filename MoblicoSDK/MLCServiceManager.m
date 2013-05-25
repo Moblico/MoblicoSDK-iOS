@@ -76,6 +76,9 @@ static NSString *_apiKey = nil;
                 MLCUsersService *service = [MLCUsersService readUserWithUsername:self.username handler:^(id<MLCEntityProtocol> resource, NSError *error, NSHTTPURLResponse *response) {
                     if ([resource isKindOfClass:[MLCUser class]]) {
                         _currentUser = (MLCUser *)resource;
+                    } else if (error) {
+                        NSLog(@"An error occured: %@ (%ld)", [error localizedDescription], (long)[response statusCode]);
+                        _currentUser = nil;
                     }
                 }];
                 [service start];

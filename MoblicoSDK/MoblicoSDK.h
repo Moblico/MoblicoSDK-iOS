@@ -18,7 +18,9 @@
 
 
 // Services
+#import <MoblicoSDK/MLCServiceProtocol.h>
 #import <MoblicoSDK/MLCService.h>
+#import <MoblicoSDK/MLCBasicService.h>
 
 #import <MoblicoSDK/MLCAffinitiesService.h>
 #import <MoblicoSDK/MLCDealsService.h>
@@ -34,8 +36,8 @@
 
 
 // Models
-#import <MoblicoSDK/MLCEntity.h>
 #import <MoblicoSDK/MLCEntityProtocol.h>
+#import <MoblicoSDK/MLCEntity.h>
 
 #import <MoblicoSDK/MLCAffinity.h>
 #import <MoblicoSDK/MLCDeal.h>

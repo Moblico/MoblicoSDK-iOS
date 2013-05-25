@@ -15,8 +15,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "MLCEntityProtocol.h"
-#import "MLCServiceProtocol.h"
+@protocol MLCEntityProtocol;
+@protocol MLCServiceProtocol;
 @class MLCStatus;
 
 typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {

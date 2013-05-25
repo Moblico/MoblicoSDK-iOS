@@ -38,7 +38,7 @@
 @property (nonatomic) double distance;
 @property (strong, nonatomic) NSURL *url;
 @property (copy, nonatomic) NSString *contactName;
-@property (nonatomic) NSUInteger externalId;
+@property (copy, nonatomic) NSString *externalId;
 @property (copy, nonatomic) NSString *locate;
 @property (copy, nonatomic) NSDictionary *attributes;
 @end

@@ -18,6 +18,7 @@
 
 @interface MLCUser : MLCEntity
 @property (copy, nonatomic) NSString *username;
+@property (copy, nonatomic) NSString *password;
 @property (nonatomic) BOOL optinEmail;
 @property (nonatomic) BOOL optinPhone;
 @property (copy, nonatomic) NSString *dateOfBirth;

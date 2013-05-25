@@ -254,12 +254,27 @@
         case '@':   // object
         {
             id value = originalValue;
-            if ([type isEqualToString:@"@\"NSString\""]) value = [MLCEntity stringFromValue:value];
-            if ([type isEqualToString:@"@\"NSDate\""]) value = [MLCEntity dateFromTimeStampValue:value];
-            if ([type isEqualToString:@"@\"NSNumber\""]) value = [MLCEntity numberFromDoubleValue:value];
-            if ([type isEqualToString:@"@\"NSURL\""]) value = [MLCEntity URLFromValue:value];
-            if ([type isEqualToString:@"@\"NSArray\""]) value = [MLCEntity arrayFromValue:value];
-            if ([type isEqualToString:@"@\"NSDictionary\""]) value = [MLCEntity dictionaryFromValue:value];
+            NSMutableString *className = [type mutableCopy];
+            if ([className hasPrefix:@"@\""]) {
+                [className deleteCharactersInRange:NSMakeRange(0, 2)];
+            }
+            if ([className hasSuffix:@"\""]) {
+                [className deleteCharactersInRange:NSMakeRange(className.length-1, 0)];
+            }
+
+			Class ClassType = NSClassFromString(className);
+
+			if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
+				value = [ClassType deserialize:value];
+			}
+			else {
+				if ([ClassType isSubclassOfClass:[NSString class]]) value = [MLCEntity stringFromValue:value];
+				if ([ClassType isSubclassOfClass:[NSDate class]]) value = [MLCEntity dateFromTimeStampValue:value];
+				if ([ClassType isSubclassOfClass:[NSNumber class]]) value = [MLCEntity numberFromDoubleValue:value];
+				if ([ClassType isSubclassOfClass:[NSURL class]]) value = [MLCEntity URLFromValue:value];
+				if ([ClassType isSubclassOfClass:[NSArray class]]) value = [MLCEntity arrayFromValue:value];
+				if ([ClassType isSubclassOfClass:[NSDictionary class]]) value = [MLCEntity dictionaryFromValue:value];
+			}
             [invocation setArgument:&value atIndex:2];
             [invocation invoke];
             break;

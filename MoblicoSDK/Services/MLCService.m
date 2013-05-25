@@ -16,6 +16,7 @@
 
 #import "MLCService.h"
 #import "MLCService_Private.h"
+#import "MLCServiceProtocol.h"
 #import "MLCServiceManager.h"
 #import "MLCEntityProtocol.h"
 #import "MLCEntity.h"

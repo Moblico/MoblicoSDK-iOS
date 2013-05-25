@@ -14,8 +14,6 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
-
 @interface MLCService () <NSURLConnectionDataDelegate>
 @property (strong, nonatomic) MLCServiceJSONCompletionHandler jsonCompletionhandler;
 @property (strong, nonatomic) NSURLConnection *connection;
