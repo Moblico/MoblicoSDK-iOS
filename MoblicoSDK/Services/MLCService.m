@@ -163,16 +163,10 @@
 }
 
 + (id)findResourcesWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSLog(@"findResourcesWithSearchParameters:%@", searchParameters);
-    NSLog(@"self: %@", self);
-    NSLog(@"classForResource: %@", [self classForResource]);
-    NSLog(@"collectionName: %@", [[self classForResource] collectionName]);
-    
     return [self find:[[self classForResource] collectionName] searchParameters:searchParameters handler:handler];
 }
 
 + (id)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSLog(@"find:%@\nparameters:%@", path, searchParameters);
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:searchParameters
@@ -196,7 +190,7 @@
     
     NSMutableArray *deserializedArray = [NSMutableArray arrayWithCapacity:[array count]];
     
-    [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [array enumerateObjectsUsingBlock:^(id obj, __unused NSUInteger idx, __unused BOOL *stop) {
         id resource = [self deserializeResource:obj];
         if (resource) [deserializedArray addObject:resource];
     }];
@@ -209,20 +203,18 @@
 }
 
 + (id)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters {
-    NSLog(@"requestWithMethod:%@\npath:%@\nparameters:%@", [self stringFromMLCServiceRequestMethod:method], path, parameters);
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 	
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	[request setHTTPMethod:[self stringFromMLCServiceRequestMethod:method]];
 	
     path = [NSString pathWithComponents:@[@"/", @"services", [MLCServiceManager apiVersion], path]];
     
     NSURL *requestURL = [[NSURL alloc] initWithScheme:([MLCServiceManager isSSLDisabled] ? @"http" : @"https") host:[MLCServiceManager host] path:path];
 
-    NSLog(@"requuestURL:%@", requestURL);
-
 	if ([parameters count]) {
 		NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:[parameters count]];
-		[parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+		[parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
             id value = obj;
 
             if ([obj isKindOfClass:[NSArray class]]) {
@@ -263,13 +255,10 @@
 		
 		NSString *parameterString = [queryParams componentsJoinedByString:@"&"];
         
-        NSLog(@"parameterString:%@", parameterString);
 		if (ALWAYS_USE_QUERY_PARAMS || method == MLCServiceRequestMethodGET || method == MLCServiceRequestMethodDELETE) {
             NSMutableString * urlString = [[requestURL absoluteString] mutableCopy];
             [urlString appendFormat:@"?%@", parameterString];
-            NSLog(@"urlString:%@", urlString);
             requestURL = [NSURL URLWithString:urlString];
-            NSLog(@"requestURL:%@", requestURL);
 		} else {
 			[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
 			NSData *formData = [NSData dataWithBytes:[parameterString UTF8String] length:[parameterString length]];
@@ -336,32 +325,32 @@
 
 #pragma mark - NSURLConnectionDataDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     self.httpResponse = (NSHTTPURLResponse *)response;
 	[self.receivedData setLength:0];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
 	[self.receivedData appendData:data];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    NSLog(@"connection:didFailWithError:%@", error);
-    NSLog(@"httpResponse:%@", self.httpResponse);
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
+    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection:didFailWithError:%@", error);
     NSMutableDictionary *logDictionary = [NSMutableDictionary dictionary];
     if (self.request.URL) logDictionary[@"url"] = self.request.URL;
     if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
-    if (self.httpResponse.allHeaderFields) logDictionary[@"headers"] = self.httpResponse.allHeaderFields;
+    if (self.request.allHTTPHeaderFields) logDictionary[@"requestHeader"] = self.request.allHTTPHeaderFields;
+    if (self.httpResponse.allHeaderFields) logDictionary[@"responseHeaders"] = self.httpResponse.allHeaderFields;
     if (self.httpResponse.statusCode) {
         logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
         logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
-    NSLog(@"\n=====\n%@\n=====", logDictionary);
+    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"\n=====\n%@\n=====", logDictionary);
 
     self.jsonCompletionhandler(nil, error, self.httpResponse);
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
     NSError *error;
     id jsonObject = nil;
     if ([self.receivedData length]) {
@@ -379,12 +368,13 @@
     if (jsonObject) logDictionary[@"response"] = jsonObject;
     if (self.request.URL) logDictionary[@"url"] = self.request.URL;
     if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
-    if (self.httpResponse.allHeaderFields) logDictionary[@"headers"] = self.httpResponse.allHeaderFields;
+    if (self.request.allHTTPHeaderFields) logDictionary[@"requestHeader"] = self.request.allHTTPHeaderFields;
+    if (self.httpResponse.allHeaderFields) logDictionary[@"responseHeaders"] = self.httpResponse.allHeaderFields;
     if (self.httpResponse.statusCode) {
         logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
         logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
-    NSLog(@"\n=====\n%@\n=====", logDictionary);
+    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"\n=====\n%@\n=====", logDictionary);
     if ([jsonObject isKindOfClass:[NSDictionary class]] && jsonObject[@"status"]) {
         NSDictionary * statusDictionary = jsonObject[@"status"];
         MLCStatus * status = [MLCStatus deserialize:statusDictionary];
@@ -397,13 +387,13 @@
  	self.receivedData = nil;
 }
 
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
-    NSLog(@"connection:canAuthenticateAgainstProtectionSpace: %@", protectionSpace);
+- (BOOL)connection:(__unused NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
+    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection:canAuthenticateAgainstProtectionSpace: %@", protectionSpace);
 	return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    NSLog(@"connection:didReceiveAuthenticationChallenge: %@", challenge);
+- (void)connection:(__unused NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection:didReceiveAuthenticationChallenge: %@", challenge);
 	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
 		if ([challenge.protectionSpace.host isEqualToString:[MLCServiceManager host]] && [MLCServiceManager isTestingEnabled]) {
 			[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
