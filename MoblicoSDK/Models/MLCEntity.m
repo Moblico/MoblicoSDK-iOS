@@ -20,11 +20,23 @@
 
 @implementation MLCEntity
 
-+ (NSString *)collectionName {
+- (NSMutableDictionary *)_scalarValues {
+    if (!__scalarValues) {
+        self._scalarValues = [[NSMutableDictionary alloc] init];
+    }
+    
+    return __scalarValues;
+}
+
++ (NSString *)resourceName {
     NSString *className = NSStringFromClass([self class]);
     className = [className stringByReplacingOccurrencesOfString:@"MLC" withString:@""];
     className = [className lowercaseString];
-    return [className stringByAppendingString:@"s"];
+    return className;
+}
+
++ (NSString *)collectionName {
+    return [[self resourceName] stringByAppendingString:@"s"];
 }
 
 - (NSString *)collectionName {
@@ -32,10 +44,7 @@
 }
 
 + (NSString *)uniqueIdentifierKey {
-    NSString *className = NSStringFromClass([self class]);
-    className = [className stringByReplacingOccurrencesOfString:@"MLC" withString:@""];
-    className = [className lowercaseString];
-    return [className stringByAppendingString:@"Id"];
+    return [[self resourceName] stringByAppendingString:@"Id"];
 }
 
 - (NSString *)uniqueIdentifier {
@@ -45,13 +54,32 @@
 
 - (void)setSafeValue:(id)value forKey:(NSString *)key {
 	if (!key) [NSException raise:NSInvalidArgumentException format:@"Key must not be nil"];
-	
-	NSString *capitalizedKey = [[[key substringToIndex:1] uppercaseString] stringByAppendingString:[key substringFromIndex:1]];
-	NSString *setterString = [NSString stringWithFormat:@"set%@:", capitalizedKey];
-	SEL setter = NSSelectorFromString(setterString);
-	if ([self respondsToSelector:setter]) {
-		[self setValue:value forKey:key];
-	}
+    NSDictionary *properties = [self properties];
+    id type = properties[key];
+
+    [self setValue:value forKey:key type:type];
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key {
+    NSDictionary *properties = [self properties];
+    id type = properties[key];
+    
+    if ([type characterAtIndex:0] == '@') {
+        [super setValue:value forKey:key];
+        return;
+    }
+    self._scalarValues[key] = value;
+}
+
+- (id)valueForKey:(NSString *)key {
+    NSDictionary *properties = [self properties];
+    id type = properties[key];
+    
+    if ([type characterAtIndex:0] == '@') {
+        return [super valueForKey:key];
+    }
+    
+    return self._scalarValues[key];
 }
 
 + (NSString *)stringFromValue:(id)value {
@@ -78,6 +106,7 @@
 }
 
 + (NSNumber *)timeStampFromDate:(NSDate *)date {
+    if (!date) return nil;
     NSTimeInterval timeInterval = [date timeIntervalSince1970];
 	NSNumber *timeStamp = @(timeInterval *1000.0);
 	return @([timeStamp longLongValue]);
@@ -157,20 +186,17 @@
     return nil;
 }
 
-+ (id)deserialize:(id)jsonObject {
++ (instancetype)deserialize:(id)jsonObject {
     if (jsonObject == nil) return nil;
     
     id object = [[[self class] alloc] init];
 	NSDictionary *properties = [object properties];
-    [jsonObject enumerateKeysAndObjectsUsingBlock:^(id originalKey, id obj, BOOL *stop) {
+    [jsonObject enumerateKeysAndObjectsUsingBlock:^(id originalKey, id obj, __unused BOOL *stop) {
         id key = originalKey;
         id value = obj;
-        if ([value isEqual:[NSNull null]]) value = nil;
+        if (value == [NSNull null]) value = nil;
 		if ([key isEqualToString:@"id"]) {
-            NSString *className = NSStringFromClass([self class]);
-            className = [className stringByReplacingOccurrencesOfString:@"MLC" withString:@""];
-            className = [className lowercaseString];
-            key = [className stringByAppendingString:@"Id"];
+            key = [self uniqueIdentifierKey];
         }
 
         [object setValue:value forKey:key type:properties[key]];
@@ -181,22 +207,20 @@
 
 - (id)serialize {
     NSDictionary *properties = [self properties];
+    
     NSMutableDictionary *serializedObject = [NSMutableDictionary dictionaryWithCapacity:[properties count]];
     
-    NSString *className = NSStringFromClass([self class]);
-    className = [className stringByReplacingOccurrencesOfString:@"MLC" withString:@""];
-    className = [className lowercaseString];
-    NSString *uniqueId = [className stringByAppendingString:@"Id"];
-
-    [properties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *type = properties[key];
+    NSString *uniqueId = [[[self class] resourceName] stringByAppendingString:@"Id"];
+    
+    [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
         id value = [self valueForKey:key];
-        if ([type isEqualToString:@"@\"NSDate\""]) value = [MLCEntity timeStampFromDate:value];
+        if (!value || value == [NSNull null] || [key isEqualToString:uniqueId]) return;
+        if ([[MLCEntity classFromType:type] isSubclassOfClass:[NSDate class]]) value = [MLCEntity timeStampFromDate:value];
         if ([type characterAtIndex:0] == 'c') value = [MLCEntity boolFromValue:value] ? @"true" : @"false";
         if (key && value) serializedObject[key] = value;
     }];
 
-    [serializedObject removeObjectForKey:uniqueId];
+//    [serializedObject removeObjectForKey:uniqueId];
     
     return serializedObject;
 }
@@ -205,147 +229,107 @@
     return [self propertiesForClass:[self class]];
 }
 
-- (NSMutableDictionary *)propertiesForClass:(Class)klass {
+- (NSMutableDictionary *)propertiesForClass:(Class)cls {
     
     NSMutableDictionary *results = [NSMutableDictionary dictionary];
     
     unsigned int outCount, i;
-    objc_property_t *properties = class_copyPropertyList(klass, &outCount);
+    objc_property_t *properties = class_copyPropertyList(cls, &outCount);
     for(i = 0; i < outCount; i++) {
         objc_property_t property = properties[i];
         
-        NSString *pname = @(property_getName(property));
-        NSString *pattrs = @(property_getAttributes(property));
+        NSString *propertyName = @(property_getName(property));
+        if ([propertyName hasPrefix:@"_"]) continue;
+        NSString *propertyAttributes = @(property_getAttributes(property));
         
-        pattrs = [pattrs componentsSeparatedByString:@","][0];
-        pattrs = [pattrs substringFromIndex:1];
+        propertyAttributes = [propertyAttributes componentsSeparatedByString:@","][0];
+        propertyAttributes = [propertyAttributes substringFromIndex:1];
         
-        results[pname] = pattrs;
+        results[propertyName] = propertyAttributes;
     }
     free(properties);
     
-    if ([klass superclass] != [NSObject class]) {
-        [results addEntriesFromDictionary:[self propertiesForClass:[klass superclass]]];
+    if ([cls superclass] != [NSObject class]) {
+        [results addEntriesFromDictionary:[self propertiesForClass:[cls superclass]]];
     }
 	
     return results;
 }
 
-- (void)setValue:(id)originalValue forKey:(NSString *)key type:(NSString *)type {
-    NSString *firstLetter = [[key substringWithRange:NSMakeRange(0,1)] uppercaseString];
-    NSString *capitolized = [key stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstLetter];
-    NSString *setter = [NSString stringWithFormat:@"set%@:", capitolized];
++ (Class)classFromType:(NSString *)type {
+    if ([type characterAtIndex:0] != @encode(id)[0]) return nil;
     
-    NSMethodSignature *signature = nil;
-    NSInvocation *invocation = nil;
-    
-    @try {
-        signature =  [self methodSignatureForSelector:NSSelectorFromString(setter)];
-        invocation = [NSInvocation invocationWithMethodSignature:signature];
+    NSMutableString *className = [type mutableCopy];
+    [className replaceOccurrencesOfString:@"\"" withString:@"" options:0 range:NSMakeRange(0, [className length])];
+    if ([className hasPrefix:@"@"]) {
+        [className deleteCharactersInRange:NSMakeRange(0, 1)];
     }
-    @catch (NSException *exception) {
+    
+    return NSClassFromString(className);
+
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key type:(NSString *)type {
+    /*
+     Code clean up inspired by Mike Ash:
+     http://www.mikeash.com/pyblog/friday-qa-2013-02-08-lets-build-key-value-coding.html
+     */
+    
+    NSString *setterName = [NSString stringWithFormat: @"set%@:", [key capitalizedString]];
+    SEL setterSEL = NSSelectorFromString(setterName);
+	
+	if (![self respondsToSelector:setterSEL]) return;
+
+	const unichar typeChar = [type characterAtIndex:0];
+	IMP imp = [self methodForSelector:setterSEL];
+
+    
+    // Class
+	if(typeChar == @encode(Class)[0]) {
+		((void (*)(id, SEL, id))imp)(self, setterSEL, value);
+        return;
+	}
+    
+	// Object
+    if (typeChar == @encode(id)[0]) {
+        Class ClassType = [MLCEntity classFromType:type];
+        
+        if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
+            value = [ClassType deserialize:value];
+        }
+        else {
+            if ([ClassType isSubclassOfClass:[NSString class]]) value = [MLCEntity stringFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSDate class]]) value = [MLCEntity dateFromTimeStampValue:value];
+            if ([ClassType isSubclassOfClass:[NSNumber class]]) value = [MLCEntity numberFromDoubleValue:value];
+            if ([ClassType isSubclassOfClass:[NSURL class]]) value = [MLCEntity URLFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSArray class]]) value = [MLCEntity arrayFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSDictionary class]]) value = [MLCEntity dictionaryFromValue:value];
+        }
+		((void (*)(id, SEL, id))imp)(self, setterSEL, value);
         return;
     }
     
-    [invocation setSelector:NSSelectorFromString(setter)];
-    [invocation setTarget:self];
+    #define CASE_SEL(ctype, selectorpart) \
+        if(typeChar == @encode(ctype)[0]) { \
+            ((void (*)(id, SEL, ctype))imp)(self, setterSEL, [MLCEntity selectorpart ## FromValue: value ]); \
+            return; \
+        }
     
-    switch ([type characterAtIndex:0]) {
-        case '@':   // object
-        {
-            id value = originalValue;
-            NSMutableString *className = [type mutableCopy];
-            if ([className hasPrefix:@"@\""]) {
-                [className deleteCharactersInRange:NSMakeRange(0, 2)];
-            }
-            if ([className hasSuffix:@"\""]) {
-                [className deleteCharactersInRange:NSMakeRange(className.length-1, 0)];
-            }
+    #define CASE(ctype) CASE_SEL(ctype, ctype)
+    
+    CASE(float);
+    CASE(double);
+    CASE(int);
+    CASE(long);
+    CASE(unsigned);
+    CASE(short);
 
-			Class ClassType = NSClassFromString(className);
+    CASE_SEL(BOOL, bool);
+    CASE_SEL(unsigned long, unsignedLong);
+    CASE_SEL(unsigned long long, unsignedLongLong);
 
-			if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
-				value = [ClassType deserialize:value];
-			}
-			else {
-				if ([ClassType isSubclassOfClass:[NSString class]]) value = [MLCEntity stringFromValue:value];
-				if ([ClassType isSubclassOfClass:[NSDate class]]) value = [MLCEntity dateFromTimeStampValue:value];
-				if ([ClassType isSubclassOfClass:[NSNumber class]]) value = [MLCEntity numberFromDoubleValue:value];
-				if ([ClassType isSubclassOfClass:[NSURL class]]) value = [MLCEntity URLFromValue:value];
-				if ([ClassType isSubclassOfClass:[NSArray class]]) value = [MLCEntity arrayFromValue:value];
-				if ([ClassType isSubclassOfClass:[NSDictionary class]]) value = [MLCEntity dictionaryFromValue:value];
-			}
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'c':   // bool
-        {
-            BOOL value = [MLCEntity boolFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'f':   // float
-        {
-            float value = [MLCEntity floatFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'd':   // double
-        {
-            double value = [MLCEntity doubleFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'i':   // int
-        {
-            int value = [MLCEntity intFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'L':   // unsigned long
-        {
-            unsigned long value = [MLCEntity unsignedLongFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'Q':   // unsigned long long
-        {
-            unsigned long long value = [MLCEntity unsignedLongLongFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'l':   // long
-        {
-            long value = [MLCEntity longFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 'I':   // unsigned
-        {
-            unsigned value = [MLCEntity unsignedFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-            break;
-        }
-        case 's':   // short
-        {
-            short value = [MLCEntity shortFromValue:originalValue];
-            [invocation setArgument:&value atIndex:2];
-            [invocation invoke];
-        }
-            break;
-            
-        default:
-            break;
-    }
+    #undef CASE
+    #undef CASE_SEL
 }
 
 
@@ -373,6 +357,44 @@
 	}
 	
 	return NO;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    NSDictionary *properties = [self properties];
+    [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
+        id value = [self valueForKey:key];
+        if ([type characterAtIndex:0] == @encode(id)[0]) {
+            Class ClassType = [[self class] classFromType:type];
+            if (![ClassType conformsToProtocol:@protocol(NSCoding)]) {
+                value = nil;
+            }
+        }
+        if (key && value) [coder encodeObject:value forKey:key];
+    }];
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+	if (self) {
+        NSDictionary *properties = [self properties];
+        [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
+            id value = [coder decodeObjectForKey:key];
+            [self setValue:value forKey:key type:type];
+        }];
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+	id copyedObject = [[[self class] allocWithZone:zone] init];
+    if (copyedObject) {
+        NSDictionary *properties = [self properties];
+        [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
+            id value = [self valueForKey:key];
+            [copyedObject setValue:value forKey:key type:type];
+        }];
+    }
+    return copyedObject;
 }
 
 @end

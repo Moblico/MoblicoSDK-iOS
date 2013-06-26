@@ -18,7 +18,7 @@
 #import "MLCEntityProtocol.h"
 
 /** Base class for all Moblico model objects. */
-@interface MLCEntity : NSObject <MLCEntityProtocol>
+@interface MLCEntity : NSObject <MLCEntityProtocol, NSCoding, NSCopying>
 
 @end
 

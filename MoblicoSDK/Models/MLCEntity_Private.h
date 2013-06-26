@@ -17,6 +17,7 @@
 #import "MLCEntity.h"
 
 @interface MLCEntity ()
+@property (nonatomic, strong) NSMutableDictionary *_scalarValues;
 + (NSString *)stringFromValue:(id)value;
 + (NSDate *)dateFromTimeStampValue:(id)value;
 
