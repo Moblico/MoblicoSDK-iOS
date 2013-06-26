@@ -72,6 +72,8 @@ typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *au
 + (BOOL)isSSLDisabled;
 + (void)setTestingEnabled:(BOOL)testing;
 + (BOOL)isTestingEnabled;
++ (void)setLoggineEnabled:(BOOL)logging;
++ (BOOL)isLoggingEnabled;
 + (NSString *)host;
 + (NSString *)apiVersion;
 

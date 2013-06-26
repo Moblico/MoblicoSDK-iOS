@@ -120,6 +120,23 @@ static BOOL _testing = nil;
     }
 }
 
+static BOOL _logging = nil;
+
++ (void)setLoggineEnabled:(BOOL)logging {
+    @synchronized(self) {
+        _logging = logging;
+        if ([_apiKey length]) {
+            [[self sharedServiceManager] setAuthenticationToken:nil];
+        }
+    }
+}
+
++ (BOOL)isLoggingEnabled {
+    @synchronized(self) {
+        return _logging;
+    }
+}
+
 - (void)authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler {
     NSMutableURLRequest *authenticatedRequest = [request mutableCopy];
     MLCAuthenticationToken * currentToken = self.authenticationToken;
