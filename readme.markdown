@@ -1,5 +1,4 @@
-Getting Started
----------------
+## Getting Started
 
 The MoblicoSDK has been designed to be easy to use with a simple block based interface ([see example below](#example)). Setting up the SDK can be done in a few steps:
 
