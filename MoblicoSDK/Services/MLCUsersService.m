@@ -18,6 +18,22 @@
 
 #import "MLCUsersService.h"
 #import "MLCUser.h"
+#import "MLCStatus.h"
+NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
+    if ([deviceToken isKindOfClass:[NSString class]]) {
+        return (NSString *)deviceToken;
+    }
+    
+	const unsigned char *bytes = [deviceToken bytes];
+	const NSUInteger length = [deviceToken length];
+	
+	NSMutableString *deviceId = [NSMutableString string];
+	for (NSUInteger idx = 0; idx < length; ++idx) {
+		[deviceId appendFormat:@"%02x", bytes[idx]];
+	}
+	
+	return [deviceId copy];
+}
 
 @implementation MLCUsersService
 
@@ -56,20 +72,42 @@
     return [self updateResource:user handler:handler];
 }
 
-//+ (id)destroyUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
-//    return [self destroyResource:user handler:handler];
-//}
++ (id)destroyUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+    return [self destroyResource:user handler:handler];
+}
 
 + (id)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
-    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"device"]];
+    return [self updateDeviceWithDeviceToken:(id)deviceId forUser:user handler:handler];
+}
 
++ (id)updateDeviceWithDeviceToken:(NSData *)deviceToken forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
+    NSString *deviceId = MLCDeviceIdFromDeviceToken(deviceToken);
+    [[NSUserDefaults standardUserDefaults] setObject:deviceId forKey:@"MLCDeviceId"];
+    
+    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"device"]];
+    
     // return [self create:path parameters:@{@"deviceId": deviceId} handler:handler];
     return [self update:path parameters:@{@"deviceId": deviceId} handler:handler];
 }
 
++ (id)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
+    NSString *deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"MLCDeviceId"];
+    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"device"]];
+    return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
+        if ([status httpStatus] == 200) {
+            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"MLCDeviceId"];
+        }
+        handler(status, error, response);
+    }];
+}
+
 + (id)destroyDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"device"]];
-    return [self destroy:path parameters:@{@"deviceId": deviceId} handler:handler];
+    return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
+        handler(status, error, response);
+    }];
 }
 
 
