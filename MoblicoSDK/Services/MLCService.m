@@ -22,6 +22,7 @@
 #import "MLCEntity.h"
 #import "MLCEntity_Private.h"
 #import "MLCStatus.h"
+#import "version.h"
 
 #import "MLCInvalidService.h"
 #if TARGET_OS_IPHONE
@@ -315,7 +316,7 @@
 #endif
 
 			NSString *appName = @"MoblicoSDK";
-            NSString *appVersion = @"1.1";
+            NSString *appVersion = @(MOBLICO_SDK_VERSION_STRING);
             userAgent = [NSString stringWithFormat:@"%@ %@ (%@; %@ %@; %@)", appName, appVersion, model, systemName, systemVersion, locale];
         }
 		return userAgent;

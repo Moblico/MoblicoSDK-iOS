@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
+#import <MoblicoSDK/version.h>
 #import <MoblicoSDK/MLCServiceManager.h>
-
 
 // Services
 #import <MoblicoSDK/MLCServiceProtocol.h>
