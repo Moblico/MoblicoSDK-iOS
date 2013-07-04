@@ -23,6 +23,14 @@
 
 @implementation MLCMetric
 
+- (void)setPayload:(NSString *)payload {
+    self.text = payload;
+}
+
+- (NSString *)payload {
+    return self.text;
+}
+
 - (NSDate *)timeStamp {
     if (!_timeStamp) {
         _timeStamp = [NSDate date];
@@ -31,9 +39,14 @@
 }
 
 + (id)metricWithType:(MLCMetricType)type payload:(NSString *)payload {
+    return [self metricWithType:type text:payload username:nil];
+}
+
++ (id)metricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
     MLCMetric * metric = [[MLCMetric alloc] init];
     metric.type = type;
-    metric.payload = payload;
+    metric.text = text;
+    metric.username = username;
     metric.timeStamp = [NSDate date];
 //    metric.latitude = latitude;
 //    metric.longitude = longitude;
@@ -69,6 +82,8 @@
 			return @"Deal_Click";
 		case MLCMetricTypeTracking:
             return @"Tracking";
+		case MLCMetricTypeAffinity:
+            return @"Affinity";
     }
     return nil;
 }

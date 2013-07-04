@@ -19,6 +19,9 @@
 
 @interface MLCMetricsService : MLCService
 + (void)sendMetric:(MLCMetric *)metric;
-+ (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload;
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username;
+@end
 
+@interface MLCMetricsService (Deprecated_Nonfunctional)
++ (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload __attribute__((deprecated ("Use 'sendMetricWithType:text:username:' instead.")));
 @end

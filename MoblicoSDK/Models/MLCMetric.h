@@ -26,15 +26,22 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
     MLCMetricTypeExitPage,
     MLCMetricTypeDealClick,
     MLCMetricTypeAdClick,
-    MLCMetricTypeTracking
+    MLCMetricTypeTracking,
+    MLCMetricTypeAffinity
 };
 
 @interface MLCMetric : MLCEntity
 @property (nonatomic) MLCMetricType type;
-@property (strong, nonatomic) NSString *payload;
+@property (strong, nonatomic) NSString *text;
+@property (strong, nonatomic) NSString *username;
 @property (nonatomic) double latitude;
 @property (nonatomic) double longitude;
 @property (nonatomic, strong, readonly) NSDate *timeStamp;
-+ (id)metricWithType:(MLCMetricType)type payload:(NSString *)payload;
++ (id)metricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username;
+@end
 
+@interface MLCMetric (Deprecated_Nonfunctional)
++ (id)metricWithType:(MLCMetricType)type payload:(NSString *)payload __attribute__((deprecated ("Use 'metricWithType:text:username:' instead.")));
+- (void)setPayload:(NSString *)payload __attribute__((deprecated ("Use 'setText:' instead.")));
+- (NSString *)payload __attribute__((deprecated ("Use 'text' instead.")));
 @end

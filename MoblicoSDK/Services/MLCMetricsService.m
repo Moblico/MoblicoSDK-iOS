@@ -28,7 +28,11 @@
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload {
-    MLCMetric *metric = [MLCMetric metricWithType:type payload:payload];
+    [self sendMetricWithType:type text:payload username:nil];
+}
+
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
+    MLCMetric *metric = [MLCMetric metricWithType:type text:text username:username];
     [self sendMetric:metric];
 }
 
