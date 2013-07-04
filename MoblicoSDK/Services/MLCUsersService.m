@@ -15,7 +15,7 @@
  */
 
 #import "MLCService_Private.h"
-
+#import "MLCServiceManager.h"
 #import "MLCUsersService.h"
 #import "MLCUser.h"
 #import "MLCStatus.h"
@@ -76,6 +76,56 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
     return [self destroyResource:user handler:handler];
+}
+
++ (id)createAnonymousDeviceWithDeviceToken:(NSData *)deviceToken handler:(MLCServiceStatusCompletionHandler)handler {
+    NSString *username = MLCDeviceIdFromDeviceToken(deviceToken);
+
+    MLCUser * user = [MLCUser userWithUsername:username];
+
+    MLCUsersService *updateDeviceService = [MLCUsersService updateDeviceWithDeviceToken:deviceToken forUser:user handler:handler];
+
+	// This block of code will create a user, it will not execute until you call [createUserService start]
+	MLCUsersService *createUserService = [MLCUsersService createUser:user handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
+		if (response.statusCode == 200) {
+			// User was succesfully created
+			NSLog(@"Created User: %@", user);
+            [[MLCServiceManager sharedServiceManager] setUsername:user.username password:nil remember:NO];
+            [updateDeviceService start];
+		}
+		else {
+			// User was not created
+			NSLog(@"Unable to create user.\nstatus: %@ error: %@ response: %@", status, error, response);
+            handler(status, error, response);
+		}
+	}];
+    
+	// This block of code determines if the user already exists, it will not execute until you call [verifyUserService start]
+	MLCUsersService *verifyUserService = [MLCUsersService verifyExistingUserWithUsername:user.username handler:^(id<MLCEntityProtocol> resource, NSError *error, NSHTTPURLResponse *response) {
+		if (response.statusCode == 200) {
+			NSLog(@"User exists, registering device.");
+            [[MLCServiceManager sharedServiceManager] setUsername:user.username password:nil remember:NO];
+            [updateDeviceService start];
+		}
+		
+		else if (response.statusCode == 404) {
+			NSLog(@"User not found. Creating User");
+			[createUserService start];
+		}
+		else {
+            MLCStatus *status = nil;
+            if ([resource isKindOfClass:[MLCStatus class]]) {
+                status = (MLCStatus *)resource;
+            } else if ([resource respondsToSelector:@selector(status)]) {
+                status = [resource performSelector:@selector(status)];
+            }
+            handler(status, error, response);
+			NSLog(@"Unable to verify user.\nresource: %@ error: %@ response: %@", resource, error, response);
+		}
+	}];
+	
+	// Execute
+	return verifyUserService;
 }
 
 + (id)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {

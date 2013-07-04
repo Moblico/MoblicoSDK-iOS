@@ -25,6 +25,8 @@
 + (id)createUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
 + (id)readUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler;
 + (id)updateUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
+
++ (id)createAnonymousDeviceWithDeviceToken:(NSData *)deviceToken handler:(MLCServiceStatusCompletionHandler)handler;
 + (id)updateDeviceWithDeviceToken:(NSData *)deviceToken forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
 + (id)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
 @end
