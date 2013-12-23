@@ -20,11 +20,12 @@
 @class MLCLocation;
 
 @interface MLCRewardsService : MLCService
-+ (id)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCServiceResourceCompletionHandler)handler;
-+ (id)listRewards:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listRewardsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listRewardsForResource:(id <MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler;
-+ (id)purchaseReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)listRewards:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listRewardsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
 @end

@@ -19,10 +19,9 @@
 #import "MLCAuthenticationToken.h"
 #import "MLCUser.h"
 #import "MLCUsersService.h"
-
+#import "version.h"
+NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
 @interface MLCServiceManager ()
-@property (copy) NSString *username;
-@property (copy) NSString *password;
 @property (strong) MLCAuthenticationToken *authenticationToken;
 @property (strong, readonly) NSMutableDictionary *keychainItemData;
 @property (strong, readonly) NSMutableDictionary *genericPasswordQuery;
@@ -36,7 +35,7 @@
 
 + (MLCServiceManager *)sharedServiceManager {
     if ([MLCServiceManager apiKey] == nil) {
-        [[NSException exceptionWithName:@"MLCInvalidAPIKeyException" reason:@"You must set your API key before getting an instance of the ServiceManager." userInfo:nil] raise];
+        [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You must set your API key before getting an instance of the ServiceManager." userInfo:nil] raise];
     }
 	static MLCServiceManager *sharedInstance = nil;
 	static dispatch_once_t onceToken;
@@ -44,19 +43,19 @@
 		sharedInstance = [[MLCServiceManager alloc] init];
         NSString *username = sharedInstance.keychainItemData[(__bridge id)kSecAttrAccount];
         NSString *password = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
-        sharedInstance.username = [username length] ? username : nil;
-        sharedInstance.password = [password length] ? password : nil;
+        if ([username length]) {
+            [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] remember:YES];
+        }
 	});
 	return sharedInstance;
 }
-
 
 static NSString *_apiKey = nil;
 
 + (void)setAPIKey:(NSString *)apiKey {
 	@synchronized(self) {
         if ([MLCServiceManager apiKey] != nil) {
-            [[NSException exceptionWithName:@"MLCInvalidAPIKeyException" reason:@"You can only set the API Key once." userInfo:nil] raise];
+            [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You can only set the API Key once." userInfo:nil] raise];
         }
 		_apiKey = [apiKey copy];
 	}
@@ -70,35 +69,23 @@ static NSString *_apiKey = nil;
 
 - (MLCUser *)currentUser {
     @synchronized(self) {
-        if (!_currentUser) {
-            if ([self.username length]) {
-                _currentUser = [MLCUser userWithUsername:self.username];
-                MLCUsersService *service = [MLCUsersService readUserWithUsername:self.username handler:^(id<MLCEntityProtocol> resource, NSError *error, NSHTTPURLResponse *response) {
-                    if ([resource isKindOfClass:[MLCUser class]]) {
-                        _currentUser = (MLCUser *)resource;
-                    } else if (error) {
-                        NSLog(@"An error occured: %@ (%ld)", [error localizedDescription], (long)[response statusCode]);
-                        _currentUser = nil;
-                    }
-                }];
-                [service start];
-            }
-        }
         return _currentUser;
     }
 }
 
-- (void)setUsername:(NSString *)username password:(NSString *)password remember:(BOOL)rememberCredentials {
+- (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials {
     @synchronized(self) {
-        self.username = username;
-        self.password = password;
+        _currentUser = user;
         self.authenticationToken = nil;
-        if (!rememberCredentials) {
+        NSString *username = user.username;
+        NSString *password = user.password;
+        if (user.socialType != MLCUserSocialTypeNone || !rememberCredentials) {
             username = nil;
             password = nil;
         }
-        self.keychainItemData[(__bridge id)kSecAttrAccount] = username ? username : @"";
-        self.keychainItemData[(__bridge id)kSecValueData] = password ? password : @"";
+        self.keychainItemData[(__bridge id)kSecAttrAccount] = username ?: @"";
+        self.keychainItemData[(__bridge id)kSecValueData] = password ?: @"";
+
         [self writeToKeychain];
     }
 }
@@ -122,7 +109,11 @@ static BOOL _testing = nil;
 
 static BOOL _logging = nil;
 
-+ (void)setLoggineEnabled:(BOOL)logging {
++ (void)setLoggineEnabled:(BOOL)logging __attribute__((deprecated ("Use 'setLoggingEnabled:' instead."))) {
+    [self setLoggingEnabled:logging];
+}
+
++ (void)setLoggingEnabled:(BOOL)logging {
     @synchronized(self) {
         _logging = logging;
         if ([_apiKey length]) {
@@ -146,19 +137,21 @@ static BOOL _logging = nil;
         handler(authenticatedRequest, nil, nil);
     }
     else {
-        MLCAuthenticationService *service = [MLCAuthenticationService authenticateWithAPIKey:[[self class] apiKey] username:self.username password:self.password handler:^(MLCAuthenticationToken *newToken, NSError *error, NSHTTPURLResponse *response) {
-            if (error) {
-                handler(nil, error, response);
-            }
-            else {
-                self.authenticationToken = newToken;
-                NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", self.authenticationToken.token];
-                [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
-                handler(authenticatedRequest, error, response);
-            }
-        }];
+        MLCAuthenticationService *service = [MLCAuthenticationService authenticateWithAPIKey:[[self class] apiKey]
+                                                                                        user:self.currentUser
+                                                                                     handler:^(MLCAuthenticationToken *newToken, NSError *error, NSHTTPURLResponse *response) {
+                                                                                         if (error) {
+                                                                                             handler(nil, error, response);
+                                                                                         }
+                                                                                         else {
+                                                                                             self.authenticationToken = newToken;
+                                                                                             NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", self.authenticationToken.token];
+                                                                                             [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
+                                                                                             handler(authenticatedRequest, error, response);
+                                                                                         }
+                                                                                     }];
         [service start];
-    }    
+    }
 }
 
 static BOOL _sslDisabled = nil;
@@ -185,14 +178,19 @@ static BOOL _sslDisabled = nil;
     return @"v4";
 }
 
++ (NSString *)sdkVersion {
+    return @(MOBLICO_SDK_VERSION_STRING);
+}
+
 - (NSMutableDictionary *)genericPasswordQuery {
     @synchronized(self) {
         if (!_genericPasswordQuery) {
-            _genericPasswordQuery = [[NSMutableDictionary alloc] init];
-            _genericPasswordQuery[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
-            _genericPasswordQuery[(__bridge id)kSecAttrGeneric] = @"com.moblico.SDK.credentials";
-            _genericPasswordQuery[(__bridge id)kSecMatchLimit] = (__bridge id)kSecMatchLimitOne;
-            _genericPasswordQuery[(__bridge id)kSecReturnAttributes] = (__bridge id)kCFBooleanTrue;
+            _genericPasswordQuery = [@{(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+                                       (__bridge id)kSecAttrService: @"com.moblico.SDK.credentials",
+                                       (__bridge id)kSecAttrGeneric: @"com.moblico.SDK.credentials",
+                                       (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlways,
+                                       (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
+                                       (__bridge id)kSecReturnAttributes: (__bridge id)kCFBooleanTrue} mutableCopy];
         }
         return _genericPasswordQuery;
     }
@@ -204,20 +202,22 @@ static BOOL _sslDisabled = nil;
             NSDictionary *tempQuery = [NSDictionary dictionaryWithDictionary:self.genericPasswordQuery];
             
             CFMutableDictionaryRef outDictionary = NULL;
-            
-            if (!SecItemCopyMatching((__bridge CFDictionaryRef)tempQuery, (CFTypeRef *)&outDictionary) == noErr)
-            {
-                _keychainItemData = [[NSMutableDictionary alloc] init];
-                _keychainItemData[(__bridge id)kSecAttrAccount] = @"";
-                _keychainItemData[(__bridge id)kSecAttrLabel] = @"";
-                _keychainItemData[(__bridge id)kSecAttrDescription] = @"";
-                _keychainItemData[(__bridge id)kSecValueData] = @"";
-                _keychainItemData[(__bridge id)kSecAttrGeneric] = self.genericPasswordQuery[(__bridge id)kSecAttrGeneric];
-            }
-            else
-            {
+
+            OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)tempQuery, (CFTypeRef *)&outDictionary);
+
+            if (status == noErr) {
                 // load the saved data from Keychain.
                 _keychainItemData = [self secItemFormatToDictionary:(__bridge NSDictionary *)outDictionary];
+            }
+            else {
+                _keychainItemData = [@{(__bridge id)kSecAttrAccount: @"",
+                                       (__bridge id)kSecAttrLabel: @"",
+                                       (__bridge id)kSecAttrDescription: @"",
+                                       (__bridge id)kSecValueData: @"",
+                                       (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlways,
+                                       (__bridge id)kSecAttrService: @"com.moblico.SDK.credentials",
+                                       (__bridge id)kSecAttrGeneric: self.genericPasswordQuery[(__bridge id)kSecAttrGeneric]} mutableCopy];
+
             }
             if(outDictionary) CFRelease(outDictionary);
         }
@@ -308,4 +308,21 @@ static BOOL _sslDisabled = nil;
 	
 	if(attributes) CFRelease(attributes);
 }
+
+#pragma mark -
+#pragma mark Deprecated
+
+- (NSString *)username {
+    return self.currentUser.username;
+}
+
+- (NSString *)password {
+    return self.currentUser.password;
+}
+
+- (void)setUsername:(NSString *)username password:(NSString *)password remember:(BOOL)rememberCredentials {
+    MLCUser *user = [MLCUser userWithUsername:username password:password];
+    [self setCurrentUser:user remember:rememberCredentials];
+}
+
 @end

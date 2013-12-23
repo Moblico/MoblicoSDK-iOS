@@ -41,4 +41,11 @@
 
 //- (BOOL)validate:(NSError**)error;
 - (void)setSafeValue:(id)value forKey:(NSString *)key;
+
++ (NSArray *)ignoredPropertiesDuringSerialization;
++ (NSArray *)ignoredPropertiesDuringDeserialization;
+
++ (NSDictionary *)renamedPropertiesDuringSerialization;
++ (NSDictionary *)renamedPropertiesDuringDeserialization;
+
 @end

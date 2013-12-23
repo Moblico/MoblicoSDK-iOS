@@ -16,9 +16,48 @@
 
 #import "MLCEntity.h"
 
+/**
+ A MLCPoints object represents points earned through affinity.
+ */
 @interface MLCPoints : MLCEntity
+
+/**
+ The type for these points.
+ */
 @property (copy, nonatomic) NSString *type;
-@property (copy, nonatomic) NSString *description;
-@property (nonatomic) int total;
-@property (nonatomic) int accumulatedTotal;
+
+/**
+ The details for these points.
+ */
+@property (copy, nonatomic) NSString *details;
+
+/**
+ The total amount for these points.
+ */
+@property (nonatomic) NSInteger total;
+
+/**
+ The accumulated total amount for these points.
+ */
+@property (nonatomic) NSInteger accumulatedTotal;
+
+/**
+ The merchant id for these points;
+ */
+@property (nonatomic) NSUInteger merchantId;
+
+@end
+
+@interface MLCPoints (Deprecated)
+
+/**
+ The description property has been renamed to details,
+ and will be removed in the next major release.
+
+ @deprecated Use 'details' instead.
+
+ @see details
+ */
+@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
+
 @end

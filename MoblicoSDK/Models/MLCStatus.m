@@ -16,6 +16,21 @@
 
 #import "MLCStatus.h"
 
+NSString *const MLCStatusErrorDomain = @"MLCStatusErrorDomain";
+
 @implementation MLCStatus
 
++ (instancetype)deserialize:(NSDictionary *)jsonObject {
+    MLCStatus *status = [super deserialize:jsonObject];
+
+    NSNumber *statusType = jsonObject[@"statusType"];
+    if (statusType && statusType != (id)[NSNull null]) {
+        status.type = [statusType integerValue];
+    }
+    else {
+        status.type = MLCStatusTypeMissing;
+    }
+
+    return status;
+}
 @end

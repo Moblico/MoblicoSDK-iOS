@@ -20,7 +20,7 @@
 
 @implementation MLCDealsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCDeal class];
 }
 
@@ -28,23 +28,23 @@
     return @[@"MLCLocation"];
 }
 
-+ (id)readDealWithDealId:(NSUInteger)dealId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readDealWithDealId:(NSUInteger)dealId handler:(MLCServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(dealId) handler:handler];
 }
 
-+ (id)listDeals:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listDeals:(MLCServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
-+ (id)listDealsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listDealsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 
-+ (id)listDealsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listDealsForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listDealsForResource:(id<MLCEntity>)location handler:handler];
 }
 
-+ (id)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *resource = [NSString pathWithComponents:@[[deal collectionName], [deal uniqueIdentifier], @"redeem"]];
     return [self update:resource parameters:@{@"offerCode": offerCode} handler:handler];
 }

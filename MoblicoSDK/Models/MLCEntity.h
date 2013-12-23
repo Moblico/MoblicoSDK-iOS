@@ -15,10 +15,27 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "MLCEntityProtocol.h"
 
-/** Base class for all Moblico model objects. */
-@interface MLCEntity : NSObject <MLCEntityProtocol, NSCoding, NSCopying>
+/**
+ All MLCEntity objects conform to the MLCEntity protocol.
+ */
+@protocol MLCEntity <NSObject, NSCoding, NSCopying>
++ (instancetype)deserialize:(NSDictionary *)jsonObject;
+- (NSDictionary *)serialize;
+
+- (NSMutableDictionary *)properties;
+
++ (NSString *)collectionName;
+- (NSString *)collectionName;
+
+- (id)uniqueIdentifier;
++ (NSString *)uniqueIdentifierKey;
+@end
+
+/**
+ Base class for all Moblico model objects.
+ */
+@interface MLCEntity : NSObject <MLCEntity>
 
 @end
 

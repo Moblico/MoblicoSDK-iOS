@@ -22,12 +22,12 @@
 #import "MLCUser.h"
 
 @interface MLCPointsService ()
-+ (NSString *)stringWithMLCPointsTotalType:(MLCPointsTotalType)type;
++ (NSString *)stringForPointsTotalType:(MLCPointsTotalType)type;
 @end
 
 @implementation MLCPointsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCPoints class];
 }
 
@@ -35,21 +35,21 @@
     return @[@"MLCUser"];
 }
 
-+ (id)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
     NSDictionary * searchParameters = @{@"pointTypeName": @"Interactive"};
-    return [self findScopedResourcesForResource:(id<MLCEntityProtocol>)user searchParameters:searchParameters handler:handler];
+    return [self findScopedResourcesForResource:(id<MLCEntity>)user searchParameters:searchParameters handler:handler];
 }
 
-+ (id)updatePoints:(int)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
     NSMutableDictionary * parameters = [@{@"pointTypeName": @"Interactive"} mutableCopy];
     parameters[@"points"] = @(points);
-    NSString * totalTypeName = [self stringWithMLCPointsTotalType:totalType];
+    NSString * totalTypeName = [self stringForPointsTotalType:totalType];
     if (totalTypeName.length) parameters[@"totalTypeName"] = totalTypeName;
     NSString * path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"points"]];
     return [self update:path parameters:parameters handler:handler];
 }
 
-+ (NSString *)stringWithMLCPointsTotalType:(MLCPointsTotalType)type {
++ (NSString *)stringForPointsTotalType:(MLCPointsTotalType)type {
     switch (type) {
         case MLCPointsTotalTypeAccumulated:
             return @"ACCUM";

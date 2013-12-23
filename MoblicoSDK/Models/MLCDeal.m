@@ -19,7 +19,7 @@
 
 @implementation MLCDeal
 
-+ (id)deserialize:(NSDictionary *)jsonObject {
++ (instancetype)deserialize:(NSDictionary *)jsonObject {
     
     MLCDeal *deal = [super deserialize:jsonObject];
     
@@ -35,14 +35,14 @@
     return deal;
 }
 
-- (id)serialize {
+- (NSDictionary *)serialize {
     NSMutableDictionary *serializedObject = [[super serialize] mutableCopy];
     
     if (self.image) {
         serializedObject[@"image"] = [self.image serialize];
     }
     
-    return serializedObject;
+    return [serializedObject mutableCopy];
 }
 
 @end

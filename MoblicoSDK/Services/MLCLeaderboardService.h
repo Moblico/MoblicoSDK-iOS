@@ -14,11 +14,20 @@
  limitations under the License.
  */
 
+/**
+ Leaderboard types
+ */
 typedef NS_ENUM(NSUInteger, MLCLeaderboardType) {
+    /**
+     Overall Points
+     */
     MLCLeaderboardTypeOverallPoints
 };
 
+/**
+ MLCLeaderboardService used to retrieve leaders
+ */
 @interface MLCLeaderboardService : MLCService
-+ (id)findLeaderboardWithType:(MLCLeaderboardType)type limit:(int)limit handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 @end

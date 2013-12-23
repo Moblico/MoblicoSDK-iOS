@@ -19,7 +19,7 @@
 
 @implementation MLCMetricsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return Nil;
 }
 
@@ -28,11 +28,15 @@
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload {
-    [self sendMetricWithType:type text:payload username:nil];
+    [self sendMetricWithType:type text:payload location:nil username:nil];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
-    MLCMetric *metric = [MLCMetric metricWithType:type text:text username:username];
+    [self sendMetricWithType:type text:text location:nil username:username];
+}
+
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
+    MLCMetric *metric = [MLCMetric metricWithType:type text:text location:location username:username];
     [self sendMetric:metric];
 }
 

@@ -16,29 +16,158 @@
 
 #import "MLCEntity.h"
 
+/**
+ Locations may be associated with users, events, deals, rewards
+ and many other features within the Moblico ecosystem 
+ for an exceptionally rich consumer experience. 
+ 
+ Locations are loaded and managed using Moblico's admin tool.
+ 
+ A MLCLocation object encapsulates the data of a location stored in the Moblico Admin Portal.
+ */
 @interface MLCLocation : MLCEntity
+
+/**
+ A unique identifier for this location.
+ */
 @property (nonatomic) NSUInteger locationId;
+
+/**
+ The date this location was created.
+ */
 @property (strong, nonatomic) NSDate *createDate;
+
+/**
+ The date this location was last updated.
+ */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
+
+/**
+ The type for this location.
+ */
 @property (copy, nonatomic) NSString *type;
+
+/**
+ Specifies whether this location is active.
+ */
 @property (nonatomic) BOOL active;
+
+/**
+ The name for this location.
+ */
 @property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *description;
+
+/**
+ The details for this location.
+ */
+@property (copy, nonatomic) NSString *details;
+
+/**
+ The first line of the address for this location.
+ */
 @property (copy, nonatomic) NSString *address1;
+
+/**
+ The second line of the address for this location.
+ */
 @property (copy, nonatomic) NSString *address2;
+
+/**
+ The city for this location.
+ */
 @property (copy, nonatomic) NSString *city;
+
+/**
+ The county for this location.
+ */
 @property (copy, nonatomic) NSString *county;
+
+/**
+ The state or province for this location.
+ */
 @property (copy, nonatomic) NSString *stateOrProvince;
+
+/**
+ The phone number for this location.
+ */
 @property (copy, nonatomic) NSString *phone;
+
+/**
+ The email address for this location.
+ */
 @property (copy, nonatomic) NSString *email;
+
+/**
+ The postal (zip) code for this location.
+ */
 @property (copy, nonatomic) NSString *postalCode;
+
+/**
+ The country for this location.
+ */
 @property (copy, nonatomic) NSString *country;
+
+/**
+ The latitude for this location.
+ */
 @property (nonatomic) double latitude;
+
+/**
+ The longitude for this location.
+ */
 @property (nonatomic) double longitude;
+
+/**
+ The distance for this location.
+ 
+ The distance will be set when the location is retrieved with a service call
+ that specifies a search area.
+ */
 @property (nonatomic) double distance;
+
+/**
+ The URL for this location.
+ */
 @property (strong, nonatomic) NSURL *url;
+
+/**
+ The contact name for this location.
+ */
 @property (copy, nonatomic) NSString *contactName;
+
+/**
+ The external unique identifier for this location.
+ 
+ The externalId will be set when the location originates from an external system to Moblico.
+ */
 @property (copy, nonatomic) NSString *externalId;
-@property (copy, nonatomic) NSString *locate;
+
+/**
+ The locale for this location.
+ */
+@property (copy, nonatomic) NSString *locale;
+
+/**
+ The attributes for this location.
+ */
 @property (copy, nonatomic) NSDictionary *attributes;
+
+/**
+ The merchant id for this location.
+ */
+@property (nonatomic) NSUInteger merchantId;
+
+@end
+
+@interface MLCLocation (Deprecated)
+
+/**
+ The description property has been renamed to details,
+ and will be removed in the next major release.
+ 
+ @deprecated Use 'details' instead.
+
+ @see details
+ */
+@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
 @end

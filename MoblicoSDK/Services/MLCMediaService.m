@@ -25,27 +25,27 @@
     return @[@"MLCLocation", @"MLCEvent"];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCMedia class];
 }
 
-+ (id)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(mediaId) handler:handler];
 }
 
-+ (id)listMedia:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listMedia:(MLCServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
-+ (id)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listMediaForResource:(id<MLCEntity>)location handler:handler];
 }
 
-+ (id)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntityProtocol>)event handler:handler];
++ (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listMediaForResource:(id<MLCEntity>)event handler:handler];
 }
 
-+ (id)listMediaForResource:(id <MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listMediaForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

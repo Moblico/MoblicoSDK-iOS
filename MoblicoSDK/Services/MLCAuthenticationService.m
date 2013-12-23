@@ -15,21 +15,45 @@
  */
 
 #import "MLCService_Private.h"
-#import "MLCServiceProtocol.h"
 #import "MLCAuthenticationService.h"
 #import "MLCAuthenticationToken.h"
+#import "MLCUser.h"
+
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
+
+@interface MLCAuthenticationService ()
++ (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken handler:(MLCServiceResourceCompletionHandler)handler;
+@end
 
 @implementation MLCAuthenticationService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCAuthenticationToken class];
 }
 
-+ (id)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password handler:(MLCServiceResourceCompletionHandler)handler {
+    MLCUser *user = [MLCUser userWithUsername:username password:password];
+    return [self authenticateWithAPIKey:apiKey user:user handler:handler];
+}
+
++ (instancetype)authenticateWithAPIKey:(NSString *)apiKey user:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler {
+    if (user.socialType != MLCUserSocialTypeNone) {
+        NSArray *components = [user.username componentsSeparatedByString:@"."];
+        NSString *social = [[components firstObject] uppercaseString];
+        return [self authenticateWithAPIKey:apiKey username:user.username password:nil social:social socialToken:user.password handler:handler];
+    }
+    return [self authenticateWithAPIKey:apiKey username:user.username password:user.password social:nil socialToken:nil handler:handler];
+}
+
++ (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken handler:(MLCServiceResourceCompletionHandler)handler {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:3];
     if (apiKey) parameters[@"apikey"] = apiKey;
     if (username) parameters[@"username"] = username;
     if (password) parameters[@"password"] = password;
+    if (social) parameters[@"social"] = social;
+    if (socialToken) parameters[@"socialToken"] = socialToken;
 
     return [self read:[MLCAuthenticationToken collectionName] parameters:parameters handler:handler];
 }
@@ -37,6 +61,9 @@
 - (void)start {
     [self cancel];
     self.connection = [NSURLConnection connectionWithRequest:self.request delegate:self];;
+#if TARGET_OS_IPHONE
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+#endif
     [self.connection start];
 }
 

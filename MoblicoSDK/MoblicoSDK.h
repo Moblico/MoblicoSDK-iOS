@@ -18,16 +18,18 @@
 #import <MoblicoSDK/MLCServiceManager.h>
 
 // Services
-#import <MoblicoSDK/MLCServiceProtocol.h>
 #import <MoblicoSDK/MLCService.h>
 #import <MoblicoSDK/MLCBasicService.h>
 
 #import <MoblicoSDK/MLCAffinitiesService.h>
+#import <MoblicoSDK/MLCCheckInService.h>
 #import <MoblicoSDK/MLCDealsService.h>
 #import <MoblicoSDK/MLCEventsService.h>
+#import <MoblicoSDK/MLCGroupsService.h>
 #import <MoblicoSDK/MLCLeaderboardService.h>
 #import <MoblicoSDK/MLCLocationsService.h>
 #import <MoblicoSDK/MLCMediaService.h>
+#import <MoblicoSDK/MLCMessageService.h>
 #import <MoblicoSDK/MLCMetricsService.h>
 #import <MoblicoSDK/MLCPointsService.h>
 #import <MoblicoSDK/MLCRewardsService.h>
@@ -36,16 +38,17 @@
 
 
 // Models
-#import <MoblicoSDK/MLCEntityProtocol.h>
 #import <MoblicoSDK/MLCEntity.h>
 
 #import <MoblicoSDK/MLCAffinity.h>
 #import <MoblicoSDK/MLCDeal.h>
 #import <MoblicoSDK/MLCEvent.h>
+#import <MoblicoSDK/MLCGroup.h>
 #import <MoblicoSDK/MLCImage.h>
 #import <MoblicoSDK/MLCLeader.h>
 #import <MoblicoSDK/MLCLocation.h>
 #import <MoblicoSDK/MLCMedia.h>
+#import <MoblicoSDK/MLCMessage.h>
 #import <MoblicoSDK/MLCMetric.h>
 #import <MoblicoSDK/MLCPoints.h>
 #import <MoblicoSDK/MLCReward.h>

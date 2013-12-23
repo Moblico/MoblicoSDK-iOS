@@ -15,14 +15,25 @@
  */
 
 #import "MLCReward.h"
-
+#import "MLCEntity_Private.h"
 @implementation MLCReward
+
++ (NSArray *)ignoredPropertiesDuringSerialization {
+    return [@[@"dealId"] arrayByAddingObjectsFromArray:[super ignoredPropertiesDuringSerialization]];
+}
+
 - (void)setDealId:(NSUInteger)dealId {
     self.rewardId = dealId;
 }
 
 - (NSUInteger)dealId {
     return self.rewardId;
+}
+
+- (NSInteger)availableRedemptions {
+	if (self.numberOfPurchases <= 0) return 0;
+	if (self.numberOfUsesPerCode == 0) return NSIntegerMax;
+	return ((self.numberOfPurchases * self.numberOfUsesPerCode) - self.redeemedCount);
 }
 
 @end

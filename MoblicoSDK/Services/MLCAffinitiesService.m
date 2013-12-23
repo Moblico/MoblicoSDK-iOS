@@ -21,11 +21,11 @@
 
 @implementation MLCAffinitiesService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCAffinity class];
 }
 
-+ (id)listAffinities:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listAffinities:(MLCServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 

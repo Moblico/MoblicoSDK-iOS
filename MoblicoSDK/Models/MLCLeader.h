@@ -16,6 +16,13 @@
 
 #import "MLCUser.h"
 
+/**
+ MLCLeader is a subclass of MLCUser and represents users who have earned points.
+ */
 @interface MLCLeader : MLCUser
-@property (nonatomic) int points;
+
+/**
+ The amount of points earned by this user.
+ */
+@property (nonatomic) NSInteger points;
 @end

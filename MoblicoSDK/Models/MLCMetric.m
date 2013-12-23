@@ -15,6 +15,8 @@
  */
 
 #import "MLCMetric.h"
+#import "MLCLocation.h"
+#import "MLCEntity_Private.h"
 
 @interface MLCMetric ()
 @property (nonatomic, strong) NSDate *timeStamp;
@@ -23,6 +25,9 @@
 
 @implementation MLCMetric
 
++ (NSArray *)ignoredPropertiesDuringSerialization {
+    return [@[@"payload"] arrayByAddingObjectsFromArray:[super ignoredPropertiesDuringSerialization]];
+}
 - (void)setPayload:(NSString *)payload {
     self.text = payload;
 }
@@ -38,27 +43,39 @@
     return _timeStamp;
 }
 
-+ (id)metricWithType:(MLCMetricType)type payload:(NSString *)payload {
-    return [self metricWithType:type text:payload username:nil];
++ (instancetype)metricWithType:(MLCMetricType)type payload:(NSString *)payload {
+    return [self metricWithType:type text:payload location:nil username:nil];
 }
 
-+ (id)metricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
++ (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
+    return [self metricWithType:type text:text location:nil username:username];
+}
+
++ (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
     MLCMetric * metric = [[MLCMetric alloc] init];
     metric.type = type;
     metric.text = text;
     metric.username = username;
     metric.timeStamp = [NSDate date];
-//    metric.latitude = latitude;
-//    metric.longitude = longitude;
+    metric.location = location;
+    //    metric.latitude = latitude;
+    //    metric.longitude = longitude;
     return metric;
+
 }
 
-- (id)serialize {
+- (NSDictionary *)serialize {
     NSMutableDictionary *serializedObject = [[super serialize] mutableCopy];
     
     NSString *type = [MLCMetric stringForMetricType:self.type];
     serializedObject[@"type"] = type;
 
+    [serializedObject removeObjectForKey:@"location"];
+    NSUInteger locationId = self.location.locationId;
+    if (locationId > 0) {
+        serializedObject[@"locationId"] = @(locationId);
+    }
+    
     return serializedObject;
 }
 

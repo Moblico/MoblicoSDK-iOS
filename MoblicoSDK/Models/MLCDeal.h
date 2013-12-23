@@ -18,21 +18,114 @@
 
 @class MLCImage;
 
+/**
+ Moblico deals encompass many of the attributes of coupons.
+ Deals can be associated to Locations (i.e merchants) and Moblico
+ also provides several mechanisms for Deal redemption.
+ 
+ Deals are loaded and managed using Moblico's admin tool.
+ 
+ A MLCDeal object encapsulates the data of a deal stored in the Moblico Admin Portal.
+ */
 @interface MLCDeal : MLCEntity
+
+/**
+ A unique identifier for this deal.
+ */
 @property (nonatomic) NSUInteger dealId;
+
+/**
+ The name for this deal.
+ */
 @property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *description;
+
+/**
+ The details for this deal.
+ */
+@property (copy, nonatomic) NSString *details;
+
+/**
+ The offer code for this deal.
+ */
 @property (copy, nonatomic) NSString *offerCode;
+
+/**
+ The legalese for this deal.
+ */
 @property (copy, nonatomic) NSString *legalese;
+
+/**
+ The promo text for this deal.
+ */
 @property (copy, nonatomic) NSString *promoText;
+
+/**
+ The name of the URL for this deal.
+ */
 @property (copy, nonatomic) NSString *urlName;
+
+/**
+ The URL for this deal.
+ */
 @property (strong, nonatomic) NSURL *url;
+
+/**
+ The date this deal was created.
+ */
 @property (strong, nonatomic) NSDate *createDate;
+
+/**
+ The date this deal was last updated.
+ */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
+
+/**
+ The date this deal will become active.
+ */
 @property (strong, nonatomic) NSDate *startDate;
+
+/**
+ The date this deal will no longer be active.
+ */
 @property (strong, nonatomic) NSDate *endDate;
-@property (nonatomic) int redeemedCount;
-@property (nonatomic) int numberOfUsesPerCode;
+
+/**
+ The number of times this deal has been redeemed.
+ */
+@property (nonatomic) NSInteger redeemedCount;
+
+/**
+ The number of uses per offer code for this deal.
+ */
+@property (nonatomic) NSInteger numberOfUsesPerCode;
+
+/**
+ Specifies whether this deal can be redeemed in app.
+
+ Deals that are not appRedemptionEnabled must be redeemed using
+ the Moblico Redemption Tool.
+ */
 @property (nonatomic) BOOL appRedemptionEnabled;
+
+/**
+ The image for this deal.
+ 
+ @see MLCImage
+ */
 @property (strong, nonatomic) MLCImage *image;
+
+@end
+
+@interface MLCDeal (Deprecated)
+
+/**
+ The description property has been renamed to details,
+ and will be removed in the next major release.
+
+ @deprecated Use 'details' instead.
+
+ @see details
+ */
+@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
+
 @end

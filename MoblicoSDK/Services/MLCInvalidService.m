@@ -1,19 +1,32 @@
-//
-//  MLCInvalidService.m
-//  MoblicoSDK
-//
-//  Created by Cameron Knight on 2/5/13.
-//  Copyright (c) 2013 Moblico Solutions LLC. All rights reserved.
-//
+/*
+ Copyright 2012 Moblico Solutions LLC
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this work except in compliance with the License.
+ You may obtain a copy of the License in the LICENSE file, or at:
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 #import "MLCInvalidService.h"
 
 @implementation MLCInvalidService
 
-+ (id)invalidServiceWithError:(NSError *)error handler:(MLCInvalidServiceCompletionHandler)handler {
++ (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCInvalidServiceCompletionHandler)handler {
+    return [self invalidServiceWithError:error response:nil handler:handler];
+}
+
++ (instancetype)invalidServiceWithError:(NSError *)error response:(NSHTTPURLResponse *)response handler:(MLCInvalidServiceCompletionHandler)handler {
     MLCInvalidService * service = [[self alloc] init];
     service.error = error;
     service.handler = handler;
+    service.response = response;
     return service;
 }
 

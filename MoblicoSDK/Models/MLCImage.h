@@ -16,8 +16,31 @@
 
 #import "MLCEntity.h"
 
+/**
+ A MLCImage object encapsulates the image data for a deal stored in the Moblico Admin Portal.
+ */
 @interface MLCImage : MLCEntity
-@property (copy, nonatomic) NSString *imageId;
+
+/**
+ A unique identifier for this image.
+ */
+@property (nonatomic) NSUInteger imageId;
+
+/**
+ The URL for this image.
+ */
 @property (strong, nonatomic) NSURL *url;
+
+/**
+ The date this image was last updated.
+ */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
+
+/**
+ The data of this image. Loaded asyncronously.
+ */
+@property (strong, nonatomic, readonly) NSData *data;
+
+- (void)loadImageData;
+
 @end

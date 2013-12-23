@@ -17,5 +17,5 @@
 #import "MLCService.h"
 
 @interface MLCSettingsService : MLCService
-+ (id)readSettings:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler;
 @end

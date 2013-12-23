@@ -48,7 +48,6 @@
 /* Begin PBXBuildFile section */
 		5B13EEF216C1C3CF00CFE2B5 /* MLCInvalidService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B13EEF016C1C3CE00CFE2B5 /* MLCInvalidService.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		5B13EEF316C1C3CF00CFE2B5 /* MLCInvalidService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13EEF116C1C3CE00CFE2B5 /* MLCInvalidService.m */; };
-		5B13EEF516C1C6BE00CFE2B5 /* MLCServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B13EEF416C1C3F700CFE2B5 /* MLCServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4270B216B71E9A00DE981C /* MLCSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4270B116B71E9A00DE981C /* MLCSettingsService.m */; };
 		5B4270B516B7214B00DE981C /* MLCMetricsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4270B416B7214B00DE981C /* MLCMetricsService.m */; };
 		5B4270B816B7216C00DE981C /* MLCMetric.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4270B716B7216C00DE981C /* MLCMetric.m */; };
@@ -65,7 +64,6 @@
 		5B4A799216BB712A000C39A4 /* MLCServiceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4A799316BB7132000C39A4 /* MLCEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B42709116B7158600DE981C /* MLCEntity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4A799416BB7176000C39A4 /* MLCEntity_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4A798A16BB6051000C39A4 /* MLCEntity_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		5B4A799516BB717B000C39A4 /* MLCEntityProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B42709316B7158600DE981C /* MLCEntityProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4A799616BB718D000C39A4 /* MLCAffinity.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4A796B16BAD762000C39A4 /* MLCAffinity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4A799716BB718D000C39A4 /* MLCDeal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4A796216BACA00000C39A4 /* MLCDeal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4A799816BB718D000C39A4 /* MLCEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B42708B16B7158600DE981C /* MLCEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -91,6 +89,8 @@
 		5B4A79AC16BB71B1000C39A4 /* MLCUsersService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B42708616B7158600DE981C /* MLCUsersService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B5F672416EFC4E100956B4A /* MLCBasicService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B5F672216EFC4E100956B4A /* MLCBasicService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B5F672516EFC4E100956B4A /* MLCBasicService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B5F672316EFC4E100956B4A /* MLCBasicService.m */; };
+		5BB56B54181AD1D300BCA9DB /* MLCCheckInService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BB56B55181AD1D300BCA9DB /* MLCCheckInService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */; };
 		5BB8F29017849952006A86EF /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB8F28F17849952006A86EF /* version.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC1AB1216BB7B0100E91D79 /* MLCEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B42709216B7158600DE981C /* MLCEntity.m */; };
 		5BC1AB1B16BB7B1300E91D79 /* MLCAuthenticationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B42708A16B7158600DE981C /* MLCAuthenticationToken.m */; };
@@ -112,8 +112,16 @@
 		5BC1AB4D16BC646E00E91D79 /* MLCAuthenticationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC1AB4B16BC646E00E91D79 /* MLCAuthenticationService.m */; };
 		5BC1ABAF16BF746900E91D79 /* MLCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B42708316B7158600DE981C /* MLCService.m */; };
 		5BC1ABB016BF748300E91D79 /* MLCDeal.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4A796316BACA00000C39A4 /* MLCDeal.m */; };
+		5BC206E8186786DB00E321AC /* MLCGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BC206E6186786DB00E321AC /* MLCGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BC206E9186786DB00E321AC /* MLCGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC206E7186786DB00E321AC /* MLCGroup.m */; };
+		5BC206EC1867893000E321AC /* MLCGroupsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BC206EA1867892F00E321AC /* MLCGroupsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BC206ED1867893000E321AC /* MLCGroupsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC206EB1867893000E321AC /* MLCGroupsService.m */; };
 		5BDB77EC16CC034400E45E48 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BDB77EB16CC034400E45E48 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5BDB77ED16CC034E00E45E48 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BDB77EB16CC034400E45E48 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5BE472B41804FB9B00616CF2 /* MLCMessageService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BE472B21804FB9A00616CF2 /* MLCMessageService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BE472B51804FB9B00616CF2 /* MLCMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE472B31804FB9A00616CF2 /* MLCMessageService.m */; };
+		5BE472B81804FBFE00616CF2 /* MLCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BE472B61804FBFE00616CF2 /* MLCMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BE472B91804FBFE00616CF2 /* MLCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE472B71804FBFE00616CF2 /* MLCMessage.m */; };
 		5BECA8E616A850DF00F0E4B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BECA8E516A850DF00F0E4B5 /* Foundation.framework */; };
 		5BECA8F516A850DF00F0E4B5 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BECA8F416A850DF00F0E4B5 /* SenTestingKit.framework */; };
 		5BECA8F716A850DF00F0E4B5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BECA8F616A850DF00F0E4B5 /* UIKit.framework */; };
@@ -158,7 +166,6 @@
 		5B13EEE616C199E000CFE2B5 /* readme.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.markdown; sourceTree = "<group>"; };
 		5B13EEF016C1C3CE00CFE2B5 /* MLCInvalidService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCInvalidService.h; sourceTree = "<group>"; };
 		5B13EEF116C1C3CE00CFE2B5 /* MLCInvalidService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCInvalidService.m; sourceTree = "<group>"; };
-		5B13EEF416C1C3F700CFE2B5 /* MLCServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLCServiceProtocol.h; sourceTree = "<group>"; };
 		5B42707C16B7158600DE981C /* MLCEventsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCEventsService.h; sourceTree = "<group>"; };
 		5B42707D16B7158600DE981C /* MLCEventsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCEventsService.m; sourceTree = "<group>"; };
 		5B42707E16B7158600DE981C /* MLCLocationsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCLocationsService.h; sourceTree = "<group>"; };
@@ -179,7 +186,6 @@
 		5B42709016B7158600DE981C /* MLCMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCMedia.m; sourceTree = "<group>"; };
 		5B42709116B7158600DE981C /* MLCEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCEntity.h; sourceTree = "<group>"; };
 		5B42709216B7158600DE981C /* MLCEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCEntity.m; sourceTree = "<group>"; };
-		5B42709316B7158600DE981C /* MLCEntityProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCEntityProtocol.h; sourceTree = "<group>"; };
 		5B42709416B7158600DE981C /* MLCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCUser.h; sourceTree = "<group>"; };
 		5B42709516B7158600DE981C /* MLCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCUser.m; sourceTree = "<group>"; };
 		5B4270B016B71E9A00DE981C /* MLCSettingsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCSettingsService.h; sourceTree = "<group>"; };
@@ -212,6 +218,8 @@
 		5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCServiceManager.m; sourceTree = "<group>"; };
 		5B5F672216EFC4E100956B4A /* MLCBasicService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCBasicService.h; sourceTree = "<group>"; };
 		5B5F672316EFC4E100956B4A /* MLCBasicService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCBasicService.m; sourceTree = "<group>"; };
+		5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCCheckInService.h; sourceTree = "<group>"; };
+		5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCCheckInService.m; sourceTree = "<group>"; };
 		5BB8F28F17849952006A86EF /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		5BC1AB3016BBABD500E91D79 /* MLCLeaderboardService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCLeaderboardService.h; sourceTree = "<group>"; };
 		5BC1AB3116BBABD500E91D79 /* MLCLeaderboardService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCLeaderboardService.m; sourceTree = "<group>"; };
@@ -221,7 +229,15 @@
 		5BC1AB3D16BBC1E200E91D79 /* MLCStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCStatus.m; sourceTree = "<group>"; };
 		5BC1AB4A16BC646E00E91D79 /* MLCAuthenticationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCAuthenticationService.h; sourceTree = "<group>"; };
 		5BC1AB4B16BC646E00E91D79 /* MLCAuthenticationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCAuthenticationService.m; sourceTree = "<group>"; };
+		5BC206E6186786DB00E321AC /* MLCGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCGroup.h; sourceTree = "<group>"; };
+		5BC206E7186786DB00E321AC /* MLCGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCGroup.m; sourceTree = "<group>"; };
+		5BC206EA1867892F00E321AC /* MLCGroupsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCGroupsService.h; sourceTree = "<group>"; };
+		5BC206EB1867893000E321AC /* MLCGroupsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCGroupsService.m; sourceTree = "<group>"; };
 		5BDB77EB16CC034400E45E48 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		5BE472B21804FB9A00616CF2 /* MLCMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCMessageService.h; sourceTree = "<group>"; };
+		5BE472B31804FB9A00616CF2 /* MLCMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCMessageService.m; sourceTree = "<group>"; };
+		5BE472B61804FBFE00616CF2 /* MLCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCMessage.h; sourceTree = "<group>"; };
+		5BE472B71804FBFE00616CF2 /* MLCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCMessage.m; sourceTree = "<group>"; };
 		5BECA8E216A850DF00F0E4B5 /* libMoblicoSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMoblicoSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BECA8E516A850DF00F0E4B5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5BECA8E916A850DF00F0E4B5 /* MoblicoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MoblicoSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -265,7 +281,6 @@
 			children = (
 				5B42708216B7158600DE981C /* MLCService.h */,
 				5B42708316B7158600DE981C /* MLCService.m */,
-				5B13EEF416C1C3F700CFE2B5 /* MLCServiceProtocol.h */,
 				5B4A798916BB5931000C39A4 /* MLCService_Private.h */,
 				5B13EEF016C1C3CE00CFE2B5 /* MLCInvalidService.h */,
 				5B13EEF116C1C3CE00CFE2B5 /* MLCInvalidService.m */,
@@ -277,13 +292,19 @@
 				5B4A797516BAFD4D000C39A4 /* MLCDealsService.m */,
 				5B42707C16B7158600DE981C /* MLCEventsService.h */,
 				5B42707D16B7158600DE981C /* MLCEventsService.m */,
+				5BC206EA1867892F00E321AC /* MLCGroupsService.h */,
+				5BC206EB1867893000E321AC /* MLCGroupsService.m */,
 				5BC1AB3016BBABD500E91D79 /* MLCLeaderboardService.h */,
 				5BC1AB3116BBABD500E91D79 /* MLCLeaderboardService.m */,
 				5B42707E16B7158600DE981C /* MLCLocationsService.h */,
 				5B42707F16B7158600DE981C /* MLCLocationsService.m */,
 				5B42708016B7158600DE981C /* MLCMediaService.h */,
 				5B42708116B7158600DE981C /* MLCMediaService.m */,
+				5BE472B21804FB9A00616CF2 /* MLCMessageService.h */,
+				5BE472B31804FB9A00616CF2 /* MLCMessageService.m */,
 				5B4270B316B7214A00DE981C /* MLCMetricsService.h */,
+				5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */,
+				5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */,
 				5B4270B416B7214B00DE981C /* MLCMetricsService.m */,
 				5BC1AB3416BBBE0700E91D79 /* MLCPointsService.h */,
 				5BC1AB3516BBBE0700E91D79 /* MLCPointsService.m */,
@@ -305,7 +326,6 @@
 				5B42709116B7158600DE981C /* MLCEntity.h */,
 				5B4A798A16BB6051000C39A4 /* MLCEntity_Private.h */,
 				5B42709216B7158600DE981C /* MLCEntity.m */,
-				5B42709316B7158600DE981C /* MLCEntityProtocol.h */,
 				5B4A796B16BAD762000C39A4 /* MLCAffinity.h */,
 				5B4A796C16BAD762000C39A4 /* MLCAffinity.m */,
 				5B42708916B7158600DE981C /* MLCAuthenticationToken.h */,
@@ -314,6 +334,8 @@
 				5B4A796316BACA00000C39A4 /* MLCDeal.m */,
 				5B42708B16B7158600DE981C /* MLCEvent.h */,
 				5B42708C16B7158600DE981C /* MLCEvent.m */,
+				5BC206E6186786DB00E321AC /* MLCGroup.h */,
+				5BC206E7186786DB00E321AC /* MLCGroup.m */,
 				5B4A796816BAD19C000C39A4 /* MLCImage.h */,
 				5B4A796916BAD19C000C39A4 /* MLCImage.m */,
 				5B4A797116BAFCB8000C39A4 /* MLCLeader.h */,
@@ -322,6 +344,8 @@
 				5B42708E16B7158600DE981C /* MLCLocation.m */,
 				5B42708F16B7158600DE981C /* MLCMedia.h */,
 				5B42709016B7158600DE981C /* MLCMedia.m */,
+				5BE472B61804FBFE00616CF2 /* MLCMessage.h */,
+				5BE472B71804FBFE00616CF2 /* MLCMessage.m */,
 				5B4270B616B7216C00DE981C /* MLCMetric.h */,
 				5B4270B716B7216C00DE981C /* MLCMetric.m */,
 				5B4A796E16BADB64000C39A4 /* MLCPoints.h */,
@@ -422,8 +446,8 @@
 				5B4A799216BB712A000C39A4 /* MLCServiceManager.h in Headers */,
 				5B4A799316BB7132000C39A4 /* MLCEntity.h in Headers */,
 				5B4A799416BB7176000C39A4 /* MLCEntity_Private.h in Headers */,
-				5B4A799516BB717B000C39A4 /* MLCEntityProtocol.h in Headers */,
 				5B4A799616BB718D000C39A4 /* MLCAffinity.h in Headers */,
+				5BC206E8186786DB00E321AC /* MLCGroup.h in Headers */,
 				5B4A799716BB718D000C39A4 /* MLCDeal.h in Headers */,
 				5B4A799816BB718D000C39A4 /* MLCEvent.h in Headers */,
 				5B4A799916BB718D000C39A4 /* MLCImage.h in Headers */,
@@ -435,7 +459,9 @@
 				5B4A799F16BB718D000C39A4 /* MLCReward.h in Headers */,
 				5B4A79A016BB718D000C39A4 /* MLCUser.h in Headers */,
 				5B4A79A116BB7194000C39A4 /* MLCAuthenticationToken.h in Headers */,
+				5BB56B54181AD1D300BCA9DB /* MLCCheckInService.h in Headers */,
 				5B4A79A216BB719E000C39A4 /* MLCService_Private.h in Headers */,
+				5BC206EC1867893000E321AC /* MLCGroupsService.h in Headers */,
 				5B4A79A316BB71B1000C39A4 /* MLCService.h in Headers */,
 				5B4A79A416BB71B1000C39A4 /* MLCAffinitiesService.h in Headers */,
 				5B4A79A516BB71B1000C39A4 /* MLCDealsService.h in Headers */,
@@ -445,13 +471,14 @@
 				5B4A79A916BB71B1000C39A4 /* MLCMetricsService.h in Headers */,
 				5B4A79AA16BB71B1000C39A4 /* MLCRewardsService.h in Headers */,
 				5B4A79AB16BB71B1000C39A4 /* MLCSettingsService.h in Headers */,
+				5BE472B81804FBFE00616CF2 /* MLCMessage.h in Headers */,
 				5B4A79AC16BB71B1000C39A4 /* MLCUsersService.h in Headers */,
 				5BC1AB3216BBABD500E91D79 /* MLCLeaderboardService.h in Headers */,
 				5BC1AB3616BBBE0700E91D79 /* MLCPointsService.h in Headers */,
 				5BC1AB3E16BBC1E200E91D79 /* MLCStatus.h in Headers */,
 				5BC1AB4C16BC646E00E91D79 /* MLCAuthenticationService.h in Headers */,
+				5BE472B41804FB9B00616CF2 /* MLCMessageService.h in Headers */,
 				5B13EEF216C1C3CF00CFE2B5 /* MLCInvalidService.h in Headers */,
-				5B13EEF516C1C6BE00CFE2B5 /* MLCServiceProtocol.h in Headers */,
 				5B5F672416EFC4E100956B4A /* MLCBasicService.h in Headers */,
 				5BB8F29017849952006A86EF /* version.h in Headers */,
 			);
@@ -505,7 +532,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MLC;
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Moblico Solutions LLC";
 			};
 			buildConfigurationList = 5BECA8DC16A850DF00F0E4B5 /* Build configuration list for PBXProject "MoblicoSDK" */;
@@ -566,7 +593,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "script_file=\"package_framework.rb\"\necho \"Running a custom build phase script: $script_file\"\n~/.rvm/bin/rvm-auto-ruby ${PROJECT_DIR}/scripts/${script_file}\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
+			shellScript = "script_file=\"package_framework.rb\"\necho \"Running a custom build phase script: $script_file\"\n~/.rvm/bin/rvm-auto-ruby \"${PROJECT_DIR}/scripts/${script_file}\"\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
 		};
 		5B4A79AD16BB7273000C39A4 /* Prepare Framework */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -580,7 +607,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nmkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/Headers\"\n\n# Link the \"Current\" version to \"A\"\n/bin/ln -sfh A \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/Current\"\n/bin/ln -sfh Versions/Current/Headers \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Headers\"\n/bin/ln -sfh \"Versions/Current/${PRODUCT_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# The -a ensures that the headers maintain the source modification date so that we don't constantly\n# cause propagating rebuilds of files that import these headers.\n/bin/cp -a \"${TARGET_BUILD_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}/\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/Headers\"\n\necho \"BUILT_PRODUCTS_DIR \" $BUILT_PRODUCTS_DIR\necho \"PROJECT_DIR \" $PROJECT_DIR\necho \"HEADER_SEARCH_PATHS \" $HEADER_SEARCH_PATHS\necho \"PUBLIC_HEADERS_FOLDER_PATH \" $PUBLIC_HEADERS_FOLDER_PATH";
+			shellScript = "script_file=\"prepare_framework.sh\"\n\necho \"Running a custom build phase script: $script_file\"\n\"${PROJECT_DIR}/../../scripts/${script_file}\"\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
 		};
 		5B4A79B716BB73CD000C39A4 /* Build Framework */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -594,7 +621,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "script_file=\"build_framework.sh\"\n\necho \"Running a custom build phase script: $script_file\"\n${PROJECT_DIR}/scripts/${script_file}\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
+			shellScript = "script_file=\"build_framework.sh\"\n\necho \"Running a custom build phase script: $script_file\"\n\"${PROJECT_DIR}/../../scripts/${script_file}\"\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
 		};
 		5BC1AB4616BBFA4900E91D79 /* Create Documentation */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -608,7 +635,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "script_file=\"create_documentation.sh\"\n\necho \"Running a custom build phase script: $script_file\"\n${PROJECT_DIR}/scripts/${script_file}\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
+			shellScript = "script_file=\"create_documentation.sh\"\n\necho \"Running a custom build phase script: $script_file\"\n\"${PROJECT_DIR}/scripts/${script_file}\"\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
 		};
 		5BECA8F116A850DF00F0E4B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -638,6 +665,9 @@
 				5B4A796D16BAD762000C39A4 /* MLCAffinity.m in Sources */,
 				5B4A797016BADB64000C39A4 /* MLCPoints.m in Sources */,
 				5B4A797316BAFCB9000C39A4 /* MLCLeader.m in Sources */,
+				5BB56B55181AD1D300BCA9DB /* MLCCheckInService.m in Sources */,
+				5BE472B91804FBFE00616CF2 /* MLCMessage.m in Sources */,
+				5BC206E9186786DB00E321AC /* MLCGroup.m in Sources */,
 				5B4A797616BAFD4D000C39A4 /* MLCDealsService.m in Sources */,
 				5B4A798516BB1E65000C39A4 /* MLCAffinitiesService.m in Sources */,
 				5B4A798816BB45F5000C39A4 /* MLCRewardsService.m in Sources */,
@@ -650,10 +680,12 @@
 				5BC1AB1F16BB7B1300E91D79 /* MLCUser.m in Sources */,
 				5BC1AB2516BB7B1A00E91D79 /* MLCEventsService.m in Sources */,
 				5BC1AB2616BB7B1A00E91D79 /* MLCLocationsService.m in Sources */,
+				5BE472B51804FB9B00616CF2 /* MLCMessageService.m in Sources */,
 				5BC1AB2716BB7B1A00E91D79 /* MLCMediaService.m in Sources */,
 				5BC1AB2816BB7B1A00E91D79 /* MLCUsersService.m in Sources */,
 				5BC1AB3316BBABD500E91D79 /* MLCLeaderboardService.m in Sources */,
 				5BC1AB3716BBBE0700E91D79 /* MLCPointsService.m in Sources */,
+				5BC206ED1867893000E321AC /* MLCGroupsService.m in Sources */,
 				5BC1AB3F16BBC1E200E91D79 /* MLCStatus.m in Sources */,
 				5BC1AB4D16BC646E00E91D79 /* MLCAuthenticationService.m in Sources */,
 				5BC1ABAF16BF746900E91D79 /* MLCService.m in Sources */,
@@ -757,11 +789,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -800,11 +833,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;

@@ -15,22 +15,89 @@
  */
 
 #import <Foundation/Foundation.h>
-@protocol MLCEntityProtocol;
-@protocol MLCServiceProtocol;
+@protocol MLCEntity;
+
+/**
+ All MLCService objects conform to the MLCService protocol.
+ */
+@protocol MLCService <NSObject>
+@required
+- (void)start;
+- (void)cancel;
+@end
+
+
 @class MLCStatus;
 
+/**
+ Indicates the method used in the request
+ */
 typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
+    /**
+     Requests a representation of the specified resource.
+     */
 	MLCServiceRequestMethodGET,
+    
+    /**
+     Creates a resource.
+     */
 	MLCServiceRequestMethodPOST,
+    
+    /**
+     Updates the specified resource.
+     */
 	MLCServiceRequestMethodPUT,
+    
+    /* Deletes the specified resource.*/
 	MLCServiceRequestMethodDELETE
 };
 
+/**
+ The callback handler for JSON MLCService requests
+ 
+ The parameters for this handler are:
+
+ @param jsonObject The JSON data returned by the service request.
+ @param error An error identifier.
+ @param response The URL response returned by the service request that includes the HTTP response codes.
+ */
 typedef void(^MLCServiceJSONCompletionHandler)(id jsonObject, NSError *error, NSHTTPURLResponse *response);
-typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntityProtocol> resource, NSError *error, NSHTTPURLResponse *response);
-typedef void(^MLCServiceCollectionCompletionHandler)(NSArray *array, NSError *error, NSHTTPURLResponse *response);
+
+
+/**
+ The callback handler for resource MLCService requests
+ 
+ The parameters for this handler are:
+
+ @param resource The object returned by the service request.
+ @param error An error identifier.
+ @param response The URL response returned by the service request that includes the HTTP response codes.
+ */
+typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntity> resource, NSError *error, NSHTTPURLResponse *response);
+
+/**
+ The callback handler for collection MLCService requests
+ 
+ The parameters for this handler are:
+
+ @param collection The array of resources returned by the service request.
+ @param error An error identifier.
+ @param response The URL response returned by the service request that includes the HTTP response codes.
+ */
+typedef void(^MLCServiceCollectionCompletionHandler)(NSArray *collection, NSError *error, NSHTTPURLResponse *response);
+
+/**
+ The callback handler for status MLCService requests
+ 
+ The parameters for this handler are:
+ @param status The status returned by the service request.
+ @param error An error identifier.
+ @param response The URL response returned by the service request that includes the HTTP response codes.
+ */
 typedef void(^MLCServiceStatusCompletionHandler)(MLCStatus *status, NSError *error, NSHTTPURLResponse *response);
 
-/** Base class for all Moblico service objects. */
-@interface MLCService : NSObject <MLCServiceProtocol>
+/**
+ Base class for all Moblico service objects.
+ */
+@interface MLCService : NSObject <MLCService>
 @end

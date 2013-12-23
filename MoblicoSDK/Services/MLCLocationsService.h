@@ -20,13 +20,13 @@
 @class MLCReward;
 
 @interface MLCLocationsService : MLCService
-+ (id)readLocationWithLocationId:(NSUInteger)locationId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readLocationWithLocationId:(NSUInteger)locationId handler:(MLCServiceResourceCompletionHandler)handler;
 
-+ (id)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)findLocationsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findLocationsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
-+ (id)listLocationsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listLocationsForDeal:(MLCDeal *)deal handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listLocationsForReward:(MLCReward *)reward handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listLocationsForResource:(id <MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listLocationsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listLocationsForDeal:(MLCDeal *)deal handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listLocationsForReward:(MLCReward *)reward handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listLocationsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 @end

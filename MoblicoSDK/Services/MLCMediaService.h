@@ -18,10 +18,58 @@
 @class MLCLocation;
 @class MLCEvent;
 
+/**
+ The media facility provides the means to reference and provide dynamic meta data for any type of content required.
+
+ Media is loaded and managed using Moblico's admin tool.
+ */
 @interface MLCMediaService : MLCService
-+ (id)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler;
-+ (id)listMedia:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listMediaForResource:(id <MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
+
+/**
+ This method is used to request a media item with a specified id.
+
+ @param mediaId The identifier of the media you are requesting.
+ @param handler The request completion handler.
+
+ @return A MLCMediaService instance.
+
+ @see -[MLCServiceProtocol start]
+ */
++ (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler;
+
+/**
+ This method requests all media.
+
+ @param handler The request completion handler.
+ */
++ (instancetype)listMedia:(MLCServiceCollectionCompletionHandler)handler;
+
+/**
+ This method requests all media for a specified location.
+
+ @param location The MLCLocation instance that the media are assigned to.
+ @param handler The request completion handler.
+ */
++ (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
+
+/**
+ This method requests all media for a specified event.
+
+ @param event The MLCEvent instance that the media are assigned to.
+ @param handler The request completion handler.
+ */
++ (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
+
+/**
+ This method requests all media for a specified generic resource.
+ 
+ This is a generic method for requesting media that are assigned to another
+ resource. For example, you can call this method with either a MLCEvent or
+ MLCLocation instance as the resource.
+
+ @param resource The resource that the media is assigned to.
+ @param handler The request completion handler.
+ */
++ (instancetype)listMediaForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
+
 @end

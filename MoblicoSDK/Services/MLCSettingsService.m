@@ -19,11 +19,11 @@
 
 @implementation MLCSettingsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return Nil;
 }
 
-+ (id)readSettings:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodGET path:@"settings" parameters:nil handler:handler];
 }
 

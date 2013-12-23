@@ -17,13 +17,14 @@
 #import "MLCService.h"
 @class MLCUser;
 
-typedef NS_ENUM(NSUInteger, MLCPointsTotalType) {
-    MLCPointsTotalTypeBoth,
-    MLCPointsTotalTypePoints,
-    MLCPointsTotalTypeAccumulated
+typedef NS_OPTIONS(NSUInteger, MLCPointsTotalType) {
+    MLCPointsTotalTypePoints = (1 << 0),
+    MLCPointsTotalTypeAccumulated = (1 << 1),
+    MLCPointsTotalTypeBoth = (MLCPointsTotalTypePoints |
+                              MLCPointsTotalTypeAccumulated)
 };
 
 @interface MLCPointsService : MLCService
-+ (id)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)updatePoints:(int)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
 @end

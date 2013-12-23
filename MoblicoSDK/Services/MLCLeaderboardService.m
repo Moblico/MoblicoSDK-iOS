@@ -25,16 +25,16 @@
 
 @implementation MLCLeaderboardService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCLeader class];
 }
 
-+ (id)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:searchParameters handler:handler];
 }
 
-+ (id)findLeaderboardWithType:(MLCLeaderboardType)type limit:(int)limit handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSMutableDictionary * searchParameters = [@{@"type": [self stringFromMLCServiceRequestMethod:type]} mutableCopy];
++ (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler {
+    NSMutableDictionary * searchParameters = [@{@"type": [self stringFromMLCLeaderboardType:type]} mutableCopy];
     if (limit) searchParameters[@"leaderboardLimit"] = @(limit);
     return [self findLeaderboardWithSearchParameters:searchParameters handler:handler];
 }
@@ -44,7 +44,6 @@
         case MLCLeaderboardTypeOverallPoints:
             return @"overallPoints";
     }
-    
     return nil;
 }
 

@@ -16,19 +16,100 @@
 
 #import "MLCEntity.h"
 
+/**
+ The media facility provides the means to reference and provide dynamic meta data
+ for any type of content required.
+ 
+ Media is loaded and managed using Moblico's admin tool.
+ 
+ A MLCMedia object encapsulates the data of a media stored in the Moblico Admin Portal.
+ */
 @interface MLCMedia : MLCEntity
+
+/**
+ A unique identifier for this media.
+ */
 @property (nonatomic) NSUInteger mediaId;
+
+/**
+ The date this media was created.
+ */
 @property (strong, nonatomic) NSDate *createDate;
+
+/**
+ The date this media was last updated.
+ */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
+
+/**
+ The MIME type for this media.
+ */
 @property (copy, nonatomic) NSString *mimeType;
+
+/**
+ The type for this media.
+ */
 @property (copy, nonatomic) NSString *type;
+
+/**
+ The name for this media.
+ */
 @property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *description;
+
+/**
+ The details for this media.
+ */
+@property (copy, nonatomic) NSString *details;
+
+/**
+ The URL for this media.
+ */
 @property (strong, nonatomic) NSURL *url;
+
+/**
+ The image URL for this media.
+ */
 @property (strong, nonatomic) NSURL *imageUrl;
+
+/**
+ The attributes for this media.
+ */
 @property (copy, nonatomic) NSDictionary *attributes;
+
+/**
+ The sorting priority for this media.
+ */
 @property (nonatomic) NSUInteger priority;
+
+/**
+ Specifices whether this media should be cached.
+ */
 @property (nonatomic) BOOL shouldCache;
+
+/**
+ The thumbnail image URL for this media.
+ */
 @property (copy, nonatomic) NSString *thumbUrl;
-@property (nonatomic) NSUInteger externalId;
+
+/**
+ The external unique identifier for this media.
+ 
+ The externalId will be set when the media originates from an external system to Moblico.
+ */
+@property (copy, nonatomic) NSString *externalId;
+
+@end
+
+@interface MLCMedia (Deprecated)
+
+/**
+ The description property has been renamed to details,
+ and will be removed in the next major release.
+
+ @deprecated Use 'details' instead.
+
+ @see details
+ */
+@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
+
 @end

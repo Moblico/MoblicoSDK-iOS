@@ -48,11 +48,14 @@
 }
 
 - (NSString *)uniqueIdentifier {
-    id value = [self valueForKey:[[self class] uniqueIdentifierKey]];
+    id key =[[self class] uniqueIdentifierKey];
+    id value = [self valueForKey:key];
+//    NSLog(@"uniqueIdentifier key: %@ value: %@", key, value);
     return [MLCEntity stringFromValue:value];
 }
 
 - (void)setSafeValue:(id)value forKey:(NSString *)key {
+//    NSLog(@"setSafeValue: %@ forKey: %@", value, key);
 	if (!key) [NSException raise:NSInvalidArgumentException format:@"Key must not be nil"];
     NSDictionary *properties = [self properties];
     id type = properties[key];
@@ -61,6 +64,7 @@
 }
 
 - (void)setValue:(id)value forKey:(NSString *)key {
+//    NSLog(@"Set Value[%@] = %@", key, value);
     NSDictionary *properties = [self properties];
     id type = properties[key];
     
@@ -68,7 +72,15 @@
         [super setValue:value forKey:key];
         return;
     }
-    self._scalarValues[key] = value;
+//    NSLog(@"Set Scalar[%@] = %@", key, value);
+    if (value) {
+        self._scalarValues[key] = value;
+    }
+    else {
+        [self._scalarValues removeObjectForKey:key];
+    }
+
+    [super setValue:value forKey:key];
 }
 
 - (id)valueForKey:(NSString *)key {
@@ -76,10 +88,15 @@
     id type = properties[key];
     
     if ([type characterAtIndex:0] == '@') {
-        return [super valueForKey:key];
+        id value = [super valueForKey:key];
+//        NSLog(@"Get Value[%@] = %@", key, value);
+        return value;
     }
-    
-    return self._scalarValues[key];
+
+    id value = self._scalarValues[key];
+//    NSLog(@"Get Scalar[%@] = %@", key, value);
+
+    return value;
 }
 
 + (NSString *)stringFromValue:(id)value {
@@ -130,6 +147,11 @@
 + (int)intFromValue:(id)value {
 	if (![value respondsToSelector:@selector(integerValue)]) return 0;
 	return [value integerValue];
+}
+
++ (unsigned int)unsignedIntFromValue:(id)value {
+	if (![value respondsToSelector:@selector(unsignedIntValue)]) return 0;
+	return [value unsignedIntValue];
 }
 
 + (unsigned long)unsignedLongFromValue:(id)value {
@@ -186,26 +208,48 @@
     return nil;
 }
 
++ (NSArray *)ignoredPropertiesDuringDeserialization {
+    return nil;
+}
+
++ (NSDictionary *)renamedPropertiesDuringDeserialization {
+    return @{@"id": [self uniqueIdentifierKey],
+             @"description": @"details"};
+}
+
 + (instancetype)deserialize:(id)jsonObject {
     if (jsonObject == nil) return nil;
     
-    id object = [[[self class] alloc] init];
-	NSDictionary *properties = [object properties];
+    MLCEntity *object = [[[self class] alloc] init];
+//	NSDictionary *properties = [object properties];
     [jsonObject enumerateKeysAndObjectsUsingBlock:^(id originalKey, id obj, __unused BOOL *stop) {
         id key = originalKey;
         id value = obj;
         if (value == [NSNull null]) value = nil;
-		if ([key isEqualToString:@"id"]) {
-            key = [self uniqueIdentifierKey];
+        if ([[self ignoredPropertiesDuringDeserialization] containsObject:key]) {
+            return;
         }
-
-        [object setValue:value forKey:key type:properties[key]];
+        if ([self renamedPropertiesDuringDeserialization][key]) {
+            key = [self renamedPropertiesDuringDeserialization][key];
+        }
+//        NSLog(@"deserialize setValue:%@ forKey:%@ type:%@", value, key, properties[key]);
+        [object setSafeValue:value forKey:key];
+//        [object setValue:value forKey:key type:properties[key]];
     }];
     
 	return object;
 }
 
-- (id)serialize {
+
++ (NSArray *)ignoredPropertiesDuringSerialization {
+    return @[[self uniqueIdentifierKey]];
+}
+
++ (NSDictionary *)renamedPropertiesDuringSerialization {
+    return @{@"details": @"description"};
+}
+
+- (NSDictionary *)serialize {
     NSDictionary *properties = [self properties];
     
     NSMutableDictionary *serializedObject = [NSMutableDictionary dictionaryWithCapacity:[properties count]];
@@ -217,12 +261,19 @@
         if (!value || value == [NSNull null] || [key isEqualToString:uniqueId]) return;
         if ([[MLCEntity classFromType:type] isSubclassOfClass:[NSDate class]]) value = [MLCEntity timeStampFromDate:value];
         if ([type characterAtIndex:0] == 'c') value = [MLCEntity boolFromValue:value] ? @"true" : @"false";
+        if ([[[self class] ignoredPropertiesDuringSerialization] containsObject:key]) {
+            return;
+        }
+        if ([[self class] renamedPropertiesDuringSerialization][key]) {
+            key = [[self class] renamedPropertiesDuringSerialization][key];
+        }
+
         if (key && value) serializedObject[key] = value;
     }];
 
 //    [serializedObject removeObjectForKey:uniqueId];
     
-    return serializedObject;
+    return [serializedObject copy];
 }
 
 - (NSMutableDictionary *)properties {
@@ -270,15 +321,22 @@
 }
 
 - (void)setValue:(id)value forKey:(NSString *)key type:(NSString *)type {
+//    NSLog(@"START setValue:%@ forKey:%@ type:%@", value, key, type);
     /*
      Code clean up inspired by Mike Ash:
      http://www.mikeash.com/pyblog/friday-qa-2013-02-08-lets-build-key-value-coding.html
      */
     
-    NSString *setterName = [NSString stringWithFormat: @"set%@:", [key capitalizedString]];
+    NSString *firstCapChar = [[key substringToIndex:1] capitalizedString];
+    NSString *capitalizedKey = [key stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstCapChar];
+
+    NSString *setterName = [NSString stringWithFormat: @"set%@:", capitalizedKey];
     SEL setterSEL = NSSelectorFromString(setterName);
 	
-	if (![self respondsToSelector:setterSEL]) return;
+	if (![self respondsToSelector:setterSEL]) {
+//        NSLog(@"[%@] does not respond to [%@]", [self class], NSStringFromSelector(setterSEL));
+        return;
+    }
 
 	const unichar typeChar = [type characterAtIndex:0];
 	IMP imp = [self methodForSelector:setterSEL];
@@ -287,6 +345,8 @@
     // Class
 	if(typeChar == @encode(Class)[0]) {
 		((void (*)(id, SEL, id))imp)(self, setterSEL, value);
+//        NSLog(@"CLASS setValue:%@ forKey:%@ type:%@", value, key, type);
+        [self setValue:value forKey:key];
         return;
 	}
     
@@ -294,7 +354,7 @@
     if (typeChar == @encode(id)[0]) {
         Class ClassType = [MLCEntity classFromType:type];
         
-        if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
+        if ([ClassType conformsToProtocol:@protocol(MLCEntity)]) {
             value = [ClassType deserialize:value];
         }
         else {
@@ -305,13 +365,15 @@
             if ([ClassType isSubclassOfClass:[NSArray class]]) value = [MLCEntity arrayFromValue:value];
             if ([ClassType isSubclassOfClass:[NSDictionary class]]) value = [MLCEntity dictionaryFromValue:value];
         }
-		((void (*)(id, SEL, id))imp)(self, setterSEL, value);
+//		((void (*)(id, SEL, id))imp)(self, setterSEL, value);
+//        NSLog(@"OBJECT setValue:%@ forKey:%@ type:%@", value, key, type);
+        [self setValue:value forKey:key];
         return;
     }
     
     #define CASE_SEL(ctype, selectorpart) \
         if(typeChar == @encode(ctype)[0]) { \
-            ((void (*)(id, SEL, ctype))imp)(self, setterSEL, [MLCEntity selectorpart ## FromValue: value ]); \
+            [self setValue:@([MLCEntity selectorpart ## FromValue: value ]) forKey:key]; \
             return; \
         }
     
@@ -325,13 +387,39 @@
     CASE(short);
 
     CASE_SEL(BOOL, bool);
+    CASE_SEL(unsigned int, unsignedInt);
     CASE_SEL(unsigned long, unsignedLong);
     CASE_SEL(unsigned long long, unsignedLongLong);
 
     #undef CASE
     #undef CASE_SEL
+//    NSLog(@"OTHER setValue:%@ forKey:%@ type:%@", value, key, type);
+
+    [self setValue:value forKey:key];
 }
 
+- (NSString *)description {
+    objc_property_t descriptionProperty = class_getProperty([self class], "description");
+    objc_property_t detailsProperty = class_getProperty([self class], "details");
+    if (descriptionProperty && detailsProperty) {
+        return [self valueForKey:@"details"];
+    }
+
+    NSMutableString *description = [[super description] mutableCopy];
+
+    [description appendString:@" ("];
+    NSDictionary *properties = self.properties;
+
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:properties.count];
+    for (NSString *key in properties) {
+        id value = [self valueForKey:key];
+        [array addObject:[NSString stringWithFormat:@"%@: %@", key, value]];
+    }
+    [description appendString:[array componentsJoinedByString:@"; "]];
+    [description appendString:@")"];
+
+    return [description copy];
+}
 
 - (BOOL)validate:(NSError**)outError {
     
@@ -343,7 +431,7 @@
 		NSError *error = nil;
 		if (![self validateValue:&value forKey:key error:&error]) {
 			if (!error) {
-				error = [[NSError alloc] initWithDomain:@"com.moblico.Core.EntityError" code:-1 userInfo:@{ NSLocalizedDescriptionKey : @"Unknown error" }];
+				error = [[NSError alloc] initWithDomain:@"MLCEntityErrorDomain" code:-1 userInfo:@{ NSLocalizedDescriptionKey : @"Unknown error" }];
 			}
 			[errors addObject:error];
 		}
@@ -353,7 +441,7 @@
 	
 	if (outError != NULL) {
 		if ([errors count] == 1) *outError = [errors lastObject];
-		else *outError = [[NSError alloc] initWithDomain:@"com.moblico.Core.EntityError" code:-1 userInfo:@{ @"MLCValidationDetailedErrorsKey" : errors }];
+		else *outError = [[NSError alloc] initWithDomain:@"MLCEntityErrorDomain" code:-1 userInfo:@{ @"MLCEntityValidationDetailedErrorsKey" : errors }];
 	}
 	
 	return NO;
@@ -397,4 +485,13 @@
     return copyedObject;
 }
 
+- (BOOL)isEqual:(MLCEntity *)anObject {
+    return [self.uniqueIdentifier isEqual:anObject.uniqueIdentifier];
+    // If it's an object. Otherwise use a simple comparison like self.personId == anObject.personId
+}
+
+- (NSUInteger)hash
+{
+    return [self.uniqueIdentifier hash]; //Must be a unique unsigned integer
+}
 @end

@@ -20,13 +20,13 @@
 @class MLCEvent;
 
 @interface MLCEventsService : MLCService
-+ (id)readEventWithEventId:(NSUInteger)eventId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readEventWithEventId:(NSUInteger)eventId handler:(MLCServiceResourceCompletionHandler)handler;
 
-+ (id)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)findEventsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findEventsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
-+ (id)listSubEventsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (id)listEventsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listSubEventsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listEventsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 @end

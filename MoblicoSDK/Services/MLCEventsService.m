@@ -25,38 +25,38 @@
     return @[@"MLCEvent", @"MLCLocation", @"MLCMedia"];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
     return [MLCEvent class];
 }
 
-+ (id)readEventWithEventId:(NSUInteger)eventId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readEventWithEventId:(NSUInteger)eventId handler:(MLCServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(eventId) handler:handler];
 }
 
-+ (id)findEventsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findEventsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:searchParameters handler:handler];
 }
 
-+ (id)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler {
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:2];
     if (typeName.length) searchParameters[@"eventTypeName"] = typeName;
     searchParameters[@"liveOnly"] = liveOnly ? @"true" : @"false" ;
     return [self findEventsWithSearchParameters:searchParameters handler:handler];
 }
 
-+ (id)listSubEventsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listSubEventsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listEventsForResource:event handler:handler];
 }
 
-+ (id)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listEventsForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listEventsForResource:(id<MLCEntity>)location handler:handler];
 }
 
-+ (id)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listEventsForResource:(id<MLCEntityProtocol>)media handler:handler];
++ (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listEventsForResource:(id<MLCEntity>)media handler:handler];
 }
 
-+ (id)listEventsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listEventsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 @end

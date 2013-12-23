@@ -16,9 +16,8 @@
 
 #import "MLCService.h"
 #import "MLCService_Private.h"
-#import "MLCServiceProtocol.h"
 #import "MLCServiceManager.h"
-#import "MLCEntityProtocol.h"
+#import "MLCEntity.h"
 #import "MLCEntity.h"
 #import "MLCEntity_Private.h"
 #import "MLCStatus.h"
@@ -38,23 +37,33 @@
 }
 
 
-+ (BOOL)canScopeResource:(id<MLCEntityProtocol>)resource {
++ (BOOL)canScopeResource:(id<MLCEntity>)resource {
     NSString * className = NSStringFromClass([resource class]);
     return [[self scopeableResources] containsObject:className];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class<MLCEntity>)classForResource {
+    NSString *className = NSStringFromClass([self class]);
+    className = [className stringByReplacingOccurrencesOfString:@"sService" withString:@""];
+    Class classForResource = NSClassFromString(className);
+    if (classForResource) {
+        return classForResource;
+    }
+
     [self doesNotRecognizeSelector:_cmd];
     return Nil;
 }
 
 - (void)start {
     [self cancel];
-    [[MLCServiceManager sharedServiceManager] authenticateRequest:self.request handler:^(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response) {
+    [MLCServiceManager.sharedServiceManager authenticateRequest:self.request handler:^(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response) {
         if (error) {
             self.jsonCompletionhandler(nil, error, response);
         } else {
-            self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];;
+            self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];
+#if TARGET_OS_IPHONE
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+#endif
             [self.connection start];
         }
     }];
@@ -65,18 +74,18 @@
     self.connection = nil;
 }
 
-+ (id)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     MLCService *service = [[[self class] alloc] init];
     service.jsonCompletionhandler = handler;
     service.request = [self requestWithMethod:method path:path parameters:parameters];
     return service;
 }
 
-+ (id)createResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)createResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler {
     return [self create:[resource collectionName] parameters:[resource serialize] handler:handler];
 }
 
-+ (id)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodPOST
                              path:path
                        parameters:parameters
@@ -87,14 +96,14 @@
                           }];
 }
 
-+ (id)updateResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)updateResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *path = [[resource collectionName] stringByAppendingPathComponent:[resource uniqueIdentifier]];
     NSMutableDictionary *serializedObject = [[resource serialize] mutableCopy];
     [serializedObject removeObjectForKey:[[resource class] uniqueIdentifierKey]];
     return [self update:path parameters:serializedObject handler:handler];
 }
 
-+ (id)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodPUT
                              path:path
                        parameters:parameters
@@ -103,12 +112,12 @@
                           }];
 }
 
-+ (id)destroyResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)destroyResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *path = [[resource collectionName] stringByAppendingPathComponent:[resource uniqueIdentifier]];
     return [self destroy:path parameters:nil handler:handler];
 }
 
-+ (id)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodDELETE
                              path:path
                        parameters:parameters
@@ -117,18 +126,18 @@
                           }];
 }
 
-+ (id)readResourceWithUniqueIdentifier:(id)uniqueIdentifier handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readResourceWithUniqueIdentifier:(id)uniqueIdentifier handler:(MLCServiceResourceCompletionHandler)handler {
     uniqueIdentifier = [MLCEntity stringFromValue:uniqueIdentifier];
     if (![uniqueIdentifier length]) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
-        NSError * error = [NSError errorWithDomain:@"com.moblico.service" code:1001 userInfo:@{NSLocalizedDescriptionKey: description}];
-        return [MLCInvalidService invalidServiceWithError:error handler:handler];
+        NSError * error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1001 userInfo:@{NSLocalizedDescriptionKey: description}];
+        return (MLCService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
     }
     NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
     return [self read:path parameters:nil handler:handler];
 }
 
-+ (id)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:parameters
@@ -137,42 +146,42 @@
                           }];
 }
 
-+ (id)listScopedResourcesForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listScopedResourcesForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self findScopedResourcesForResource:resource searchParameters:nil handler:handler];
 }
 
-+ (id)listResources:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listResources:(MLCServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:nil handler:handler];
 }
 
-+ (id)list:(NSString *)path handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)list:(NSString *)path handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self find:path searchParameters:nil handler:handler];
 }
 
 
 
-+ (id)findScopedResourcesForResource:(id<MLCEntityProtocol>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findScopedResourcesForResource:(id<MLCEntity>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     if ([self canScopeResource:resource] == NO) {
         NSString *failureReason = [NSString stringWithFormat:NSLocalizedString(@"%@ do not have %@", nil), [[self classForResource] collectionName], [resource collectionName]];
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
-        NSError * error = [NSError errorWithDomain:@"com.moblico.model" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: failureReason}];
-        return [MLCInvalidService invalidServiceWithError:error handler:handler];
+        NSError * error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: failureReason}];
+        return (MLCService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
     }
 
     NSString *path = [NSString pathWithComponents:@[[resource collectionName], [resource uniqueIdentifier], [[self classForResource] collectionName]]];
     return [self find:path searchParameters:searchParameters handler:handler];
 }
 
-+ (id)findResourcesWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findResourcesWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self find:[[self classForResource] collectionName] searchParameters:searchParameters handler:handler];
 }
 
-+ (id)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:searchParameters
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
-                              int httpStatus = [error.userInfo[@"status"] httpStatus];
+                              NSInteger httpStatus = [error.userInfo[@"status"] httpStatus];
                               if (httpStatus == 404) {
                                   handler(@[], nil, response);
                               } else {
@@ -182,8 +191,16 @@
 }
 
 
-+ (id)deserializeResource:(NSDictionary *)resource {
-    return [[self classForResource] deserialize:resource];
++ (id <MLCEntity>)deserializeResource:(NSDictionary *)resource {
+    if ([self classForResource]) {
+        return [[self classForResource] deserialize:resource];
+    }
+    
+    if (resource[@"status"]) {
+        return [MLCStatus deserialize:resource[@"status"]];
+    }
+    
+    return nil;
 }
 
 + (NSArray *)deserializeArray:(NSArray *)array {
@@ -203,7 +220,7 @@
     return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(nil, (__bridge CFStringRef)(string), NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"), kCFStringEncodingUTF8);
 }
 
-+ (id)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters {
++ (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters {
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 	
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -336,6 +353,9 @@
 }
 
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
+#if TARGET_OS_IPHONE
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+#endif
     if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection:didFailWithError:%@", error);
     NSMutableDictionary *logDictionary = [NSMutableDictionary dictionary];
     if (self.request.URL) logDictionary[@"url"] = self.request.URL;
@@ -352,10 +372,14 @@
 }
 
 - (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
+#if TARGET_OS_IPHONE
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+#endif
+
     NSError *error;
     id jsonObject = nil;
     if ([self.receivedData length]) {
-        NSLog(@"receivedData length: %d", [self.receivedData length]);
+//        NSLog(@"receivedData length: %d", [self.receivedData length]);
         jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:0 error:&error];
     }
 
@@ -379,7 +403,7 @@
     if ([jsonObject isKindOfClass:[NSDictionary class]] && jsonObject[@"status"]) {
         NSDictionary * statusDictionary = jsonObject[@"status"];
         MLCStatus * status = [MLCStatus deserialize:statusDictionary];
-        NSError * statusError = [NSError errorWithDomain:@"com.moblico.service.error" code:status.statusType userInfo:@{NSLocalizedDescriptionKey: status.message, @"status": status}];
+        NSError * statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: status.message, @"status": status}];
         self.jsonCompletionhandler(nil, statusError, self.httpResponse);
     }
     else {
