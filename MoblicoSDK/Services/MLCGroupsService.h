@@ -22,6 +22,9 @@
 + (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
 + (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
 
++ (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
+
 @end
 
 @interface MLCGroupsService (Unavailable)

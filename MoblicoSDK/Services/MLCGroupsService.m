@@ -54,4 +54,14 @@
     return [self addUser:user toGroupNamed:groupName handler:handler];
 }
 
++ (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler {
+    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], [MLCGroup collectionName]]];
+    return [self destroy:path parameters:@{@"name": groupName} handler:handler];
+}
+
++ (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler {
+    MLCUser *user = [MLCServiceManager sharedServiceManager].currentUser;
+    return [self removeUser:user fromGroupNamed:groupName handler:handler];
+}
+
 @end
