@@ -14,9 +14,8 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
-#import "MLCMetric.h"
-@class MLCLocation;
+#import <MoblicoSDK/MLCService.h>
+#import <MoblicoSDK/MLCMetric.h>
 
 /**
  Moblico metrics provide a means for mobile applications to track and report
@@ -45,6 +44,43 @@
  metric to Moblico.
 
  @param type The type of metric which is created.
+ */
++ (void)sendMetricWithType:(MLCMetricType)type;
+
+/**
+ Creates an automatically running service that sends an automatically created
+ metric to Moblico.
+
+ @param type The type of metric which is created.
+ @param text Additional data include with the metric.
+ */
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text;
+
+/**
+ Creates an automatically running service that sends an automatically created
+ metric to Moblico.
+
+ @param type The type of metric which is created.
+ @param text Additional data include with the metric.
+ @param location The location include with the metric.
+ */
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location;
+
+/**
+ Creates an automatically running service that sends an automatically created
+ metric to Moblico.
+
+ @param type The type of metric which is created.
+ @param text Additional data include with the metric.
+ @param username The username include with the metric.
+ */
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username;
+
+/**
+ Creates an automatically running service that sends an automatically created
+ metric to Moblico.
+
+ @param type The type of metric which is created.
  @param text Additional data include with the metric.
  @param location The location include with the metric.
  @param username The username include with the metric.
@@ -54,16 +90,6 @@
 @end
 
 @interface MLCMetricsService (Deprecated)
-
-/**
- This method is no longer used,
- and will be removed in the next major release.
-
- @deprecated Use 'sendMetricWithType:text:location:username:' instead.
-
- @see +sendMetricWithType:text:location:username:
- */
-+ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username __attribute__((deprecated ("Use 'sendMetricWithType:text:location:username:' instead.")));
 
 /**
  This method is no longer used,

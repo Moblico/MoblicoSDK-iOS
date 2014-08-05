@@ -57,9 +57,8 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
 + (instancetype)verifyExistingUserWithValue:(NSString *)value forKey:(NSString *)key handler:(MLCServiceResourceCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[[MLCUser collectionName], @"exists"]];
-    NSDictionary * parameters;
-    if (value.length) parameters = @{key: value};
-    return [self read:path parameters:parameters handler:handler];
+
+    return [self read:path parameters:value.length ? @{key: value} : nil handler:handler];
 }
 
 + (instancetype)createUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
@@ -71,37 +70,33 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 }
 
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler {
-    if (username == nil) {
-        username = @"";
-//        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
-//        NSError * error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1001 userInfo:@{NSLocalizedDescriptionKey: description}];
-//        NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:nil statusCode:401 HTTPVersion:nil headerFields:nil];
-//        return (MLCUsersService *)[MLCInvalidService invalidServiceWithError:error response:response handler:handler];
-    }
-    return [self readResourceWithUniqueIdentifier:username handler:handler];
+    return [self readResourceWithUniqueIdentifier:username ? username : @"" handler:handler];
 }
 
 + (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
     return [self updateResource:user handler:handler];
 }
 
-+ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)destroyUser:(__unused MLCUser *)user handler:(__unused MLCServiceStatusCompletionHandler)handler {
     [self doesNotRecognizeSelector:_cmd];
+
     return nil;
-    return [self destroyResource:user handler:handler];
 }
 
 + (instancetype)createAnonymousDeviceWithDeviceToken:(NSData *)deviceToken handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *device = MLCDeviceIdFromDeviceToken(deviceToken);
     NSString *username = nil;
     Class Device = NSClassFromString(@"UIDevice");
+
     if (Device) {
         SEL selector = NSSelectorFromString(@"currentDevice");
+
         if ([Device respondsToSelector:selector]) {
             id currentDevice = [Device valueForKey:NSStringFromSelector(selector)];
             selector = NSSelectorFromString(@"identifierForVendor");
+
             if ([currentDevice respondsToSelector:selector]) {
-                NSUUID * identifierForVendor = [currentDevice valueForKey:NSStringFromSelector(selector)];
+                NSUUID *identifierForVendor = [currentDevice valueForKey:NSStringFromSelector(selector)];
                 username = [identifierForVendor UUIDString];
             }
 
@@ -114,6 +109,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     }
     NSDictionary *parameters = parameters = @{@"username": username};
     NSString *path = [@"device" stringByAppendingPathComponent:device];
+
     return [self create:path parameters:parameters handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
         if (!error && status.type == MLCStatusTypeSuccess) {
             MLCUser *user = [MLCUser userWithUsername:username];
@@ -121,52 +117,6 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
         }
         handler(status, error, response);
     }];
-/*
- NSString *username = MLCDeviceIdFromDeviceToken(deviceToken);
-    MLCUser * user = [MLCUser userWithUsername:username];
-
-    MLCUsersService *updateDeviceService = [MLCUsersService updateDeviceWithDeviceToken:deviceToken forUser:user handler:handler];
-
-	// This block of code will create a user, it will not execute until you call [createUserService start]
-	MLCUsersService *createUserService = [MLCUsersService createUser:user handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
-		if (response.statusCode == 200) {
-			// User was succesfully created
-//			NSLog(@"Created User: %@", user);
-            [[MLCServiceManager sharedServiceManager] setUsername:user.username password:nil remember:NO];
-            [updateDeviceService start];
-		}
-		else {
-			// User was not created
-//			NSLog(@"Unable to create user.\nstatus: %@ error: %@ response: %@", status, error, response);
-            handler(status, error, response);
-		}
-	}];
-    
-	// This block of code determines if the user already exists, it will not execute until you call [verifyUserService start]
-	MLCUsersService *verifyUserService = [MLCUsersService verifyExistingUserWithUsername:user.username handler:^(id<MLCEntity> resource, NSError *error, NSHTTPURLResponse *response) {
-		if (response.statusCode == 200) {
-//			NSLog(@"User exists, registering device.");
-            [[MLCServiceManager sharedServiceManager] setUsername:user.username password:nil remember:NO];
-            [updateDeviceService start];
-		}
-		
-		else if (response.statusCode == 404) {
-//			NSLog(@"User not found. Creating User");
-			[createUserService start];
-		}
-		else {
-            MLCStatus *status = nil;
-            if ([resource isKindOfClass:[MLCStatus class]]) {
-                status = (MLCStatus *)resource;
-            }
-            handler(status, error, response);
-//			NSLog(@"Unable to verify user.\nresource: %@ error: %@ response: %@", resource, error, response);
-		}
-	}];
-	
-	// Execute
-	return verifyUserService;
- */
 }
 
 + (instancetype)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
@@ -189,7 +139,16 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"MLCDeviceId"];
+
+    if (![deviceId length]) {
+        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing device for user: %@", nil), user];
+        NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1002 userInfo:@{NSLocalizedDescriptionKey: description}];
+
+        return (MLCUsersService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
+    }
+
     NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"device"]];
+
     return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
         if ([status httpStatus] == 200) {
             [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"MLCDeviceId"];
@@ -200,10 +159,26 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
 + (instancetype)destroyDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"device"]];
+
     return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
         handler(status, error, response);
     }];
 }
 
++ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
+    NSString *uniqueIdentifier = [user uniqueIdentifier];
+
+    if (![uniqueIdentifier length]) {
+        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
+        NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1001 userInfo:@{NSLocalizedDescriptionKey: description}];
+
+        return (MLCUsersService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
+    }
+
+    NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
+    path = [path stringByAppendingPathComponent:@"resetPassword"];
+
+    return [self create:path parameters:nil handler:handler];
+}
 
 @end

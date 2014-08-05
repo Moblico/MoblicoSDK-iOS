@@ -16,6 +16,7 @@
 
 #import "MLCBasicService.h"
 #import "MLCService_Private.h"
+
 @implementation MLCBasicService
 
 + (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
@@ -41,6 +42,5 @@
 + (Class<MLCEntity>)classForResource {
     return [super classForResource];
 }
-
 
 @end

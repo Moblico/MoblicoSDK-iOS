@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 
 /**
  Moblico affinity facilitates a points plus rewards system.
@@ -37,4 +37,5 @@
  @return A MLCAffinitiesService instance which conforms to the MLCServiceProtocol.
  */
 + (instancetype)listAffinities:(MLCServiceCollectionCompletionHandler)handler;
+
 @end

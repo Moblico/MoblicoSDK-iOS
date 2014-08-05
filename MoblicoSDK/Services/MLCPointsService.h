@@ -14,17 +14,18 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 @class MLCUser;
 
 typedef NS_OPTIONS(NSUInteger, MLCPointsTotalType) {
     MLCPointsTotalTypePoints = (1 << 0),
     MLCPointsTotalTypeAccumulated = (1 << 1),
-    MLCPointsTotalTypeBoth = (MLCPointsTotalTypePoints |
-                              MLCPointsTotalTypeAccumulated)
+    MLCPointsTotalTypeBoth = (MLCPointsTotalTypePoints | MLCPointsTotalTypeAccumulated)
 };
 
 @interface MLCPointsService : MLCService
+
 + (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
+
 @end

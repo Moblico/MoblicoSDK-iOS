@@ -23,10 +23,11 @@
 }
 
 + (instancetype)invalidServiceWithError:(NSError *)error response:(NSHTTPURLResponse *)response handler:(MLCInvalidServiceCompletionHandler)handler {
-    MLCInvalidService * service = [[self alloc] init];
+    MLCInvalidService *service = [[self alloc] init];
     service.error = error;
     service.handler = handler;
     service.response = response;
+    
     return service;
 }
 

@@ -14,12 +14,13 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 @class MLCLocation;
 @class MLCMedia;
 @class MLCEvent;
 
 @interface MLCEventsService : MLCService
+
 + (instancetype)readEventWithEventId:(NSUInteger)eventId handler:(MLCServiceResourceCompletionHandler)handler;
 
 + (instancetype)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler;
@@ -29,4 +30,5 @@
 + (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listEventsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
+
 @end

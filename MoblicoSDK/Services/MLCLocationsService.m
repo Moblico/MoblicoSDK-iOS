@@ -38,9 +38,9 @@
 }
 
 + (instancetype)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSMutableDictionary * searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
+    NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
     if (typeName.length) searchParameters[@"locationTypeName"] = typeName;
-    if (postalCode.length) searchParameters[@"postalCode"] = postalCode;
+    if (postalCode.length) searchParameters[@"zipcode"] = postalCode;
     if (latitude) searchParameters[@"latitude"] = @(latitude);
     if (longitude) searchParameters[@"longitude"] = @(longitude);
     if (radius) searchParameters[@"radius"] = @(radius);
@@ -63,4 +63,5 @@
 + (instancetype)listLocationsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
+
 @end

@@ -24,7 +24,20 @@
 }
 
 + (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler {
-    return [self serviceForMethod:MLCServiceRequestMethodGET path:@"settings" parameters:nil handler:handler];
+    return [self serviceForMethod:MLCServiceRequestMethodGET
+                             path:@"settings"
+                       parameters:nil
+                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                              if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
+                                  [[NSUserDefaults standardUserDefaults] setObject:jsonObject forKey:@"MLCSettings"];
+                                  [[NSUserDefaults standardUserDefaults] synchronize];
+                              }
+                              handler(jsonObject, error, response);
+                          }];
+}
+
++ (NSDictionary *)settings {
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettings"];
 }
 
 @end

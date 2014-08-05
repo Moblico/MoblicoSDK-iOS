@@ -14,8 +14,7 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
-
+#import <MoblicoSDK/MLCService.h>
 @class MLCUser;
 
 @interface MLCUsersService : MLCService
@@ -38,6 +37,12 @@
  @since Available in MoblicoSDK 1.2 and later.
  */
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
+
+/**
+ @since Available in MoblicoSDK 1.6 and later.
+ */
++ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
+
 @end
 
 @interface MLCUsersService (Deprecated)

@@ -14,14 +14,16 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 
 typedef void(^MLCInvalidServiceCompletionHandler)(id jsonObject, NSError *error, NSHTTPURLResponse *response);
 
 @interface MLCInvalidService : NSObject <MLCService>
+
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, strong) NSHTTPURLResponse *response;
 @property (nonatomic, strong) MLCInvalidServiceCompletionHandler handler;
 + (instancetype)invalidServiceWithError:(NSError *)error response:(NSHTTPURLResponse *)response handler:(MLCInvalidServiceCompletionHandler)handler;
 + (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCInvalidServiceCompletionHandler)handler;
+
 @end

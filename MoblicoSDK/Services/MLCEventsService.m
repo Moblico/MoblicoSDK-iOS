@@ -41,6 +41,7 @@
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:2];
     if (typeName.length) searchParameters[@"eventTypeName"] = typeName;
     searchParameters[@"liveOnly"] = liveOnly ? @"true" : @"false" ;
+
     return [self findEventsWithSearchParameters:searchParameters handler:handler];
 }
 
@@ -59,4 +60,5 @@
 + (instancetype)listEventsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
+
 @end

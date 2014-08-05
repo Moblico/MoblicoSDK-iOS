@@ -46,6 +46,7 @@
 
 + (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *resource = [NSString pathWithComponents:@[[deal collectionName], [deal uniqueIdentifier], @"redeem"]];
+
     return [self update:resource parameters:@{@"offerCode": offerCode} handler:handler];
 }
 

@@ -9,19 +9,25 @@
 #import "MLCCheckInService.h"
 #import "MLCService_Private.h"
 #import "MLCEntity_Private.h"
+#import "MLCLocation.h"
+#import "MLCEvent.h"
 
 @interface MLCCheckIn : MLCEntity
+
 @property (nonatomic) NSUInteger locationId;
 @property (nonatomic) NSUInteger eventId;
+
 @end
 
 @implementation MLCCheckInService
 
-+ (instancetype)checkInWithLocation:(MLCLocation *)location handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)checkInWithLocation:(MLCLocation *)location
+                            handler:(MLCServiceStatusCompletionHandler)handler {
     return [self checkInWithLocation:location event:nil handler:handler];
 }
 
-+ (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event
+                            handler:(MLCServiceStatusCompletionHandler)handler {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
     if (location) parameters[@"locationId"] = @(location.locationId);
     if (event) parameters[@"eventId"] = @(event.eventId);
@@ -32,7 +38,6 @@
 }
 
 @end
-
 
 @implementation MLCCheckIn
 

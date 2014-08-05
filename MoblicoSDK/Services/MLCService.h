@@ -14,16 +14,18 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 @protocol MLCEntity;
 
 /**
  All MLCService objects conform to the MLCService protocol.
  */
 @protocol MLCService <NSObject>
+
 @required
 - (void)start;
 - (void)cancel;
+
 @end
 
 
@@ -100,4 +102,5 @@ typedef void(^MLCServiceStatusCompletionHandler)(MLCStatus *status, NSError *err
  Base class for all Moblico service objects.
  */
 @interface MLCService : NSObject <MLCService>
+
 @end

@@ -20,11 +20,13 @@
 #import "MLCUser.h"
 
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
+@import UIKit;
 #endif
 
 @interface MLCAuthenticationService ()
+
 + (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken handler:(MLCServiceResourceCompletionHandler)handler;
+
 @end
 
 @implementation MLCAuthenticationService
@@ -35,6 +37,7 @@
 
 + (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password handler:(MLCServiceResourceCompletionHandler)handler {
     MLCUser *user = [MLCUser userWithUsername:username password:password];
+
     return [self authenticateWithAPIKey:apiKey user:user handler:handler];
 }
 
@@ -42,8 +45,10 @@
     if (user.socialType != MLCUserSocialTypeNone) {
         NSArray *components = [user.username componentsSeparatedByString:@"."];
         NSString *social = [[components firstObject] uppercaseString];
+
         return [self authenticateWithAPIKey:apiKey username:user.username password:nil social:social socialToken:user.password handler:handler];
     }
+
     return [self authenticateWithAPIKey:apiKey username:user.username password:user.password social:nil socialToken:nil handler:handler];
 }
 

@@ -14,8 +14,11 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 
 @interface MLCSettingsService : MLCService
+
 + (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler;
++ (NSDictionary *)settings;
+
 @end

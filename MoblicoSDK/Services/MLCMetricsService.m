@@ -24,11 +24,20 @@
 }
 
 + (void)sendMetric:(MLCMetric *)metric {
-    [[self createResource:metric handler:nil] start];
+    MLCMetricsService *service = [self createResource:metric handler:nil];
+    [service start];
 }
 
-+ (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload {
-    [self sendMetricWithType:type text:payload location:nil username:nil];
++ (void)sendMetricWithType:(MLCMetricType)type {
+    [self sendMetricWithType:type text:nil location:nil username:nil];
+}
+
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text {
+    [self sendMetricWithType:type text:text location:nil username:nil];
+}
+
++ (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location {
+    [self sendMetricWithType:type text:text location:location username:nil];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
@@ -37,7 +46,13 @@
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
     MLCMetric *metric = [MLCMetric metricWithType:type text:text location:location username:username];
+
     [self sendMetric:metric];
+}
+
+
++ (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload {
+    [self sendMetricWithType:type text:payload location:nil username:nil];
 }
 
 @end

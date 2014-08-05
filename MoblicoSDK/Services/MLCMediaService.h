@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 @class MLCLocation;
 @class MLCEvent;
 

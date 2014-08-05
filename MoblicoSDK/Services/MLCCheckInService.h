@@ -6,8 +6,7 @@
 //  Copyright (c) 2013 Moblico Solutions LLC. All rights reserved.
 //
 
-#import <MoblicoSDK/MoblicoSDK.h>
-
+#import <MoblicoSDK/MLCService.h>
 @class MLCLocation;
 @class MLCEvent;
 

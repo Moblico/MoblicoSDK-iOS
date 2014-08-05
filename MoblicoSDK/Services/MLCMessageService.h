@@ -6,9 +6,14 @@
 //  Copyright (c) 2013 Moblico Solutions LLC. All rights reserved.
 //
 
-#import <MoblicoSDK/MoblicoSDK.h>
-
+#import <MoblicoSDK/MLCService.h>
 @class MLCMessage;
+@class MLCDeal;
+@class MLCReward;
+
+typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
+    MLCMessageServiceTypeShare
+};
 
 /**
  Messages can be sent from mobile applications to multiple devices, using the
@@ -48,5 +53,11 @@
  @since Available in MoblicoSDK 1.4 and later.
  */
 + (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceStatusCompletionHandler)handler;
+
+
++ (instancetype)readMessageForDeal:(MLCDeal *)deal type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readMessageForReward:(MLCReward *)reward type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readMessageForResource:(id <MLCEntity>)resource type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
+
 
 @end

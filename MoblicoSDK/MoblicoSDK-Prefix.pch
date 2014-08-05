@@ -18,9 +18,11 @@
 // Prefix header for all source files of the 'SDK' target in the 'SDK' project
 //
 
-#ifdef __OBJC__
-	#import <Foundation/Foundation.h>
-    #import <Security/Security.h>
-#endif
-
+//#ifdef __OBJC__
+//	#import <Foundation/Foundation.h>
+//    #import <Security/Security.h>
+//#import "MLCEntity.h"
 //#import "MLCService.h"
+//#import "MLCUser.h"
+
+//#endif

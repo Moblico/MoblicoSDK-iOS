@@ -29,5 +29,4 @@
     return [self listResources:handler];
 }
 
-
 @end

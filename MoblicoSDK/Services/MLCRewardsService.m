@@ -54,11 +54,13 @@
 
 + (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *resource = [NSString pathWithComponents:@[[reward collectionName], [reward uniqueIdentifier], @"redeem"]];
+
     return [self update:resource parameters:@{@"offerCode": offerCode} handler:handler];
 }
 
 + (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler {
     NSString *resource = [NSString pathWithComponents:@[[reward collectionName], [reward uniqueIdentifier], @"purchase"]];
+
     return [self update:resource parameters:nil handler:handler];
 }
 

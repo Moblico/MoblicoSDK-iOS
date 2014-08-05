@@ -28,6 +28,8 @@ typedef NS_ENUM(NSUInteger, MLCLeaderboardType) {
  MLCLeaderboardService used to retrieve leaders
  */
 @interface MLCLeaderboardService : MLCService
+
 + (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
+
 @end

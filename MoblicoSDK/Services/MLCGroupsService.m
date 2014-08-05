@@ -8,6 +8,9 @@
 
 #import "MLCService_Private.h"
 #import "MLCGroupsService.h"
+#import "MLCGroup.h"
+#import "MLCUser.h"
+#import "MLCServiceManager.h"
 
 @implementation MLCGroupsService
 
@@ -17,10 +20,6 @@
 
 + (Class<MLCEntity>)classForResource {
     return [MLCGroup class];
-}
-
-+ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self readResourceWithUniqueIdentifier:@(groupId) handler:handler];
 }
 
 + (instancetype)listGroups:(MLCServiceCollectionCompletionHandler)handler {
@@ -36,9 +35,23 @@
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceStatusCompletionHandler)handler {
-    
     NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], [group collectionName], [group uniqueIdentifier]]];
-
     return [self update:path parameters:nil handler:handler];
 }
+
++ (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceStatusCompletionHandler)handler {
+    MLCUser *user = [MLCServiceManager sharedServiceManager].currentUser;
+    return [self addUser:user toGroup:group handler:handler];
+}
+
++ (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler {
+    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], [MLCGroup collectionName]]];
+    return [self update:path parameters:@{@"name": groupName} handler:handler];
+}
+
++ (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler {
+    MLCUser *user = [MLCServiceManager sharedServiceManager].currentUser;
+    return [self addUser:user toGroupNamed:groupName handler:handler];
+}
+
 @end

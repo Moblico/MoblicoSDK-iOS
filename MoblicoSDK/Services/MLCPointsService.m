@@ -21,8 +21,13 @@
 #import "MLCPoints.h"
 #import "MLCUser.h"
 
+static NSString *const MLCPointsTotalTypeAccumulatedString = @"ACCUM";
+static NSString *const MLCPointsTotalTypePointsString = @"POINTS";
+
 @interface MLCPointsService ()
+
 + (NSString *)stringForPointsTotalType:(MLCPointsTotalType)type;
+
 @end
 
 @implementation MLCPointsService
@@ -36,30 +41,26 @@
 }
 
 + (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSDictionary * searchParameters = @{@"pointTypeName": @"Interactive"};
+    NSDictionary *searchParameters = @{@"pointTypeName": @"Interactive"};
+
     return [self findScopedResourcesForResource:(id<MLCEntity>)user searchParameters:searchParameters handler:handler];
 }
 
 + (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
-    NSMutableDictionary * parameters = [@{@"pointTypeName": @"Interactive"} mutableCopy];
+    NSMutableDictionary *parameters = [@{@"pointTypeName": @"Interactive"} mutableCopy];
     parameters[@"points"] = @(points);
-    NSString * totalTypeName = [self stringForPointsTotalType:totalType];
+    NSString *totalTypeName = [self stringForPointsTotalType:totalType];
     if (totalTypeName.length) parameters[@"totalTypeName"] = totalTypeName;
-    NSString * path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"points"]];
+    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"points"]];
+    
     return [self update:path parameters:parameters handler:handler];
 }
 
 + (NSString *)stringForPointsTotalType:(MLCPointsTotalType)type {
-    switch (type) {
-        case MLCPointsTotalTypeAccumulated:
-            return @"ACCUM";
-            break;
-        case MLCPointsTotalTypePoints:
-            return @"POINTS";
-            break;
-        case MLCPointsTotalTypeBoth:
-            return nil;
-    }
+    if (type == MLCPointsTotalTypeBoth) return nil;
+    if (type == MLCPointsTotalTypeAccumulated) return MLCPointsTotalTypeAccumulatedString;
+    if (type == MLCPointsTotalTypePoints) return MLCPointsTotalTypePointsString;
+
     return nil;
 }
 

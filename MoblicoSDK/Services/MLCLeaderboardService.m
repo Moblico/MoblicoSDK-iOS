@@ -19,8 +19,12 @@
 #import "MLCLeaderboardService.h"
 #import "MLCLeader.h"
 
+static NSString *const MLCLeaderboardTypeOverallPointsString = @"overallPoints";
+
 @interface MLCLeaderboardService ()
+
 + (NSString *)stringFromMLCLeaderboardType:(MLCLeaderboardType)type;
+
 @end
 
 @implementation MLCLeaderboardService
@@ -34,16 +38,15 @@
 }
 
 + (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSMutableDictionary * searchParameters = [@{@"type": [self stringFromMLCLeaderboardType:type]} mutableCopy];
+    NSMutableDictionary *searchParameters = [@{@"type": [self stringFromMLCLeaderboardType:type]} mutableCopy];
     if (limit) searchParameters[@"leaderboardLimit"] = @(limit);
+    
     return [self findLeaderboardWithSearchParameters:searchParameters handler:handler];
 }
 
 + (NSString *)stringFromMLCLeaderboardType:(MLCLeaderboardType)type {
-    switch (type) {
-        case MLCLeaderboardTypeOverallPoints:
-            return @"overallPoints";
-    }
+    if (type == MLCLeaderboardTypeOverallPoints) return MLCLeaderboardTypeOverallPointsString;
+
     return nil;
 }
 

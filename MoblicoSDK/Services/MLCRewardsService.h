@@ -14,12 +14,13 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 @class MLCReward;
 @class MLCUser;
 @class MLCLocation;
 
 @interface MLCRewardsService : MLCService
+
 + (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)listRewards:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
@@ -28,4 +29,5 @@
 + (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
 + (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler;
 + (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
+
 @end

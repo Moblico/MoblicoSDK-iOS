@@ -14,9 +14,8 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 @class MLCUser;
-
 /**
  The callback handler for `authenticateRequest:handler:`
 
@@ -27,15 +26,12 @@
 
  @discussion Discussion that applies to the entire callback.
  */
-typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *authenticatedRequest,
-                                                                NSError *error,
-                                                                NSHTTPURLResponse *response);
+typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response);
 
 /**
  MLCInvalidAPIKeyException
  */
-extern NSString *const MLCInvalidAPIKeyException;
-
+FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 
 /**
  `MLCServiceManager` keeps track of your Moblico API Key, and authenticates
@@ -89,6 +85,20 @@ extern NSString *const MLCInvalidAPIKeyException;
 + (void)setAPIKey:(NSString *)apiKey;
 
 /**
+ Set the API Key used for all service calls.
+
+ @param testingAPIKey The testing API Key provided by Moblico.
+
+ @warning The testing API Key should only be set once.
+ Calling -setTestingAPIKey: more than once will raise an exception.
+
+ @exception MLCInvalidAPIKeyException You can only set the testing API Key once.
+
+ @see apiKey
+ */
++ (void)setTestingAPIKey:(NSString *)testingAPIKey;
+
+/**
  Get the current API Key.
 
  @return The API Key will be nil until setAPIKey is called.
@@ -107,10 +117,9 @@ extern NSString *const MLCInvalidAPIKeyException;
 
  @see setCurrentUser:remember:
  */
-@property (readonly, strong) MLCUser *currentUser;
+@property (readonly) MLCUser *currentUser;
 
-- (void)setCurrentUser:(MLCUser *)user
-       remember:(BOOL)rememberCredentials;
+- (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials;
 
 /**
  Create an authenticated request.
@@ -118,8 +127,7 @@ extern NSString *const MLCInvalidAPIKeyException;
  @param request The unauthenticated request which needs to be authenticated.
  @param handler Completion handler with the authenticated request.
  */
-- (void)authenticateRequest:(NSURLRequest *)request
-                    handler:(MLCServiceManagerAuthenticationCompletionHandler)handler;
+- (void)authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler;
 
 #pragma mark Configuration
 ///--------------------
@@ -218,5 +226,6 @@ extern NSString *const MLCInvalidAPIKeyException;
 @property (readonly) NSString *username __attribute__((deprecated ("Use 'currentUser' instead.")));
 @property (readonly) NSString *password __attribute__((deprecated ("Use 'currentUser' instead.")));
 - (void)setUsername:(NSString *)username password:(NSString *)password remember:(BOOL)rememberCredentials __attribute__((deprecated ("Use 'setCurrentUser:remember:' instead.")));
++ (void)setLoggineEnabled:(BOOL)logging __attribute__((deprecated("Use 'setLoggingEnabled:' instead.")));
 
 @end
