@@ -18,9 +18,7 @@
  Leaderboard types
  */
 typedef NS_ENUM(NSUInteger, MLCLeaderboardType) {
-    /**
-     Overall Points
-     */
+    /// Overall Points
     MLCLeaderboardTypeOverallPoints
 };
 

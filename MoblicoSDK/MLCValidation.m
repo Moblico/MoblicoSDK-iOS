@@ -40,11 +40,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 }
 
 - (NSError *)firstError {
-    if (![self isValid]) {
-        return self.errors[0];
-    }
-
-    return nil;
+    return [self.errors firstObject];
 }
 
 - (NSError *)multipleErrorsError {

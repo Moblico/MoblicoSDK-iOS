@@ -67,9 +67,9 @@
     if (_path) return _path;
 
 
-    NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    if ([searchPaths count] == 0) return nil;
-    NSString *docDir = [searchPaths[0] stringByAppendingPathComponent:@"CachedImages"];
+    NSString *searchPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    if (!searchPath) return nil;
+    NSString *docDir = [searchPath stringByAppendingPathComponent:@"CachedImages"];
 
     if (![[NSFileManager defaultManager] createDirectoryAtPath:docDir withIntermediateDirectories:YES attributes:nil error:nil]) {
         return nil;

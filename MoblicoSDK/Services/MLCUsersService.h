@@ -14,13 +14,15 @@
  limitations under the License.
  */
 
+typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSError *error, NSHTTPURLResponse *response);
+
 #import <MoblicoSDK/MLCService.h>
 @class MLCUser;
 
 @interface MLCUsersService : MLCService
-+ (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
++ (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
++ (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
 + (instancetype)createUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
 + (instancetype)readUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler;

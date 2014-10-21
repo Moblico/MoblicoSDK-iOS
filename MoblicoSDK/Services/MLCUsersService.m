@@ -43,22 +43,31 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     return [MLCUser class];
 }
 
-+ (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler {
     return [self verifyExistingUserWithValue:username forKey:@"username" handler:handler];
 }
 
-+ (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler {
     return [self verifyExistingUserWithValue:phone forKey:@"phone" handler:handler];
 }
 
-+ (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler {
     return [self verifyExistingUserWithValue:email forKey:@"email" handler:handler];
 }
 
-+ (instancetype)verifyExistingUserWithValue:(NSString *)value forKey:(NSString *)key handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)verifyExistingUserWithValue:(NSString *)value forKey:(NSString *)key handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[[MLCUser collectionName], @"exists"]];
 
-    return [self read:path parameters:value.length ? @{key: value} : nil handler:handler];
+    return [self read:path parameters:value.length ? @{key: value} : nil handler:^(__unused id<MLCEntity> resource, NSError *error, NSHTTPURLResponse *response) {
+        if (handler) {
+            if (response.statusCode == 200) {
+                handler(YES, error, response);
+            }
+            else {
+                handler(NO, error, response);
+            }
+        }
+    }];
 }
 
 + (instancetype)createUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {

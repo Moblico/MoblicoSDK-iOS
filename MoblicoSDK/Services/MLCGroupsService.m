@@ -11,6 +11,7 @@
 #import "MLCGroup.h"
 #import "MLCUser.h"
 #import "MLCServiceManager.h"
+#import "MLCInvalidService.h"
 
 @implementation MLCGroupsService
 
@@ -45,6 +46,20 @@
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler {
+    if (!user || groupName.length == 0) {
+        NSMutableArray *failureReasons = [NSMutableArray arrayWithCapacity:2];
+        if (!user) {
+            [failureReasons addObject:@"User is nil."];
+        }
+        if (groupName.length == 0) {
+            [failureReasons addObject:@"Invalid group name."];
+        }
+
+        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid parameter.", nil), [[self classForResource] collectionName]];
+        NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: [failureReasons componentsJoinedByString:@"\n"]}];
+        return (MLCGroupsService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
+    }
+
     NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], [MLCGroup collectionName]]];
     return [self update:path parameters:@{@"name": groupName} handler:handler];
 }

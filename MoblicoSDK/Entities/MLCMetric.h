@@ -21,94 +21,58 @@
  Indicates the type of metric.
  */
 typedef NS_ENUM(NSUInteger, MLCMetricType) {
-    /**
-     Specifies that the application started.
-     */
+    /// Specifies that the application started.
     MLCMetricTypeApplicationStart,
 
-    /**
-     Specifies that the application has exited.
-     */
+    /// Specifies that the application has exited.
     MLCMetricTypeApplicationStop,
 
-    /**
-     Specifies that the application has been sent to the background.
-     */
+    /// Specifies that the application has been sent to the background.
     MLCMetricTypeInBackground,
 
-    /**
-     Specifies that the application has resumed from the background.
-     */
+    /// Specifies that the application has resumed from the background.
     MLCMetricTypeOutBackground,
 
-    /**
-     Specifies that the application has presented a view.
-     */
+    /// Specifies that the application has presented a view.
     MLCMetricTypeEnterPage,
 
-    /**
-     Specifies that the application has dismissed a view.
-     */
+    /// Specifies that the application has dismissed a view.
     MLCMetricTypeExitPage,
 
-    /**
-     Specifies that the user has interacted an ad.
-     */
+    /// Specifies that the user has interacted an ad.
     MLCMetricTypeAdClick,
 
-    /**
-     Specifies a generic tracking metric.
-     */
+    /// Specifies a generic tracking metric.
     MLCMetricTypeTracking,
 
-    /**
-     Specifies a metric which generates affinity.
-     */
-    MLCMetricTypeAffinity,
+    /// Specifies a custom metric used for triggers.
+    MLCMetricTypeCustom,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has interacted with a deal.
     MLCMetricTypeViewDeal,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has interacted with a reward.
     MLCMetricTypeViewReward,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has interacted with a location.
     MLCMetricTypeViewLocation,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has interacted with an event.
     MLCMetricTypeViewEvent,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has interacted with a media.
     MLCMetricTypeViewMedia,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has shared the app.
     MLCMetricTypeShareApp,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has shared a deal.
     MLCMetricTypeShareDeal,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has shared a reward.
     MLCMetricTypeShareReward,
 
-	/**
-     Specifies that the user has interacted with a deal.
-     */
+	/// Specifies that the user has shared a location.
     MLCMetricTypeShareLocation,
 };
 

@@ -20,25 +20,16 @@
  The prefered method of contact for the user.
  */
 typedef NS_OPTIONS(NSUInteger, MLCUserContactPreferenceType) {
-    /**
-     Specifies that the user does not wish to be contacted.
-     */
+    /// Specifies that the user does not wish to be contacted.
     MLCUserContactPreferenceTypeNone = 0,
 
-    /**
-     Specifies that the user wishes to be contacted by SMS (phone text message)
-     only.
-     */
+    /// Specifies that the user wishes to be contacted by SMS (phone text message) only.
     MLCUserContactPreferenceTypeSMS = (1 << 0),
 
-    /**
-     Specifies that the user wishes to be contacted by email only.
-     */
+    /// Specifies that the user wishes to be contacted by email only.
     MLCUserContactPreferenceTypeEmail = (1 << 1),
     
-    /**
-     Specifies that the user wishes to be contacted by either SMS or email.
-     */
+    /// Specifies that the user wishes to be contacted by either SMS or email.
     MLCUserContactPreferenceTypeBoth = (MLCUserContactPreferenceTypeSMS |
                                         MLCUserContactPreferenceTypeEmail)
 };
@@ -47,19 +38,13 @@ typedef NS_OPTIONS(NSUInteger, MLCUserContactPreferenceType) {
  The gender for the user.
  */
 typedef NS_ENUM(NSUInteger, MLCUserGenderType) {
-    /**
-     Specifies that the user does not provide gender information.
-     */
+    /// Specifies that the user does not provide gender information.
     MLCUserGenderTypeUndeclared,
 
-    /**
-     Specifies that the user is male.
-     */
+    /// Specifies that the user is male.
     MLCUserGenderTypeMale,
     
-    /**
-     Specifies that the user is female.
-     */
+    /// Specifies that the user is female.
     MLCUserGenderTypeFemale
 };
 
@@ -67,13 +52,10 @@ typedef NS_ENUM(NSUInteger, MLCUserGenderType) {
  The social media provider for the user.
  */
 typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
-    /**
-     No social media provider.
-     */
+    /// No social media provider.
     MLCUserSocialTypeNone,
-    /**
-     Facebook.
-     */
+    
+    /// Facebook.
     MLCUserSocialTypeFacebook
 };
 

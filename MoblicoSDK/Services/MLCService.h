@@ -35,22 +35,16 @@
  Indicates the method used in the request
  */
 typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
-    /**
-     Requests a representation of the specified resource.
-     */
+    /// Requests a representation of the specified resource.
 	MLCServiceRequestMethodGET,
     
-    /**
-     Creates a resource.
-     */
+    /// Creates a resource.
 	MLCServiceRequestMethodPOST,
     
-    /**
-     Updates the specified resource.
-     */
+    /// Updates the specified resource.
 	MLCServiceRequestMethodPUT,
     
-    /* Deletes the specified resource.*/
+    /// Deletes the specified resource.
 	MLCServiceRequestMethodDELETE
 };
 

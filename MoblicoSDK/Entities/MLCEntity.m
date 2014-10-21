@@ -312,7 +312,8 @@
     NSMutableDictionary *serializedObject = [NSMutableDictionary dictionaryWithCapacity:[properties count]];
     
     [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
-        if ([key isEqualToString:@"properties"]) {
+		NSLog(@"Key: %@ Type: %@", key, type);
+        if ([key isEqualToString:@"properties"] || [key isEqualToString:@"_properties"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"description"]) {
             return;
         }
         if ([[[self class] ignoredPropertiesDuringSerialization] containsObject:key]) {
@@ -358,7 +359,7 @@
         if ([propertyName hasPrefix:@"_"]) continue;
         NSString *propertyAttributes = @(property_getAttributes(property));
 
-        propertyAttributes = [propertyAttributes componentsSeparatedByString:@","][0];
+        propertyAttributes = [[propertyAttributes componentsSeparatedByString:@","] firstObject];
         propertyAttributes = [propertyAttributes substringFromIndex:1];
 
         results[propertyName] = propertyAttributes;

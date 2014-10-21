@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'fileutils'
 require 'redcarpet'
-#PROJECT_DIR = ENV['PROJECT_DIR']
-PROJECT_DIR = "/Users/camjknight/Moblico/MoblicoFrameworks/MoblicoSDK"
+PROJECT_DIR = ENV['PROJECT_DIR']
+#PROJECT_DIR = "/Users/camjknight/Moblico/MoblicoFrameworks/MoblicoSDK"
 DEST_DIR = "/Users/camjknight/Moblico/Distributions/MoblicoSDK"
 DOC_DIR = "/Users/camjknight/Moblico/Documentation/MoblicoSDK"
 
