@@ -10,6 +10,9 @@
 
 @interface MLCProductsService : MLCService
 
++ (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)findProductsWithProductTypes:(NSArray *)productTypes handler:(MLCServiceCollectionCompletionHandler)handler;
+
++ (instancetype)findProductsWithFilters:(NSString *)filters productTypes:(NSArray *)productTypes handler:(MLCServiceCollectionCompletionHandler)handler;
 
 @end
