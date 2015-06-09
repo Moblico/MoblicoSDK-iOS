@@ -473,29 +473,23 @@
     [self setValue:value forKey:key];
 }
 
-- (NSString *)description {
-    objc_property_t descriptionProperty = class_getProperty([self class], "description");
-    objc_property_t detailsProperty = class_getProperty([self class], "details");
+- (NSString *)debugDescription {
+    NSMutableString *debugDescription = [[super debugDescription] mutableCopy];
 
-    if (descriptionProperty && detailsProperty) {
-        return [self valueForKey:@"details"];
-    }
-
-    NSMutableString *description = [[super description] mutableCopy];
-
-    [description appendString:@" ("];
+    [debugDescription appendString:@" ("];
     NSDictionary *properties = [self _properties];
 
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:properties.count];
 
     for (NSString *key in properties) {
+        if ([key isEqualToString:@"description"] || [key isEqualToString:@"debugDescription"]) continue;
         id value = [self valueForKey:key];
         [array addObject:[NSString stringWithFormat:@"%@: %@", key, value]];
     }
-    [description appendString:[array componentsJoinedByString:@"; "]];
-    [description appendString:@")"];
+    [debugDescription appendString:[array componentsJoinedByString:@"; "]];
+    [debugDescription appendString:@")"];
 
-    return [description copy];
+    return [debugDescription copy];
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {

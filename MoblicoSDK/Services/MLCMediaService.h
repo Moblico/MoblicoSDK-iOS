@@ -38,6 +38,15 @@
 + (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler;
 
 /**
+ This method requests all media for the specified type and category.
+
+ @param mediaType The media type requested.
+ @param mediaTypeCategory The media type category requested.
+ @param handler The request completion handler.
+ */
++ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory handler:(MLCServiceCollectionCompletionHandler)handler;
+
+/**
  This method requests all media.
 
  @param handler The request completion handler.

@@ -20,11 +20,8 @@
  The callback handler for `authenticateRequest:handler:`
 
  @param authenticatedRequest The authenticated request.
- @param error The error that occured during authentication
-        (will be nil if no error).
+ @param error The error that occured during authentication (will be nil if no error).
  @param response The data returned during authentication.
-
- @discussion Discussion that applies to the entire callback.
  */
 typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response);
 
@@ -40,7 +37,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  Get a shared instance of `MLCServiceManager` by calling the
  `sharedServiceManager` class method.
  
- For user level authentication call `setUsername:password:remember:`
+ For user level authentication call `setCurrentUser:remember:`
  on the shared instance.
  */
 @interface MLCServiceManager : NSObject
@@ -119,6 +116,12 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  */
 @property (readonly) MLCUser *currentUser;
 
+/**
+ Set the cuurent user for authentication and optionally store the credentials in the keychain.
+
+ @param user                The MLCUser to use as the current user.
+ @param rememberCredentials Store the credentials in the keystore?
+ */
 - (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials;
 
 /**
@@ -153,7 +156,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 + (BOOL)isSSLDisabled;
 
 /**
- Sets wheter the Moblico testing environment should be used.
+ Sets whether the Moblico testing environment should be used.
 
  @param testing Specify YES to use the Moblico testing environment
  or NO to use the production environment.

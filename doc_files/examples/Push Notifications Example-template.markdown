@@ -1,14 +1,14 @@
 # Push Notifications Example
 
-This article outlines how to develop an iOS app to receive push notifications with the Moblico SDK for iOS. Review step 1 of the [Moblico Push Notifications Guide][PushGuide] for information or setting up your account with Push Notifications.
+This article outlines how to develop an iOS app to receive push notifications with the Moblico SDK for iOS. Review the [Moblico Push Notifications Guide][PushGuide] for information or setting up your account with Push Notifications.
 
 ## Beginning with the Moblico SDK
 
 1. Create a new Xcode Project, or open an existing project _(This example uses the Single View Application template)_.
 2. Add MoblicoSDK and Security frameworks.
 
-	_For more information see the [Getting Started Guide](http://developer.moblico.com/sdks/ios/docs/)_
-3. Configure the MLCServiceManager during `-application:didFinishLaunchingWithOptions:`
+	_For more information see the [Getting Started Guide][GettingStarted]_
+3. Configure the MLCServiceManager during `- application:didFinishLaunchingWithOptions:`
 
 		- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 			// Enter your Moblico API key here
@@ -120,7 +120,7 @@ Follow these steps to register your device with Moblico:
 
 Push notifications can enter your app in one of two ways.
 
-1. Your app is launched by the push notification. ``- application:didFinishLaunchingWithOptions:`` will be called with the push notification in the launchOptions dictionary. 
+1. Your app is launched by the push notification. `- application:didFinishLaunchingWithOptions:` will be called with the push notification in the launchOptions dictionary. 
 
 		- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 			NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -128,7 +128,7 @@ Push notifications can enter your app in one of two ways.
 			return YES;
 		}
 
-2. Your app is already running when the push notification is running. ``- application:didReceiveRemoteNotification:`` will be called with the push notification as the userInfo dictionary. 
+2. Your app is already running when the push notification is running. `- application:didReceiveRemoteNotification:` will be called with the push notification as the userInfo dictionary. 
 
 		- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo {
 			NSDictionary *pushNotification = userInfo;
@@ -142,3 +142,4 @@ Push notifications can enter your app in one of two ways.
 Download the Push Notifications example source code: [PushNotifications.zip](http://developer.moblico.com/sdks/ios/samplecode/PushNotifications.zip)
 
 [PushGuide]: http://developer.moblico.com/guides/Push_Notifications
+[GettingStarted]: http://developer.moblico.com/sdks/ios/docs/

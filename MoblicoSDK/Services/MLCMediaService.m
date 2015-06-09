@@ -29,6 +29,16 @@
     return [MLCMedia class];
 }
 
++ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory handler:(MLCServiceCollectionCompletionHandler)handler {
+
+    NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
+    if (mediaType.length) searchParameters[@"mediaType"] = mediaType;
+    if (mediaTypeCategory.length) searchParameters[@"mediaTypeCategory"] = mediaTypeCategory;
+
+    return [self findResourcesWithSearchParameters:searchParameters handler:handler];
+}
+
+
 + (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(mediaId) handler:handler];
 }

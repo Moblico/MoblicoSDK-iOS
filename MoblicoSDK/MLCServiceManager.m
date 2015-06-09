@@ -23,6 +23,7 @@
 
 NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
 static NSString *const MLCServiceManagerTestingEnabledKey = @"MLCServiceManagerTestingEnabled";
+static NSString *const MLCServiceManagerLocalhostEnabledKey = @"MLCServiceManagerLocalhostEnabled";
 static NSString *const MLCServiceManagerLoggingEnabledKey = @"MLCServiceManagerLoggingEnabled";
 static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLDisabled";
 
@@ -30,7 +31,7 @@ static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLD
 
 @property (atomic, strong) MLCAuthenticationToken *authenticationToken;
 @property (atomic, readonly) NSMutableDictionary *keychainItemData;
-@property (atomic, readonly) NSMutableDictionary *genericPasswordQuery;
+@property (atomic, readonly) NSDictionary *genericPasswordQuery;
 @property (atomic, readwrite, strong) MLCUser *currentUser;
 
 @end
@@ -72,12 +73,12 @@ static NSString *_testingAPIKey = nil;
 }
 
 + (void)setTestingAPIKey:(NSString *)apiKey {
-	@synchronized(self) {
+    @synchronized(self) {
         if (_testingAPIKey != nil) {
             [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You can only set the testing API Key once." userInfo:nil] raise];
         }
-		_testingAPIKey = [apiKey copy];
-	}
+        _testingAPIKey = [apiKey copy];
+    }
 }
 
 + (NSString *)apiKey {
@@ -219,7 +220,7 @@ static NSString *_testingAPIKey = nil;
     return @(MOBLICO_SDK_VERSION_STRING);
 }
 
-- (NSMutableDictionary *)genericPasswordQuery {
+- (NSDictionary *)genericPasswordQuery {
     @synchronized(self) {
         if (!_genericPasswordQuery) {
             _genericPasswordQuery = [@{(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,

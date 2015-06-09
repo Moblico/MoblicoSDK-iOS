@@ -35,12 +35,6 @@
     return [MLCAuthenticationToken class];
 }
 
-+ (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password handler:(MLCServiceResourceCompletionHandler)handler {
-    MLCUser *user = [MLCUser userWithUsername:username password:password];
-
-    return [self authenticateWithAPIKey:apiKey user:user handler:handler];
-}
-
 + (instancetype)authenticateWithAPIKey:(NSString *)apiKey user:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler {
     if (user.socialType != MLCUserSocialTypeNone) {
         NSArray *components = [user.username componentsSeparatedByString:@"."];

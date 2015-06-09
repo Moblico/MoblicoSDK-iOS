@@ -14,6 +14,12 @@
  limitations under the License.
  */
 
+@import Foundation;
+
+FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
+FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
+
+
 #import <MoblicoSDK/version.h>
 #import <MoblicoSDK/MLCServiceManager.h>
 
@@ -44,6 +50,7 @@
 
 // Models
 #import <MoblicoSDK/MLCEntity.h>
+#import <MoblicoSDK/MLCValidation.h>
 
 #import <MoblicoSDK/MLCAffinity.h>
 #import <MoblicoSDK/MLCDeal.h>
@@ -65,5 +72,4 @@
 #import <MoblicoSDK/MLCUserTransaction.h>
 #import <MoblicoSDK/MLCUserTransactionsSummary.h>
 
-FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
-FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
+#import <MoblicoSDK/MLCMetricsManager.h>
