@@ -30,4 +30,4 @@ outputPath="~/Moblico/Documentation/MoblicoSDK";
 --include "${PROJECT_DIR}/doc_files/images/" \
 --include "${PROJECT_DIR}/doc_files/examples/" \
 --index-desc "${PROJECT_DIR}/readme.markdown" \
-"${PROJECT_DIR}/MoblicoSDK.framework/Headers"
+"${PROJECT_DIR}/../build/MoblicoSDK.framework/Headers"

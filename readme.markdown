@@ -5,35 +5,24 @@ The MoblicoSDK has been designed to be easy to use with a simple block based
 interface ([see example below](#example)). Setting up the SDK can be done in a 
 few steps:
 
-1.	Download the SDK: [MoblicoSDK.zip](http://developer.moblico.com/sdks/ios/MoblicoSDK.zip "Download MoblicoSDK.zip")
+1. Download the SDK: [MoblicoSDK.zip](http://developer.moblico.com/sdks/ios/MoblicoSDK.zip "Download MoblicoSDK.zip")
+1. Create a new Xcode project or open an existing project.
+3. Unzip MoblicoSDK.zip and drag MoblicoSDK.framework into your Xcode project. Be sure to enable *Copy items if needed*
 
-2.	Create a new Xcode project or open an existing project.
+   ![Drag MoblicoSDK.framework to Frameworks][1]
 
-3.	Unzip MoblicoSDK.zip and drag MoblicoSDK.framework into the Frameworks 
-	folder in your Xcode project. Be sure to enable *Copy items into destination
-	group's folder*
-	
-	![Drag MoblicoSDK.framework to Frameworks][1]
-	
-	![Enable Copy items into destination group's folder][2]
-	
-4.	Add Security.framework to the project using the *Link Binary With Libraries*
-	target build phase.
+   ![Enable Copy items into destination group's folder][2]
 
-	![Add Items to Link Binary With Libraries build phase][3]
+4. Configure `MLCServiceManager` with your Moblico API Key.
 
-	![Add Security.framework][4]
+   ```
+   [MLCServiceManager setAPIKey:@"YOUR_API_KEY"];
+   ```
 
-5.	Configure `MLCServiceManager` with your Moblico API Key.
-
-	```
-	[MLCServiceManager setAPIKey:@"YOUR_API_KEY"];
-	```
-
-	*Please see the `MLCServiceManager` class reference for more information and
+   *Please see the `MLCServiceManager` class reference for more information and
 	configuration options.*
 
-### <a id="example"></a>Example ###
+<h3 id="example">Example</h3>
 
 Once you have configured `MLCServiceManager` you can begin making service calls.
 For example, if you have set any Custom Application Settings they can be
@@ -58,11 +47,6 @@ MLCSettingsService *settingsService =
 [settingsService start];
 ```
 
+[1]: http://developer.moblico.com/sdks/ios/docs/docs/images/DragSDK.png "Drag MoblicoSDK.framework"
 
-[1]: http://developer.moblico.com/sdks/ios/docs/docs/images/DragSDK2.png "Drag MoblicoSDK.framework"
-
-[2]: http://developer.moblico.com/sdks/ios/docs/docs/images/Copy2.png "Enable Copy"
-
-[3]: http://developer.moblico.com/sdks/ios/docs/docs/images/AddItems2.png "Add Items"
-
-[4]: http://developer.moblico.com/sdks/ios/docs/docs/images/OK2.png "Add Security.framework"
+[2]: http://developer.moblico.com/sdks/ios/docs/docs/images/Copy.png "Enable Copy"

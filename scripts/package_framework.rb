@@ -8,7 +8,7 @@ DOC_DIR = "/Users/camjknight/Moblico/Documentation/MoblicoSDK"
 
 system("cp -fa #{PROJECT_DIR}/LICENSE #{DEST_DIR}")
 system("rm -rf #{DEST_DIR}/MoblicoSDK.framework")
-system("cp -fa #{PROJECT_DIR}/MoblicoSDK.framework #{DEST_DIR}")
+system("cp -fa #{PROJECT_DIR}/../build/MoblicoSDK.framework #{DEST_DIR}")
 system("rm -rf #{DEST_DIR}/Documentation")
 system("cp -fa #{DOC_DIR}/html #{DEST_DIR}/Documentation")
 system("cp -fa #{DOC_DIR}/docset #{DEST_DIR}/MoblicoSDK.docset")
