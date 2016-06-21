@@ -12,7 +12,7 @@
 
 @implementation MLCProductsService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCProduct class];
 }
 
@@ -28,7 +28,7 @@
     NSMutableDictionary *parameters = [@{} mutableCopy];
 
     if (productTypes.count) {
-        parameters[@"productTypes"] = productTypes;
+        parameters[@"productTypes"] = [productTypes componentsJoinedByString:@","];
     }
 
     if (filters.length) {

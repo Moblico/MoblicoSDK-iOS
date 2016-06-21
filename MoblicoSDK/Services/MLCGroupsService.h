@@ -14,16 +14,16 @@
 
 + (instancetype)listGroups:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listGroupsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listGroupsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 
-+ (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end
 

@@ -33,7 +33,7 @@
 
  @return A MLCMediaService instance.
 
- @see -[MLCServiceProtocol start]
+ @see -[MLCService start]
  */
 + (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler;
 
@@ -44,7 +44,7 @@
  @param mediaTypeCategory The media type category requested.
  @param handler The request completion handler.
  */
-+ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
 
 /**
  This method requests all media.
@@ -79,6 +79,6 @@
  @param resource The resource that the media is assigned to.
  @param handler The request completion handler.
  */
-+ (instancetype)listMediaForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listMediaForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 
 @end

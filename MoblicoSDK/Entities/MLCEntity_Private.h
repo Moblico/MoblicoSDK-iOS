@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import "MLCEntity.h"
+#import <MoblicoSDK/MLCEntity.h>
 
 @interface MLCEntity ()
 
@@ -28,6 +28,8 @@
 + (BOOL)boolFromValue:(id)value;
 + (float)floatFromValue:(id)value;
 + (double)doubleFromValue:(id)value;
++ (NSInteger)integerFromValue:(id)value;
++ (NSUInteger)unsignedIntegerFromValue:(id)value;
 + (int)intFromValue:(id)value;
 + (unsigned long)unsignedLongFromValue:(id)value;
 + (unsigned long long)unsignedLongLongFromValue:(id)value;

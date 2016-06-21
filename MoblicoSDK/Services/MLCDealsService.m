@@ -20,7 +20,7 @@
 
 @implementation MLCDealsService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCDeal class];
 }
 
@@ -36,16 +36,16 @@
     return [self listResources:handler];
 }
 
-+ (instancetype)listDealsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listDealsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 
 + (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listDealsForResource:(id<MLCEntity>)location handler:handler];
+    return [self listDealsForResource:(id<MLCEntityProtocol>)location handler:handler];
 }
 
-+ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[deal collectionName], [deal uniqueIdentifier], @"redeem"]];
++ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSString *resource = [NSString pathWithComponents:@[[[deal class] collectionName], deal.uniqueIdentifier, @"redeem"]];
 
     return [self update:resource parameters:@{@"offerCode": offerCode} handler:handler];
 }

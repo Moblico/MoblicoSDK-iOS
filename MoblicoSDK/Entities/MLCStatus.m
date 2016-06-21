@@ -20,22 +20,24 @@ NSString *const MLCStatusErrorDomain = @"MLCStatusErrorDomain";
 
 @implementation MLCStatus
 
-+ (instancetype)deserialize:(NSDictionary *)jsonObject {
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     NSMutableDictionary *statusParameters = [jsonObject mutableCopy];
 
     NSNumber *statusType = statusParameters[@"statusType"];
     [statusParameters removeObjectForKey:@"statusType"];
-    MLCStatus *status = [super deserialize:statusParameters];
 
-    if (statusType && statusType != (id)[NSNull null]) {
-        status.type = [statusType integerValue];
-    } else {
-        status.type = MLCStatusTypeMissing;
+    self = [super initWithJSONObject:statusParameters];
+
+    if (self) {
+        if (statusType && statusType != (id)[NSNull null]) {
+            self.type = statusType.integerValue;
+        } else {
+            self.type = MLCStatusTypeMissing;
+        }
     }
 
-
-
-    return status;
+    return self;
 }
+
 
 @end

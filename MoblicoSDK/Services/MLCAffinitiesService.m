@@ -21,12 +21,23 @@
 
 @implementation MLCAffinitiesService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCAffinity class];
+}
+
++ (NSArray *)scopeableResources {
+    return @[@"MLCLocation"];
 }
 
 + (instancetype)listAffinities:(MLCServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
++ (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listAffinitiesForResource:(id<MLCEntityProtocol>)location handler:handler];
+}
+
++ (instancetype)listAffinitiesForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listScopedResourcesForResource:resource handler:handler];
+}
 @end

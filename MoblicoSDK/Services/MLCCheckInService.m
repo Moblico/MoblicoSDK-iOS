@@ -11,6 +11,7 @@
 #import "MLCEntity_Private.h"
 #import "MLCLocation.h"
 #import "MLCEvent.h"
+#import "MLCStatus.h"
 
 @interface MLCCheckIn : MLCEntity
 
@@ -21,18 +22,23 @@
 
 @implementation MLCCheckInService
 
++ (Class<MLCEntityProtocol>)classForResource {
+    return [MLCCheckIn class];
+}
+
+
 + (instancetype)checkInWithLocation:(MLCLocation *)location
-                            handler:(MLCServiceStatusCompletionHandler)handler {
+                            handler:(MLCServiceResourceCompletionHandler)handler {
     return [self checkInWithLocation:location event:nil handler:handler];
 }
 
 + (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event
-                            handler:(MLCServiceStatusCompletionHandler)handler {
+                            handler:(MLCServiceResourceCompletionHandler)handler {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
     if (location) parameters[@"locationId"] = @(location.locationId);
     if (event) parameters[@"eventId"] = @(event.eventId);
 
-    MLCCheckIn *checkIn = [MLCCheckIn deserialize:parameters];
+    MLCCheckIn *checkIn = [[MLCCheckIn alloc] initWithJSONObject:parameters];
 
     return [self createResource:checkIn handler:handler];
 }

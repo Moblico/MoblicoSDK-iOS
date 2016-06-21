@@ -25,9 +25,9 @@
 + (instancetype)listRewards:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listRewardsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)listRewardsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end

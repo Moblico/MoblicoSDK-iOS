@@ -43,6 +43,9 @@
     else if ([(id)key respondsToSelector:@selector(stringValue)]) {
         stringKey = [(id)key stringValue];
     }
+    if (stringKey == nil) {
+        return nil;
+    }
     return [self valueForKey:stringKey];
 }
 
@@ -54,6 +57,11 @@
     else if ([(id)key respondsToSelector:@selector(stringValue)]) {
         stringKey = [(id)key stringValue];
     }
+
+    if (stringKey == nil) {
+        return;
+    }
+
     [self setValue:obj forKey:stringKey];
 }
 

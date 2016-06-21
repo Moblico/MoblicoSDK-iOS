@@ -14,24 +14,23 @@
     return @"product_categories";
 }
 
-+ (instancetype)deserialize:(NSDictionary *)jsonObject {
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
 
-    MLCProductCategory *productCategory = [super deserialize:jsonObject];
+    if ([self.productTypes isKindOfClass:[NSArray class]]) {
+        NSMutableArray *productTypes = [NSMutableArray arrayWithCapacity:self.productTypes.count];
 
-    if (![productCategory.productTypes isKindOfClass:[NSArray class]]) return productCategory;
-
-    NSMutableArray *productTypes = [NSMutableArray arrayWithCapacity:productCategory.productTypes.count];
-
-    for (id object in productCategory.productTypes) {
-        MLCProductType *productType = [MLCProductType deserialize:object];
-        if (productType) {
-            [productTypes addObject:productType];
+        for (id object in self.productTypes) {
+            MLCProductType *productType = [[MLCProductType alloc] initWithJSONObject:object];
+            if (productType) {
+                [productTypes addObject:productType];
+            }
         }
+
+        self.productTypes = productTypes;
     }
 
-    productCategory.productTypes = productTypes;
-
-    return productCategory;
+    return self;
 }
 
 @end

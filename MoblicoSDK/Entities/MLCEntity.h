@@ -19,28 +19,26 @@
 /**
  All MLCEntity objects conform to the MLCEntity protocol.
  */
-@protocol MLCEntity <NSObject, NSCoding, NSCopying>
-//@property (nonatomic, readonly) NSDictionary *properties;
+@protocol MLCEntityProtocol <NSObject, NSCoding, NSCopying>
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id uniqueIdentifier;
 
-+ (instancetype)deserialize:(NSDictionary *)jsonObject;
-- (NSDictionary *)serialize;
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
++ (NSDictionary *)serialize:(id<MLCEntityProtocol>)entity;
 
 + (NSString *)collectionName;
-- (NSString *)collectionName;
-
 + (NSString *)resourceName;
-- (NSString *)resourceName;
 
-- (id)uniqueIdentifier;
 + (NSString *)uniqueIdentifierKey;
 - (BOOL)validate:(out NSError *__autoreleasing *)error;
+
+//+ (instancetype)deserialize:(NSDictionary *)jsonObject __attribute__((deprecated ("Use 'initWithJSONObject:' instead.")));
 
 @end
 
 /**
  Base class for all Moblico model objects.
  */
-@interface MLCEntity : NSObject <MLCEntity>
+@interface MLCEntity : NSObject <MLCEntityProtocol>
 
 @end
 

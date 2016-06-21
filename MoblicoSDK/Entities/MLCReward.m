@@ -22,7 +22,7 @@
 + (NSArray *)ignoredPropertiesDuringSerialization {
     NSArray *parrentArray = [super ignoredPropertiesDuringSerialization];
 
-    return [@[@"dealId"] arrayByAddingObjectsFromArray:parrentArray];
+    return [@[@"dealId", @"availableRedemptions", @"redeemable", @"isRedeemable"] arrayByAddingObjectsFromArray:parrentArray];
 }
 
 - (void)setDealId:(NSUInteger)dealId {
@@ -33,11 +33,53 @@
     return self.rewardId;
 }
 
+- (BOOL)isRedeemable {
+    return self.availableRedemptions != 0;
+}
+
 - (NSInteger)availableRedemptions {
 	if (self.numberOfPurchases <= 0) return 0;
 	if (self.numberOfUsesPerCode == 0) return NSIntegerMax;
 
     return (self.numberOfPurchases * self.numberOfUsesPerCode) - self.redeemedCount;
+}
+
+- (NSComparisonResult)compare:(MLCReward *)other {
+    BOOL thisIsRedeemable = self.isRedeemable;
+
+    NSComparisonResult result = [@(other.isRedeemable) compare:@(thisIsRedeemable)];
+
+    if (result != NSOrderedSame) {
+        return result;
+    }
+
+    if (!thisIsRedeemable) {
+        result = [@(self.points) compare:@(other.points)];
+    }
+
+    if (result != NSOrderedSame) {
+        return result;
+    }
+
+    return [super compare:other];
+
+//    if (result == NSOrderedSame) {
+//        result = [@(reward1.points) compare:@(reward2.points)];
+//        if (result == NSOrderedSame || reward1.availableRedemptions) {
+//            NSStringCompareOptions options = NSCaseInsensitiveSearch | NSNumericSearch | NSDiacriticInsensitiveSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+//            result = [reward1.name compare:reward2.name options:options];
+//        }
+//    }
+//
+//    return result;
+//
+//
+//    NSComparisonResult results = [@(other.availableRedemptions) compare:@(self.availableRedemptions)];
+//    if (results != NSOrderedSame) {
+//        return results;
+//    }
+//
+//    return [super compare:other];
 }
 
 @end

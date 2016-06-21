@@ -26,6 +26,6 @@ typedef NS_OPTIONS(NSUInteger, MLCPointsTotalType) {
 @interface MLCPointsService : MLCService
 
 + (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end

@@ -29,7 +29,7 @@ static NSString *const MLCLeaderboardTypeOverallPointsString = @"overallPoints";
 
 @implementation MLCLeaderboardService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCLeader class];
 }
 

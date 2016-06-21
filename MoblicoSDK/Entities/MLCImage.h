@@ -15,7 +15,9 @@
  */
 
 #import <MoblicoSDK/MLCEntity.h>
+@import CoreGraphics;
 
+typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache, CGFloat scale);
 /**
  A MLCImage object encapsulates the image data for a deal stored in 
  the Moblico Admin Portal.
@@ -26,7 +28,7 @@
  A unique identifier for this image.
  */
 @property (nonatomic) NSUInteger imageId;
-
+@property (nonatomic) CGFloat scaleFactor;
 /**
  The URL for this image.
  */
@@ -42,8 +44,12 @@
  */
 @property (nonatomic, readonly) NSData *data;
 
-- (void)loadImageData;
+- (void)loadImageData:(MLCImageCompletionHandler)handler;
 
 + (instancetype)deserializeFromString:(NSString *)string;
 
+@end
+
+@interface MLCImage (Deprecated)
+- (void)loadImageData __attribute__((deprecated ("Use 'loadImageData:' instead.")));
 @end

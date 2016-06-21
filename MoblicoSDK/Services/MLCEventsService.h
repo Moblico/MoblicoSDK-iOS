@@ -29,6 +29,6 @@
 + (instancetype)listSubEventsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listEventsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listEventsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 
 @end

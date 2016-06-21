@@ -23,7 +23,7 @@
 + (instancetype)readDealWithDealId:(NSUInteger)dealId handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)listDeals:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listDealsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)listDealsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end

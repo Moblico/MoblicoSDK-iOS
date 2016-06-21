@@ -35,9 +35,9 @@ typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
 
  @since Available in MoblicoSDK 1.4 and later.
  
- @see -[MLCServiceProtocol start]
+ @see -[MLCService start]
  */
-+ (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceResourceCompletionHandler)handler;
 
 /**
  This method is used to send a message with the provided parameters.
@@ -52,12 +52,13 @@ typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-+ (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceResourceCompletionHandler)handler;
 
 
 + (instancetype)readMessageForDeal:(MLCDeal *)deal type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)readMessageForReward:(MLCReward *)reward type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)readMessageForResource:(id <MLCEntity>)resource type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readMessageForResource:(id<MLCEntityProtocol>)resource type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
 
++ (instancetype)updateMessageWithMessageId:(NSUInteger)messageId status:(NSString *)status handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end

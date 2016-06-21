@@ -20,15 +20,15 @@
     return @[@"MLCDeal", @"MLCReward"];
 }
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCMessage class];
 }
 
-+ (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceResourceCompletionHandler)handler {
     return [self createResource:message handler:handler];
 }
 
-+ (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceResourceCompletionHandler)handler {
     MLCMessage *message = [MLCMessage messageWithText:text deviceIds:deviceIds phoneNumbers:phoneNumbers emailAddresses:emailAddresses];
 
     return [self sendMessage:message handler:handler];
@@ -42,9 +42,9 @@
     return [self readMessageForResource:reward type:type handler:handler];
 }
 
-+ (instancetype)readMessageForResource:(id <MLCEntity>)resource type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readMessageForResource:(id<MLCEntityProtocol>)resource type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler {
     if ([self canScopeResource:resource] == NO) {
-        NSString *failureReason = [NSString stringWithFormat:NSLocalizedString(@"%@ do not have %@", nil), [[self classForResource] collectionName], [resource collectionName]];
+        NSString *failureReason = [NSString stringWithFormat:NSLocalizedString(@"%@ do not have %@", nil), [[self classForResource] collectionName], [[resource class] collectionName]];
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
         NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: failureReason}];
         return (MLCMessageService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
@@ -54,9 +54,15 @@
     if (type == MLCMessageServiceTypeShare) {
 
     }
-    NSString *path = [NSString pathWithComponents:@[[resource collectionName], [resource uniqueIdentifier], [[self classForResource] resourceName]]];
+    NSString *path = [NSString pathWithComponents:@[[[resource class] collectionName], resource.uniqueIdentifier, [[self classForResource] resourceName]]];
 
     return [self read:path parameters:@{@"type": messageType} handler:handler];
+}
+
++ (instancetype)updateMessageWithMessageId:(NSUInteger)messageId status:(NSString *)status handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSString *path = [@"message" stringByAppendingPathComponent:@(messageId).stringValue];
+
+    return [self update:path parameters:@{@"status": status} handler:handler];
 }
 
 @end

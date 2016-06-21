@@ -22,10 +22,10 @@
 @implementation MLCLocationsService
 
 + (NSArray *)scopeableResources {
-    return @[@"MLCEvent", @"MLCDeal", @"MLCReward"];
+    return @[@"MLCEvent", @"MLCDeal", @"MLCReward", @"MLCMerchant"];
 }
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCLocation class];
 }
 
@@ -37,30 +37,55 @@
     return [self findResourcesWithSearchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
++ (NSDictionary *)searchParametersForTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius {
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
     if (typeName.length) searchParameters[@"locationTypeName"] = typeName;
     if (postalCode.length) searchParameters[@"zipcode"] = postalCode;
     if (latitude) searchParameters[@"latitude"] = @(latitude);
     if (longitude) searchParameters[@"longitude"] = @(longitude);
     if (radius) searchParameters[@"radius"] = @(radius);
+
+    return searchParameters;
+}
+
++ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant typeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
     
+    NSDictionary *searchParameters = [self searchParametersForTypeNamed:typeName
+                                                             postalCode:postalCode
+                                                               latitude:latitude
+                                                              longitude:longitude
+                                                                 radius:radius];
+    return [self findLocationsForMerchant:merchant
+                         searchParameters:searchParameters
+                                  handler:handler];
+}
+
++ (instancetype)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
+    NSDictionary *searchParameters = [self searchParametersForTypeNamed:typeName postalCode:postalCode latitude:latitude longitude:longitude radius:radius];
     return [self findLocationsWithSearchParameters:searchParameters handler:handler];
 }
 
 + (instancetype)listLocationsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntity>)event handler:handler];
+    return [self listLocationsForResource:(id<MLCEntityProtocol>)event handler:handler];
 }
 
 + (instancetype)listLocationsForDeal:(MLCDeal *)deal handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntity>)deal handler:handler];
+    return [self listLocationsForResource:(id<MLCEntityProtocol>)deal handler:handler];
 }
 
 + (instancetype)listLocationsForReward:(MLCReward *)reward handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntity>)reward handler:handler];
+    return [self listLocationsForResource:(id<MLCEntityProtocol>)reward handler:handler];
 }
 
-+ (instancetype)listLocationsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self findScopedResourcesForResource:(id<MLCEntityProtocol>)merchant searchParameters:searchParameters handler:handler];
+}
+
++ (instancetype)listLocationsForMerchant:(MLCMerchant *)merchant handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listLocationsForResource:(id<MLCEntityProtocol>)merchant handler:handler];
+}
+
++ (instancetype)listLocationsForResource:(id <MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

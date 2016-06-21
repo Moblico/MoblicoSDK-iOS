@@ -20,18 +20,20 @@ static NSString *const MLCUserTransactionTypeUnknownString = @"UNKNOWN";
     return @"transactions";
 }
 
-+ (instancetype)deserialize:(NSDictionary *)jsonObject {
-    MLCUserTransaction *transaction = [super deserialize:jsonObject];
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
 
-    transaction.type = [[self class] userTransactionTypeFromString:jsonObject[@"type"]];
+    if (self) {
+        self.type = [[self class] userTransactionTypeFromString:jsonObject[@"type"]];
+    }
 
-    return transaction;
+    return self;
 }
 
 + (MLCUserTransactionType)userTransactionTypeFromString:(NSString *)string {
     if (![string isKindOfClass:[NSString class]]) return MLCUserTransactionTypeUnknown;
 
-    NSString *uppercaseString = [string uppercaseString];
+    NSString *uppercaseString = string.uppercaseString;
 	if ([uppercaseString isEqualToString:MLCUserTransactionTypePointsEarnedString]) return MLCUserTransactionTypePointsEarned;
 	if ([uppercaseString isEqualToString:MLCUserTransactionTypePointsSpentString]) return MLCUserTransactionTypePointsSpent;
 	if ([uppercaseString isEqualToString:MLCUserTransactionTypeCurrencySavedString]) return MLCUserTransactionTypeCurrencySaved;

@@ -20,6 +20,8 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 
 
+
+
 #import <MoblicoSDK/version.h>
 #import <MoblicoSDK/MLCServiceManager.h>
 
@@ -27,16 +29,22 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 #import <MoblicoSDK/MLCService.h>
 #import <MoblicoSDK/MLCBasicService.h>
 
+#import <MoblicoSDK/MLCAdsService.h>
 #import <MoblicoSDK/MLCAffinitiesService.h>
 #import <MoblicoSDK/MLCCheckInService.h>
+#import <MoblicoSDK/MLCCredentialsService.h>
 #import <MoblicoSDK/MLCDealsService.h>
 #import <MoblicoSDK/MLCEventsService.h>
 #import <MoblicoSDK/MLCGroupsService.h>
 #import <MoblicoSDK/MLCLeaderboardService.h>
+#import <MoblicoSDK/MLCListItemsService.h>
+#import <MoblicoSDK/MLCListsService.h>
 #import <MoblicoSDK/MLCLocationsService.h>
 #import <MoblicoSDK/MLCMediaService.h>
+#import <MoblicoSDK/MLCMerchantsService.h>
 #import <MoblicoSDK/MLCMessageService.h>
 #import <MoblicoSDK/MLCMetricsService.h>
+#import <MoblicoSDK/MLCNotificationsService.h>
 #import <MoblicoSDK/MLCOutOfBandService.h>
 #import <MoblicoSDK/MLCPointsService.h>
 #import <MoblicoSDK/MLCProductCategoriesService.h>
@@ -52,15 +60,21 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 #import <MoblicoSDK/MLCEntity.h>
 #import <MoblicoSDK/MLCValidation.h>
 
+#import <MoblicoSDK/MLCAd.h>
 #import <MoblicoSDK/MLCAffinity.h>
+#import <MoblicoSDK/MLCCredential.h>
 #import <MoblicoSDK/MLCDeal.h>
 #import <MoblicoSDK/MLCEvent.h>
 #import <MoblicoSDK/MLCGroup.h>
 #import <MoblicoSDK/MLCImage.h>
 #import <MoblicoSDK/MLCLeader.h>
+#import <MoblicoSDK/MLCList.h>
+#import <MoblicoSDK/MLCListItem.h>
 #import <MoblicoSDK/MLCLocation.h>
 #import <MoblicoSDK/MLCMedia.h>
+#import <MoblicoSDK/MLCMerchant.h>
 #import <MoblicoSDK/MLCMessage.h>
+#import <MoblicoSDK/MLCNotification.h>
 #import <MoblicoSDK/MLCMetric.h>
 #import <MoblicoSDK/MLCPoints.h>
 #import <MoblicoSDK/MLCProduct.h>
@@ -73,3 +87,5 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 #import <MoblicoSDK/MLCUserTransactionsSummary.h>
 
 #import <MoblicoSDK/MLCMetricsManager.h>
+
+#import <MoblicoSDK/MLCEntityCache.h>

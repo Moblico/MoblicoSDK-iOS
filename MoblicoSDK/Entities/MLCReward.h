@@ -77,5 +77,8 @@
 
  */
 @property (nonatomic, readonly) NSInteger availableRedemptions;
+@property (nonatomic, readonly, getter=isRedeemable) BOOL redeemable;
+
+- (NSComparisonResult)compare:(MLCReward *)other;
 
 @end

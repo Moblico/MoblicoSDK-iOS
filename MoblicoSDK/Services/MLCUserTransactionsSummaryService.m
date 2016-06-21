@@ -13,14 +13,14 @@
 
 @implementation MLCUserTransactionsSummaryService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCUserTransactionsSummary class];
 }
 
 + (instancetype)readTransactionsSummaryForUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[
                                                     [MLCUser collectionName],
-                                                    [user uniqueIdentifier],
+                                                    user.uniqueIdentifier,
                                                     [[self classForResource] collectionName]
                                                     ]];
 

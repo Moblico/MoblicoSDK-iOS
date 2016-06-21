@@ -18,4 +18,91 @@
 
 @implementation MLCLocation
 
+//@property (nonatomic, copy) NSString *geoEnterNotificationText;
+//@property (nonatomic, strong) CLCircularRegion *geoFenceRegion;
+//@property (nonatomic) CLLocationDistance geoFenceRadius;
+//@property (nonatomic) BOOL checkinEnabled;
+//@property (nonatomic) CLLocationDistance checkinRadius;
+
+//@property (nonatomic, copy) NSString *beaconEnterNotificationText;
+//@property (nonatomic, strong) CLBeaconRegion *beaconRegion;
+//@property (nonatomic) CLProximity beaconDesiredProximity;
+//@property (nonatomic) CLProximity beaconLastProximity;
+//@property (nonatomic) CLProximity beaconMinimumCheckInProximity;
+
++ (CLProximity)proximityFromString:(NSString *)string {
+    if (![string isKindOfClass:[NSString class]]) return CLProximityUnknown;
+
+    NSString *uppercaseString = string.uppercaseString;
+    if ([uppercaseString isEqualToString:@"NEAR"]) return CLProximityNear;
+    if ([uppercaseString isEqualToString:@"FAR"]) return CLProximityFar;
+    if ([uppercaseString isEqualToString:@"IMMEDIATE"]) return CLProximityImmediate;
+
+    return CLProximityUnknown;
+}
+
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
+    if (self) {
+        NSString *identifier = [NSString stringWithFormat:@"%@-NOTIFICATION", @(self.locationId)];
+
+        if ([jsonObject[@"geoNotificationEnabled"] boolValue]) {
+            CLLocationCoordinate2D center = CLLocationCoordinate2DMake(self.latitude, self.longitude);
+            self.geoFenceRegion = [[CLCircularRegion alloc] initWithCenter:center
+                                                                    radius:self.geoFenceRadius
+                                                                identifier:identifier];
+            self.geoFenceRegion.notifyOnEntry = YES;
+            self.geoFenceRegion.notifyOnExit = YES;
+        }
+        if ([jsonObject[@"beaconNotificationEnabled"] boolValue]) {
+            NSArray *beacon = [jsonObject[@"beaconIdentifier"] componentsSeparatedByString:@","];
+            CLBeaconRegion *region;
+            if (beacon.count >= 3) {
+                NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:beacon[0]];
+                CLBeaconMajorValue majorValue = ((NSString *)beacon[1]).integerValue;
+                CLBeaconMinorValue minorValue = ((NSString *)beacon[2]).integerValue;
+                region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID major:majorValue minor:minorValue identifier:identifier];
+            }
+            else if (beacon.count >= 2) {
+                NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:beacon[0]];
+                CLBeaconMajorValue majorValue = ((NSString *)beacon[1]).integerValue;
+                region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID major:majorValue identifier:identifier];
+            }
+            else if (beacon.count >= 1) {
+                NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:beacon[0]];
+                region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID identifier:identifier];
+            }
+
+            if (region) {
+                region.notifyEntryStateOnDisplay = YES;
+                region.notifyOnEntry = YES;
+                region.notifyOnExit = YES;
+                self.beaconRegion = region;
+            }
+
+            self.beaconDesiredProximity = [MLCLocation proximityFromString:jsonObject[@"beaconRange"]];
+            self.beaconMinimumCheckInProximity = [MLCLocation proximityFromString:jsonObject[@"checkinRange"]];
+            self.beaconLastProximity = CLProximityUnknown;
+        }
+
+    }
+    return self;
+}
+
+- (NSComparisonResult)compare:(MLCLocation *)location order:(MLCLocationCompareOrder)order {
+    NSComparisonResult distance = [@(self.distance) compare:@(location.distance)];
+    NSComparisonResult name = [self.name localizedStandardCompare:location.name];
+
+    if (order == MLCLocationCompareOrderDistance) {
+        return distance ?: name;
+    }
+
+    return name ?: distance;
+}
+
+- (NSComparisonResult)compare:(MLCLocation *)location {
+    return [self compare:location order:MLCLocationCompareOrderDistance];
+}
+
+
 @end

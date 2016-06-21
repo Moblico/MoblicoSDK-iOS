@@ -32,7 +32,7 @@ static NSString *const MLCPointsTotalTypePointsString = @"POINTS";
 
 @implementation MLCPointsService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCPoints class];
 }
 
@@ -43,15 +43,15 @@ static NSString *const MLCPointsTotalTypePointsString = @"POINTS";
 + (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
     NSDictionary *searchParameters = @{@"pointTypeName": @"Interactive"};
 
-    return [self findScopedResourcesForResource:(id<MLCEntity>)user searchParameters:searchParameters handler:handler];
+    return [self findScopedResourcesForResource:(id<MLCEntityProtocol>)user searchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
     NSMutableDictionary *parameters = [@{@"pointTypeName": @"Interactive"} mutableCopy];
     parameters[@"points"] = @(points);
     NSString *totalTypeName = [self stringForPointsTotalType:totalType];
     if (totalTypeName.length) parameters[@"totalTypeName"] = totalTypeName;
-    NSString *path = [NSString pathWithComponents:@[[user collectionName], [user uniqueIdentifier], @"points"]];
+    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"points"]];
     
     return [self update:path parameters:parameters handler:handler];
 }

@@ -40,13 +40,13 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 }
 
 - (NSError *)firstError {
-    return [self.errors firstObject];
+    return self.errors.firstObject;
 }
 
 - (NSError *)multipleErrorsError {
-    if (![self isValid]) {
+    if (!self.valid) {
         if (self.errors.count == 1) {
-            return [self firstError];
+            return self.firstError;
         }
         
         return [NSError errorWithDomain:MLCValidationErrorDomain
@@ -60,14 +60,14 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 
 - (BOOL)isValid:(out NSError *__autoreleasing *)outError {
     if (outError) {
-        *outError = [self firstError];
+        *outError = self.multipleErrorsError;
     }
 
-    return [self isValid];
+    return self.valid;
 }
 
 - (BOOL)isValid {
-    return [self.errors count] == 0;
+    return self.errors.count == 0;
 }
 
 + (NSError *)errorWithMessage:(NSString *)message {
@@ -125,7 +125,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
     if (required) {
         [validation validateShouldExist:YES errorMessage:errorMessage];
     }
-    if ([expression length]) {
+    if (expression.length) {
         if (caseSensitive) {
             [validation validateFormat:expression errorMessage:errorMessage];
         }
@@ -135,10 +135,10 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
     }
 
     if (outError) {
-        *outError = [validation firstError];
+        *outError = validation.multipleErrorsError;
     }
 
-    return [validation isValid];
+    return validation.valid;
 }
 
 

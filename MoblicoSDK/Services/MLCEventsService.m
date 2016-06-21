@@ -25,7 +25,7 @@
     return @[@"MLCEvent", @"MLCLocation", @"MLCMedia"];
 }
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCEvent class];
 }
 
@@ -50,14 +50,14 @@
 }
 
 + (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listEventsForResource:(id<MLCEntity>)location handler:handler];
+    return [self listEventsForResource:(id<MLCEntityProtocol>)location handler:handler];
 }
 
 + (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listEventsForResource:(id<MLCEntity>)media handler:handler];
+    return [self listEventsForResource:(id<MLCEntityProtocol>)media handler:handler];
 }
 
-+ (instancetype)listEventsForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listEventsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

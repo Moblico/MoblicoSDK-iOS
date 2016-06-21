@@ -12,7 +12,7 @@
 
 @implementation MLCProductCategoriesService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCProductCategory class];
 }
 

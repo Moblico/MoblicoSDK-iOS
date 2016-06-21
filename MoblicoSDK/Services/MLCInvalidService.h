@@ -17,13 +17,18 @@
 #import <MoblicoSDK/MLCService.h>
 
 typedef void(^MLCInvalidServiceCompletionHandler)(id jsonObject, NSError *error, NSHTTPURLResponse *response);
+typedef void(^MLCInvalidServiceFailedCompletionHandler)(BOOL success, NSError *error, NSHTTPURLResponse *response);
 
-@interface MLCInvalidService : NSObject <MLCService>
+@interface MLCInvalidService : NSObject <MLCServiceProtocol>
 
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, strong) NSHTTPURLResponse *response;
-@property (nonatomic, strong) MLCInvalidServiceCompletionHandler handler;
+@property (nonatomic, strong) MLCInvalidServiceCompletionHandler jsonHandler;
+@property (nonatomic, strong) MLCInvalidServiceFailedCompletionHandler successHandler;
+
 + (instancetype)invalidServiceWithError:(NSError *)error response:(NSHTTPURLResponse *)response handler:(MLCInvalidServiceCompletionHandler)handler;
++ (instancetype)invalidServiceFailedWithError:(NSError *)error response:(NSHTTPURLResponse *)response handler:(MLCInvalidServiceFailedCompletionHandler)handler;
 + (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCInvalidServiceCompletionHandler)handler;
++ (instancetype)invalidServiceFailedWithError:(NSError *)error handler:(MLCInvalidServiceFailedCompletionHandler)handler;
 
 @end

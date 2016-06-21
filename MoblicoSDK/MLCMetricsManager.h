@@ -11,7 +11,7 @@
 
 @protocol MLCMetricsManagerLocationDelegate <NSObject>
 @required
-- (CLLocation *)location;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) CLLocation *location;
 
 @end
 

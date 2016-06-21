@@ -25,11 +25,11 @@
     return @"users/message";
 }
 
-- (NSDictionary *)serialize {
-    NSMutableDictionary *serializedObject = [[super serialize] mutableCopy];
++ (NSDictionary *)serialize:(MLCMessage *)message {
+    NSMutableDictionary *serializedObject = [[super serialize:message] mutableCopy];
 
-    if (self.text) {
-        serializedObject[@"messageText"] = self.text;
+    if (message.text) {
+        serializedObject[@"messageText"] = message.text;
     }
 
     [serializedObject removeObjectForKey:@"text"];

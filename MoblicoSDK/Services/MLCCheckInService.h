@@ -12,7 +12,7 @@
 
 @interface MLCCheckInService : MLCService
 
-+ (instancetype)checkInWithLocation:(MLCLocation *)location handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)checkInWithLocation:(MLCLocation *)location handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event handler:(MLCServiceResourceCompletionHandler)handler;
 
 @end

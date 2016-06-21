@@ -109,6 +109,8 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 /// @name Authentication
 ///---------------------
 
+@property (readonly) NSString *childKeyword;
+
 /**
  The currently authenticated user used for user level authentication. (read-only)
 
@@ -123,6 +125,14 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  @param rememberCredentials Store the credentials in the keystore?
  */
 - (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials;
+
+/**
+ Set the cuurent user for authentication and optionally store the credentials in the keychain.
+
+ @param user                The MLCUser to use as the current user.
+ @param rememberCredentials Store the credentials in the keystore?
+ */
+- (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword remember:(BOOL)rememberCredentials;
 
 /**
  Create an authenticated request.
@@ -196,6 +206,8 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  */
 + (BOOL)isLoggingEnabled;
 
++ (void)setForceQueryParametersEnabled:(BOOL)disabled;
++ (BOOL)isForceQueryParametersEnabled;
 #pragma mark Information
 ///------------------
 /// @name Information

@@ -19,7 +19,7 @@
 
 @implementation MLCMetricsService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return Nil;
 }
 

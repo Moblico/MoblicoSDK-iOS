@@ -20,5 +20,6 @@
 
 + (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler;
 + (NSDictionary *)settings;
++ (void)overrideSettings:(NSDictionary *)settings;
 
 @end

@@ -83,6 +83,11 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 @property (nonatomic) MLCUserSocialType socialType;
 
 /**
+ The social token for this user (Optional).
+ */
+@property (copy, nonatomic) NSString *socialToken;
+
+/**
  Specifies whether the user has opted in to recieving emails.
  */
 @property (nonatomic) BOOL optinEmail;
@@ -95,7 +100,7 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 /**
  The date of birth of the user.
  */
-@property (copy, nonatomic) NSString *dateOfBirth;
+@property (copy, nonatomic) NSDate *dateOfBirth;
 
 /**
  The phone number for the user.
@@ -191,6 +196,11 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 @property (strong, nonatomic) NSString *attr3;
 @property (strong, nonatomic) NSString *attr4;
 @property (strong, nonatomic) NSString *attr5;
+
+@property (copy, nonatomic) NSString *externalId;
+@property (nonatomic) NSUInteger locationId;
+@property (nonatomic) NSUInteger merchantId;
+
 /**
  Convenience class method to create a MLCUser object with the provided
  username.

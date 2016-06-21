@@ -15,6 +15,12 @@
  */
 
 #import <MoblicoSDK/MLCEntity.h>
+@import CoreLocation;
+
+typedef NS_ENUM(NSUInteger, MLCLocationCompareOrder) {
+    MLCLocationCompareOrderDistance,
+    MLCLocationCompareOrdernName
+};
 
 /**
  Locations may be associated with users, events, deals, rewards
@@ -31,6 +37,7 @@
  A unique identifier for this location.
  */
 @property (nonatomic) NSUInteger locationId;
+@property (nonatomic) NSUInteger accountId;
 
 /**
  The date this location was created.
@@ -110,12 +117,12 @@
 /**
  The latitude for this location.
  */
-@property (nonatomic) double latitude;
+@property (nonatomic) CLLocationDegrees latitude;
 
 /**
  The longitude for this location.
  */
-@property (nonatomic) double longitude;
+@property (nonatomic) CLLocationDegrees longitude;
 
 /**
  The distance for this location.
@@ -123,7 +130,7 @@
  The distance will be set when the location is retrieved with a service call
  that specifies a search area.
  */
-@property (nonatomic) double distance;
+@property (nonatomic) CLLocationDistance distance;
 
 /**
  The URL for this location.
@@ -156,6 +163,23 @@
  The merchant id for this location.
  */
 @property (nonatomic) NSUInteger merchantId;
+
+
+@property (nonatomic, strong) CLCircularRegion *geoFenceRegion;
+@property (nonatomic, copy) NSString *geoEnterNotificationText;
+@property (nonatomic) CLLocationDistance geoFenceRadius;
+
+@property (nonatomic, copy) NSString *beaconEnterNotificationText;
+@property (nonatomic, strong) CLBeaconRegion *beaconRegion;
+@property (nonatomic) CLProximity beaconDesiredProximity;
+@property (nonatomic) CLProximity beaconLastProximity;
+@property (nonatomic) CLProximity beaconMinimumCheckInProximity;
+
+@property (nonatomic) BOOL checkinEnabled;
+@property (nonatomic) CLLocationDistance checkinRadius;
+
+- (NSComparisonResult)compare:(MLCLocation *)location order:(MLCLocationCompareOrder)order;
+- (NSComparisonResult)compare:(MLCLocation *)location;
 
 @end
 

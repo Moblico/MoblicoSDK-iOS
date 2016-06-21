@@ -25,15 +25,16 @@
     return @[@"MLCLocation", @"MLCEvent"];
 }
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCMedia class];
 }
 
-+ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler {
 
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
     if (mediaType.length) searchParameters[@"mediaType"] = mediaType;
     if (mediaTypeCategory.length) searchParameters[@"mediaTypeCategory"] = mediaTypeCategory;
+    if (category.length) searchParameters[@"category"] = category;
 
     return [self findResourcesWithSearchParameters:searchParameters handler:handler];
 }
@@ -48,14 +49,14 @@
 }
 
 + (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntity>)location handler:handler];
+    return [self listMediaForResource:(id<MLCEntityProtocol>)location handler:handler];
 }
 
 + (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntity>)event handler:handler];
+    return [self listMediaForResource:(id<MLCEntityProtocol>)event handler:handler];
 }
 
-+ (instancetype)listMediaForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listMediaForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

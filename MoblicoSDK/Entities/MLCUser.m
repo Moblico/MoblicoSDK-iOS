@@ -19,7 +19,7 @@
 
 @interface MLCUser ()
 
-+ (instancetype)userWithUsername:(NSString *)username password:(NSString *)password social:(NSString *)social;
++ (instancetype)userWithUsername:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken;
 
 @end
 
@@ -37,20 +37,47 @@ static NSString *const MLCUserContactPreferenceTypeSMSString = @"SMS";
 static NSString *const MLCUserContactPreferenceTypeEmailString = @"EMAIL";
 static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 
+@dynamic age;
+@dynamic optinEmail;
+@dynamic optinPhone;
+@dynamic socialType;
+@dynamic contactPreferenceType;
+@dynamic genderType;
+@dynamic locationId;
+@dynamic merchantId;
+
 - (void)setContactPreference:(NSString *)contactPreference {
-    self.contactPreferenceType = [[self class] contactPreferenceTypeFromString:contactPreference];
+    if (contactPreference.length) {
+        [self setSafeValue:@([[self class] contactPreferenceTypeFromString:contactPreference]) forKey:@"contactPreferenceType"];
+    }
+    else {
+        [self setSafeValue:nil forKey:@"contactPreferenceType"];
+    }
 }
 
 - (NSString *)contactPreference {
-    return [[self class] stringForContactPreferenceType:self.contactPreferenceType];
+    id value = [self valueForKey:@"contactPreferenceType"];
+    if (value && value != [NSNull null]) {
+        return [[self class] stringForContactPreferenceType:[value unsignedIntegerValue]];
+    }
+    return nil;
 }
 
 - (void)setGender:(NSString *)gender {
-    self.genderType = [[self class] genderTypeFromString:gender];
+    if (gender.length) {
+        [self setSafeValue:@([[self class] genderTypeFromString:gender]) forKey:@"genderType"];
+    }
+    else {
+        [self setSafeValue:nil forKey:@"genderType"];
+    }
 }
 
 - (NSString *)gender {
-    return [[self class] stringForGenderType:self.genderType];
+    id value = [self valueForKey:@"genderType"];
+    if (value && value != [NSNull null]) {
+        return [[self class] stringForGenderType:[value unsignedIntegerValue]];
+    }
+    return nil;
 }
 
 + (NSArray *)ignoredPropertiesDuringSerialization {
@@ -62,35 +89,37 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 }
 
 + (instancetype)userWithUsername:(NSString *)username {
-    return [self userWithUsername:username password:nil social:nil];
+    return [self userWithUsername:username password:nil social:nil socialToken:nil];
 }
 
 + (instancetype)userWithUsername:(NSString *)username password:(NSString *)password {
-    return [self userWithUsername:username password:password social:nil];
+    return [self userWithUsername:username password:password social:nil socialToken:nil];
 }
 
 + (instancetype)userWithSocialType:(MLCUserSocialType)socialType socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken {
     NSString *social = [self stringForSocialType:socialType];
-    NSString *username = [NSString stringWithFormat:@"%@.%@.%@", [social lowercaseString], socialId, socialUsername];
+    NSString *username = [NSString stringWithFormat:@"%@.%@.%@", social.uppercaseString, socialId, socialUsername];
 
-    return [self userWithUsername:username password:socialToken social:social];
+    return [self userWithUsername:username password:nil social:social socialToken:socialToken];
 }
 
-+ (instancetype)userWithUsername:(NSString *)username password:(NSString *)password social:(NSString *)social {
++ (instancetype)userWithUsername:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken {
     NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:
                                        (username != nil) +
                                        (password != nil) +
-                                       (social != nil)
+                                       (social != nil) +
+                                       (socialToken != nil)
                                        ];
 
 	if (username) properties[@"username"] = username;
-	if (password) properties[@"password"] = password;
-	if (social) properties[@"social"] = social;
+    if (password) properties[@"password"] = password;
+    if (social) properties[@"social"] = social;
+    if (socialToken) properties[@"socialToken"] = socialToken;
 
-    if ([properties count] == 0) return nil;
+    if (properties.count == 0) return nil;
 
 //    NSLog(@"properties: %@", properties);
-    return [MLCUser deserialize:properties];
+    return [[[self class] alloc] initWithJSONObject:properties];
 }
 
 + (MLCUserSocialType)socialTypeFromString:(NSString *)string {
@@ -112,7 +141,7 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 + (MLCUserGenderType)genderTypeFromString:(NSString *)string {
     if (![string isKindOfClass:[NSString class]]) return MLCUserGenderTypeUndeclared;
 
-    NSString *uppercaseString = [string uppercaseString];
+    NSString *uppercaseString = string.uppercaseString;
     if ([uppercaseString isEqualToString:MLCUserGenderTypeUndeclaredString]) return MLCUserGenderTypeUndeclared;
     if ([uppercaseString isEqualToString:MLCUserGenderTypeMaleString]) return MLCUserGenderTypeMale;
     if ([uppercaseString isEqualToString:MLCUserGenderTypeFemaleString]) return MLCUserGenderTypeFemale;
@@ -121,9 +150,11 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 }
 
 + (NSString *)stringForGenderType:(MLCUserGenderType)type {
+
     if (type == MLCUserGenderTypeUndeclared) return MLCUserGenderTypeUndeclaredString;
     if (type == MLCUserGenderTypeMale) return MLCUserGenderTypeMaleString;
     if (type == MLCUserGenderTypeFemale) return MLCUserGenderTypeFemaleString;
+
 
     return nil;
 }
@@ -131,11 +162,11 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 + (MLCUserContactPreferenceType)contactPreferenceTypeFromString:(NSString *)string {
     if (![string isKindOfClass:[NSString class]]) return MLCUserContactPreferenceTypeNone;
 
-    NSString *uppercaseString = [string uppercaseString];
-    if ([uppercaseString isEqualToString:MLCUserContactPreferenceTypeNoneString]) return MLCUserContactPreferenceTypeNone;
-    if ([uppercaseString isEqualToString:MLCUserContactPreferenceTypeSMSString]) return MLCUserContactPreferenceTypeSMS;
-    if ([uppercaseString isEqualToString:MLCUserContactPreferenceTypeEmailString]) return MLCUserContactPreferenceTypeEmail;
-    if ([uppercaseString isEqualToString:MLCUserContactPreferenceTypeBothString]) return MLCUserContactPreferenceTypeBoth;
+    NSString *contactPreference = string.uppercaseString;
+    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeNoneString]) return MLCUserContactPreferenceTypeNone;
+    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeSMSString]) return MLCUserContactPreferenceTypeSMS;
+    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeEmailString]) return MLCUserContactPreferenceTypeEmail;
+    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeBothString]) return MLCUserContactPreferenceTypeBoth;
 
 
     return MLCUserContactPreferenceTypeNone;
@@ -150,48 +181,103 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
     return nil;
 }
 
-+ (instancetype)deserialize:(NSDictionary *)jsonObject {
-    MLCUser *user = [super deserialize:jsonObject];
-
-    NSDictionary *attributes = jsonObject[@"attributes"];
-    if (attributes) {
-        user.attr1 = attributes[@"attr1"];
-        user.attr2 = attributes[@"attr2"];
-        user.attr3 = attributes[@"attr3"];
-        user.attr4 = attributes[@"attr4"];
-        user.attr5 = attributes[@"attr5"];
-    }
-    user.socialType = [MLCUser socialTypeFromString:jsonObject[@"social"]];
-    user.genderType = [MLCUser genderTypeFromString:jsonObject[@"gender"]];
-    user.contactPreferenceType = [MLCUser contactPreferenceTypeFromString:jsonObject[@"contactPreference"]];
-
-    return user;
++ (NSDateFormatter *)dateOfBirthDateFormatter {
+    static NSDateFormatter *dateFormatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"MM/dd/yyyy";
+    });
+    return dateFormatter;
 }
 
-- (NSDictionary *)serialize {
-    NSMutableDictionary *serializedObject = [[super serialize] mutableCopy];
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+//    if (jsonObject) {
+//        <#statements#>
+//    }
+    self = [super initWithJSONObject:jsonObject];
 
-    NSString *social = [[self class] stringForSocialType:self.socialType];
+    if (self) {
+        NSDictionary *attributes = jsonObject[@"attributes"];
+        if (attributes) {
+            [self setSafeValue:attributes[@"attr1"] forKey:@"attr1"];
+            [self setSafeValue:attributes[@"attr2"] forKey:@"attr2"];
+            [self setSafeValue:attributes[@"attr3"] forKey:@"attr3"];
+            [self setSafeValue:attributes[@"attr4"] forKey:@"attr4"];
+            [self setSafeValue:attributes[@"attr5"] forKey:@"attr5"];
+        }
+
+        NSString *dateOfBirth = jsonObject[@"dateOfBirth"];
+        if ([dateOfBirth isKindOfClass:[NSString class]]) {
+            NSDate *date = [[MLCUser dateOfBirthDateFormatter] dateFromString:dateOfBirth];
+            [self setSafeValue:date forKey:@"dateOfBirth"];
+        }
+
+        if (jsonObject[@"social"] != [NSNull null] && [jsonObject[@"social"] length]) {
+            [self setSafeValue:@([MLCUser socialTypeFromString:jsonObject[@"social"]]) forKey:@"socialType"];
+        }
+        if (jsonObject[@"gender"] != [NSNull null] && [jsonObject[@"gender"] length]) {
+            [self setSafeValue:@([MLCUser genderTypeFromString:jsonObject[@"gender"]]) forKey:@"genderType"];
+        }
+        if (jsonObject[@"contactPreference"] != [NSNull null] && [jsonObject[@"contactPreference"] length]) {
+            [self setSafeValue:@([MLCUser contactPreferenceTypeFromString:jsonObject[@"contactPreference"]]) forKey:@"contactPreferenceType"];
+        }
+
+//        self.socialType = [MLCUser socialTypeFromString:jsonObject[@"social"]];
+//        self.genderType = [MLCUser genderTypeFromString:jsonObject[@"gender"]];
+//        self.contactPreferenceType = [MLCUser contactPreferenceTypeFromString:jsonObject[@"contactPreference"]];
+
+    }
+
+    return self;
+}
+
++ (NSDictionary *)serialize:(MLCUser *)user {
+    NSMutableDictionary *serializedObject = [[super serialize:user] mutableCopy];
+
+
+
+    NSString *social = [self stringForSocialType:user.socialType];
+
 
     if (social) {
         serializedObject[@"social"] = social;
     }
 
-    NSString *type = [[self class] stringForGenderType:self.genderType];
+    if (user.genderType != MLCUserGenderTypeUndeclared) {
 
-    if (self.genderType != MLCUserGenderTypeUndeclared) {
-        serializedObject[@"gender"] = type;
+        serializedObject[@"gender"] = [self stringForGenderType:user.genderType];
     }
 
-    NSString *contactPrefernce = [[self class] stringForContactPreferenceType:self.contactPreferenceType];
-    serializedObject[@"contactPreference"] = contactPrefernce;
 
-    if (self.socialType == MLCUserSocialTypeNone) {
+
+    id value = [user valueForKey:@"contactPreferenceType"];
+    
+    if (value && value != [NSNull null]) {
+        NSString *contactPrefernce = [self stringForContactPreferenceType:user.contactPreferenceType];
+        serializedObject[@"contactPreference"] = contactPrefernce;
+    }
+    else {
+        [serializedObject removeObjectForKey:@"contactPreference"];
+    }
+
+    if (user.socialType == MLCUserSocialTypeNone) {
         [serializedObject removeObjectForKey:@"social"];
+        [serializedObject removeObjectForKey:@"socialToken"];
     } else {
         [serializedObject removeObjectForKey:@"password"];
     }
 
+    id password = serializedObject[@"password"];
+    if (password && (password == [NSNull null] || [@"" isEqualToString:password])) {
+//        NSLog(@"Password is empty!");
+        [serializedObject removeObjectForKey:@"password"];
+    }
+    
+    if (user.dateOfBirth) {
+        serializedObject[@"dateOfBirth"] = [[self dateOfBirthDateFormatter] stringFromDate:user.dateOfBirth];
+    }
+    
     return serializedObject;
 }
 

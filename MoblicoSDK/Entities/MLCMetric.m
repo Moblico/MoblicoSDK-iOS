@@ -39,6 +39,11 @@ static NSString *const MLCMetricTypeShareAppString = @"Share_App";
 static NSString *const MLCMetricTypeShareDealString = @"Share_Deal";
 static NSString *const MLCMetricTypeShareRewardString = @"Share_Reward";
 static NSString *const MLCMetricTypeShareLocationString = @"Share_Location";
+static NSString *const MLCMetricTypeEnterGeoRegionString = @"Enter_Geo_Region";
+static NSString *const MLCMetricTypeExitGeoRegionString = @"Exit_Geo_Region";
+static NSString *const MLCMetricTypeEnterBeaconRegionString = @"Enter_Beacon_Region";
+static NSString *const MLCMetricTypeExitBeaconRegionString = @"Exit_Beacon_Region";
+static NSString *const MLCMetricTypeChangeGPSString = @"Change_GPS";
 
 @interface MLCMetric ()
 
@@ -87,7 +92,7 @@ static NSString *const MLCMetricTypeShareLocationString = @"Share_Location";
     metric.timeStamp = [NSDate date];
     metric.location = location;
 
-    CLLocation *coreLocation = [[[MLCMetricsManager sharedMetricsManager] locationDelegate] location];
+    CLLocation *coreLocation = ([MLCMetricsManager sharedMetricsManager].locationDelegate).location;
     if (coreLocation) {
         metric.latitude = coreLocation.coordinate.latitude;
         metric.longitude = coreLocation.coordinate.longitude;
@@ -96,14 +101,14 @@ static NSString *const MLCMetricTypeShareLocationString = @"Share_Location";
     return metric;
 }
 
-- (NSDictionary *)serialize {
-    NSMutableDictionary *serializedObject = [[super serialize] mutableCopy];
++ (NSDictionary *)serialize:(MLCMetric *)metric {
+    NSMutableDictionary *serializedObject = [[super serialize:metric] mutableCopy];
     
-    NSString *type = [MLCMetric stringForMetricType:self.type];
+    NSString *type = [MLCMetric stringForMetricType:metric.type];
     serializedObject[@"type"] = type;
 
     [serializedObject removeObjectForKey:@"location"];
-    NSUInteger locationId = self.location.locationId;
+    NSUInteger locationId = metric.location.locationId;
     
     if (locationId > 0) {
         serializedObject[@"locationId"] = @(locationId);
@@ -131,7 +136,11 @@ static NSString *const MLCMetricTypeShareLocationString = @"Share_Location";
     if (type == MLCMetricTypeShareDeal) return MLCMetricTypeShareDealString;
     if (type == MLCMetricTypeShareReward) return MLCMetricTypeShareRewardString;
     if (type == MLCMetricTypeShareLocation) return MLCMetricTypeShareLocationString;
-
+    if (type == MLCMetricTypeEnterGeoRegion) return MLCMetricTypeEnterGeoRegionString;
+    if (type == MLCMetricTypeExitGeoRegion) return MLCMetricTypeExitGeoRegionString;
+    if (type == MLCMetricTypeEnterBeaconRegion) return MLCMetricTypeEnterBeaconRegionString;
+    if (type == MLCMetricTypeExitBeaconRegion) return MLCMetricTypeExitBeaconRegionString;
+    if (type == MLCMetricTypeChangeGPS) return MLCMetricTypeChangeGPSString;
     return nil;
 }
 

@@ -24,7 +24,7 @@
     return @[@"MLCUser", @"MLCLocation"];
 }
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCReward class];
 }
 
@@ -37,29 +37,29 @@
 }
 
 + (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listRewardsForResource:(id<MLCEntity>)user handler:handler];
+    return [self listRewardsForResource:(id<MLCEntityProtocol>)user handler:handler];
 }
 
 + (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listRewardsForResource:(id<MLCEntity>)location handler:handler];
+    return [self listRewardsForResource:(id<MLCEntityProtocol>)location handler:handler];
 }
 
-+ (instancetype)listRewardsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listRewardsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 
-+ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler {
     return [self redeemReward:reward withOfferCode:reward.offerCode handler:handler];
 }
 
-+ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceStatusCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[reward collectionName], [reward uniqueIdentifier], @"redeem"]];
++ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"redeem"]];
 
     return [self update:resource parameters:@{@"offerCode": offerCode} handler:handler];
 }
 
-+ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceStatusCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[reward collectionName], [reward uniqueIdentifier], @"purchase"]];
++ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"purchase"]];
 
     return [self update:resource parameters:nil handler:handler];
 }

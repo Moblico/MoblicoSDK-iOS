@@ -19,6 +19,6 @@
 
 @interface MLCAuthenticationService : MLCService
 
-+ (instancetype)authenticateWithAPIKey:(NSString *)apiKey user:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)authenticateWithAPIKey:(NSString *)apiKey user:(MLCUser *)user childKeyword:(NSString *)childKeyword handler:(MLCServiceResourceCompletionHandler)handler;
 
 @end

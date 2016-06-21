@@ -19,7 +19,7 @@
 
 @implementation MLCSettingsService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return Nil;
 }
 
@@ -38,6 +38,13 @@
 
 + (NSDictionary *)settings {
     return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettings"];
+}
+
++ (void)overrideSettings:(NSDictionary *)settings {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:self.settings];
+    [dictionary addEntriesFromDictionary:settings];
+    [[NSUserDefaults standardUserDefaults] setObject:dictionary forKey:@"MLCSettings"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

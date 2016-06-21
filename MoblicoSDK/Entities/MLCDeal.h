@@ -115,6 +115,21 @@
  */
 @property (strong, nonatomic) MLCImage *image;
 
+@property (assign, nonatomic, getter=isGoalEnabled) BOOL goalEnabled;
+@property (assign, nonatomic, getter=isWellnessEnabled) BOOL wellnessEnabled;
+@property (assign, nonatomic) NSInteger currentGoalAmount;
+@property (assign, nonatomic) NSInteger targetGoalAmount;
+@property (assign, nonatomic) NSInteger currentGoalQuantity;
+@property (assign, nonatomic) NSInteger currentGoalQuantity2;
+@property (assign, nonatomic) NSInteger targetGoalQuantity;
+@property (assign, nonatomic) NSInteger targetGoalQuantity2;
+@property (assign, nonatomic) NSInteger totalMetGoals;
+@property (assign, nonatomic) NSInteger maximumMetGoals;
+
+@property (nonatomic, assign, readonly) NSInteger remainingMetGoals;
+
+- (NSComparisonResult)compare:(MLCDeal *)other;
+
 @end
 
 @interface MLCDeal (Deprecated)

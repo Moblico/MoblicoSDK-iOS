@@ -13,11 +13,11 @@ FOUNDATION_EXPORT NSString *const MLCValidationDetailedErrorsKey;
 
 typedef BOOL(^MLCValidationTest)(id value);
 
-enum {
+typedef NS_ENUM(NSInteger) {
     MLCValidationUnknownError = -1,
     MLCValidationError = 0,
     MLCValidationMultipleErrorsError = 1
-};
+} MLCValidationErrorCode;
 
 @interface MLCValidation : NSObject
 @property (nonatomic, readonly) NSArray *errors;

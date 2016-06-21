@@ -13,7 +13,7 @@
 
 @implementation MLCUserTransactionsService
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     return [MLCUserTransaction class];
 }
 

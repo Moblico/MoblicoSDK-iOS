@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import "MLCService.h"
+#import <MoblicoSDK/MLCService.h>
 
 @interface MLCService () <NSURLConnectionDataDelegate>
 @property (strong, nonatomic) MLCServiceJSONCompletionHandler jsonCompletionhandler;
@@ -23,28 +23,28 @@
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)createResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)createResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceResourceCompletionHandler)handler;
 
-+ (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)updateResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)updateResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler;
-+ (instancetype)destroyResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)destroyResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)readResourceWithUniqueIdentifier:(id)uniqueIdentifier handler:(MLCServiceResourceCompletionHandler)handler;
 
 + (instancetype)list:(NSString *)path handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listResources:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listScopedResourcesForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listScopedResourcesForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 
 + (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)findResourcesWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findScopedResourcesForResource:(id<MLCEntity>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findScopedResourcesForResource:(id<MLCEntityProtocol>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
-+ (NSArray *)scopeableResources;
-+ (BOOL)canScopeResource:(id<MLCEntity>)resource;
++ (NSArray<MLCEntityProtocol> *)scopeableResources;
++ (BOOL)canScopeResource:(id<MLCEntityProtocol>)resource;
 
 + (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters;
 + (NSString *)stringFromMLCServiceRequestMethod:(MLCServiceRequestMethod)method;
@@ -52,8 +52,8 @@
 
 + (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
-+ (id<MLCEntity>)deserializeResource:(NSDictionary *)resource;
-+ (NSArray *)deserializeArray:(NSArray *)array;
-+ (Class<MLCEntity>)classForResource;
++ (id<MLCEntityProtocol>)deserializeResource:(NSDictionary *)resource;
++ (NSArray<MLCEntityProtocol> *)deserializeArray:(NSArray *)array;
++ (Class<MLCEntityProtocol>)classForResource;
 
 @end

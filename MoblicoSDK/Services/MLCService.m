@@ -24,25 +24,27 @@
 #import "version.h"
 
 #import "MLCInvalidService.h"
+#import "MLCLogger.h"
+
 #if TARGET_OS_IPHONE
 @import UIKit;
 #endif
 
-static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
+//static BOOL ALWAYS_USE_QUERY_PARAMS = NO;
 
 @implementation MLCService
 
-+ (NSArray *)scopeableResources {
-    return nil;
++ (NSArray<MLCEntityProtocol> *)scopeableResources {
+    return [[NSArray<MLCEntityProtocol> alloc] init];
 }
 
-+ (BOOL)canScopeResource:(id<MLCEntity>)resource {
++ (BOOL)canScopeResource:(id<MLCEntityProtocol>)resource {
     NSString *className = NSStringFromClass([resource class]);
 
     return [[self scopeableResources] containsObject:className];
 }
 
-+ (Class<MLCEntity>)classForResource {
++ (Class<MLCEntityProtocol>)classForResource {
     NSString *className = NSStringFromClass([self class]);
     className = [className stringByReplacingOccurrencesOfString:@"sService" withString:@""];
     Class classForResource = NSClassFromString(className);
@@ -64,6 +66,7 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
         if (error) {
             self.jsonCompletionhandler(nil, error, response);
         } else {
+            self.request = authenticatedRequest;
             self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];
 #if TARGET_OS_IPHONE
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -74,7 +77,6 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
 }
 
 - (void)cancel {
-    NSLog(@"Service Canceled: %@", self);
     [self.connection cancel];
     self.connection = nil;
 }
@@ -87,58 +89,86 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
     return service;
 }
 
-+ (instancetype)createResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler {
-    return [self create:[resource collectionName] parameters:[resource serialize] handler:handler];
++ (instancetype)createResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceResourceCompletionHandler)handler {
+    return [self create:[[resource class] collectionName] parameters:[[resource class] serialize:resource] handler:handler];
 }
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodPOST
                              path:path
                        parameters:parameters
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+
 							  if (handler) {
-								  handler([MLCStatus deserialize:jsonObject], error, response);
+//								  handler([[MLCStatus alloc] initWithJSONObject:jsonObject], error, response);
+                                  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                      id<MLCEntityProtocol> resource = [self deserializeResource:jsonObject];
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          handler(resource, error, response);
+                                      });
+                                  });
 							  }
                           }];
 }
 
-+ (instancetype)updateResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler {
-    NSString *path = [[resource collectionName] stringByAppendingPathComponent:[resource uniqueIdentifier]];
-    NSMutableDictionary *serializedObject = [[resource serialize] mutableCopy];
++ (instancetype)updateResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSString *path = [[[resource class] collectionName] stringByAppendingPathComponent:resource.uniqueIdentifier];
+    NSMutableDictionary *serializedObject = [[[resource class] serialize:resource] mutableCopy];
     [serializedObject removeObjectForKey:[[resource class] uniqueIdentifierKey]];
 
     return [self update:path parameters:serializedObject handler:handler];
 }
 
-+ (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodPUT
                              path:path
                        parameters:parameters
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
-                              NSLog(@"received jsonObject: %@", jsonObject);
-                              handler([MLCStatus deserialize:jsonObject], error, response);
+
+                              if (handler) {
+                                  BOOL success;
+                                  MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
+                                  if (status) {
+                                      success = status.type == MLCStatusTypeSuccess;
+                                  }
+                                  else {
+                                      success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
+                                  }
+                                  handler(success, error, response);
+                              }
+
                           }];
 }
 
-+ (instancetype)destroyResource:(id<MLCEntity>)resource handler:(MLCServiceStatusCompletionHandler)handler {
-    NSString *path = [[resource collectionName] stringByAppendingPathComponent:[resource uniqueIdentifier]];
++ (instancetype)destroyResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSString *path = [[[resource class] collectionName] stringByAppendingPathComponent:resource.uniqueIdentifier];
 
     return [self destroy:path parameters:nil handler:handler];
 }
 
-+ (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceStatusCompletionHandler)handler {
++ (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodDELETE
                              path:path
                        parameters:parameters
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
-                              handler([MLCStatus deserialize:jsonObject], error, response);
+                              if (handler) {
+                                  BOOL success;
+                                  MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
+                                  if (status) {
+                                      success = status.type == MLCStatusTypeSuccess;
+                                  }
+                                  else {
+                                      success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
+                                  }
+                                  handler(success, error, response);
+                              }
                           }];
 }
 
 + (instancetype)readResourceWithUniqueIdentifier:(id)uniqueIdentifierObject handler:(MLCServiceResourceCompletionHandler)handler {
     NSString *uniqueIdentifier = [MLCEntity stringFromValue:uniqueIdentifierObject];
 
-    if (![uniqueIdentifier length]) {
+    if (!uniqueIdentifier.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
         NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1001 userInfo:@{NSLocalizedDescriptionKey: description}];
 
@@ -154,17 +184,16 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
                              path:path
                        parameters:parameters
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
-                              dispatch_queue_t currentQueue = dispatch_get_main_queue();
                               dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                  id <MLCEntity> resource = [self deserializeResource:jsonObject];
-                                  dispatch_async(currentQueue, ^{
+                                  id<MLCEntityProtocol> resource = [self deserializeResource:jsonObject];
+                                  dispatch_async(dispatch_get_main_queue(), ^{
                                       handler(resource, error, response);
                                   });
                               });
                           }];
 }
 
-+ (instancetype)listScopedResourcesForResource:(id<MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listScopedResourcesForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self findScopedResourcesForResource:resource searchParameters:nil handler:handler];
 }
 
@@ -176,15 +205,15 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
     return [self find:path searchParameters:nil handler:handler];
 }
 
-+ (instancetype)findScopedResourcesForResource:(id<MLCEntity>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findScopedResourcesForResource:(id<MLCEntityProtocol>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     if ([self canScopeResource:resource] == NO) {
-        NSString *failureReason = [NSString stringWithFormat:NSLocalizedString(@"%@ do not have %@", nil), [[self classForResource] collectionName], [resource collectionName]];
+        NSString *failureReason = [NSString stringWithFormat:NSLocalizedString(@"%@ do not have %@", nil), [[self classForResource] collectionName], [[resource class] collectionName]];
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
         NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: failureReason}];
         return (MLCService *)[MLCInvalidService invalidServiceWithError:error handler:handler];
     }
 
-    NSString *path = [NSString pathWithComponents:@[[resource collectionName], [resource uniqueIdentifier], [[self classForResource] collectionName]]];
+    NSString *path = [NSString pathWithComponents:@[[[resource class] collectionName], resource.uniqueIdentifier, [[self classForResource] collectionName]]];
 
     return [self find:path searchParameters:searchParameters handler:handler];
 }
@@ -201,12 +230,11 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
                               NSInteger httpStatus = [error.userInfo[@"status"] httpStatus];
 
                               if (httpStatus == 404) {
-                                  handler(@[], nil, response);
+                                  handler([[NSArray<MLCEntityProtocol> alloc] init], nil, response);
                               } else {
-                                  dispatch_queue_t currentQueue = dispatch_get_main_queue();
                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                      NSArray *array = [self deserializeArray:jsonObject];
-                                      dispatch_async(currentQueue, ^{
+                                      NSArray<MLCEntityProtocol> *array = [self deserializeArray:jsonObject];
+                                      dispatch_async(dispatch_get_main_queue(), ^{
                                           handler(array, error, response);
                                       });
                                   });
@@ -214,22 +242,24 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
                           }];
 }
 
-+ (id <MLCEntity>)deserializeResource:(NSDictionary *)resource {
-    if ([self classForResource]) {
-        return [[self classForResource] deserialize:resource];
++ (id<MLCEntityProtocol>)deserializeResource:(NSDictionary *)resource {
+    Class EntityClass = [self classForResource];
+
+    if (EntityClass) {
+        return [[EntityClass alloc] initWithJSONObject:resource];
     }
 
     if (resource[@"status"]) {
-        return [MLCStatus deserialize:resource[@"status"]];
+        return [[MLCStatus alloc] initWithJSONObject:resource[@"status"]];
     }
 
     return nil;
 }
 
-+ (NSArray *)deserializeArray:(NSArray *)array {
++ (NSArray<MLCEntityProtocol> *)deserializeArray:(NSArray *)array {
     if (![array isKindOfClass:[NSArray class]]) return nil;
 
-    NSMutableArray *deserializedArray = [NSMutableArray arrayWithCapacity:[array count]];
+    NSMutableArray *deserializedArray = [NSMutableArray arrayWithCapacity:array.count];
 
     [array enumerateObjectsUsingBlock:^(id obj, __unused NSUInteger idx, __unused BOOL *stop) {
         id resource = [self deserializeResource:obj];
@@ -244,7 +274,7 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
 }
 
 + (NSString *)serializeArray:(NSArray *)array {
-    NSMutableArray *items = [NSMutableArray arrayWithCapacity:[array count]];
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:array.count];
 
     [array enumerateObjectsUsingBlock:^(id unescapedItem, __unused NSUInteger idx, __unused BOOL *stop) {
         id item = unescapedItem;
@@ -260,7 +290,7 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
 }
 
 + (NSString *)serializeDictionary:(NSDictionary *)dictionary {
-    NSMutableArray *keyValuePairs = [NSMutableArray arrayWithCapacity:[dictionary count]];
+    NSMutableArray *keyValuePairs = [NSMutableArray arrayWithCapacity:dictionary.count];
 
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id unescapedKey, id obj, __unused BOOL *stop) {
         id key = unescapedKey;
@@ -283,10 +313,33 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
     return [keyValuePairs componentsJoinedByString:@";"];
 }
 
-+ (NSString *)serializeParameters:(NSDictionary *)parameters {
-    if ([parameters count] == 0) return nil;
++ (NSArray *)queryItemsFromParameters:(NSDictionary *)parameters {
+    if (parameters.count == 0) return nil;
 
-    NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:[parameters count]];
+    NSMutableArray *queryItems = [NSMutableArray arrayWithCapacity:parameters.count];
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSString *value = obj;
+
+        if ([obj isKindOfClass:[NSArray class]]) {
+            value = [self serializeArray:obj];
+        } else if ([obj isKindOfClass:[NSDictionary class]]) {
+            value = [self serializeDictionary:obj];
+        }
+
+        value = [MLCEntity stringFromValue:value];
+        NSString *name = [MLCEntity stringFromValue:key];
+        NSURLQueryItem *item = [[NSURLQueryItem alloc] initWithName:name value:value];
+
+        [queryItems addObject:item];
+    }];
+
+    return queryItems;
+}
+
++ (NSString *)oldSerializeParameters:(NSDictionary *)parameters {
+    if (parameters.count == 0) return nil;
+
+    NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:parameters.count];
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         id value = obj;
 
@@ -312,27 +365,24 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-	[request setHTTPMethod:[self stringFromMLCServiceRequestMethod:method]];
+	request.HTTPMethod = [self stringFromMLCServiceRequestMethod:method];
 
     NSString *path = [NSString pathWithComponents:@[@"/", @"services", [MLCServiceManager apiVersion], servicePath]];
 
-    NSURL *requestURL = [[NSURL alloc] initWithScheme:([MLCServiceManager isSSLDisabled] ? @"http" : @"https") host:[MLCServiceManager host] path:path];
-
-    NSString *parameterString = [self serializeParameters:parameters];
-
-    if (parameterString) {
-        if (ALWAYS_USE_QUERY_PARAMS || method == MLCServiceRequestMethodGET || method == MLCServiceRequestMethodDELETE) {
-            NSMutableString *urlString = [[requestURL absoluteString] mutableCopy];
-            [urlString appendFormat:@"?%@", parameterString];
-            requestURL = [NSURL URLWithString:urlString];
-        } else {
-            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
-            NSData *formData = [NSData dataWithBytes:[parameterString UTF8String] length:[parameterString length]];
-            [request setHTTPBody:formData];
-        }
+    NSURLComponents *components = [[NSURLComponents alloc] init];
+    components.scheme = [MLCServiceManager isSSLDisabled] ? @"http" : @"https";
+    components.host = [MLCServiceManager host];
+    components.path = path;
+    components.queryItems = [self queryItemsFromParameters:parameters];
+    BOOL alwaysUseQueryParams = [MLCServiceManager isForceQueryParametersEnabled];
+    
+    if (components.query.length && !(alwaysUseQueryParams || method == MLCServiceRequestMethodGET || method == MLCServiceRequestMethodDELETE)) {
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
+        request.HTTPBody = [components.query dataUsingEncoding:NSUTF8StringEncoding];
+        components.query = nil;
     }
 
-	[request setURL:requestURL];
+	request.URL = components.URL;
     [request setValue:[self userAgent] forHTTPHeaderField:@"User-Agent"];
 
 	return request;
@@ -370,19 +420,19 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
         NSString *model;
         NSString *systemName;
         NSString *systemVersion;
-        NSString *locale = [[NSLocale currentLocale] localeIdentifier];
+        NSString *locale = [NSLocale currentLocale].localeIdentifier;
 
 #if TARGET_OS_IPHONE
-        model = [[UIDevice currentDevice] model];
-        systemName = [[UIDevice currentDevice] systemName];
-        systemVersion = [[UIDevice currentDevice] systemVersion];
+        model = [UIDevice currentDevice].model;
+        systemName = [UIDevice currentDevice].systemName;
+        systemVersion = [UIDevice currentDevice].systemVersion;
 #else
         model = @"Macintosh";
         systemName = @"Mac OS X";
         systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"][@"ProductVersion"];
 #endif
 
-        NSString *appName = @"MoblicoSDK";
+        NSString *appName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
         NSString *appVersion = @(MOBLICO_SDK_VERSION_STRING);
         userAgent = [NSString stringWithFormat:@"%@ %@ (%@; %@ %@; %@)", appName, appVersion, model, systemName, systemVersion, locale];
 
@@ -394,7 +444,7 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
 
 - (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     self.httpResponse = (NSHTTPURLResponse *)response;
-	[self.receivedData setLength:0];
+	(self.receivedData).length = 0;
 }
 
 - (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -405,17 +455,19 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
 #if TARGET_OS_IPHONE
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 #endif
-    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection:didFailWithError:%@", error);
+    
+    MLCLDebugLog(@"connection:didFailWithError:%@", error);
     NSMutableDictionary *logDictionary = [NSMutableDictionary dictionary];
     if (self.request.URL) logDictionary[@"url"] = self.request.URL;
     if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
+    if (self.request.HTTPBody) logDictionary[@"body"] = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
     if (self.request.allHTTPHeaderFields) logDictionary[@"requestHeader"] = self.request.allHTTPHeaderFields;
     if (self.httpResponse.allHeaderFields) logDictionary[@"responseHeaders"] = self.httpResponse.allHeaderFields;
     if (self.httpResponse.statusCode) {
         logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
         logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
-    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"\n=====\n%@\n=====", logDictionary);
+    MLCLDebugLog(@"\n=====\n%@\n=====", logDictionary);
 
     self.jsonCompletionhandler(nil, error, self.httpResponse);
 }
@@ -428,7 +480,7 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
     NSError *error;
     id jsonObject = nil;
 
-    if ([self.receivedData length]) {
+    if ((self.receivedData).length) {
         #pragma clang diagnostic push
         #pragma clang diagnostic ignored "-Wassign-enum"
         jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:0 error:&error];
@@ -445,41 +497,95 @@ static BOOL ALWAYS_USE_QUERY_PARAMS = YES;
     if (jsonObject) logDictionary[@"response"] = jsonObject;
     if (self.request.URL) logDictionary[@"url"] = self.request.URL;
     if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
+    if (self.request.HTTPBody) logDictionary[@"body"] = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
     if (self.request.allHTTPHeaderFields) logDictionary[@"requestHeader"] = self.request.allHTTPHeaderFields;
     if (self.httpResponse.allHeaderFields) logDictionary[@"responseHeaders"] = self.httpResponse.allHeaderFields;
     if (self.httpResponse.statusCode) {
         logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
         logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
-    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"\n=====\n%@\n=====", logDictionary);
-    if ([jsonObject isKindOfClass:[NSDictionary class]] && jsonObject[@"status"]) {
-        NSDictionary *statusDictionary = jsonObject[@"status"];
-        MLCStatus *status = [MLCStatus deserialize:statusDictionary];
-        NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: status.message, @"status": status}];
-        self.jsonCompletionhandler(nil, statusError, self.httpResponse);
-    } else {
-        self.jsonCompletionhandler(jsonObject, error, self.httpResponse);
+
+    MLCLDebugLog(@"connectionDidFinishLoading: %@", connection);
+    MLCLDebugLog(@"\n=====\n%@\n=====", logDictionary);
+
+    if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *statusJSON = jsonObject[@"status"];
+        if (statusJSON && [statusJSON isKindOfClass:[NSDictionary class]]) {
+            MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:statusJSON];
+            if (status.type != MLCStatusTypeSuccess) {
+                NSString *message = status.message;
+                if (!message) {
+                    message = @"Unknown Error";
+                }
+                NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey:message, @"status": status}];
+                self.jsonCompletionhandler(nil, statusError, self.httpResponse);
+				self.receivedData = nil;
+                return;
+            }
+        }
     }
- 	self.receivedData = nil;
+//	Class EntityClass = [[self class] classForResource];
+//	NSLog(@"connectionFinishedEntityClass: %@", EntityClass);
+
+//	BOOL entityHasStatus = [EntityClass instancesRespondToSelector:NSSelectorFromString(@"status")];
+//	NSLog(@"entityHasStatus: %@", entityHasStatus ? @"YES" : @"NO");
+//    if (!entityHasStatus && [jsonObject isKindOfClass:[NSDictionary class]] && jsonObject[@"status"]) {
+//        NSDictionary *statusDictionary = jsonObject[@"status"];
+//        MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:statusDictionary];
+//        NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: status.message, @"status": status}];
+//        self.jsonCompletionhandler(nil, statusError, self.httpResponse);
+//    } else {
+        self.jsonCompletionhandler(jsonObject, error, self.httpResponse);
+		self.receivedData = nil;
+
+//    }
 }
 
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
-    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection: %@ canAuthenticateAgainstProtectionSpace: %@", connection, protectionSpace);
+    MLCLDebugLog(@"connection: %@ canAuthenticateAgainstProtectionSpace: %@", connection, protectionSpace);
     
 	return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"connection: %@ didReceiveAuthenticationChallenge: %@", connection, challenge);
+    MLCLDebugLog(@"connection: %@ didReceiveAuthenticationChallenge: %@", connection, challenge);
 	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] &&
         [challenge.protectionSpace.host isEqualToString:[MLCServiceManager host]] &&
         [MLCServiceManager isTestingEnabled]) {
         NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        [challenge.sender useCredential:credential
-             forAuthenticationChallenge:challenge];
+        [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
     }
     
 	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
-    
-    @end
+
+- (void)connection:(nonnull NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(nonnull NSURLAuthenticationChallenge *)challenge {
+    MLCLDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
+    MLCLDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
+
+//    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"challenge.sender: %@", challenge.sender);
+    [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+//    return;
+//    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] &&
+//        [challenge.protectionSpace.host isEqualToString:[MLCServiceManager host]] &&
+//        [MLCServiceManager isTestingEnabled]) {
+//
+//        if ([challenge previousFailureCount] == 0) {
+//            if ([MLCServiceManager isLoggingEnabled]) NSLog(@"Using credentials");
+//            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+//            [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
+//        }
+//        else {
+//            if ([MLCServiceManager isLoggingEnabled]) NSLog(@"Not using credentials");
+//            [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+//        }
+//    }
+//    else {
+//
+//        if ([MLCServiceManager isLoggingEnabled]) NSLog(@"Default response");
+//        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+////        [[challenge sender] rejectProtectionSpaceAndContinueWithChallenge:challenge];
+//    }
+}
+
+@end

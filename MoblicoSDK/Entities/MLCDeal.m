@@ -15,35 +15,62 @@
  */
 
 #import "MLCDeal.h"
+#import "MLCEntity_Private.h"
 #import "MLCImage.h"
 
 @implementation MLCDeal
 
-+ (instancetype)deserialize:(NSDictionary *)jsonObject {
-    
-    MLCDeal *deal = [super deserialize:jsonObject];
-    
-    if (![deal.image isKindOfClass:[NSDictionary class]]) return deal;
-    
-    NSDictionary *image = (NSDictionary *)deal.image;
-    
-    if ([image count]) {
-        deal.image = [MLCImage deserialize:image];
-    } else {
-        deal.image = nil;
-    }
-    
-    return deal;
++ (NSArray *)ignoredPropertiesDuringSerialization {
+    return @[@"lastUpdateDate"];
 }
 
-- (NSDictionary *)serialize {
-    NSMutableDictionary *serializedObject = [[super serialize] mutableCopy];
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
+
+    if ([self.image isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *image = (NSDictionary *)self.image;
+
+        if (image.count) {
+            self.image = [[MLCImage alloc] initWithJSONObject:image];
+        } else {
+            self.image = nil;
+        }
+    }
+
+    return self;
+}
+
++ (NSDictionary *)serialize:(MLCDeal *)deal {
+    NSMutableDictionary *serializedObject = [[super serialize:deal] mutableCopy];
     
-    if (self.image) {
-        serializedObject[@"image"] = [self.image serialize];
+    if (deal.image) {
+        serializedObject[@"image"] = [[deal.image class] serialize:deal.image];
     }
     
     return [serializedObject mutableCopy];
+}
+
+- (NSComparisonResult)compare:(MLCDeal *)other {
+    NSComparisonResult results = [self.endDate compare:other.endDate];
+    if (results != NSOrderedSame) {
+        return results;
+    }
+    
+    results = [self.name localizedStandardCompare:other.name];
+
+    if (results != NSOrderedSame) {
+        return results;
+    }
+
+    return [@(self.dealId) compare:@(other.dealId)];
+}
+
+- (NSInteger)remainingMetGoals {
+    if (self.maximumMetGoals < 1) {
+        return -1;
+    }
+
+    return self.maximumMetGoals - self.totalMetGoals;
 }
 
 @end

@@ -20,12 +20,14 @@
 #import "MLCUser.h"
 #import "MLCUsersService.h"
 #import "version.h"
+#import "MLCStatus.h"
 
 NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
 static NSString *const MLCServiceManagerTestingEnabledKey = @"MLCServiceManagerTestingEnabled";
 static NSString *const MLCServiceManagerLocalhostEnabledKey = @"MLCServiceManagerLocalhostEnabled";
 static NSString *const MLCServiceManagerLoggingEnabledKey = @"MLCServiceManagerLoggingEnabled";
 static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLDisabled";
+static NSString *const MLCServiceManagerForceQueryParametersEnabledKey = @"MLCServiceManagerForceQueryParametersEnabled";
 
 @interface MLCServiceManager ()
 
@@ -33,16 +35,29 @@ static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLD
 @property (atomic, readonly) NSMutableDictionary *keychainItemData;
 @property (atomic, readonly) NSDictionary *genericPasswordQuery;
 @property (atomic, readwrite, strong) MLCUser *currentUser;
-
+@property (atomic, readwrite, strong) NSString *childKeyword;
+@property (atomic, readonly, strong) NSString *serviceName;
 @end
 
 @implementation MLCServiceManager
+@synthesize serviceName = _serviceName;
 @synthesize genericPasswordQuery = _genericPasswordQuery;
 @synthesize keychainItemData = _keychainItemData;
 @synthesize currentUser = _currentUser;
 
+- (NSString *)serviceName {
+    @synchronized(self) {
+        if (!_serviceName) {
+            NSString *appName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
+            _serviceName = [@"com.moblico.SDK.credentials." stringByAppendingString:appName];
+        }
+        return _serviceName;
+    }
+}
+
 + (MLCServiceManager *)sharedServiceManager {
     if ([MLCServiceManager apiKey] == nil) {
+//        return nil;
         [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You must set your API key before getting an instance of the ServiceManager." userInfo:nil] raise];
     }
 	static MLCServiceManager *sharedInstance = nil;
@@ -50,10 +65,14 @@ static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLD
 	dispatch_once(&onceToken, ^{
 		sharedInstance = [[MLCServiceManager alloc] init];
         NSString *username = sharedInstance.keychainItemData[(__bridge id)kSecAttrAccount];
-        NSString *password = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
+//        NSString *password = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
+        NSDictionary *credentials = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
 
-        if ([username length]) {
-            [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] remember:YES];
+        if (username.length) {
+            NSString *password = credentials[@"password"];
+            NSString *childKeyword = credentials[@"childKeyword"];
+
+            [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] childKeyword:childKeyword remember:YES];
         }
 	});
 
@@ -84,16 +103,16 @@ static NSString *_testingAPIKey = nil;
 + (NSString *)apiKey {
     @synchronized(self) {
         if ([self isTestingEnabled]) {
-            return _testingAPIKey;
+            return _testingAPIKey ?: @"";
         }
-        return _apiKey;
+        return _apiKey ?: @"";
     }
 }
 
 //- (void)processUser:(MLCUser *)user {
 //    NSLog(@"processUser: %@", user);
 //    if (user) {
-//        [[MLCUsersService readUser:user handler:^(id<MLCEntity> resource, __unused NSError *error, __unused NSHTTPURLResponse *response) {
+//        [[MLCUsersService readUser:user handler:^(id<MLCEntityProtocol> resource, __unused NSError *error, __unused NSHTTPURLResponse *response) {
 //            if (resource) {
 //                NSLog(@"resource: %@", resource);
 ////                self.currentUser = resource;
@@ -104,19 +123,31 @@ static NSString *_testingAPIKey = nil;
 //    }
 //}
 
+
+
 - (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials {
+    [self setCurrentUser:user childKeyword:nil remember:rememberCredentials];
+}
+
+- (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword remember:(BOOL)rememberCredentials {
     @synchronized(self) {
         self.currentUser = user;
+        self.childKeyword = childKeyword;
         self.authenticationToken = nil;
         NSString *username = user.username;
+        NSMutableDictionary *credentials = [@{} mutableCopy];
         NSString *password = user.password;
 
         if (user.socialType != MLCUserSocialTypeNone || !rememberCredentials) {
             username = nil;
             password = nil;
+        } else {
+            credentials[@"password"] = password ?: @"";
+            credentials[@"childKeyword"] = childKeyword ?: @"";
         }
-        self.keychainItemData[(__bridge id)kSecAttrAccount] = username ? username : @"";
-        self.keychainItemData[(__bridge id)kSecValueData] = password ? password : @"";
+
+        self.keychainItemData[(__bridge id)kSecAttrAccount] = username ?: @"";
+        self.keychainItemData[(__bridge id)kSecValueData] = credentials;
 
         [self writeToKeychain];
     }
@@ -130,7 +161,7 @@ static NSString *_testingAPIKey = nil;
         [defaults setBool:testing forKey:MLCServiceManagerTestingEnabledKey];
         [defaults synchronize];
 
-        if ([[self apiKey] length]) {
+        if ([self apiKey].length) {
             [[self sharedServiceManager] setAuthenticationToken:nil];
         }
     }
@@ -166,14 +197,37 @@ static NSString *_testingAPIKey = nil;
     NSMutableURLRequest *authenticatedRequest = [request mutableCopy];
     MLCAuthenticationToken *currentToken = self.authenticationToken;
 
-    if ([currentToken isValid]) {
+    NSString *apiKey = [[self class] apiKey];
+    if (currentToken.valid) {
         NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", currentToken.token];
         [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
         handler(authenticatedRequest, nil, nil);
     } else {
-        MLCAuthenticationService *service = [MLCAuthenticationService authenticateWithAPIKey:[[self class] apiKey] user:self.currentUser handler:^(MLCAuthenticationToken *newToken, NSError *error, NSHTTPURLResponse *response) {
+        MLCUser *user = self.currentUser;
+        MLCAuthenticationService *service = [MLCAuthenticationService authenticateWithAPIKey:apiKey user:user childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *newToken, NSError *error, NSHTTPURLResponse *response) {
             if (error) {
-                handler(nil, error, response);
+                MLCStatus *status = error.userInfo[@"status"];
+                BOOL correctClass = [status isKindOfClass:[MLCStatus class]];
+                BOOL correctStatusType = status.type == MLCStatusTypeInvalidUser;
+                BOOL currentUserIsSet = user != nil;
+                if (correctClass && correctStatusType && currentUserIsSet) {
+                    [self setCurrentUser:nil childKeyword:self.childKeyword remember:YES];
+                    MLCAuthenticationService *retryService = [MLCAuthenticationService authenticateWithAPIKey:apiKey user:nil childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *retryNewToken, NSError *retryError, NSHTTPURLResponse *retryResponse) {
+                        if (retryError) {
+                            handler(nil, retryError, retryResponse);
+                        }
+                        else {
+                            self.authenticationToken = retryNewToken;
+                            NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", retryNewToken.token];
+                            [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
+                            handler(authenticatedRequest, retryError, retryResponse);
+                        }
+                    }];
+                    [retryService start];
+                }
+                else {
+                    handler(nil, error, response);
+                }
             } else {
                 self.authenticationToken = newToken;
                 NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", self.authenticationToken.token];
@@ -204,6 +258,25 @@ static NSString *_testingAPIKey = nil;
     }
 }
 
++ (void)setForceQueryParametersEnabled:(BOOL)disabled {
+    @synchronized(self) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:disabled forKey:MLCServiceManagerForceQueryParametersEnabledKey];
+        [defaults synchronize];
+    }
+}
+
++ (BOOL)isForceQueryParametersEnabled {
+    @synchronized(self) {
+        NSNumber *force = [[NSUserDefaults standardUserDefaults] objectForKey:MLCServiceManagerForceQueryParametersEnabledKey];
+        if (force && !force.boolValue) {
+            return NO;
+        }
+        return YES;
+    }
+}
+
+
 + (NSString *)host {
     if ([self isTestingEnabled]) {
         return @"moblicosandbox.com";
@@ -224,7 +297,7 @@ static NSString *_testingAPIKey = nil;
     @synchronized(self) {
         if (!_genericPasswordQuery) {
             _genericPasswordQuery = [@{(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-                                       (__bridge id)kSecAttrService: @"com.moblico.SDK.credentials",
+                                       (__bridge id)kSecAttrService: self.serviceName,
                                        (__bridge id)kSecAttrGeneric: @"com.moblico.SDK.credentials",
                                        (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlways,
                                        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
@@ -252,11 +325,13 @@ static NSString *_testingAPIKey = nil;
             _keychainItemData = [@{(__bridge id)kSecAttrAccount: @"",
                                    (__bridge id)kSecAttrLabel: @"",
                                    (__bridge id)kSecAttrDescription: @"",
-                                   (__bridge id)kSecValueData: @"",
+                                   (__bridge id)kSecValueData: @{},
                                    (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlways,
-                                   (__bridge id)kSecAttrService: @"com.moblico.SDK.credentials",
-                                   (__bridge id)kSecAttrGeneric: self.genericPasswordQuery[(__bridge id)kSecAttrGeneric]} mutableCopy];
-
+                                   (__bridge id)kSecAttrService: self.serviceName} mutableCopy];
+            id attrGeneric = self.genericPasswordQuery[(__bridge id)kSecAttrGeneric];
+            if (attrGeneric) {
+                _keychainItemData[(__bridge id)kSecAttrGeneric] = attrGeneric;
+            }
         }
 
         if (outDictionary) CFRelease(outDictionary);
@@ -277,8 +352,10 @@ static NSString *_testingAPIKey = nil;
 
     // Convert the NSString to NSData to meet the requirements for the value type kSecValueData.
 	// This is where to store sensitive data that should be encrypted.
-    NSString *passwordString = dictionaryToConvert[(__bridge id)kSecValueData];
-    returnDictionary[(__bridge id)kSecValueData] = [passwordString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *credentials = dictionaryToConvert[(__bridge id)kSecValueData];
+//    NSString *passwordString = dictionaryToConvert[(__bridge id)kSecValueData];
+    returnDictionary[(__bridge id)kSecValueData] = [NSKeyedArchiver archivedDataWithRootObject:credentials];
+//    returnDictionary[(__bridge id)kSecValueData] = [passwordString dataUsingEncoding:NSUTF8StringEncoding];
 
     return returnDictionary;
 }
@@ -302,9 +379,21 @@ static NSString *_testingAPIKey = nil;
         [returnDictionary removeObjectForKey:(__bridge id)kSecReturnData];
         
         // Add the password to the dictionary, converting from NSData to NSString.
-        NSString *password = [[NSString alloc] initWithBytes:[(__bridge NSData *)passwordData bytes] length:[(__bridge NSData *)passwordData length]
-                                                    encoding:NSUTF8StringEncoding];
-        returnDictionary[(__bridge id)kSecValueData] = password;
+        NSData *data = (__bridge NSData *)passwordData;
+		NSDictionary *credentials = @{};
+        if (data != nil) {
+            @try {
+                credentials = (NSDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+                returnDictionary[(__bridge id)kSecValueData] = credentials;
+            }
+            @catch (NSException *exception) {
+                credentials = @{};
+            }
+        }
+
+
+//        NSString *password = [[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+//        returnDictionary[(__bridge id)kSecValueData] = password;
     } else {
         // Don't do anything if nothing is found.
         NSAssert(NO, @"Serious error, no matching item found in the keychain.\n");
@@ -341,6 +430,15 @@ static NSString *_testingAPIKey = nil;
     }
 	
 	if (attributes) CFRelease(attributes);
+}
+
+- (NSURLSession *)session {
+    if (!_session) {
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+        _session = session;
+    }
+    return _session;
 }
 
 #pragma mark -

@@ -72,8 +72,13 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
 	/// Specifies that the user has shared a reward.
     MLCMetricTypeShareReward,
 
-	/// Specifies that the user has shared a location.
+    /// Specifies that the user has shared a location.
     MLCMetricTypeShareLocation,
+    MLCMetricTypeEnterGeoRegion,
+    MLCMetricTypeExitGeoRegion,
+    MLCMetricTypeEnterBeaconRegion,
+    MLCMetricTypeExitBeaconRegion,
+    MLCMetricTypeChangeGPS,
 };
 
 /**

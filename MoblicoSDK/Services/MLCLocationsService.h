@@ -18,6 +18,7 @@
 @class MLCEvent;
 @class MLCDeal;
 @class MLCReward;
+@class MLCMerchant;
 
 @interface MLCLocationsService : MLCService
 
@@ -26,9 +27,13 @@
 + (instancetype)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)findLocationsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
++ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant typeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
+
++ (instancetype)listLocationsForMerchant:(MLCMerchant *)merchant handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listLocationsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listLocationsForDeal:(MLCDeal *)deal handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)listLocationsForReward:(MLCReward *)reward handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listLocationsForResource:(id <MLCEntity>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listLocationsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
 
 @end

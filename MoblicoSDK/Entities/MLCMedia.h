@@ -16,6 +16,7 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL fromCache);
 /**
  The media facility provides the means to reference and provide dynamic meta data
  for any type of content required.
@@ -89,7 +90,7 @@
 /**
  The thumbnail image URL for this media.
  */
-@property (copy, nonatomic) NSString *thumbUrl;
+@property (copy, nonatomic) NSURL *thumbUrl;
 
 /**
  The external unique identifier for this media.
@@ -97,6 +98,10 @@
  The externalId will be set when the media originates from an external system to Moblico.
  */
 @property (copy, nonatomic) NSString *externalId;
+
+- (void)loadImageData:(MLCMediaCompletionHandler)handler;
+- (void)loadThumbData:(MLCMediaCompletionHandler)handler;
+- (void)loadData:(MLCMediaCompletionHandler)handler;
 
 @end
 

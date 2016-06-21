@@ -23,27 +23,28 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
 + (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
 + (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
 + (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
-+ (instancetype)createUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)createUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)readUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)addAccountId:(NSUInteger)accountId toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)createAnonymousDeviceWithDeviceToken:(NSData *)deviceToken handler:(MLCServiceStatusCompletionHandler)handler;
-
-/**
- @since Available in MoblicoSDK 1.2 and later.
- */
-+ (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)createAnonymousDeviceWithDeviceToken:(NSData *)deviceToken handler:(MLCServiceResourceCompletionHandler)handler;
 
 /**
  @since Available in MoblicoSDK 1.2 and later.
  */
-+ (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
+
+/**
+ @since Available in MoblicoSDK 1.2 and later.
+ */
++ (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
 /**
  @since Available in MoblicoSDK 1.6 and later.
  */
-+ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler;
++ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
 
 @end
 
@@ -56,7 +57,7 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
  
  @see +destroyDeviceForUser:handler:
  */
-+ (instancetype)destroyDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler
++ (instancetype)destroyDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler
     __attribute__((deprecated ("Use 'destroyDeviceForUser:handler:' instead.")));
 
 /**
@@ -66,13 +67,13 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
  
  @see +updateDeviceWithDeviceToken:forUser:handler:
  */
-+ (instancetype)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler
++ (instancetype)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler
     __attribute__((deprecated ("Use 'updateDeviceWithDeviceId:forUser:handler:' instead.")));
 
 /**
  @since Unavailable in this version of the MoblicoSDK.
  */
-+ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceStatusCompletionHandler)handler
++ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler
     __attribute__((unavailable ("'destroyUser:handler:' is not available with this version of the Moblico SDK.")));
 
 @end
