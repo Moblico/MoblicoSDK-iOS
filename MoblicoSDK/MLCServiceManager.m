@@ -432,15 +432,6 @@ static NSString *_testingAPIKey = nil;
 	if (attributes) CFRelease(attributes);
 }
 
-- (NSURLSession *)session {
-    if (!_session) {
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-        _session = session;
-    }
-    return _session;
-}
-
 #pragma mark -
 #pragma mark Deprecated
 
