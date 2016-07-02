@@ -47,6 +47,8 @@ MLCSettingsService *settingsService =
 [settingsService start];
 ```
 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 [1]: http://developer.moblico.com/sdks/ios/docs/docs/images/DragSDK.png "Drag MoblicoSDK.framework"
 
 [2]: http://developer.moblico.com/sdks/ios/docs/docs/images/Copy.png "Enable Copy"

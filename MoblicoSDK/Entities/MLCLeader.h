@@ -14,16 +14,27 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCUser.h>
+#import <MoblicoSDK/MLCEntity.h>
 
-/**
- MLCLeader is a subclass of MLCUser and represents users who have earned points.
- */
-@interface MLCLeader : MLCUser
+/// MLCLeader represents a user who has earned points.
+@interface MLCLeader : MLCEntity
 
-/**
- The amount of points earned by this user.
- */
+/// The username of the user.
+@property (copy, nonatomic) NSString *username;
+
+/// The first name of the user.
+@property (copy, nonatomic) NSString *firstName;
+
+/// The last name of the user.
+@property (copy, nonatomic) NSString *lastName;
+
+/// The email address of the user.
+@property (copy, nonatomic) NSString *email;
+
+/// The nick name of the user.
+@property (copy, nonatomic) NSString *nickName;
+
+/// The amount of points earned by this user.
 @property (nonatomic) NSInteger points;
 
 @end

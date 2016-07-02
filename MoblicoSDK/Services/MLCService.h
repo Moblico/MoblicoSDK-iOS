@@ -55,8 +55,6 @@ typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
 /**
  The callback handler for JSON MLCService requests
  
- The parameters for this handler are:
-
  @param jsonObject The JSON data returned by the service request.
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
@@ -67,8 +65,6 @@ typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject,  NSError
 /**
  The callback handler for resource MLCService requests
  
- The parameters for this handler are:
-
  @param resource The object returned by the service request.
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
@@ -77,8 +73,6 @@ typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntityProtocol>  _Nulla
 
 /**
  The callback handler for collection MLCService requests
- 
- The parameters for this handler are:
 
  @param collection The array of resources returned by the service request.
  @param error An error identifier.
@@ -89,7 +83,6 @@ typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<MLCEntityProtocol> 
 /**
  The callback handler for status MLCService requests
  
- The parameters for this handler are:
  @param success Boolean indicating if the action was successful.
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
