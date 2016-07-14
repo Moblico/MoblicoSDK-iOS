@@ -37,13 +37,17 @@
 }
 
 + (NSDictionary *)settings {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettings"];
+    NSDictionary *settings = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettings"];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:settings];
+    NSDictionary *override = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettingsOverride"];
+    if (override.count > 0) {
+        [dictionary addEntriesFromDictionary:override];
+    }
+    return dictionary;
 }
 
-+ (void)overrideSettings:(NSDictionary *)settings {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:self.settings];
-    [dictionary addEntriesFromDictionary:settings];
-    [[NSUserDefaults standardUserDefaults] setObject:dictionary forKey:@"MLCSettings"];
++ (void)overrideSettings:(NSDictionary *)override {
+    [[NSUserDefaults standardUserDefaults] setObject:override forKey:@"MLCSettingsOverride"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
