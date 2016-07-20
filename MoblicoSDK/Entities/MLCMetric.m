@@ -113,6 +113,14 @@ static NSString *const MLCMetricTypeChangeGPSString = @"Change_GPS";
     if (locationId > 0) {
         serializedObject[@"locationId"] = @(locationId);
     }
+
+    NSString *latitude = @(metric.latitude).stringValue;
+    latitude = [latitude substringToIndex:MIN((NSUInteger)16, latitude.length)];
+    serializedObject[@"latitude"] = latitude;
+
+    NSString *longitude = @(metric.longitude).stringValue;
+    latitude = [longitude substringToIndex:MIN((NSUInteger)16, longitude.length)];
+    serializedObject[@"longitude"] = longitude;
     
     return serializedObject;
 }
