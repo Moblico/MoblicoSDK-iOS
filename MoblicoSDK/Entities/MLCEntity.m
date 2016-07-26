@@ -107,7 +107,9 @@
         [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, BOOL * _Nonnull stop) {
 
             if ([type characterAtIndex:0] != '@') {
-//                [self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:nil];
+                @try {
+                    [self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:nil];
+                } @catch (NSException * __unused exception) {}
             }
         }];
 //        id type = properties[key];
