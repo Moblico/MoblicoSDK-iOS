@@ -61,7 +61,7 @@
 /**
  The time zone for this event.
  */
-@property (copy, nonatomic) NSString *timeZone;
+@property (copy, nonatomic) NSTimeZone *timeZone;
 
 /**
  The phone number for this event.
@@ -101,7 +101,7 @@
 /**
  The RSVP URL for this event.
  */
-@property (copy, nonatomic) NSString *rsvpUrl;
+@property (copy, nonatomic) NSURL *rsvpUrl;
 
 /**
  The attributes for this event.

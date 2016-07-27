@@ -18,4 +18,18 @@
 
 @implementation MLCEvent
 
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
+    if (self) {
+        self.timeZone = [NSTimeZone timeZoneWithName:jsonObject[@"timeZone"]];
+    }
+    return self;
+}
+
++ (NSDictionary *)serialize:(MLCEvent *)event {
+    NSMutableDictionary *object = [[super serialize:event] mutableCopy];
+    object[@"timeZone"] = event.timeZone.name;
+    return object;
+}
+
 @end

@@ -408,7 +408,7 @@ static NSString *_testingAPIKey = nil;
     CFDictionaryRef attributes = NULL;
     NSMutableDictionary *updateItem = nil;
 	__unused OSStatus result;
-    
+
     if (SecItemCopyMatching((__bridge CFDictionaryRef)self.genericPasswordQuery, (CFTypeRef *)&attributes) == noErr) {
         // First we need the attributes from the Keychain.
         updateItem = [NSMutableDictionary dictionaryWithDictionary:(__bridge NSDictionary *)attributes];

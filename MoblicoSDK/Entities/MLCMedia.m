@@ -24,13 +24,14 @@
 @end
 
 @implementation MLCMedia
+@synthesize dataTask = __dataTask;
 
 + (NSString *)collectionName {
     return @"media";
 }
 
 + (NSArray *)ignoredPropertiesDuringSerialization {
-    return @[@"data"];
+    return @[@"data", @"dataTask"];
 }
 
 + (NSCache *)_mlc_sharedCache {
@@ -79,6 +80,11 @@
         });
     }];
     [self.dataTask resume];
+}
+
+- (void)dealloc {
+    [__dataTask cancel];
+    __dataTask = nil;
 }
 
 @end

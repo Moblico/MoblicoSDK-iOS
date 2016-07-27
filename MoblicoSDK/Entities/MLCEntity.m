@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,35 +28,35 @@
 
 - (BOOL)validate:(out NSError *__autoreleasing *)outError {
 
-	NSDictionary *properties = self._properties;
-	NSMutableArray * errors = [NSMutableArray arrayWithCapacity:properties.count];
+    NSDictionary *properties = self._properties;
+    NSMutableArray * errors = [NSMutableArray arrayWithCapacity:properties.count];
 
-	for (id key in properties) {
-		id value = [self valueForKey:key];
-		NSError * error = nil;
-		if (![self validateValue:&value forKey:key error:&error]) {
-			if (!error) {
-				error = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationUnknownError userInfo:@{ NSLocalizedDescriptionKey : @"Unknown error" }];
-			}
-			[errors addObject:error];
-		}
-	}
+    for (id key in properties) {
+        id value = [self valueForKey:key];
+        NSError * error = nil;
+        if (![self validateValue:&value forKey:key error:&error]) {
+            if (!error) {
+                error = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationUnknownError userInfo:@{ NSLocalizedDescriptionKey : @"Unknown error" }];
+            }
+            [errors addObject:error];
+        }
+    }
 
-	if (errors.count == 0) return YES;
+    if (errors.count == 0) return YES;
 
-	if (outError != NULL) {
-		if (errors.count == 1) *outError = errors.firstObject;
-		else *outError = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationMultipleErrorsError userInfo:@{ MLCValidationDetailedErrorsKey : errors }];
-	}
+    if (outError != NULL) {
+        if (errors.count == 1) *outError = errors.firstObject;
+        else *outError = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationMultipleErrorsError userInfo:@{ MLCValidationDetailedErrorsKey : errors }];
+    }
 
-	return NO;
+    return NO;
 }
 
 - (NSMutableDictionary *)_scalarValues {
     if (!__scalarValues) {
         self._scalarValues = [[NSMutableDictionary alloc] init];
     }
-    
+
     return __scalarValues;
 }
 
@@ -92,7 +92,7 @@
 }
 
 - (void)setSafeValue:(id)value forKey:(NSString *)key {
-	if (!key) [NSException raise:NSInvalidArgumentException format:@"Key must not be nil"];
+    if (!key) [NSException raise:NSInvalidArgumentException format:@"Key must not be nil"];
     NSDictionary *properties = self._properties;
     id type = properties[key];
 
@@ -112,14 +112,14 @@
                 } @catch (NSException * __unused exception) {}
             }
         }];
-//        id type = properties[key];
+        //        id type = properties[key];
 
-//        unsigned int propertyCount;
-//        objc_property_t *properties = class_copyPropertyList([self class], &propertyCount);
-//        for(unsigned int i = 0; i < propertyCount; i++)
-//            [self addObserver:self
-//                   forKeyPath:[NSString stringWithCString:property_getName(properties[i]) encoding:NSUTF8StringEncoding]
-//                      options:NSKeyValueObservingOptionNew context:nil];
+        //        unsigned int propertyCount;
+        //        objc_property_t *properties = class_copyPropertyList([self class], &propertyCount);
+        //        for(unsigned int i = 0; i < propertyCount; i++)
+        //            [self addObserver:self
+        //                   forKeyPath:[NSString stringWithCString:property_getName(properties[i]) encoding:NSUTF8StringEncoding]
+        //                      options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -142,7 +142,7 @@
     MLCEntityLog(@"Changed value at key path: %@ change: %@ value: %@", keyPath, change, value);
     NSDictionary *properties = self._properties;
     id type = properties[keyPath];
-//    id value = [super valueForKey:keyPath];//change[NSKeyValueChangeNewKey];
+    //    id value = [super valueForKey:keyPath];//change[NSKeyValueChangeNewKey];
     if (type && [type characterAtIndex:0] != '@') {
         if (value) {
             MLCEntityLog(@"set _scalarValues[%@] = %@", keyPath, value);
@@ -160,7 +160,7 @@
     MLCEntityLog(@"setValue[%@] = %@", key, value);
     NSDictionary *properties = self._properties;
     id type = properties[key];
-    
+
     if ([type characterAtIndex:0] == '@') {
         [super setValue:value forKey:key];
         return;
@@ -180,7 +180,7 @@
 - (id)valueForKey:(NSString *)key {
     NSDictionary *properties = self._properties;
     id type = properties[key];
-    
+
     if ([type characterAtIndex:0] == '@') {
         id value = [super valueForKey:key];
         MLCEntityLog(@"Get Value[%@] = %@", key, value);
@@ -211,51 +211,51 @@
         return [value boolValue] ? @"true" : @"false";
     }
 
-	if ([value respondsToSelector:@selector(stringValue)]) {
-		return [value stringValue];
-	}
+    if ([value respondsToSelector:@selector(stringValue)]) {
+        return [value stringValue];
+    }
 
-	if (![value isKindOfClass:[NSString class]]) {
-		return nil;
-	}
+    if (![value isKindOfClass:[NSString class]]) {
+        return nil;
+    }
 
-	return value;
+    return value;
 }
 
 + (NSDate *)dateFromTimeStampValue:(id)value {
-	double timestamp = [self doubleFromValue:value];
+    double timestamp = [self doubleFromValue:value];
 
-	if (timestamp) {
-		return [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
-	}
-	
-	return nil;
+    if (timestamp) {
+        return [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
+    }
+
+    return nil;
 }
 
 + (NSNumber *)timeStampFromDate:(NSDate *)date {
     if (!date) return nil;
     NSTimeInterval timeInterval = date.timeIntervalSince1970;
-	NSNumber *timeStamp = @(timeInterval * 1000.0);
+    NSNumber *timeStamp = @(timeInterval * 1000.0);
 
-	return @(timeStamp.longLongValue);
+    return @(timeStamp.longLongValue);
 }
 
 + (BOOL)boolFromValue:(id)value {
-	if (![value respondsToSelector:@selector(boolValue)]) return NO;
+    if (![value respondsToSelector:@selector(boolValue)]) return NO;
 
-	return [value boolValue];
+    return [value boolValue];
 }
 
 + (float)floatFromValue:(id)value {
-	if (![value respondsToSelector:@selector(floatValue)]) return 0.0;
+    if (![value respondsToSelector:@selector(floatValue)]) return 0.0;
 
-	return [value floatValue];
+    return [value floatValue];
 }
 
 + (double)doubleFromValue:(id)value {
-	if (![value respondsToSelector:@selector(doubleValue)]) return 0.0;
+    if (![value respondsToSelector:@selector(doubleValue)]) return 0.0;
 
-	return [value doubleValue];
+    return [value doubleValue];
 }
 
 + (NSInteger)integerFromValue:(id)value {
@@ -271,27 +271,27 @@
 }
 
 + (int)intFromValue:(id)value {
-	if (![value respondsToSelector:@selector(intValue)]) return 0;
+    if (![value respondsToSelector:@selector(intValue)]) return 0;
 
-	return [value intValue];
+    return [value intValue];
 }
 
 + (unsigned int)unsignedIntFromValue:(id)value {
-	if (![value respondsToSelector:@selector(unsignedIntValue)]) return 0;
+    if (![value respondsToSelector:@selector(unsignedIntValue)]) return 0;
 
-	return [value unsignedIntValue];
+    return [value unsignedIntValue];
 }
 
 + (unsigned long)unsignedLongFromValue:(id)value {
-	if (![value respondsToSelector:@selector(unsignedLongValue)]) return 0;
+    if (![value respondsToSelector:@selector(unsignedLongValue)]) return 0;
 
-	return [value unsignedLongValue];
+    return [value unsignedLongValue];
 }
 
 + (unsigned long long)unsignedLongLongFromValue:(id)value {
-	if (![value respondsToSelector:@selector(unsignedLongLongValue)]) return 0;
+    if (![value respondsToSelector:@selector(unsignedLongLongValue)]) return 0;
 
-	return [value unsignedLongLongValue];
+    return [value unsignedLongLongValue];
 }
 
 + (long)longFromValue:(id)value {
@@ -301,37 +301,46 @@
 }
 
 + (unsigned)unsignedFromValue:(id)value {
-	if (![value respondsToSelector:@selector(unsignedIntValue)]) return 0;
+    if (![value respondsToSelector:@selector(unsignedIntValue)]) return 0;
 
-	return [value unsignedIntValue];
+    return [value unsignedIntValue];
 }
 
 + (short)shortFromValue:(id)value {
-	if (![value respondsToSelector:@selector(shortValue)]) return 0;
+    if (![value respondsToSelector:@selector(shortValue)]) return 0;
 
-	return [value shortValue];
+    return [value shortValue];
 }
 
 + (NSNumber *)numberFromDoubleValue:(id)value {
-	if (![value respondsToSelector:@selector(doubleValue)]) return nil;
+    if (![value respondsToSelector:@selector(doubleValue)]) return nil;
 
-	return @([value doubleValue]);
+    return @([value doubleValue]);
 }
 
 + (NSNumber *)numberFromIntegerValue:(id)value {
-	if (![value respondsToSelector:@selector(integerValue)]) return nil;
+    if (![value respondsToSelector:@selector(integerValue)]) return nil;
 
-	return @([value integerValue]);
+    return @([value integerValue]);
 }
 
 + (NSNumber *)numberFromBoolValue:(id)value {
-	if (![value respondsToSelector:@selector(boolValue)]) return nil;
+    if (![value respondsToSelector:@selector(boolValue)]) return nil;
 
-	return @([value boolValue]);
+    return @([value boolValue]);
 }
 
 + (NSURL *)URLFromValue:(id)value {
-    return [NSURL URLWithString:[self stringFromValue:value]];
+    NSString *string = [self stringFromValue:value];
+    if (string.length <= 0) {
+        return nil;
+    }
+
+    NSURLComponents *components = [NSURLComponents componentsWithString:string];
+    if (components.scheme == nil) {
+        components.scheme = @"http";
+    }
+    return components.URL;
 }
 
 + (NSArray *)arrayFromValue:(id)value {
@@ -402,14 +411,14 @@
     MLCEntity *entity = entityObject;
 
     NSDictionary *properties = entity._properties;
-    
+
     NSMutableDictionary *serializedObject = [NSMutableDictionary dictionaryWithCapacity:properties.count];
 
     NSArray *ignore = [self ignoredPropertiesDuringSerialization];
     NSDictionary *rename = [self renamedPropertiesDuringSerialization];
 
     [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
-		MLCEntityLog(@"Key: %@ Type: %@", key, type);
+        MLCEntityLog(@"Key: %@ Type: %@", key, type);
         if ([key isEqualToString:@"properties"] || [key isEqualToString:@"_properties"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"description"]) {
             return;
         }
@@ -419,8 +428,14 @@
         id value = [entity valueForKey:key];
         if (!value || value == [NSNull null]) return;
 
-        if ([[MLCEntity classFromType:type] isSubclassOfClass:[NSDate class]]) {
+        Class ValueClass = [MLCEntity classFromType:type];
+        if ([ValueClass isSubclassOfClass:[MLCEntity class]]) {
+            value = [ValueClass serialize:value];
+        } else if ([ValueClass isSubclassOfClass:[NSDate class]]) {
             value = [MLCEntity timeStampFromDate:value];
+        } else if ([ValueClass isSubclassOfClass:[NSURL class]]) {
+            NSURL *url = value;
+            value = url.absoluteString;
         } else if ([type characterAtIndex:0] == 'c' || [type characterAtIndex:0] == @encode(BOOL)[0] || [type characterAtIndex:0] == @encode(bool)[0]) {
             MLCEntityLog(@"it's a bool! %@", value);
             value = [MLCEntity boolFromValue:value] ? @"true" : @"false";
@@ -455,6 +470,13 @@
 
         NSString *propertyName = @(property_getName(property));
         if ([propertyName hasPrefix:@"_"]) continue;
+        char *ivar = property_copyAttributeValue(property, "V");
+        if (ivar) {
+            NSString *ivarName = @(ivar);
+            free(ivar);
+            if (![ivarName isEqualToString:propertyName] && ![ivarName isEqualToString:[@"_" stringByAppendingString:propertyName]]) continue;
+        }
+
         NSString *propertyAttributes = @(property_getAttributes(property));
         MLCEntityLog(@"propertyName: %@ propertyAttributes: %@", propertyName, propertyAttributes);
         propertyAttributes = [propertyAttributes componentsSeparatedByString:@","].firstObject;
@@ -473,18 +495,18 @@
 
 + (Class)classFromType:(NSString *)type {
     if ([type characterAtIndex:0] != @encode(id)[0]) return nil;
-    
+
     NSMutableString *className = [type mutableCopy];
-    
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wassign-enum"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wassign-enum"
     [className replaceOccurrencesOfString:@"\"" withString:@"" options:0 range:NSMakeRange(0, className.length)];
-    #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
     if ([className hasPrefix:@"@"]) {
         [className deleteCharactersInRange:NSMakeRange(0, 1)];
     }
-    
+
     return NSClassFromString(className);
 
 }
@@ -506,32 +528,34 @@
      Code clean up inspired by Mike Ash:
      http://www.mikeash.com/pyblog/friday-qa-2013-02-08-lets-build-key-value-coding.html
      */
-    
-//    NSString *firstCapChar = [key substringToIndex:1].capitalizedString;
-//    NSString *capitalizedKey = [key stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:firstCapChar];
 
-//    NSString *setterName = [NSString stringWithFormat: @"set%@:", capitalizedKey];
-//    SEL setterSEL = NSSelectorFromString(setterName);
+    //    NSString *firstCapChar = [key substringToIndex:1].capitalizedString;
+    //    NSString *capitalizedKey = [key stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:firstCapChar];
 
-//	if (![self respondsToSelector:setterSEL]) {
-//        MLCEntityLog(@"%@ Not responding to setter: %@", [self class],  setterName);
-//        return;
-//    }
+    //    NSString *setterName = [NSString stringWithFormat: @"set%@:", capitalizedKey];
+    //    SEL setterSEL = NSSelectorFromString(setterName);
 
-	const unichar typeChar = [type characterAtIndex:0];
+    //	if (![self respondsToSelector:setterSEL]) {
+    //        MLCEntityLog(@"%@ Not responding to setter: %@", [self class],  setterName);
+    //        return;
+    //    }
+
+    const unichar typeChar = [type characterAtIndex:0];
 
     // Class
-	if (typeChar == @encode(Class)[0]) {
+    if (typeChar == @encode(Class)[0]) {
         [self setValue:value forKey:key];
         return;
-	}
-    
-	// Object
+    }
+
+    // Object
     if (typeChar == @encode(id)[0]) {
         Class ClassType = [MLCEntity classFromType:type];
         id obj = nil;
 
-        if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
+        if ([value isKindOfClass:[MLCEntity class]]) {
+            obj = value;
+        } else if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
             obj = [[ClassType alloc] initWithJSONObject:value];
         } else {
             if ([ClassType isSubclassOfClass:[NSString class]]) obj = [MLCEntity stringFromValue:value];
@@ -545,23 +569,23 @@
         return;
     }
 
-//    MLCEntityLog(@"Not Object or Class - key: %@ value: %@ type: %@ value class: %@", key, value, type, [value class]);
-    #define CASE_SEL(ctype, selectorpart) \
-        if(typeChar == @encode(ctype)[0]) { \
-            if ([value isKindOfClass:[NSString class]]) { \
-                if (((NSString *)value).length == 0) return; \
-                NSNumberFormatter *f = [[NSNumberFormatter alloc] init]; \
-                f.numberStyle = NSNumberFormatterDecimalStyle; \
-                NSNumber *number = [f numberFromString:value]; \
-                if(number)value=number;\
-            }\
-            NSNumber *number = @([MLCEntity selectorpart ## FromValue: value ]); \
-            [self setValue:number forKey:key]; \
-            return; \
-        }
-    
-    #define CASE(ctype) CASE_SEL(ctype, ctype)
-    
+    //    MLCEntityLog(@"Not Object or Class - key: %@ value: %@ type: %@ value class: %@", key, value, type, [value class]);
+#define CASE_SEL(ctype, selectorpart) \
+if(typeChar == @encode(ctype)[0]) { \
+if ([value isKindOfClass:[NSString class]]) { \
+if (((NSString *)value).length == 0) return; \
+NSNumberFormatter *f = [[NSNumberFormatter alloc] init]; \
+f.numberStyle = NSNumberFormatterDecimalStyle; \
+NSNumber *number = [f numberFromString:value]; \
+if(number)value=number;\
+}\
+NSNumber *number = @([MLCEntity selectorpart ## FromValue: value ]); \
+[self setValue:number forKey:key]; \
+return; \
+}
+
+#define CASE(ctype) CASE_SEL(ctype, ctype)
+
     CASE(float);
     CASE(double);
     CASE(int);
@@ -574,10 +598,10 @@
     CASE_SEL(unsigned long, unsignedLong);
     CASE_SEL(unsigned long long, unsignedLongLong);
 
-    #undef CASE
-    #undef CASE_SEL
+#undef CASE
+#undef CASE_SEL
 
-//    MLCEntityLog(@"Ok, what? value: %@ key: %@ type: %@", value, key, type);
+    //    MLCEntityLog(@"Ok, what? value: %@ key: %@ type: %@", value, key, type);
     [self setValue:value forKey:key];
 }
 
@@ -605,25 +629,18 @@
     [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
         id value = [self valueForKey:key];
 
-        if ([type characterAtIndex:0] == @encode(id)[0]) {
-            Class ClassType = [[self class] classFromType:type];
-
-            if (![ClassType conformsToProtocol:@protocol(NSCoding)]) {
-                value = nil;
-            }
-        }
-        if (key && value) [coder encodeObject:value forKey:key];
+        [coder encodeObject:value forKey:key];
     }];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super init];
 
-	if (self) {
+    if (self) {
         NSDictionary *properties = self._properties;
         [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
             id value = [coder decodeObjectForKey:key];
-            [self setValue:value forKey:key type:type];
+            [self setValue:value forKey:key];
         }];
     }
 
@@ -631,7 +648,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-	id copyedObject = [[[self class] allocWithZone:zone] init];
+    id copyedObject = [[[self class] allocWithZone:zone] init];
 
     if (copyedObject) {
         NSDictionary *properties = self._properties;
@@ -646,16 +663,16 @@
 
 - (BOOL)isEqual:(id)object {
     if (![object isKindOfClass:[self class]]) {
-//        MLCEntityLog(@"These objects have a different class.");
+        //        MLCEntityLog(@"These objects have a different class.");
         return NO;
     }
     NSDictionary *this = [[self class] serialize:self];
     NSDictionary *other = [[self class] serialize:object];
-//    MLCEntityLog(@"this: %@ other: %@", this, other);
+    //    MLCEntityLog(@"this: %@ other: %@", this, other);
     BOOL equal = [this isEqualToDictionary:other];
-//    MLCEntityLog(@"Objects are %@", equal? @"equal": @"not equal");
+    //    MLCEntityLog(@"Objects are %@", equal? @"equal": @"not equal");
     return equal;
-//    return [self.uniqueIdentifier isEqual:entity.uniqueIdentifier];
+    //    return [self.uniqueIdentifier isEqual:entity.uniqueIdentifier];
 }
 
 - (NSUInteger)hash {
@@ -673,7 +690,7 @@
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-//    MLCEntityLog(@"methodSignatureForSelector: %@", NSStringFromSelector(selector));
+    //    MLCEntityLog(@"methodSignatureForSelector: %@", NSStringFromSelector(selector));
     NSMethodSignature *sig = [super methodSignatureForSelector:selector];
     if (!sig) {
         MLCEntityLog(@"Selector Not Found Here!!!! sel: %@", NSStringFromSelector(selector));
@@ -690,22 +707,22 @@
         return [NSMethodSignature signatureWithObjCTypes:[types cStringUsingEncoding:NSUTF8StringEncoding]];
     }
 
-//    if (setter) {
-//        if (self._properties[setter]) {
-//            NSString *type = self._properties[prop];
-//            NSString *name = [NSString stringWithFormat:@"v@:%@", type];
-//            MLCEntityLog(@"%@ %@", name, type);
-//            sig = [NSMethodSignature signatureWithObjCTypes:[name cStringUsingEncoding:NSUTF8StringEncoding]];
-//        }
-//        MLCEntityLog(@"sig: %@", sig);
-//        return sig;
-//    } else if (self._properties[sel]) {
-//        NSString *type = self._properties[sel];
-//        MLCEntityLog(@"Selector is in Properties.");
-//        NSString *name = [NSString stringWithFormat:@"%@@:", type];
-//
-//        return [NSMethodSignature signatureWithObjCTypes:[name cStringUsingEncoding:NSUTF8StringEncoding]];
-//    }
+    //    if (setter) {
+    //        if (self._properties[setter]) {
+    //            NSString *type = self._properties[prop];
+    //            NSString *name = [NSString stringWithFormat:@"v@:%@", type];
+    //            MLCEntityLog(@"%@ %@", name, type);
+    //            sig = [NSMethodSignature signatureWithObjCTypes:[name cStringUsingEncoding:NSUTF8StringEncoding]];
+    //        }
+    //        MLCEntityLog(@"sig: %@", sig);
+    //        return sig;
+    //    } else if (self._properties[sel]) {
+    //        NSString *type = self._properties[sel];
+    //        MLCEntityLog(@"Selector is in Properties.");
+    //        NSString *name = [NSString stringWithFormat:@"%@@:", type];
+    //
+    //        return [NSMethodSignature signatureWithObjCTypes:[name cStringUsingEncoding:NSUTF8StringEncoding]];
+    //    }
 
     return sig;
 }
@@ -743,15 +760,15 @@
 //
 //#undef CASE
 //#undef CASE_SEL
-//    
-//    
+//
+//
 //}
 
 - (NSNumber *)numberWithBytes:(const void *)value objCType:(const char *)type {
     MLCEntityLog(@"intype: %s", type);
-    #define CASE(ctype, selectorpart) \
-    if(type[0] == @encode(ctype)[0]) {\
-        return [NSNumber numberWith ## selectorpart:(ctype)value];}
+#define CASE(ctype, selectorpart) \
+if(type[0] == @encode(ctype)[0]) {\
+return [NSNumber numberWith ## selectorpart:(ctype)value];}
 
     CASE(char, Char);
     CASE(unsigned char, UnsignedChar);
@@ -763,8 +780,8 @@
     CASE(unsigned long, UnsignedLong);
     CASE(long long, LongLong);
     CASE(unsigned long long, UnsignedLongLong);
-//    CASE(float, Float);
-//    CASE(double, Double);
+    //    CASE(float, Float);
+    //    CASE(double, Double);
 
 #undef CASE
 
@@ -773,12 +790,12 @@
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
     MLCEntityLog(@"forwardInvocation: %@", invocation);
-//    return;
+    //    return;
     NSString *key = NSStringFromSelector(invocation.selector);
     MLCEntityLog(@"forwardInvocation: %@ selector: %@", invocation, key);
     NSString *setter = [self setterToGetter:key];
     NSString *type = self._properties[setter ?: key];
-
+    
     if (type) {
         MLCEntityLog(@"getting %@ (%@)", key, type);
         if ([key hasPrefix:@"set"]) {
@@ -791,14 +808,14 @@
             else {
                 const char * atype = [invocation.methodSignature getArgumentTypeAtIndex:2];
                 NSNumber *value = nil;
-
-                #define CASE(ctype, selectorpart) \
-                    if(atype[0] == @encode(ctype)[0]) {\
-                        MLCEntityLog(@"Type: %s", @encode(ctype)); \
-                        ctype val = 0; \
-                        [invocation getArgument:&val atIndex:2]; \
-                        value = [NSNumber numberWith ## selectorpart:val];}
-
+                
+#define CASE(ctype, selectorpart) \
+if(atype[0] == @encode(ctype)[0]) {\
+MLCEntityLog(@"Type: %s", @encode(ctype)); \
+ctype val = 0; \
+[invocation getArgument:&val atIndex:2]; \
+value = [NSNumber numberWith ## selectorpart:val];}
+                
                 CASE(char, Char);
                 CASE(unsigned char, UnsignedChar);
                 CASE(short, Short);
@@ -811,17 +828,17 @@
                 CASE(unsigned long long, UnsignedLongLong);
                 CASE(float, Float);
                 CASE(double, Double);
-                #undef CASE
-
-//                void* val = NULL;
-//                [invocation getArgument:&val atIndex:2];
-//                id value = [NSValue valueWithPointer:val];
-//                NSNumber *value = [self numberWithBytes:&val objCType:];
-//                MLCEntityLog(@"number: %@", value);
-//                id value = [NSValue valueWithBytes:val objCType:[type cStringUsingEncoding:NSUTF8StringEncoding]];
-//                id value = [NSValue value:&val withObjCType:];
+#undef CASE
+                
+                //                void* val = NULL;
+                //                [invocation getArgument:&val atIndex:2];
+                //                id value = [NSValue valueWithPointer:val];
+                //                NSNumber *value = [self numberWithBytes:&val objCType:];
+                //                MLCEntityLog(@"number: %@", value);
+                //                id value = [NSValue valueWithBytes:val objCType:[type cStringUsingEncoding:NSUTF8StringEncoding]];
+                //                id value = [NSValue value:&val withObjCType:];
                 [self setValue:value forKey:setter type:type];
-//                self._scalarValues[setter] = value;
+                //                self._scalarValues[setter] = value;
             }
             return;
         }
@@ -829,13 +846,13 @@
         if (!obj) {
             obj = self._scalarValues[key];
             if (!obj) {
-            MLCEntityLog(@"Value not set");
-            int zero = 0;
-            [invocation setReturnValue:&zero];
-            return;
+                MLCEntityLog(@"Value not set");
+                int zero = 0;
+                [invocation setReturnValue:&zero];
+                return;
             }
         }
-
+        
         if (invocation.methodSignature.methodReturnType[0] == '@') {
             [invocation setReturnValue:&obj];
         }

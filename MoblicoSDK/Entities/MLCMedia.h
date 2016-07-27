@@ -115,6 +115,6 @@ typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL from
 
  @see details
  */
-@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
+//@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
 
 @end

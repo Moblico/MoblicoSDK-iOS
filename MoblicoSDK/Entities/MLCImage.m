@@ -24,6 +24,7 @@
 @end
 
 @implementation MLCImage
+@synthesize dataTask = __dataTask;
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     NSUInteger imageId = [MLCEntity unsignedIntegerFromValue:jsonObject[@"imageId"]];
@@ -43,7 +44,7 @@
 }
 
 + (NSArray *)ignoredPropertiesDuringSerialization {
-    return @[@"data", @"path"];
+    return @[@"data", @"path", @"dataTask"];
 }
 
 + (instancetype)deserializeFromString:(NSString *)string {
@@ -143,8 +144,8 @@
 }
 
 - (void)dealloc {
-    [_dataTask cancel];
-    _dataTask = nil;
+    [__dataTask cancel];
+    __dataTask = nil;
 }
 
 - (NSString *)path {
