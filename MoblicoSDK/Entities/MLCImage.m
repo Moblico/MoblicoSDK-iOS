@@ -27,6 +27,9 @@
 @synthesize dataTask = __dataTask;
 
 - (instancetype)initWithURLString:(NSString *)URLString {
+    if (!URLString) {
+        return nil;
+    }
     self = [self initWithJSONObject:@{@"url": URLString}];
     return self;
 }
