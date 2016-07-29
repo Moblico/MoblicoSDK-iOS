@@ -46,6 +46,7 @@ typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL from
 
 - (void)loadImageData:(MLCImageCompletionHandler)handler;
 
+- (instancetype)initWithURLString:(NSString *)URLString;
 + (instancetype)deserializeFromString:(NSString *)string;
 
 @end

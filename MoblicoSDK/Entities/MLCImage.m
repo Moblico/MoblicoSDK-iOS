@@ -26,6 +26,11 @@
 @implementation MLCImage
 @synthesize dataTask = __dataTask;
 
+- (instancetype)initWithURLString:(NSString *)URLString {
+    self = [self initWithJSONObject:@{@"url": URLString}];
+    return self;
+}
+
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     NSUInteger imageId = [MLCEntity unsignedIntegerFromValue:jsonObject[@"imageId"]];
     NSURL *url = [MLCEntity URLFromValue:jsonObject[@"url"]];
