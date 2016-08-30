@@ -22,7 +22,7 @@
 @implementation MLCMediaService
 
 + (NSArray *)scopeableResources {
-    return @[@"MLCLocation", @"MLCEvent"];
+    return @[@"MLCLocation", @"MLCEvent", @"MLCMedia"];
 }
 
 + (Class<MLCEntityProtocol>)classForResource {
@@ -54,6 +54,10 @@
 
 + (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listMediaForResource:(id<MLCEntityProtocol>)event handler:handler];
+}
+
++ (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self listMediaForResource:(id<MLCEntityProtocol>)media handler:handler];
 }
 
 + (instancetype)listMediaForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {

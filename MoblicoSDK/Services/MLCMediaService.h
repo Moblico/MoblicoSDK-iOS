@@ -17,6 +17,7 @@
 #import <MoblicoSDK/MLCService.h>
 @class MLCLocation;
 @class MLCEvent;
+@class MLCMedia;
 
 /**
  The media facility provides the means to reference and provide dynamic meta data for any type of content required.
@@ -69,6 +70,9 @@
  */
 + (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
 
+
+
++ (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
 /**
  This method requests all media for a specified generic resource.
  
