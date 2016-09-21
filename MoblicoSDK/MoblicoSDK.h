@@ -16,11 +16,12 @@
 
 @import Foundation;
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 90000
+#error "iOS 9 is the minimum required Target Deployment for MoblicoSDK."
+#endif
+
 FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
-
-
-
 
 #import <MoblicoSDK/version.h>
 #import <MoblicoSDK/MLCServiceManager.h>
