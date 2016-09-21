@@ -17,38 +17,65 @@
 #import "MLCSettingsService.h"
 #import "MLCService_Private.h"
 
+@interface MLCSettings ()
+@property (nonatomic, copy) NSDictionary *dictionary;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+@end
+
 @implementation MLCSettingsService
 
 + (Class<MLCEntityProtocol>)classForResource {
     return Nil;
 }
 
-+ (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler {
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:@"settings"
                        parameters:nil
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                              MLCSettings *settings = nil;
                               if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
                                   [[NSUserDefaults standardUserDefaults] setObject:jsonObject forKey:@"MLCSettings"];
                                   [[NSUserDefaults standardUserDefaults] synchronize];
+                                  settings = [self settings];
                               }
-                              handler(jsonObject, error, response);
+                              handler(settings, error, response);
                           }];
 }
 
-+ (NSDictionary *)settings {
++ (MLCSettings *)settings {
     NSDictionary *settings = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettings"];
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:settings];
     NSDictionary *override = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettingsOverride"];
     if (override.count > 0) {
         [dictionary addEntriesFromDictionary:override];
     }
-    return dictionary;
+    return [[MLCSettings alloc] initWithDictionary:dictionary];
 }
 
 + (void)overrideSettings:(NSDictionary *)override {
     [[NSUserDefaults standardUserDefaults] setObject:override forKey:@"MLCSettingsOverride"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+@end
+
+@implementation MLCSettings
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        self.dictionary = dictionary;
+    }
+    return self;
+}
+
+- (nullable id)objectForKey:(NSString *)key {
+    return self.dictionary[key];
+}
+
+- (nullable id)objectForKeyedSubscript:(NSString *)key {
+    return [self objectForKey:key];
 }
 
 @end

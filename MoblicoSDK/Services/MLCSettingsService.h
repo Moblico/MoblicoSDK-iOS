@@ -15,11 +15,25 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+@class MLCSettings;
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^MLCSettingsServiceCompletionHandler)(id _Nullable MLCSettings,  NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
 
 @interface MLCSettingsService : MLCService
 
-+ (instancetype)readSettings:(MLCServiceJSONCompletionHandler)handler;
-+ (NSDictionary *)settings;
++ (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler;
++ (MLCSettings *)settings;
 + (void)overrideSettings:(NSDictionary *)settings;
 
 @end
+
+
+@interface MLCSettings : NSObject
+
+- (nullable id)objectForKey:(NSString *)key;
+- (nullable id)objectForKeyedSubscript:(NSString *)key;
+
+@end
+
+NS_ASSUME_NONNULL_END
