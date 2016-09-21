@@ -18,7 +18,7 @@
 @class MLCSettings;
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^MLCSettingsServiceCompletionHandler)(id _Nullable MLCSettings,  NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
+typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings * _Nullable MLCSettings,  NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
 
 @interface MLCSettingsService : MLCService
 
