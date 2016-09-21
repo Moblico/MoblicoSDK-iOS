@@ -24,7 +24,7 @@ typedef void(^MLCSettingsServiceCompletionHandler)(id _Nullable MLCSettings,  NS
 
 + (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler;
 + (MLCSettings *)settings;
-+ (void)overrideSettings:(NSDictionary *)settings;
++ (void)overrideSettings:(nullable NSDictionary *)settings;
 
 @end
 
