@@ -7,8 +7,12 @@
 //
 
 #import <MoblicoSDK/MLCEntity.h>
-
 @class MLCMedia;
+
+typedef NS_ENUM(NSUInteger, MLCProductCompareOrder) {
+    MLCProductCompareOrderTitle,
+    MLCProductCompareOrderRevDate
+};
 
 @interface MLCProduct : MLCEntity
 
@@ -36,5 +40,8 @@
 @property (nonatomic, strong) NSDate *revDate;
 @property (nonatomic, strong) NSDate *expirationDate;
 @property (nonatomic, strong) MLCMedia *media;
+
+- (NSComparisonResult)compare:(MLCProduct *)product order:(MLCProductCompareOrder)order;
+- (NSComparisonResult)compare:(MLCProduct *)product;
 
 @end
