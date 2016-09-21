@@ -270,7 +270,9 @@
 }
 
 + (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string {
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(nil, (__bridge CFStringRef)(string), NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"), kCFStringEncodingUTF8);
+    NSMutableCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet].mutableCopy;
+    [set removeCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"];
+    return [string stringByAddingPercentEncodingWithAllowedCharacters:set];
 }
 
 + (NSString *)serializeArray:(NSArray *)array {
