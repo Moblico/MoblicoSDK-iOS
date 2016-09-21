@@ -67,8 +67,4 @@
     [self.connection start];
 }
 
-- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
-    [super connectionDidFinishLoading:connection];
-}
-
 @end
