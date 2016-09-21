@@ -19,7 +19,7 @@
 
 typedef NS_ENUM(NSUInteger, MLCLocationCompareOrder) {
     MLCLocationCompareOrderDistance,
-    MLCLocationCompareOrdernName
+    MLCLocationCompareOrderName
 };
 
 /**
