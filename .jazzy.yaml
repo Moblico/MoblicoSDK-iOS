@@ -1,0 +1,31 @@
+skip_undocumented: false
+objc: true
+#clean: true
+xcodebuild_arguments: [--objc, MoblicoSDK/MoblicoSDK.h, --, -x, objective-c, -fmodules, -isysroot, /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator9.3.sdk, -I, MoblicoSDK, -F, Carthage/Build/iOS]
+author: Moblico LLC
+author_url: http://moblico.com
+module: MoblicoSDK
+module_version: 1.8
+copyright: © 2015 Moblico LLC
+github_url: https://github.com/Moblico/MoblicoSDK-iOS
+umbrella_header: MoblicoSDK/MoblicoSDK.h
+documentation: Guides/*.md
+theme: fullwidth
+
+swift_version: 2.2
+# xcodebuild_arguments: [-x,-fmodules]
+# custom_categories:
+#   - name: Classes
+#     children:
+#     - MLCService
+#     - MLCEntity
+
+
+# jazzy \
+#     --sdk iphonesimulator \
+#     --objc \
+#     --umbrella-header MoblicoSDK/MoblicoSDK.h \
+#     --framework . \
+#     --source-directory . \
+#     --module MoblicoSDK\
+#      --x --objc,/Users/camjknight/Moblico/MoblicoFrameworks/v4/MoblicoSDK/MoblicoSDK/MoblicoSDK.h,-x,objective-c,-isysroot,/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator9.2.sdk,-I,/Users/camjknight/Moblico/MoblicoFrameworks/v4/MoblicoSDK/MoblicoSDK/,-fmodules
