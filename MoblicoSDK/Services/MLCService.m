@@ -458,7 +458,7 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 #endif
     
-    MLCLDebugLog(@"connection:didFailWithError:%@", error);
+    MLCDebugLog(@"connection:didFailWithError:%@", error);
     NSMutableDictionary *logDictionary = [NSMutableDictionary dictionary];
     if (self.request.URL) logDictionary[@"url"] = self.request.URL;
     if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
@@ -469,7 +469,7 @@
         logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
         logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
-    MLCLDebugLog(@"\n=====\n%@\n=====", logDictionary);
+    MLCDebugLog(@"\n=====\n%@\n=====", logDictionary);
 
     self.jsonCompletionhandler(nil, error, self.httpResponse);
 }
@@ -507,8 +507,8 @@
         logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
 
-    MLCLDebugLog(@"connectionDidFinishLoading: %@", connection);
-    MLCLDebugLog(@"\n=====\n%@\n=====", logDictionary);
+    MLCDebugLog(@"connectionDidFinishLoading: %@", connection);
+    MLCDebugLog(@"\n=====\n%@\n=====", logDictionary);
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *statusJSON = jsonObject[@"status"];
@@ -544,13 +544,13 @@
 }
 
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
-    MLCLDebugLog(@"connection: %@ canAuthenticateAgainstProtectionSpace: %@", connection, protectionSpace);
+    MLCDebugLog(@"connection: %@ canAuthenticateAgainstProtectionSpace: %@", connection, protectionSpace);
     
 	return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    MLCLDebugLog(@"connection: %@ didReceiveAuthenticationChallenge: %@", connection, challenge);
+    MLCDebugLog(@"connection: %@ didReceiveAuthenticationChallenge: %@", connection, challenge);
 	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] &&
         [challenge.protectionSpace.host isEqualToString:[MLCServiceManager host]] &&
         [MLCServiceManager isTestingEnabled]) {
@@ -562,8 +562,8 @@
 }
 
 - (void)connection:(nonnull NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(nonnull NSURLAuthenticationChallenge *)challenge {
-    MLCLDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
-    MLCLDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
+    MLCDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
+    MLCDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
 
 //    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"challenge.sender: %@", challenge.sender);
     [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];

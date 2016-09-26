@@ -10,7 +10,7 @@
 #import "MLCServiceManager.h"
 
 FOUNDATION_EXPORT void _mlc_info_log() __attribute__((deprecated("Remove this log.")));
-#define MLCLDebugLog(frmt, ...) \
+#define MLCDebugLog(frmt, ...) \
     do { if ([MLCServiceManager isLoggingEnabled]) NSLog(frmt, ##__VA_ARGS__); } while(0)
 
 #define MLCInfoLog(frmt, ...) \
