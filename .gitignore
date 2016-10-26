@@ -32,3 +32,4 @@ Carthage/Build
 # Custom
 MoblicoSDK.framework
 docs
+*.xcscmblueprint

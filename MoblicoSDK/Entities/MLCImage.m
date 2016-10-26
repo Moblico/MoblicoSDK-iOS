@@ -20,11 +20,9 @@
 
 @property (strong, nonatomic, readwrite) NSData *data;
 @property (nonatomic, strong) NSString *path;
-@property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 @end
 
 @implementation MLCImage
-@synthesize dataTask = __dataTask;
 
 - (instancetype)initWithURLString:(NSString *)URLString {
     if (!URLString) {
@@ -136,7 +134,9 @@
         return;
     }
 
-    self.dataTask = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:url];
         if (data) {
             [cache setObject:data forKey:key];
         }
@@ -145,15 +145,9 @@
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler(data, error, NO, scale);
+            handler(data, nil, NO, scale);
         });
-    }];
-    [self.dataTask resume];
-}
-
-- (void)dealloc {
-    [__dataTask cancel];
-    __dataTask = nil;
+    });
 }
 
 - (NSString *)path {
