@@ -20,11 +20,9 @@
 @interface MLCMedia ()
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler;
 + (NSCache *)_mlc_sharedCache;
-@property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 @end
 
 @implementation MLCMedia
-@synthesize dataTask = __dataTask;
 
 + (NSString *)collectionName {
     return @"media";
@@ -65,9 +63,8 @@
         return;
     }
 
-    NSURLSession *session = [NSURLSession sharedSession];
-    self.dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:url];
         if (data) {
             [cache setObject:data forKey:key];
         }
@@ -76,15 +73,9 @@
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler(data, error, NO);
+            handler(data, nil, NO);
         });
-    }];
-    [self.dataTask resume];
-}
-
-- (void)dealloc {
-    [__dataTask cancel];
-    __dataTask = nil;
+    });
 }
 
 @end
