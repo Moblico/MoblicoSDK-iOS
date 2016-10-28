@@ -722,6 +722,7 @@
 				5BC7ABE51C6BE0BE003E4C9B /* Frameworks */,
 				5BC7ABE61C6BE0BE003E4C9B /* Headers */,
 				5BC7AC221C6BE0BE003E4C9B /* Resources */,
+				5B63C5DF1DC40C05004166C0 /* Find TODOs and FIXMEs */,
 			);
 			buildRules = (
 			);
@@ -816,6 +817,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "script_file=\"build-universal-framework.sh\"\n\necho \"Running a custom build phase script: $script_file\"\n\"${PROJECT_DIR}/../../scripts/${script_file}\"\nscriptExitStatus=$?\necho \"DONE with script: ${script_file} (exitStatus=${scriptExitStatus})\\n\\n\"\nexit \"${scriptExitStatus}\"";
+		};
+		5B63C5DF1DC40C05004166C0 /* Find TODOs and FIXMEs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Find TODOs and FIXMEs";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
 		};
 		5B852827189C2945005BCFD8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
