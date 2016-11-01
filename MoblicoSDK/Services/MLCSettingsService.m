@@ -78,4 +78,47 @@
     return [self objectForKey:key];
 }
 
+
+- (nullable NSDictionary *)dictionaryForKey:(NSString *)key {
+    NSString *value = self.dictionary[key];
+    if (value == nil) {
+        return nil;
+    }
+
+    NSMutableDictionary *map = [@{} mutableCopy];
+
+    for (NSString *pair in [value componentsSeparatedByString:@";"]) {
+        NSArray *keyValue = [pair componentsSeparatedByString:@","];
+        if (keyValue.count < 2) {
+            continue;
+        }
+        if (keyValue.count > 2) {
+            NSRange range = NSMakeRange(1, keyValue.count);
+            NSArray *subarray = [keyValue subarrayWithRange:range];
+            NSString *remainder = [subarray componentsJoinedByString:@","];
+            keyValue = @[keyValue.firstObject, remainder];
+        }
+        map[keyValue.firstObject] = keyValue.lastObject;
+    }
+    
+    return map;
+}
+
+- (nullable NSArray *)arrayForKey:(NSString *)key {
+    NSString *value = self.dictionary[key];
+    return [value componentsSeparatedByString:@","];
+}
+
+- (BOOL)boolForKey:(NSString *)key {
+    return [self boolForKey:key defaultValue:NO];
+}
+
+- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
+    NSString *value = self.dictionary[key];
+    if (value == nil) {
+        return defaultValue;
+    }
+    return [value boolValue];
+}
+
 @end

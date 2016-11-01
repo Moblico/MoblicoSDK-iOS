@@ -33,7 +33,10 @@ typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings * _Nullable MLCSe
 
 - (nullable id)objectForKey:(NSString *)key;
 - (nullable id)objectForKeyedSubscript:(NSString *)key;
-
+- (nullable NSDictionary *)dictionaryForKey:(NSString *)key;
+- (nullable NSArray *)arrayForKey:(NSString *)key;
+- (BOOL)boolForKey:(NSString *)key;
+- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue;
 @end
 
 NS_ASSUME_NONNULL_END
