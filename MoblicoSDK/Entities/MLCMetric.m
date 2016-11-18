@@ -44,6 +44,10 @@ static NSString *const MLCMetricTypeExitGeoRegionString = @"Exit_Geo_Region";
 static NSString *const MLCMetricTypeEnterBeaconRegionString = @"Enter_Beacon_Region";
 static NSString *const MLCMetricTypeExitBeaconRegionString = @"Exit_Beacon_Region";
 static NSString *const MLCMetricTypeChangeGPSString = @"Change_GPS";
+static NSString *const MLCMetricTypeViewProductString = @"View_Product";
+static NSString *const MLCMetricTypeShareProductString = @"Share_Product";
+static NSString *const MLCMetricTypeOpenProductString = @"Open_Product";
+static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_Product";
 
 @interface MLCMetric ()
 
@@ -149,6 +153,10 @@ static NSString *const MLCMetricTypeChangeGPSString = @"Change_GPS";
     if (type == MLCMetricTypeEnterBeaconRegion) return MLCMetricTypeEnterBeaconRegionString;
     if (type == MLCMetricTypeExitBeaconRegion) return MLCMetricTypeExitBeaconRegionString;
     if (type == MLCMetricTypeChangeGPS) return MLCMetricTypeChangeGPSString;
+    if (type == MLCMetricTypeViewProduct) return MLCMetricTypeViewProductString;
+    if (type == MLCMetricTypeShareProduct) return MLCMetricTypeShareProductString;
+    if (type == MLCMetricTypeOpenProduct) return MLCMetricTypeOpenProductString;
+    if (type == MLCMetricTypeExternalOpenProduct) return MLCMetricTypeExternalOpenProductString;
     return nil;
 }
 

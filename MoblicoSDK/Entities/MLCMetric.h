@@ -79,6 +79,12 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
     MLCMetricTypeEnterBeaconRegion,
     MLCMetricTypeExitBeaconRegion,
     MLCMetricTypeChangeGPS,
+
+
+    MLCMetricTypeViewProduct,
+    MLCMetricTypeShareProduct,
+    MLCMetricTypeOpenProduct,
+    MLCMetricTypeExternalOpenProduct
 };
 
 /**
