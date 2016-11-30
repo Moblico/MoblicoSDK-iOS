@@ -11,8 +11,14 @@
 @implementation MLCProduct
 
 - (NSComparisonResult)compare:(MLCProduct *)product order:(MLCProductCompareOrder)order {
-    NSComparisonResult titleOrder = [self.title localizedStandardCompare:product.title];
-    NSComparisonResult revDateOrder = [self.revDate compare:product.revDate];
+
+    NSComparisonResult titleOrder = [self compare:product
+                                              key:@"title"
+                                         selector:@selector(localizedStandardCompare:)];
+
+    NSComparisonResult revDateOrder = [self compare:product
+                                                key:@"revDate"
+                                           selector:@selector(compare:)];
 
     if (order == MLCProductCompareOrderRevDate) {
         return revDateOrder ?: titleOrder;
@@ -21,9 +27,33 @@
     return titleOrder ?: revDateOrder;
 }
 
-- (NSComparisonResult)compare:(MLCProduct *)location {
-    return [self compare:location order:MLCProductCompareOrderTitle];
+- (NSComparisonResult)compare:(MLCProduct *)product {
+    return [self compare:product order:MLCProductCompareOrderTitle];
 }
 
+- (NSComparisonResult)compare:(MLCProduct *)product key:(NSString *)key selector:(SEL)comparator {
+    id first = [self valueForKey:key];
+    id second = [product valueForKey:key];
+
+    if (!first && !second) {
+        return NSOrderedSame;
+    }
+
+    if (!first) {
+        return NSOrderedDescending;
+    }
+
+    if (!second) {
+        return NSOrderedAscending;
+    }
+
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:first
+                                                                            selector:comparator
+                                                                              object:second];
+    [operation start];
+    NSComparisonResult value;
+    [operation.result getValue:&value];
+    return value;
+}
 
 @end
