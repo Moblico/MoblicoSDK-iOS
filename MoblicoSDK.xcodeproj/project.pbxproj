@@ -119,6 +119,8 @@
 		5B7BF4A41D00937900F5388B /* MLCListItemsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7BF4A01D00937900F5388B /* MLCListItemsService.m */; };
 		5B7BF4A51D00937900F5388B /* MLCListsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B7BF4A11D00937900F5388B /* MLCListsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B7BF4A61D00937900F5388B /* MLCListsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7BF4A21D00937900F5388B /* MLCListsService.m */; };
+		5BAB4AE21DECD9CB00441CE3 /* MLCScanService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BAB4AE01DECD9CB00441CE3 /* MLCScanService.m */; };
+		5BAB4AE31DECD9CB00441CE3 /* MLCScanService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BAB4AE11DECD9CB00441CE3 /* MLCScanService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7ABAE1C6BE0BE003E4C9B /* MLCProductsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2ABCD919633EC3006246CC /* MLCProductsService.m */; };
 		5BC7ABAF1C6BE0BE003E4C9B /* MLCLeaderboardService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC1AB3116BBABD500E91D79 /* MLCLeaderboardService.m */; };
 		5BC7ABB01C6BE0BE003E4C9B /* MLCSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4270B116B71E9A00DE981C /* MLCSettingsService.m */; };
@@ -366,6 +368,8 @@
 		5B96EBB218AE86DF004991BC /* MLCValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCValidation.m; sourceTree = "<group>"; };
 		5B96EBEB18B2E72C004991BC /* MLCOutOfBandService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCOutOfBandService.h; sourceTree = "<group>"; };
 		5B96EBEC18B2E72C004991BC /* MLCOutOfBandService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCOutOfBandService.m; sourceTree = "<group>"; };
+		5BAB4AE01DECD9CB00441CE3 /* MLCScanService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCScanService.m; sourceTree = "<group>"; };
+		5BAB4AE11DECD9CB00441CE3 /* MLCScanService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCScanService.h; sourceTree = "<group>"; };
 		5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCCheckInService.h; sourceTree = "<group>"; };
 		5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCCheckInService.m; sourceTree = "<group>"; };
 		5BB8F28F17849952006A86EF /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
@@ -469,6 +473,8 @@
 				5B2ABCD919633EC3006246CC /* MLCProductsService.m */,
 				5B4A798616BB45F5000C39A4 /* MLCRewardsService.h */,
 				5B4A798716BB45F5000C39A4 /* MLCRewardsService.m */,
+				5BAB4AE11DECD9CB00441CE3 /* MLCScanService.h */,
+				5BAB4AE01DECD9CB00441CE3 /* MLCScanService.m */,
 				5B4A798916BB5931000C39A4 /* MLCService_Private.h */,
 				5B42708216B7158600DE981C /* MLCService.h */,
 				5B42708316B7158600DE981C /* MLCService.m */,
@@ -666,6 +672,7 @@
 				5BC7AC0A1C6BE0BE003E4C9B /* MLCMetricsService.h in Headers */,
 				5BC7AC0B1C6BE0BE003E4C9B /* MLCGroup.h in Headers */,
 				5BC7AC0C1C6BE0BE003E4C9B /* MLCSettingsService.h in Headers */,
+				5BAB4AE31DECD9CB00441CE3 /* MLCScanService.h in Headers */,
 				5BC7AC0D1C6BE0BE003E4C9B /* MLCOutOfBandService.h in Headers */,
 				5BC7AC0E1C6BE0BE003E4C9B /* MLCUserTransaction.h in Headers */,
 				5B4457A21CBFF380003CFA64 /* MLCCredential.h in Headers */,
@@ -953,6 +960,7 @@
 				5BC7ABBF1C6BE0BE003E4C9B /* MLCUserTransactionsService.m in Sources */,
 				5B7BF4A61D00937900F5388B /* MLCListsService.m in Sources */,
 				5BC7ABC01C6BE0BE003E4C9B /* MLCServiceManager.m in Sources */,
+				5BAB4AE21DECD9CB00441CE3 /* MLCScanService.m in Sources */,
 				5BC7ABC11C6BE0BE003E4C9B /* MLCProductCategoriesService.m in Sources */,
 				5BC7ABC21C6BE0BE003E4C9B /* MLCDealsService.m in Sources */,
 				5BC7ABC31C6BE0BE003E4C9B /* MLCAdsService.m in Sources */,
