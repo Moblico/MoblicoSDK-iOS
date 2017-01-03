@@ -68,6 +68,13 @@
         } else {
             self.request = authenticatedRequest;
             self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];
+            NSMutableString *headers = [NSMutableString string];
+
+            [authenticatedRequest.allHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+                [headers appendFormat:@" -H '%@: %@'", key, obj];
+            }];
+
+            MLCDebugLog(@"curl -X %@ \"%@\"%@", authenticatedRequest.HTTPMethod, [authenticatedRequest.URL absoluteString], headers);
 #if TARGET_OS_IPHONE
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 #endif
@@ -270,9 +277,10 @@
 }
 
 + (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string {
-    NSMutableCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet].mutableCopy;
-    [set removeCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"];
-    return [string stringByAddingPercentEncodingWithAllowedCharacters:set];
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(nil, (__bridge CFStringRef)(string), NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"), kCFStringEncodingUTF8);
+//    NSMutableCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet].mutableCopy;
+//    [set removeCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"];
+//    return [string stringByAddingPercentEncodingWithAllowedCharacters:set];
 }
 
 + (NSString *)serializeArray:(NSArray *)array {
@@ -375,7 +383,8 @@
     components.scheme = [MLCServiceManager isSSLDisabled] ? @"http" : @"https";
     components.host = [MLCServiceManager host];
     components.path = path;
-    components.queryItems = [self queryItemsFromParameters:parameters];
+    components.percentEncodedQuery = [self oldSerializeParameters:parameters];
+//    components.queryItems = [self queryItemsFromParameters:parameters];
     BOOL alwaysUseQueryParams = [MLCServiceManager isForceQueryParametersEnabled];
     
     if (components.query.length && !(alwaysUseQueryParams || method == MLCServiceRequestMethodGET || method == MLCServiceRequestMethodDELETE)) {
