@@ -34,8 +34,8 @@
 
 @implementation MLCService
 
-+ (NSArray<MLCEntityProtocol> *)scopeableResources {
-    return [[NSArray<MLCEntityProtocol> alloc] init];
++ (NSArray<NSString *> *)scopeableResources {
+    return [[NSArray<NSString *> alloc] init];
 }
 
 + (BOOL)canScopeResource:(id<MLCEntityProtocol>)resource {

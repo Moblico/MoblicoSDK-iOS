@@ -43,7 +43,7 @@
 + (instancetype)findResourcesWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 + (instancetype)findScopedResourcesForResource:(id<MLCEntityProtocol>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
-+ (NSArray<MLCEntityProtocol> *)scopeableResources;
++ (NSArray<NSString *> *)scopeableResources;
 + (BOOL)canScopeResource:(id<MLCEntityProtocol>)resource;
 
 + (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters;
