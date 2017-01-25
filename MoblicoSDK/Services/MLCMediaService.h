@@ -73,6 +73,8 @@
 
 
 + (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findMediaForMedia:(MLCMedia *)media mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
+
 /**
  This method requests all media for a specified generic resource.
  
