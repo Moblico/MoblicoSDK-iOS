@@ -40,16 +40,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
     /// Requests a representation of the specified resource.
-	MLCServiceRequestMethodGET,
+	MLCServiceRequestMethodGET NS_SWIFT_NAME(get),
     
     /// Creates a resource.
-	MLCServiceRequestMethodPOST,
+	MLCServiceRequestMethodPOST NS_SWIFT_NAME(post),
     
     /// Updates the specified resource.
-	MLCServiceRequestMethodPUT,
+	MLCServiceRequestMethodPUT NS_SWIFT_NAME(put),
     
     /// Deletes the specified resource.
-	MLCServiceRequestMethodDELETE
+	MLCServiceRequestMethodDELETE  NS_SWIFT_NAME(delete)
 };
 
 /**

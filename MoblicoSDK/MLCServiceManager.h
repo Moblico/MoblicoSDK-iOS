@@ -16,6 +16,9 @@
 
 @import Foundation;
 @class MLCUser;
+
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  The callback handler for `authenticateRequest:handler:`
 
@@ -23,10 +26,12 @@
  @param error The error that occured during authentication (will be nil if no error).
  @param response The data returned during authentication.
  */
-typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response);
+typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest * _Nullable authenticatedRequest, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 /**
- MLCInvalidAPIKeyException
+ The name of the exception raised when getting an instance of the `MLCServiceManager` before the API key is set.
+ 
+ Also raised if the API key is set more than once.
  */
 FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 
@@ -34,10 +39,10 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  `MLCServiceManager` keeps track of your Moblico API Key, and authenticates
  all service calls.
 
- Get a shared instance of `MLCServiceManager` by calling the
- `sharedServiceManager` class method.
+ Get a shared instance of `MLCServiceManager` by using the
+ `MLCServiceManager.sharedServiceManager` class property.
  
- For user level authentication call `setCurrentUser:remember:`
+ For user level authentication call `-[MLCServiceManager setCurrentUser:remember:]`
  on the shared instance.
  */
 @interface MLCServiceManager : NSObject
@@ -52,71 +57,43 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 
  @warning You must set the API Key before getting an instance
  of `MLCServiceManager`.
-
- @exception MLCInvalidAPIKeyException You must set your API key before getting
- an instance of the `MLCServiceManager`.
-
- @return A shared instance of `MLCServiceManager`.
- 
- @see setAPIKey:
  */
-+ (MLCServiceManager *)sharedServiceManager;
+@property (nonatomic, class, strong, readonly) MLCServiceManager *sharedServiceManager;
 
 #pragma mark API Key Management
 ///-------------------------
 /// @name API Key Management
 ///-------------------------
 
-/**
- Set the API Key used for all service calls.
+/// The current API Key used for all service calls.
+@property (atomic, class, copy, readonly, nullable) NSString *currentAPIKey;
 
- @param apiKey The API Key provided by Moblico.
+/**
+ The API Key used for all production service calls.
 
  @warning The API Key should only be set once.
- Calling setAPIKey more than once will raise an exception.
-
- @exception MLCInvalidAPIKeyException You can only set the API Key once.
-
- @see apiKey
+ Setting the API key more than once will raise an exception.
  */
-+ (void)setAPIKey:(NSString *)apiKey;
+@property (atomic, class, copy, nullable) NSString *APIKey;
 
 /**
- Set the API Key used for all service calls.
-
- @param testingAPIKey The testing API Key provided by Moblico.
+ The API Key used for all testing service calls.
 
  @warning The testing API Key should only be set once.
- Calling -setTestingAPIKey: more than once will raise an exception.
-
- @exception MLCInvalidAPIKeyException You can only set the testing API Key once.
-
- @see apiKey
+ Setting the testing API key more than once will raise an exception.
  */
-+ (void)setTestingAPIKey:(NSString *)testingAPIKey;
-
-/**
- Get the current API Key.
-
- @return The API Key will be nil until setAPIKey is called.
-
- @see setAPIKey:
- */
-+ (NSString *)apiKey;
+@property (atomic, class, copy, nullable) NSString *testingAPIKey;
 
 #pragma mark Authentication
 ///---------------------
 /// @name Authentication
 ///---------------------
 
-@property (readonly) NSString *childKeyword;
+/// The currently authenticated user used for user level authentication. (read-only)
+@property (readonly, nullable) MLCUser *currentUser;
 
-/**
- The currently authenticated user used for user level authentication. (read-only)
-
- @see setCurrentUser:remember:
- */
-@property (readonly) MLCUser *currentUser;
+/// The account keyword for the currently authenticated user.
+@property (readonly, nullable) NSString *childKeyword;
 
 /**
  Set the cuurent user for authentication and optionally store the credentials in the keychain.
@@ -124,15 +101,16 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  @param user                The MLCUser to use as the current user.
  @param rememberCredentials Store the credentials in the keystore?
  */
-- (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials;
+- (void)setCurrentUser:(MLCUser * _Nullable)user remember:(BOOL)rememberCredentials;
 
 /**
  Set the cuurent user for authentication and optionally store the credentials in the keychain.
 
  @param user                The MLCUser to use as the current user.
+ @param childKeyword        Account keyword used during authentication.
  @param rememberCredentials Store the credentials in the keystore?
  */
-- (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword remember:(BOOL)rememberCredentials;
+- (void)setCurrentUser:(MLCUser * _Nullable)user childKeyword:(NSString * _Nullable)childKeyword remember:(BOOL)rememberCredentials;
 
 /**
  Create an authenticated request.
@@ -147,100 +125,32 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 /// @name Configuration
 ///--------------------
 
-/**
- Sets whether SSL should be used with service calls.
+/// Indicates whether SSL should be used with service calls.
+@property (atomic, class, assign, getter=isSSLDisabled) BOOL SSLDisabled;
 
- @param disabled Specify YES to disable SSL or NO to remain enabled.
+/// Indicates whether the Moblico testing environment should be used.
+@property (atomic, class, assign, getter=isTestingEnabled) BOOL testingEnabled;
 
- @see isSSLDisabled
- */
-+ (void)setSSLDisabled:(BOOL)disabled;
+/// Indicates whether service calls are logged to the console.
+@property (atomic, class, assign, getter=isLoggingEnabled) BOOL loggingEnabled;
 
-/**
- Returns a Boolean value indicating whether SSL is disabled.
+/// Indicates whether parameters are always passed in the query string.
+@property (atomic, class, assign, getter=isForceQueryParametersEnabled) BOOL forceQueryParametersEnabled;
 
- @return YES if SSL is disabled; otherwise, NO.
-
- @see setSSLDisabled:
- */
-+ (BOOL)isSSLDisabled;
-
-/**
- Sets whether the Moblico testing environment should be used.
-
- @param testing Specify YES to use the Moblico testing environment
- or NO to use the production environment.
-
- @see isTestingEnabled
- */
-+ (void)setTestingEnabled:(BOOL)testing;
-
-/**
- Returns a Boolean value indicating whether the Moblico testing environment is enabled.
-
- @return YES if the Moblico testing environment is enabled; otherwise, NO.
-
- @see setTestingEnabled:
- */
-+ (BOOL)isTestingEnabled;
-
-/**
- Sets whether service calls are logged to the console.
-
- @param logging Specify YES to enable logging or NO to disable it.
-
- @see isLoggingEnabled
- 
- @since Available in MoblicoSDK 1.1.1 and later.
- */
-+ (void)setLoggingEnabled:(BOOL)logging;
-
-/**
- Returns a Boolean value indicating whether service calls are logged to the console.
-
- @return YES if logging is enabled; otherwise, NO.
-
- @see setLoggingEnabled:
- 
- @since Available in MoblicoSDK 1.1.1 and later.
- */
-+ (BOOL)isLoggingEnabled;
-
-+ (void)setForceQueryParametersEnabled:(BOOL)disabled;
-+ (BOOL)isForceQueryParametersEnabled;
 #pragma mark Information
 ///------------------
 /// @name Information
 ///------------------
 
-/**
- Returns the host name for the Moblico platform.
+/// The host name for the Moblico platform, used for service calls.
+@property (nonatomic, class, copy, readonly) NSString *host;
 
- @return The host name used for service calls.
- */
-+ (NSString *)host;
+/// The Moblico API version number.
+@property (nonatomic, class, copy, readonly) NSString *apiVersion;
 
-/**
- Returns the Moblico API version number.
-
- @return The API version number.
- */
-+ (NSString *)apiVersion;
-
-/**
- Returns the Moblico SDK for iOS version number.
-
- @return The SDK version number
- */
-+ (NSString *)sdkVersion;
+/// The Moblico SDK for iOS version number.
+@property (nonatomic, class, copy, readonly) NSString *sdkVersion;
 
 @end
 
-@interface MLCServiceManager (Deprecated)
-
-@property (readonly) NSString *username __attribute__((deprecated ("Use 'currentUser' instead.")));
-@property (readonly) NSString *password __attribute__((deprecated ("Use 'currentUser' instead.")));
-- (void)setUsername:(NSString *)username password:(NSString *)password remember:(BOOL)rememberCredentials __attribute__((deprecated ("Use 'setCurrentUser:remember:' instead.")));
-+ (void)setLoggineEnabled:(BOOL)logging __attribute__((deprecated("Use 'setLoggingEnabled:' instead.")));
-
-@end
+NS_ASSUME_NONNULL_END

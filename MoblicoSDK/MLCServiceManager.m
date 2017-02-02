@@ -56,7 +56,7 @@ static NSString *const MLCServiceManagerForceQueryParametersEnabledKey = @"MLCSe
 }
 
 + (MLCServiceManager *)sharedServiceManager {
-    if ([MLCServiceManager apiKey] == nil) {
+    if (MLCServiceManager.currentAPIKey == nil) {
 //        return nil;
         [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You must set your API key before getting an instance of the ServiceManager." userInfo:nil] raise];
     }
@@ -91,6 +91,12 @@ static NSString *_testingAPIKey = nil;
 	}
 }
 
++ (NSString *)APIKey {
+    @synchronized(self) {
+        return [_apiKey copy];
+    }
+}
+
 + (void)setTestingAPIKey:(NSString *)apiKey {
     @synchronized(self) {
         if (_testingAPIKey != nil) {
@@ -100,12 +106,18 @@ static NSString *_testingAPIKey = nil;
     }
 }
 
-+ (NSString *)apiKey {
++ (NSString *)testingAPIKey {
+    @synchronized (self) {
+        return [_testingAPIKey copy];
+    }
+}
+
++ (NSString *)currentAPIKey {
     @synchronized(self) {
         if ([self isTestingEnabled]) {
-            return _testingAPIKey ?: @"";
+            return [_testingAPIKey copy] ?: @"";
         }
-        return _apiKey ?: @"";
+        return [_apiKey copy] ?: @"";
     }
 }
 
@@ -161,7 +173,7 @@ static NSString *_testingAPIKey = nil;
         [defaults setBool:testing forKey:MLCServiceManagerTestingEnabledKey];
         [defaults synchronize];
 
-        if ([self apiKey].length) {
+        if (self.currentAPIKey.length) {
             [[self sharedServiceManager] setAuthenticationToken:nil];
         }
     }
@@ -171,12 +183,6 @@ static NSString *_testingAPIKey = nil;
     @synchronized(self) {
         return [[NSUserDefaults standardUserDefaults] boolForKey:MLCServiceManagerTestingEnabledKey];
     }
-}
-
-//static BOOL _logging = nil;
-
-+ (void)setLoggineEnabled:(BOOL)logging {
-    [self setLoggingEnabled:logging];
 }
 
 + (void)setLoggingEnabled:(BOOL)logging {
@@ -197,7 +203,7 @@ static NSString *_testingAPIKey = nil;
     NSMutableURLRequest *authenticatedRequest = [request mutableCopy];
     MLCAuthenticationToken *currentToken = self.authenticationToken;
 
-    NSString *apiKey = [[self class] apiKey];
+    NSString *apiKey = [[self class] currentAPIKey];
     if (currentToken.valid) {
         NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", currentToken.token];
         [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];

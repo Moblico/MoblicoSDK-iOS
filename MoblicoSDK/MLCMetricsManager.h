@@ -11,14 +11,13 @@
 
 @protocol MLCMetricsManagerLocationDelegate <NSObject>
 @required
-@property (NS_NONATOMIC_IOSONLY, readonly, copy) CLLocation *location;
+@property (nonatomic, readonly, copy, nullable) CLLocation *location;
 
 @end
 
-
 @interface MLCMetricsManager : NSObject
-@property (nonatomic, weak) id <MLCMetricsManagerLocationDelegate> locationDelegate;
 
-+ (instancetype)sharedMetricsManager;
+@property (nonatomic, class, strong, readonly, nonnull) MLCMetricsManager *sharedMetricsManager;
+@property (nonatomic, weak, nullable) id <MLCMetricsManagerLocationDelegate> locationDelegate;
 
 @end

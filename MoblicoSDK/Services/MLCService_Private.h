@@ -17,7 +17,7 @@
 #import <MoblicoSDK/MLCService.h>
 
 @interface MLCService () <NSURLConnectionDataDelegate>
-@property (strong, nonatomic) MLCServiceJSONCompletionHandler jsonCompletionhandler;
+@property (copy, nonatomic) MLCServiceJSONCompletionHandler jsonCompletionhandler;
 @property (strong, nonatomic) NSURLConnection *connection;
 @property (strong, nonatomic) NSURLRequest *request;
 @property (strong, nonatomic) NSMutableData *receivedData;

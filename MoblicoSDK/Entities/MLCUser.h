@@ -24,7 +24,7 @@ typedef NS_OPTIONS(NSUInteger, MLCUserContactPreferenceType) {
     MLCUserContactPreferenceTypeNone = 0,
 
     /// Specifies that the user wishes to be contacted by SMS (phone text message) only.
-    MLCUserContactPreferenceTypeSMS = (1 << 0),
+    MLCUserContactPreferenceTypeSMS NS_SWIFT_NAME(sms) = (1 << 0),
 
     /// Specifies that the user wishes to be contacted by email only.
     MLCUserContactPreferenceTypeEmail = (1 << 1),

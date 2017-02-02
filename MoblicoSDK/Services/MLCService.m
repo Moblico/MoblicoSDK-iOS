@@ -106,10 +106,11 @@
                        parameters:parameters
                           handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
 
+                              __weak __typeof__(self) __self = self;
 							  if (handler) {
 //								  handler([[MLCStatus alloc] initWithJSONObject:jsonObject], error, response);
                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                      id<MLCEntityProtocol> resource = [self deserializeResource:jsonObject];
+                                      id<MLCEntityProtocol> resource = [__self deserializeResource:jsonObject];
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           handler(resource, error, response);
                                       });
