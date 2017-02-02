@@ -16,6 +16,7 @@
 
 #import "MLCUser.h"
 #import "MLCEntity_Private.h"
+#import "MLCValidation.h"
 
 @interface MLCUser ()
 
@@ -45,6 +46,20 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 @dynamic genderType;
 @dynamic locationId;
 @dynamic merchantId;
+
+static NSArray<NSString *> *_requiredParameters = nil;
++ (NSArray<NSString *> *)requiredParameters {
+    if (!_requiredParameters) {
+        _requiredParameters = @[];
+    }
+    return [_requiredParameters copy];
+}
+
++ (void)setRequiredParameters:(NSArray<NSString *> *)requiredParameters {
+    if (requiredParameters != _requiredParameters) {
+        _requiredParameters = [requiredParameters copy];
+    }
+}
 
 - (void)setContactPreference:(NSString *)contactPreference {
     if (contactPreference.length) {
@@ -281,4 +296,216 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
     return serializedObject;
 }
 
+@end
+
+@implementation MLCUser (Validation)
+
+- (BOOL)validateUsername:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"username"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your username is required."];
+    }
+    [validation validateCaseInsensitiveFormat:@"^[A-Z0-9._%+-@ ]{5,200}$"
+                                 errorMessage:@"Please enter a valid username."];
+
+    return [validation isValid:outError];
+}
+
+//- (BOOL)validatePassword:(id *)ioValue error:(NSError **)outError {
+//	MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+//	[validation validateShouldExist:[self.class.requiredParameters containsObject:@"password"]
+//                       errorMessage:@"Your password is required."];
+//
+//	return [validation isValid:outError];
+//}
+
+- (BOOL)validateEmail:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"email"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your email address is required."];
+    }
+    [validation validateCaseInsensitiveFormat:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$"
+                                 errorMessage:@"Please enter a valid email address."];
+
+    return [validation isValid:outError];
+}
+
+
+- (BOOL)validatePostalCode:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"postalCode"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your zip code is required."];
+    }
+    [validation validateFormat:@"^\\d{5}(?:[-\\s]\\d{4})?$"
+                  errorMessage:@"Please enter a valid zip code."];
+
+    return [validation isValid:outError];
+}
+
+- (BOOL)validateFirstName:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"firstName"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your first name is required."];
+    }
+    [validation validateCaseInsensitiveFormat:@"^[A-Z -']{1,}$"
+                                 errorMessage:@"Please enter a valid first name."];
+
+    return [validation isValid:outError];
+}
+
+- (BOOL)validateLastName:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"lastName"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your last name is required."];
+    }
+    [validation validateCaseInsensitiveFormat:@"^[A-Z -']{1,}$"
+                                 errorMessage:@"Please enter a valid last name."];
+
+    return [validation isValid:outError];
+}
+
+- (BOOL)validatePhone:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"phone"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your phone number is required."];
+    }
+    [validation validateFormat:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$"
+                  errorMessage:@"Please enter a valid phone number."];
+
+    return [validation isValid:outError];
+}
+
+- (BOOL)validateStateOrProvince:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"stateOrProvince"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your state is required."];
+    }
+    [validation validateFormat:@"^[A-Z]{2}$" errorMessage:@"Please enter a valid state."];
+
+    return [validation isValid:outError];
+}
+
+- (BOOL)validateGender:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    if ([self.class.requiredParameters containsObject:@"gender"]) {
+        [validation validateShouldExist:YES errorMessage:@"Your gender is required."];
+    }
+    return [validation isValid:outError];
+}
+
+- (BOOL)validateOptinEmail:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    [validation validateTest:^BOOL(id value) {
+        BOOL selected = [value boolValue];
+        NSString *email = self.email;
+        BOOL valid = self.email.length && [self validateEmail:&email error:nil];
+        if (selected && !valid) {
+            return NO;
+        }
+        return YES;
+    } errorMessage:@"A valid email address is required for Email Alerts."];
+
+    return [validation isValid:outError];
+}
+
+- (BOOL)validateOptinPhone:(id *)ioValue error:(NSError **)outError {
+    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
+    [validation validateTest:^BOOL(id value) {
+        BOOL selected = [value boolValue];
+        NSString *phone = self.phone;
+        BOOL valid = self.phone.length && [self validatePhone:&phone error:nil];
+        if (selected && !valid) {
+            return NO;
+        }
+        return YES;
+    } errorMessage:@"A valid mobile phone number is required for Phone Alerts."];
+
+    return [validation isValid:outError];
+}
+/*
+ - (BOOL)validateDateOfBirth:(id *)ioValue error:(NSError **)outError {
+	NSDate * value = *ioValue;
+ if (value == nil) {
+ // If not required return YES;
+ return YES;
+ NSString * errorStr = NSLocalizedString(@"No Birthdate Error String", @"Your birthdate is required.");
+ NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:errorStr forKey:NSLocalizedDescriptionKey];
+ if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-1 userInfo:userInfoDict] autorelease];
+ return NO;
+	}
+
+	//	NSCalendar* calendar = [NSCalendar currentCalendar];
+	//	NSDate * now = [NSDate date];
+	//	unsigned dateComponentFlags = NSMonthCalendarUnit | NSDayCalendarUnit | NSYearCalendarUnit;
+	//	NSDateComponents * dateComponents = [calendar components:dateComponentFlags fromDate:now];
+	//
+	//	[dateComponents setYear:([dateComponents year] - 13)];
+	//	NSDate * limit = [calendar dateFromComponents:dateComponents];
+
+	NSDate * limit = [NSDate date];
+
+	if ([value compare:limit] == NSOrderedDescending) {
+ NSString * errorStr = NSLocalizedString(@"Underage Birthdate Error String", @"Invalid birthdate.");
+ NSDictionary *userInfoDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"userIsUnderage",  errorStr, NSLocalizedDescriptionKey, nil];
+ if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-2 userInfo:userInfoDict] autorelease];
+ return NO;
+	}
+
+ return YES;
+ }
+
+ - (BOOL)validateAge:(id *)ioValue error:(NSError **)outError {
+	double value = [MLCEntity doubleFromValue:*ioValue];
+ if (value <= 0.0) {
+ // If not required return YES;
+ return YES;
+ NSString * errorStr = NSLocalizedString(@"No Age Error String", @"Your age is required.");
+ NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:errorStr forKey:NSLocalizedDescriptionKey];
+ if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-1 userInfo:userInfoDict] autorelease];
+ return NO;
+	}
+
+	if (value < 12 || value > 120) {
+ NSString * errorStr = NSLocalizedString(@"Invalid Age Error String", @"Invalid age.");
+ NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:errorStr forKey:NSLocalizedDescriptionKey];
+ if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-2 userInfo:userInfoDict] autorelease];
+ return NO;
+	}
+
+ return YES;
+ }
+
+ - (BOOL)validateGender:(id *)ioValue error:(NSError **)outError {
+	NSString * value = [MLCEntity stringFromValue:*ioValue];
+ if (value.length == 0) {
+ // If not required return YES;
+ return YES;
+ NSString * errorStr = NSLocalizedString(@"No Gender Error String", @"Your gender is required.");
+ NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:errorStr forKey:NSLocalizedDescriptionKey];
+ if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-1 userInfo:userInfoDict] autorelease];
+ return NO;
+	}
+
+ return YES;
+ }
+
+
+ - (BOOL)validateMessagePermission:(id *)ioValue error:(NSError **)outError {
+	if (![MLCEntity boolFromValue:*ioValue] || self.phone.length) return YES;
+
+	NSString * errorStr = NSLocalizedString(@"Message Permission Validation Error String", @"A valid mobile phone number is required for Text Alerts.");
+	NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:errorStr forKey:NSLocalizedDescriptionKey];
+	if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-1 userInfo:userInfoDict] autorelease];
+	return NO;
+ }
+
+ - (BOOL)validateEmailPermission:(id *)ioValue error:(NSError **)outError {
+	if (![MLCEntity boolFromValue:*ioValue] || self.email.length) return YES;
+
+	NSString * errorStr = NSLocalizedString(@"Email Permission Validation Error String", @"A valid email address is required for Email Alerts.");
+	NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:errorStr forKey:NSLocalizedDescriptionKey];
+	if (outError) *outError = [[[NSError alloc] initWithDomain:@"ValidationError" code:-1 userInfo:userInfoDict] autorelease];
+	return NO;
+ }
+ */
 @end

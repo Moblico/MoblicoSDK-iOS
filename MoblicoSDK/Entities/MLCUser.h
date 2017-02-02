@@ -201,6 +201,7 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 @property (nonatomic) NSUInteger locationId;
 @property (nonatomic) NSUInteger merchantId;
 
+@property (nonatomic, copy, class) NSArray<NSString *> *requiredParameters;
 /**
  Convenience class method to create a MLCUser object with the provided
  username.
