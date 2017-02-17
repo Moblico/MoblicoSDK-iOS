@@ -135,7 +135,9 @@ static NSString *_testingAPIKey = nil;
 //    }
 //}
 
-
+- (NSString *)currentToken {
+    return [self.authenticationToken.token copy];
+}
 
 - (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials {
     [self setCurrentUser:user childKeyword:nil remember:rememberCredentials];

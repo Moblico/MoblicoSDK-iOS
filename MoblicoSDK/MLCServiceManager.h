@@ -95,6 +95,9 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 /// The account keyword for the currently authenticated user.
 @property (readonly, nullable) NSString *childKeyword;
 
+// The current token passed with all service calls.
+@property (readonly, nullable, copy) NSString *currentToken;
+
 /**
  Set the cuurent user for authentication and optionally store the credentials in the keychain.
 
