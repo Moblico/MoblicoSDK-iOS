@@ -13,6 +13,153 @@
 NSString *const MLCValidationErrorDomain = @"MLCValidationErrorDomain";
 NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKey";
 
+@interface MLCValidations ()
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<MLCValidate *> *> *validations;
+@end
+
+@interface MLCValidate ()
+@property (nonatomic, copy) MLCValidationTest test;
+@property (nonatomic, copy) NSString *message;
+@end
+
+@interface MLCValidationResults ()
+@property (nonatomic, strong) NSMutableArray<NSError *> *errors;
+- (void)addMessage:(NSString *)message;
++ (NSError *)errorWithMessage:(NSString *)message;
+@end
+
+@implementation MLCValidations
+
+- (NSMutableDictionary<NSString *,NSMutableArray<MLCValidate *> *> *)validations {
+    if (!_validations) {
+        _validations = [NSMutableDictionary<NSString *,NSMutableArray<MLCValidate *> *> dictionary];
+    }
+    return _validations;
+}
+
+- (NSArray<MLCValidate *> *)objectForKeyedSubscript:(NSString *)key {
+    NSArray *rules = self.validations[key];
+    if (!rules) {
+        return @[];
+    }
+    return rules;
+}
+
+- (void)setObject:(id)obj forKeyedSubscript:(NSString *)key {
+    NSMutableArray *rules = self.validations[key];
+    if (!rules) {
+        rules = [NSMutableArray<MLCValidate *> array];
+        self.validations[key] = rules;
+    }
+
+    if ([obj isKindOfClass:[NSArray class]]) {
+        [rules addObjectsFromArray:obj];
+    }
+    else if ([obj isKindOfClass:[MLCValidate class]]) {
+        [rules addObject:obj];
+    }
+    else if ([obj isKindOfClass:[NSNull class]]) {
+        [rules removeAllObjects];
+    }
+}
+
+- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id  _Nullable __autoreleasing *)ioValue {
+    MLCValidationResults *results = [[MLCValidationResults alloc] init];
+    for (MLCValidate *rule in self[key]) {
+        NSLog(@"testing validity %@", rule);
+        NSString *value = [MLCEntity stringFromValue:*ioValue];
+        NSLog(@"testing validity of %@ %@ %@", NSStringFromClass([entity class]), key, value);
+        if (!rule.test(entity, key, value)) {
+            [results addMessage:rule.message];
+        }
+    }
+    return results;
+}
+
+@end
+
+@implementation MLCValidate
+
+- (NSString *)description {
+    NSMutableString *description = [[super description] mutableCopy];
+    [description appendFormat:@" message: %@", self.message];
+    return description;
+}
+
+- (instancetype)initWithMessage:(NSString *)message validationTest:(MLCValidationTest)test {
+    self = [super init];
+    if (self) {
+        self.test = test;
+        self.message = message;
+    }
+    return self;
+}
+
++ (instancetype)validatePresenceWithMessage:(NSString *)message {
+    return [[MLCValidate alloc] initWithMessage:message validationTest:^BOOL(id<MLCEntityProtocol> entity, NSString *key, NSString *value) {
+        return value != nil && value.length > 0;
+    }];
+}
+
++ (instancetype)validateFormat:(NSString *)format message:(NSString *)message {
+    return [MLCValidate validateFormat:format caseSensitive:YES message:message];
+}
+
++ (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message {
+    NSString *predicateFormat = caseSensitive ? @"SELF MATCHES %@" : @"SELF MATCHES[c] %@";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFormat, format];
+    return [MLCValidate validateWithPredicate:predicate errorMessage:message];
+}
+
++ (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message {
+    return [[MLCValidate alloc] initWithMessage:message validationTest:^BOOL(id<MLCEntityProtocol> entity, NSString *key, NSString *value) {
+        if (value == nil || value.length == 0) return YES;
+        return [predicate evaluateWithObject:value];
+    }];
+}
+
+@end
+
+@implementation MLCValidationResults
+
+- (NSMutableArray<NSError *> *)errors {
+    if (!_errors) {
+        _errors = [NSMutableArray<NSError *> array];
+    }
+    return _errors;
+}
+
+- (void)addMessage:(NSString *)message {
+    [self.errors addObject:[MLCValidationResults errorWithMessage:message]];
+}
+
++ (NSError *)errorWithMessage:(NSString *)message {
+    return [NSError errorWithDomain:MLCValidationErrorDomain
+                               code:MLCValidationError
+                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(message, nil)}];
+}
+
+- (NSError *)firstError {
+    if (self.isValid) return nil;
+
+    return [self.errors firstObject];
+}
+
+- (NSError *)multipleErrorsError {
+    if (self.isValid) return nil;
+
+    return [NSError errorWithDomain:MLCValidationErrorDomain
+                               code:MLCValidationMultipleErrorsError
+                           userInfo:@{MLCValidationDetailedErrorsKey: self.errors}];
+}
+
+- (BOOL)isValid {
+    return self.errors.count == 0;
+}
+
+@end
+
+/*
 @interface MLCValidation ()
 
 @property (nonatomic, strong) NSMutableArray *mutableErrors;
@@ -154,7 +301,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 //}
 
 //- (NSError *)joinedError;
-
+*/
 
 /*
 
@@ -196,4 +343,4 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 	return NO;
 } */
 
-@end
+//@end

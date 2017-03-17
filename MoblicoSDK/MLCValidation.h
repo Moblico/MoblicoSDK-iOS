@@ -7,11 +7,14 @@
 //
 
 @import Foundation;
+NS_ASSUME_NONNULL_BEGIN
+
+@protocol MLCEntityProtocol;
 
 FOUNDATION_EXPORT NSString *const MLCValidationErrorDomain;
 FOUNDATION_EXPORT NSString *const MLCValidationDetailedErrorsKey;
 
-typedef BOOL(^MLCValidationTest)(id value);
+typedef BOOL(^MLCValidationTest)(id<MLCEntityProtocol> entity, NSString *key, NSString * _Nullable value);
 
 typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
     MLCValidationUnknownError NS_SWIFT_NAME(unknown) = -1,
@@ -19,24 +22,45 @@ typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
     MLCValidationMultipleErrorsError NS_SWIFT_NAME(multiple) = 1
 };
 
-@interface MLCValidation : NSObject
-@property (nonatomic, readonly) NSArray *errors;
+@class MLCValidate, MLCValidationResults;
 
-+ (instancetype)validationWithValue:(inout __autoreleasing id *)ioValue;
+@interface MLCValidations : NSObject
 
-- (void)validateEquals:(id)otherValue errorMessage:(NSString *)errorMessage;
-- (void)validateShouldExist:(BOOL)shouldExists errorMessage:(NSString *)errorMessage;
-- (void)validatePredicate:(NSPredicate *)predicate errorMessage:(NSString *)errorMessage;
-- (void)validateFormat:(NSString *)format errorMessage:(NSString *)errorMessage;
-- (void)validateCaseInsensitiveFormat:(NSString *)format errorMessage:(NSString *)errorMessage;
-- (void)validateTest:(MLCValidationTest)test errorMessage:(NSString *)errorMessage;
+- (NSArray<MLCValidate *> *)objectForKeyedSubscript:(NSString *)key;
+- (void)setObject:(id)obj forKeyedSubscript:(NSString *)key;
+- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing * _Nonnull)ioValue;
 
-@property (nonatomic, readonly, copy) NSError *firstError;
-@property (nonatomic, readonly, copy) NSError *multipleErrorsError;
-
-@property (nonatomic, getter=isValid, readonly) BOOL valid;
-- (BOOL)isValid:(NSError **)firstError;
-
-//+ (BOOL)validateValue:(id *)ioValue matchesExpression:(NSString *)expression required:(BOOL)required caseSensitive:(BOOL)caseSensitive outError:(NSError **)outError errorMessage:(NSString *)errorMessage;
-+ (NSError *)errorWithMessage:(NSString *)message;
 @end
+
+@interface MLCValidate : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)validatePresenceWithMessage:(NSString *)message NS_SWIFT_NAME(init(presence:));
++ (instancetype)validateFormat:(NSString *)format message:(NSString *)message;
++ (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message;
++ (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message;
+- (instancetype)initWithMessage:(NSString *)message validationTest:(MLCValidationTest)test;
+@end
+
+@interface MLCValidationResults : NSObject
+@property (nonatomic, readonly, copy, nullable) NSError *firstError;
+@property (nonatomic, readonly, copy, nullable) NSError *multipleErrorsError;
+@property (nonatomic, getter=isValid, readonly) BOOL valid;
+@end
+
+NS_ASSUME_NONNULL_END
+
+// MLCValidations *validations = [[MLCValidations alloc] init];
+// validations[@"phoneNumber"] = [MLCValidate validatePresenceWitMessage:@"Your phone number is required."];
+// validations[@"phoneNumber"] = [MLCValidate validateFormat:@"[0-9]{10,11}" message:@"Invalid phone number."];
+
+// MLCUser.class.validations[@"attr3"] = [MLCValidate validatePresenceWitMessage:@"Your card number is required."];
+// MLCUser.class.validations[@"attr3"] = [MLCValidate validateFormate:@"4[0-9]{11}" message:@"Invalid card number."];
+
+// [validations validate:@"phoneNumber" value:@"8008675309"];
+
+// let validations = MLCValidations()
+// validations["phoneNumber"] = MLCValidate(presence: "Your phone number is required.")
+// validations["phoneNumber"] = MLCValidate(format:"[0-9]{10,11}", message: "Your phone number is required.")
+// validations.validate("phoneNumber", value: "8008675309")

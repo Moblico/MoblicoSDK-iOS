@@ -597,21 +597,21 @@
 		5BECA8E716A850DF00F0E4B5 /* MoblicoSDK */ = {
 			isa = PBXGroup;
 			children = (
-				5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */,
 				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
-				5B96EBB118AE86DF004991BC /* MLCValidation.h */,
-				5BECA8EA16A850DF00F0E4B5 /* MoblicoSDK.h */,
-				5BB8F28F17849952006A86EF /* version.h */,
-				5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */,
 				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
-				5B96EBB218AE86DF004991BC /* MLCValidation.m */,
-				5B42708816B7158600DE981C /* Entities */,
-				5B42707B16B7158600DE981C /* Services */,
-				5BECA8E816A850DF00F0E4B5 /* Supporting Files */,
 				5B81470D1B669FA400A36D4A /* MLCEntityCache.h */,
 				5B81470E1B669FA400A36D4A /* MLCEntityCache.m */,
 				5B7063881CDB9B8700AE86A0 /* MLCLogger.h */,
 				5B70638A1CDBA04100AE86A0 /* MLCLogger.m */,
+				5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */,
+				5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */,
+				5B96EBB118AE86DF004991BC /* MLCValidation.h */,
+				5B96EBB218AE86DF004991BC /* MLCValidation.m */,
+				5BECA8EA16A850DF00F0E4B5 /* MoblicoSDK.h */,
+				5B42708816B7158600DE981C /* Entities */,
+				5B42707B16B7158600DE981C /* Services */,
+				5BECA8E816A850DF00F0E4B5 /* Supporting Files */,
+				5BB8F28F17849952006A86EF /* version.h */,
 			);
 			path = MoblicoSDK;
 			sourceTree = "<group>";

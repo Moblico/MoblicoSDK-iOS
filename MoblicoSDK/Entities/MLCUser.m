@@ -260,11 +260,8 @@ static NSArray<NSString *> *_requiredParameters = nil;
     }
 
     if (user.genderType != MLCUserGenderTypeUndeclared) {
-
         serializedObject[@"gender"] = [self stringForGenderType:user.genderType];
     }
-
-
 
     id value = [user valueForKey:@"contactPreferenceType"];
     
@@ -300,128 +297,68 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
 @implementation MLCUser (Validation)
 
-- (BOOL)validateUsername:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"username"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your username is required."];
+static MLCValidations *_validations;
+
++ (MLCValidate *)validatePresenceOfRequiredKey:(NSString *)key withMessage:(NSString *)message {
+    if (![self.requiredParameters containsObject:key]) return nil;
+    return [MLCValidate validatePresenceWithMessage:message];
+}
+
++ (MLCValidations *)validations {
+    if (_validations) {
+        return _validations;
     }
-    [validation validateCaseInsensitiveFormat:@"^[A-Z0-9._%+-@ ]{5,200}$"
-                                 errorMessage:@"Please enter a valid username."];
 
-    return [validation isValid:outError];
+    MLCValidations *validations = [[MLCValidations alloc] init];
+    validations[@"username"] = [self validatePresenceOfRequiredKey:@"username" withMessage:@"Your username is required."];
+    validations[@"username"] = [MLCValidate validateFormat:@"^[A-Z0-9._%+-@ ]{3,200}$" caseSensitive:NO message:@"Please enter a valid username."];
+
+    validations[@"email"] = [self validatePresenceOfRequiredKey:@"email" withMessage:@"Your email address is required."];
+    validations[@"email"] = [MLCValidate validateFormat:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$" caseSensitive:NO
+                                                message:@"Please enter a valid email address."];
+
+    validations[@"postalCode"] = [self validatePresenceOfRequiredKey:@"postalCode" withMessage:@"Your zip code is required."];
+    validations[@"postalCode"] = [MLCValidate validateFormat:@"^\\d{5}(?:[-\\s]\\d{4})?$"
+                                                     message:@"Please enter a valid zip code."];
+
+    validations[@"firstName"] = [self validatePresenceOfRequiredKey:@"firstName" withMessage:@"Your first name is required."];
+    validations[@"firstName"] = [MLCValidate validateFormat:@"^[A-Z -']{1,}$" caseSensitive:NO
+                                                    message:@"Please enter a valid first name."];
+
+    validations[@"lastName"] = [self validatePresenceOfRequiredKey:@"lastName" withMessage:@"Your last name is required."];
+    validations[@"lastName"] = [MLCValidate validateFormat:@"^[A-Z -']{1,}$" caseSensitive:NO
+                                                   message:@"Please enter a valid last name."];
+
+    validations[@"phone"] = [self validatePresenceOfRequiredKey:@"phone" withMessage:@"Your phone number is required."];
+    validations[@"phone"] = [MLCValidate validateFormat:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$"
+                                                message:@"Please enter a valid phone number."];
+
+    validations[@"stateOrProvince"] = [self validatePresenceOfRequiredKey:@"stateOrProvince" withMessage:@"Your state is required."];
+    validations[@"stateOrProvince"] = [MLCValidate validateFormat:@"^[A-Z]{2}$"
+                                                          message:@"Please enter a valid state."];
+
+    validations[@"gender"] = [self validatePresenceOfRequiredKey:@"gender" withMessage:@"Your gender is required."];
+
+    validations[@"optinEmail"] = [[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
+                                                       validationTest:^BOOL(MLCUser *user, NSString *key, NSString *value) {
+                                                           BOOL selected = [value boolValue];
+                                                           NSString *email = user.email;
+                                                           BOOL valid = email.length && [user validateValue:&email forKey:@"email" error:nil];
+                                                           return !selected || valid;
+                                                       }];
+
+    validations[@"optinPhone"] = [[MLCValidate alloc] initWithMessage:@"A valid mobile phone number is required for Phone Alerts."
+                                                       validationTest:^BOOL(MLCUser *user, NSString *key, NSString *value) {
+                                                           BOOL selected = [value boolValue];
+                                                           NSString *phone = user.phone;
+                                                           BOOL valid = phone.length && [user validateValue:&phone forKey:@"phone" error:nil];
+                                                           return !selected || valid;
+                                                       }];
+
+    _validations = validations;
+    return _validations;
 }
 
-//- (BOOL)validatePassword:(id *)ioValue error:(NSError **)outError {
-//	MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-//	[validation validateShouldExist:[self.class.requiredParameters containsObject:@"password"]
-//                       errorMessage:@"Your password is required."];
-//
-//	return [validation isValid:outError];
-//}
-
-- (BOOL)validateEmail:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"email"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your email address is required."];
-    }
-    [validation validateCaseInsensitiveFormat:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$"
-                                 errorMessage:@"Please enter a valid email address."];
-
-    return [validation isValid:outError];
-}
-
-
-- (BOOL)validatePostalCode:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"postalCode"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your zip code is required."];
-    }
-    [validation validateFormat:@"^\\d{5}(?:[-\\s]\\d{4})?$"
-                  errorMessage:@"Please enter a valid zip code."];
-
-    return [validation isValid:outError];
-}
-
-- (BOOL)validateFirstName:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"firstName"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your first name is required."];
-    }
-    [validation validateCaseInsensitiveFormat:@"^[A-Z -']{1,}$"
-                                 errorMessage:@"Please enter a valid first name."];
-
-    return [validation isValid:outError];
-}
-
-- (BOOL)validateLastName:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"lastName"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your last name is required."];
-    }
-    [validation validateCaseInsensitiveFormat:@"^[A-Z -']{1,}$"
-                                 errorMessage:@"Please enter a valid last name."];
-
-    return [validation isValid:outError];
-}
-
-- (BOOL)validatePhone:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"phone"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your phone number is required."];
-    }
-    [validation validateFormat:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$"
-                  errorMessage:@"Please enter a valid phone number."];
-
-    return [validation isValid:outError];
-}
-
-- (BOOL)validateStateOrProvince:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"stateOrProvince"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your state is required."];
-    }
-    [validation validateFormat:@"^[A-Z]{2}$" errorMessage:@"Please enter a valid state."];
-
-    return [validation isValid:outError];
-}
-
-- (BOOL)validateGender:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    if ([self.class.requiredParameters containsObject:@"gender"]) {
-        [validation validateShouldExist:YES errorMessage:@"Your gender is required."];
-    }
-    return [validation isValid:outError];
-}
-
-- (BOOL)validateOptinEmail:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    [validation validateTest:^BOOL(id value) {
-        BOOL selected = [value boolValue];
-        NSString *email = self.email;
-        BOOL valid = self.email.length && [self validateEmail:&email error:nil];
-        if (selected && !valid) {
-            return NO;
-        }
-        return YES;
-    } errorMessage:@"A valid email address is required for Email Alerts."];
-
-    return [validation isValid:outError];
-}
-
-- (BOOL)validateOptinPhone:(id *)ioValue error:(NSError **)outError {
-    MLCValidation *validation = [MLCValidation validationWithValue:ioValue];
-    [validation validateTest:^BOOL(id value) {
-        BOOL selected = [value boolValue];
-        NSString *phone = self.phone;
-        BOOL valid = self.phone.length && [self validatePhone:&phone error:nil];
-        if (selected && !valid) {
-            return NO;
-        }
-        return YES;
-    } errorMessage:@"A valid mobile phone number is required for Phone Alerts."];
-
-    return [validation isValid:outError];
-}
 /*
  - (BOOL)validateDateOfBirth:(id *)ioValue error:(NSError **)outError {
 	NSDate * value = *ioValue;

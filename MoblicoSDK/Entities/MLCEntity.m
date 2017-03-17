@@ -26,8 +26,13 @@
 
 @implementation MLCEntity
 
++ (MLCValidations *)validations {
+    return nil;
+}
+
 - (BOOL)validate:(out NSError *__autoreleasing *)outError {
 
+    NSLog(@"validate1");
     NSDictionary *properties = self._properties;
     NSMutableArray * errors = [NSMutableArray arrayWithCapacity:properties.count];
 
@@ -50,6 +55,24 @@
     }
 
     return NO;
+}
+
+- (BOOL)validateValue:(inout id  _Nullable __autoreleasing *)ioValue forKey:(NSString *)inKey error:(out NSError * _Nullable __autoreleasing *)outError {
+
+    NSLog(@"validate2");
+    if (![super validateValue:ioValue forKey:inKey error:outError]) {
+        return NO;
+    }
+    if (self.class.validations == nil) {
+        NSLog(@"No class validations.");
+        return YES;
+    }
+
+    MLCValidationResults *results = [self.class.validations validate:self key:inKey value:ioValue];
+    if (outError) {
+        *outError = results.firstError;
+    }
+    return results.isValid;
 }
 
 - (NSMutableDictionary *)_scalarValues {
