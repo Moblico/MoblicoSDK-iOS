@@ -235,6 +235,8 @@
 		5BC7AC1F1C6BE0BE003E4C9B /* MLCDealsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4A797416BAFD4D000C39A4 /* MLCDealsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7AC201C6BE0BE003E4C9B /* MLCService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B42708216B7158600DE981C /* MLCService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7AC211C6BE0BE003E4C9B /* MLCProduct.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B2ABCCC19631D7F006246CC /* MLCProduct.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BD938461E8B1EEB00B1FDC9 /* MLCConcurrentService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BD938471E8B1EEB00B1FDC9 /* MLCConcurrentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD938451E8B1EEB00B1FDC9 /* MLCConcurrentService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -386,6 +388,8 @@
 		5BC206EA1867892F00E321AC /* MLCGroupsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCGroupsService.h; sourceTree = "<group>"; };
 		5BC206EB1867893000E321AC /* MLCGroupsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCGroupsService.m; sourceTree = "<group>"; };
 		5BC7AC261C6BE0BE003E4C9B /* MoblicoSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoblicoSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCConcurrentService.h; sourceTree = "<group>"; };
+		5BD938451E8B1EEB00B1FDC9 /* MLCConcurrentService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCConcurrentService.m; sourceTree = "<group>"; };
 		5BE472B21804FB9A00616CF2 /* MLCMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCMessageService.h; sourceTree = "<group>"; };
 		5BE472B31804FB9A00616CF2 /* MLCMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCMessageService.m; sourceTree = "<group>"; };
 		5BE472B61804FBFE00616CF2 /* MLCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCMessage.h; sourceTree = "<group>"; };
@@ -426,6 +430,8 @@
 			isa = PBXGroup;
 			children = (
 				5B7B68611B7ABE5D00C63779 /* MLCAdsService.h */,
+				5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */,
+				5BD938451E8B1EEB00B1FDC9 /* MLCConcurrentService.m */,
 				5B7B68621B7ABE5D00C63779 /* MLCAdsService.m */,
 				5B4A798316BB1E65000C39A4 /* MLCAffinitiesService.h */,
 				5B4A798416BB1E65000C39A4 /* MLCAffinitiesService.m */,
@@ -671,6 +677,7 @@
 				5BC7AC091C6BE0BE003E4C9B /* MLCRewardsService.h in Headers */,
 				5BC7AC0A1C6BE0BE003E4C9B /* MLCMetricsService.h in Headers */,
 				5BC7AC0B1C6BE0BE003E4C9B /* MLCGroup.h in Headers */,
+				5BD938461E8B1EEB00B1FDC9 /* MLCConcurrentService.h in Headers */,
 				5BC7AC0C1C6BE0BE003E4C9B /* MLCSettingsService.h in Headers */,
 				5BAB4AE31DECD9CB00441CE3 /* MLCScanService.h in Headers */,
 				5BC7AC0D1C6BE0BE003E4C9B /* MLCOutOfBandService.h in Headers */,
@@ -939,6 +946,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B70638B1CDBA04100AE86A0 /* MLCLogger.m in Sources */,
+				5BD938471E8B1EEB00B1FDC9 /* MLCConcurrentService.m in Sources */,
 				5BC7ABAE1C6BE0BE003E4C9B /* MLCProductsService.m in Sources */,
 				5BC7ABAF1C6BE0BE003E4C9B /* MLCLeaderboardService.m in Sources */,
 				5BC7ABB01C6BE0BE003E4C9B /* MLCSettingsService.m in Sources */,

@@ -16,12 +16,15 @@
 
 #import <MoblicoSDK/MLCService.h>
 
+typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject,  NSError *error, NSHTTPURLResponse *response);
+
 @interface MLCService () <NSURLConnectionDataDelegate>
-@property (copy, nonatomic) MLCServiceJSONCompletionHandler jsonCompletionhandler;
+@property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionhandler;
 @property (strong, nonatomic) NSURLConnection *connection;
 @property (strong, nonatomic) NSURLRequest *request;
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
+@property (strong, nonatomic) dispatch_group_t dispatchGroup;
 
 + (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
 + (instancetype)createResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceResourceCompletionHandler)handler;
@@ -50,7 +53,7 @@
 + (NSString *)stringFromMLCServiceRequestMethod:(MLCServiceRequestMethod)method;
 + (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string;
 
-+ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler;
 
 + (id<MLCEntityProtocol>)deserializeResource:(NSDictionary *)resource;
 + (NSArray<MLCEntityProtocol> *)deserializeArray:(NSArray *)array;

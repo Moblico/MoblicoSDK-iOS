@@ -32,7 +32,7 @@
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:@"settings"
                        parameters:nil
-                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               MLCSettings *settings = nil;
                               if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
                                   [[NSUserDefaults standardUserDefaults] setObject:jsonObject forKey:@"MLCSettings"];
@@ -40,6 +40,7 @@
                                   settings = [self settings];
                               }
                               handler(settings, error, response);
+                              service.dispatchGroup = nil;
                           }];
 }
 

@@ -29,6 +29,7 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 // Services
 #import <MoblicoSDK/MLCService.h>
 #import <MoblicoSDK/MLCBasicService.h>
+#import <MoblicoSDK/MLCConcurrentService.h>
 
 #import <MoblicoSDK/MLCAdsService.h>
 #import <MoblicoSDK/MLCAffinitiesService.h>

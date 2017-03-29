@@ -34,6 +34,18 @@
 
 @implementation MLCService
 
+- (void)setDispatchGroup:(dispatch_group_t)dispatchGroup {
+    if (_dispatchGroup) {
+        dispatch_group_leave(_dispatchGroup);
+    }
+
+    if (dispatchGroup) {
+        dispatch_group_enter(dispatchGroup);
+    }
+
+    _dispatchGroup = dispatchGroup;
+}
+
 + (NSArray<NSString *> *)scopeableResources {
     return [[NSArray<NSString *> alloc] init];
 }
@@ -64,7 +76,7 @@
     }
     [MLCServiceManager.sharedServiceManager authenticateRequest:self.request handler:^(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response) {
         if (error) {
-            self.jsonCompletionhandler(nil, error, response);
+            self.jsonCompletionhandler(self, nil, error, response);
         } else {
             self.request = authenticatedRequest;
             self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];
@@ -88,7 +100,7 @@
     self.connection = nil;
 }
 
-+ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler {
     MLCService *service = [[[self class] alloc] init];
     service.jsonCompletionhandler = handler;
     service.request = [self requestWithMethod:method path:path parameters:parameters];
@@ -104,7 +116,7 @@
     return [self serviceForMethod:MLCServiceRequestMethodPOST
                              path:path
                        parameters:parameters
-                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
 
                               __weak __typeof__(self) __self = self;
 							  if (handler) {
@@ -113,9 +125,13 @@
                                       id<MLCEntityProtocol> resource = [__self deserializeResource:jsonObject];
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           handler(resource, error, response);
+                                          service.dispatchGroup = nil;
                                       });
                                   });
 							  }
+                              else {
+                                  service.dispatchGroup = nil;
+                              }
                           }];
 }
 
@@ -131,7 +147,7 @@
     return [self serviceForMethod:MLCServiceRequestMethodPUT
                              path:path
                        parameters:parameters
-                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
 
                               if (handler) {
                                   BOOL success;
@@ -143,8 +159,11 @@
                                       success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
                                   }
                                   handler(success, error, response);
+                                  service.dispatchGroup = nil;
                               }
-
+                              else {
+                                  service.dispatchGroup = nil;
+                              }
                           }];
 }
 
@@ -158,7 +177,7 @@
     return [self serviceForMethod:MLCServiceRequestMethodDELETE
                              path:path
                        parameters:parameters
-                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               if (handler) {
                                   BOOL success;
                                   MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
@@ -169,6 +188,10 @@
                                       success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
                                   }
                                   handler(success, error, response);
+                                  service.dispatchGroup = nil;
+                              }
+                              else {
+                                  service.dispatchGroup = nil;
                               }
                           }];
 }
@@ -191,11 +214,12 @@
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:parameters
-                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                   id<MLCEntityProtocol> resource = [self deserializeResource:jsonObject];
                                   dispatch_async(dispatch_get_main_queue(), ^{
                                       handler(resource, error, response);
+                                      service.dispatchGroup = nil;
                                   });
                               });
                           }];
@@ -234,7 +258,7 @@
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:searchParameters
-                          handler:^(id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               NSInteger httpStatus = [error.userInfo[@"status"] httpStatus];
 
                               if (httpStatus == 404) {
@@ -244,6 +268,7 @@
                                       NSArray<MLCEntityProtocol> *array = [self deserializeArray:jsonObject];
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           handler(array, error, response);
+                                          service.dispatchGroup = nil;
                                       });
                                   });
                               }
@@ -481,7 +506,7 @@
     }
     MLCDebugLog(@"\n=====\n%@\n=====", logDictionary);
 
-    self.jsonCompletionhandler(nil, error, self.httpResponse);
+    self.jsonCompletionhandler(self, nil, error, self.httpResponse);
 }
 
 - (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
@@ -530,7 +555,7 @@
                     message = @"Unknown Error";
                 }
                 NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey:message, @"status": status}];
-                self.jsonCompletionhandler(nil, statusError, self.httpResponse);
+                self.jsonCompletionhandler(self, nil, statusError, self.httpResponse);
 				self.receivedData = nil;
                 return;
             }
@@ -547,7 +572,7 @@
 //        NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: status.message, @"status": status}];
 //        self.jsonCompletionhandler(nil, statusError, self.httpResponse);
 //    } else {
-        self.jsonCompletionhandler(jsonObject, error, self.httpResponse);
+        self.jsonCompletionhandler(self, jsonObject, error, self.httpResponse);
 		self.receivedData = nil;
 
 //    }

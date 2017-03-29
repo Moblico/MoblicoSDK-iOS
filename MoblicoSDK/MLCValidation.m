@@ -66,9 +66,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 - (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id  _Nullable __autoreleasing *)ioValue {
     MLCValidationResults *results = [[MLCValidationResults alloc] init];
     for (MLCValidate *rule in self[key]) {
-        NSLog(@"testing validity %@", rule);
         NSString *value = [MLCEntity stringFromValue:*ioValue];
-        NSLog(@"testing validity of %@ %@ %@", NSStringFromClass([entity class]), key, value);
         if (!rule.test(entity, key, value)) {
             [results addMessage:rule.message];
         }

@@ -31,8 +31,6 @@
 }
 
 - (BOOL)validate:(out NSError *__autoreleasing *)outError {
-
-    NSLog(@"validate1");
     NSDictionary *properties = self._properties;
     NSMutableArray * errors = [NSMutableArray arrayWithCapacity:properties.count];
 
@@ -59,12 +57,10 @@
 
 - (BOOL)validateValue:(inout id  _Nullable __autoreleasing *)ioValue forKey:(NSString *)inKey error:(out NSError * _Nullable __autoreleasing *)outError {
 
-    NSLog(@"validate2");
     if (![super validateValue:ioValue forKey:inKey error:outError]) {
         return NO;
     }
     if (self.class.validations == nil) {
-        NSLog(@"No class validations.");
         return YES;
     }
 
