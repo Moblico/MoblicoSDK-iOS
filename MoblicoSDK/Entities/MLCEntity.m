@@ -27,7 +27,13 @@
 @implementation MLCEntity
 
 + (MLCValidations *)validations {
-    return nil;
+    MLCValidations *validations = objc_getAssociatedObject(self, @selector(validations));
+    if (!validations) {
+        validations = [[MLCValidations alloc] init];
+        objc_setAssociatedObject(self, @selector(validations), validations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+
+    return validations;
 }
 
 - (BOOL)validate:(out NSError *__autoreleasing *)outError {

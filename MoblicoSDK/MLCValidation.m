@@ -30,6 +30,16 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 
 @implementation MLCValidations
 
+- (NSString *)description {
+    NSMutableString *description = super.description.mutableCopy;
+    [description appendFormat:@" %@", self.validations];
+    return description;
+}
+
+- (NSUInteger)count {
+    return self.validations.count;
+}
+
 - (NSMutableDictionary<NSString *,NSMutableArray<MLCValidate *> *> *)validations {
     if (!_validations) {
         _validations = [NSMutableDictionary<NSString *,NSMutableArray<MLCValidate *> *> dictionary];

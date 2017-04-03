@@ -297,19 +297,17 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
 @implementation MLCUser (Validation)
 
-static MLCValidations *_validations;
-
 + (MLCValidate *)validatePresenceOfRequiredKey:(NSString *)key withMessage:(NSString *)message {
     if (![self.requiredParameters containsObject:key]) return nil;
     return [MLCValidate validatePresenceWithMessage:message];
 }
 
 + (MLCValidations *)validations {
-    if (_validations) {
-        return _validations;
+    MLCValidations *validations = [super validations];
+    if (validations.count) {
+        return validations;
     }
 
-    MLCValidations *validations = [[MLCValidations alloc] init];
     validations[@"username"] = [self validatePresenceOfRequiredKey:@"username" withMessage:@"Your username is required."];
     validations[@"username"] = [MLCValidate validateFormat:@"^[A-Z0-9._%+-@ ]{3,200}$" caseSensitive:NO message:@"Please enter a valid username."];
 
@@ -355,8 +353,8 @@ static MLCValidations *_validations;
                                                            return !selected || valid;
                                                        }];
 
-    _validations = validations;
-    return _validations;
+//    _validations = validations;
+    return validations;
 }
 
 /*

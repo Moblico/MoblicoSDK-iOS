@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
 @class MLCValidate, MLCValidationResults;
 
 @interface MLCValidations : NSObject
-
+@property (nonatomic, assign, readonly) NSUInteger count;
 - (NSArray<MLCValidate *> *)objectForKeyedSubscript:(NSString *)key;
 - (void)setObject:(id)obj forKeyedSubscript:(NSString *)key;
 - (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing * _Nonnull)ioValue;
