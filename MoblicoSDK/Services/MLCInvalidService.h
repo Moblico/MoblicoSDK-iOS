@@ -16,6 +16,16 @@
 
 #import <MoblicoSDK/MLCService.h>
 
+FOUNDATION_EXPORT NSString *const MLCServiceErrorDomain;
+FOUNDATION_EXPORT NSString *const MLCServiceDetailedErrorsKey;
+
+typedef NS_ENUM(NSUInteger, MLCServiceErrorCode) {
+    MLCServiceErrorCodeMissingParameter = 1000,
+    MLCServiceErrorCodeInvalidParameter,
+    MLCServiceErrorCodeInternalError,
+    MLCServiceErrorCodeMultipleErrors
+};
+
 typedef void(^MLCInvalidServiceCompletionHandler)(id jsonObject, NSError *error, NSHTTPURLResponse *response);
 typedef void(^MLCInvalidServiceFailedCompletionHandler)(BOOL success, NSError *error, NSHTTPURLResponse *response);
 
@@ -30,5 +40,8 @@ typedef void(^MLCInvalidServiceFailedCompletionHandler)(BOOL success, NSError *e
 + (instancetype)invalidServiceFailedWithError:(NSError *)error response:(NSHTTPURLResponse *)response handler:(MLCInvalidServiceFailedCompletionHandler)handler;
 + (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCInvalidServiceCompletionHandler)handler;
 + (instancetype)invalidServiceFailedWithError:(NSError *)error handler:(MLCInvalidServiceFailedCompletionHandler)handler;
+
++ (NSError *)serviceErrorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion;
++ (NSError *)serviceErrorWithErrors:(NSArray<NSError *> *)errors;
 
 @end

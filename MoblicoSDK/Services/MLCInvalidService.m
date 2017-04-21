@@ -16,6 +16,9 @@
 
 #import "MLCInvalidService.h"
 
+NSString *const MLCServiceErrorDomain = @"MLCServiceErrorDomain";
+NSString *const MLCServiceDetailedErrorsKey = @"MLCServiceDetailedErrorsKey";
+
 @implementation MLCInvalidService
 
 + (instancetype)invalidServiceFailedWithError:(NSError *)error handler:(MLCInvalidServiceFailedCompletionHandler)handler {
@@ -56,5 +59,28 @@
 - (void)cancel {
     
 }
+
++ (NSError *)serviceErrorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion {
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:2];
+
+    if (description.length) {
+        userInfo[NSLocalizedDescriptionKey] = description;
+    }
+
+    if (recoverySuggestion.length) {
+        userInfo[NSLocalizedRecoverySuggestionErrorKey] = recoverySuggestion;
+    }
+
+    if (userInfo.count) {
+        return [NSError errorWithDomain:MLCServiceErrorDomain code:code userInfo:userInfo];
+    }
+
+    return [NSError errorWithDomain:MLCServiceErrorDomain code:code userInfo:userInfo];
+}
+
++ (NSError *)serviceErrorWithErrors:(NSArray<NSError *> *)errors {
+    return [NSError errorWithDomain:MLCServiceErrorDomain code:MLCServiceErrorCodeMultipleErrors userInfo:@{MLCServiceDetailedErrorsKey: errors}];
+}
+
 
 @end
