@@ -237,6 +237,8 @@
 		5BC7AC211C6BE0BE003E4C9B /* MLCProduct.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B2ABCCC19631D7F006246CC /* MLCProduct.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BD938461E8B1EEB00B1FDC9 /* MLCConcurrentService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BD938471E8B1EEB00B1FDC9 /* MLCConcurrentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD938451E8B1EEB00B1FDC9 /* MLCConcurrentService.m */; };
+		5BEED7FC1E9D79020021125E /* MLCKeychainPasswordItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BEED7FA1E9D79020021125E /* MLCKeychainPasswordItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BEED7FD1E9D79020021125E /* MLCKeychainPasswordItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEED7FB1E9D79020021125E /* MLCKeychainPasswordItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -397,6 +399,8 @@
 		5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCMetricsManager.h; sourceTree = "<group>"; };
 		5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCMetricsManager.m; sourceTree = "<group>"; };
 		5BECA8EA16A850DF00F0E4B5 /* MoblicoSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoblicoSDK.h; sourceTree = "<group>"; };
+		5BEED7FA1E9D79020021125E /* MLCKeychainPasswordItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCKeychainPasswordItem.h; sourceTree = "<group>"; };
+		5BEED7FB1E9D79020021125E /* MLCKeychainPasswordItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCKeychainPasswordItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -604,6 +608,8 @@
 			isa = PBXGroup;
 			children = (
 				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
+				5BEED7FA1E9D79020021125E /* MLCKeychainPasswordItem.h */,
+				5BEED7FB1E9D79020021125E /* MLCKeychainPasswordItem.m */,
 				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
 				5B81470D1B669FA400A36D4A /* MLCEntityCache.h */,
 				5B81470E1B669FA400A36D4A /* MLCEntityCache.m */,
@@ -665,6 +671,7 @@
 				5B7BF49D1D00932300F5388B /* MLCListItem.h in Headers */,
 				5BC7ABFE1C6BE0BE003E4C9B /* MLCService_Private.h in Headers */,
 				5BC7ABFF1C6BE0BE003E4C9B /* MLCNotification.h in Headers */,
+				5BEED7FC1E9D79020021125E /* MLCKeychainPasswordItem.h in Headers */,
 				5BC7AC001C6BE0BE003E4C9B /* MLCEventsService.h in Headers */,
 				5BC7AC011C6BE0BE003E4C9B /* MLCMetric.h in Headers */,
 				5BC7AC021C6BE0BE003E4C9B /* MLCValidation.h in Headers */,
@@ -951,6 +958,7 @@
 				5BC7ABAF1C6BE0BE003E4C9B /* MLCLeaderboardService.m in Sources */,
 				5BC7ABB01C6BE0BE003E4C9B /* MLCSettingsService.m in Sources */,
 				5BC7ABB11C6BE0BE003E4C9B /* MLCAd.m in Sources */,
+				5BEED7FD1E9D79020021125E /* MLCKeychainPasswordItem.m in Sources */,
 				5BC7ABB21C6BE0BE003E4C9B /* MLCOutOfBandService.m in Sources */,
 				5BC7ABB31C6BE0BE003E4C9B /* MLCUserTransaction.m in Sources */,
 				5BC7ABB41C6BE0BE003E4C9B /* MLCMessage.m in Sources */,
