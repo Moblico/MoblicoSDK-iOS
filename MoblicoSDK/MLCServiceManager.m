@@ -40,6 +40,7 @@ static NSString *const MLCServiceManagerForceQueryParametersEnabledKey = @"MLCSe
 @end
 
 @implementation MLCServiceManager
+@synthesize authenticationToken = _authenticationToken;
 @synthesize serviceName = _serviceName;
 @synthesize genericPasswordQuery = _genericPasswordQuery;
 @synthesize keychainItemData = _keychainItemData;
@@ -135,8 +136,28 @@ static NSString *_testingAPIKey = nil;
 //    }
 //}
 
++ (BOOL)automaticallyNotifiesObserversOfCurrentToken {
+    return NO;
+}
+
 - (NSString *)currentToken {
     return [self.authenticationToken.token copy];
+}
+
+- (void)setAuthenticationToken:(MLCAuthenticationToken *)authenticationToken {
+    @synchronized (self) {
+        if (_authenticationToken != authenticationToken) {
+            [self willChangeValueForKey:@"currentToken"];
+            _authenticationToken = authenticationToken;
+            [self didChangeValueForKey:@"currentToken"];
+        }
+    }
+}
+
+- (MLCAuthenticationToken *)authenticationToken {
+    @synchronized (self) {
+        return _authenticationToken;
+    }
 }
 
 - (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials {
