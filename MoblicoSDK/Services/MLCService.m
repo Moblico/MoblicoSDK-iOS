@@ -263,6 +263,7 @@
 
                               if (httpStatus == 404) {
                                   handler([[NSArray<MLCEntityProtocol> alloc] init], nil, response);
+                                  service.dispatchGroup = nil;
                               } else {
                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                       NSArray<MLCEntityProtocol> *array = [self deserializeArray:jsonObject];
