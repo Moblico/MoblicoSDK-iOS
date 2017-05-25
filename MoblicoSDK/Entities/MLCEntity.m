@@ -578,7 +578,7 @@
         Class ClassType = [MLCEntity classFromType:type];
         id obj = nil;
 
-        if ([value isKindOfClass:[MLCEntity class]]) {
+        if ([value isKindOfClass:ClassType]) {
             obj = value;
         } else if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
             obj = [[ClassType alloc] initWithJSONObject:value];
