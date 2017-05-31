@@ -161,7 +161,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         return status == noErr;
     }
 
-    return [self setObject:data forKey:(__bridge NSString *)kSecValueData error:error];
+    return [self setObject:archivedData forKey:(__bridge NSString *)kSecValueData error:error];
 }
 
 - (BOOL)renameAccount:(NSString *)account error:(NSError **)error{
