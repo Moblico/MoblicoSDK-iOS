@@ -79,7 +79,7 @@
     return [self findScopedResourcesForResource:media searchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)fintMediaForLocation:(MLCLocation *)location mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findMediaForLocation:(MLCLocation *)location mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler {
     NSDictionary *searchParameters = [self searchParametersWithMediaType:mediaType mediaTypeCategory:mediaTypeCategory category:category];
 
     return [self findScopedResourcesForResource:location searchParameters:searchParameters handler:handler];

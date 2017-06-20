@@ -60,7 +60,7 @@
 
 - (void)start {
     [self cancel];
-    self.connection = [NSURLConnection connectionWithRequest:self.request delegate:self];;
+    self.connection = [NSURLConnection connectionWithRequest:self.request delegate:self];
 #if TARGET_OS_IPHONE
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 #endif

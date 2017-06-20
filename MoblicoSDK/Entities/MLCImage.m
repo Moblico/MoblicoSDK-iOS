@@ -16,10 +16,11 @@
 
 #import "MLCImage.h"
 #import "MLCEntity_Private.h"
+#import <CommonCrypto/CommonDigest.h>
+
 @interface MLCImage ()
 
 @property (strong, nonatomic, readwrite) NSData *data;
-@property (nonatomic, strong) NSString *path;
 @end
 
 @implementation MLCImage
@@ -69,49 +70,17 @@
 
 - (void)loadImageData {
     if (self.data) {
-//        [self didChangeValueForKey:NSStringFromSelector(@selector(data))];
         self.data = self.data;
         return;
     }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *path = self.path;
-        NSData *image;
-
-        if (path) {
-            image = [[NSData alloc] initWithContentsOfFile:path];
-        }
-
-        if (!image && self.url) {
-            image = [[NSData alloc] initWithContentsOfURL:self.url];
-        }
-
-        if (path) {
-            [image writeToFile:path atomically:YES];
-        }
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (image) {
-                self.data = image;
-            } else {
-                self.data = [NSData data];
-            }
-        });
-    });
+    [self loadImageData:^(NSData *data, NSError *error, BOOL fromCache, CGFloat scale) {
+        self.data = data ?: [NSData data];
+    }];
 }
 
 - (void)loadImageData:(MLCImageCompletionHandler)handler {
     return [self _mlc_loadImageDataFromURL:self.url handler:handler];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:self.url];
-//    NSOperationQueue *currentQueue = [NSOperationQueue currentQueue];
-//    [NSURLConnection sendAsynchronousRequest:request
-//                                       queue:currentQueue
-//                           completionHandler:^(NSURLResponse *response,
-//                                               NSData *data,
-//                                               NSError *connectionError) {
-//                               handler(data, connectionError, NO);
-//                           }];
-
 }
 
 + (NSCache *)_mlc_sharedCache {
@@ -124,51 +93,67 @@
     return sharedCache;
 }
 
++ (NSString *)_mlc_cacheDirectory {
+    static NSString *cacheDirectory;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *searchPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+        cacheDirectory = [searchPath stringByAppendingPathComponent:@"CachedImages"];
+        NSError *error;
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:&error]) {
+            NSLog(@"Failed to create CachedImages directory: %@", error.localizedDescription);
+        }
+    });
+
+    return cacheDirectory;
+}
+
+- (NSString *)sha1Hash:(NSString *)string {
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
+        [output appendFormat:@"%02x", digest[i]];
+    }
+
+    return output;
+}
+
+- (NSString *)cachedPath:(NSString *)key {
+    NSString *fileName = [self sha1Hash:key];
+
+    return [[self.class _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
+}
+
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCImageCompletionHandler)handler {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
     NSCache *cache = [self.class _mlc_sharedCache];
     NSData *cachedData = [cache objectForKey:key];
+    NSString *cachedPath = [self cachedPath:key];
+
     CGFloat scale = self.scaleFactor;
     if (cachedData) {
         handler(cachedData, nil, YES, scale);
         return;
     }
 
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSData *data = [NSData dataWithContentsOfURL:url];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         if (data) {
             [cache setObject:data forKey:key];
+            [data writeToFile:cachedPath atomically:YES];
         }
         else {
+            data = [NSData dataWithContentsOfFile:cachedPath];
             [cache removeObjectForKey:key];
         }
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(data, nil, NO, scale);
-        });
-    });
-}
-
-- (NSString *)path {
-    if (_path) return _path;
-
-
-    NSString *searchPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
-    if (!searchPath) return nil;
-    NSString *docDir = [searchPath stringByAppendingPathComponent:@"CachedImages"];
-
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:docDir withIntermediateDirectories:YES attributes:nil error:nil]) {
-        return nil;
-    }
-
-    NSString *fileName = [NSString stringWithFormat:@"%.0F-%@", (self.lastUpdateDate).timeIntervalSince1970, @(self.imageId)];
-    if (!self.imageId) {
-        fileName = (@((self.url.absoluteString).hash)).stringValue;
-    }
-    _path = [docDir stringByAppendingPathComponent:fileName];
-
-    return _path;
+        handler(data, error, NO, scale);
+    }];
 }
 
 @end

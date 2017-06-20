@@ -16,6 +16,7 @@
 
 #import "MLCMedia.h"
 #import "MLCEntity_Private.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @interface MLCMedia ()
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler;
@@ -42,6 +43,21 @@
     return sharedCache;
 }
 
++ (NSString *)_mlc_cacheDirectory {
+    static NSString *cacheDirectory;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *searchPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+        cacheDirectory = [searchPath stringByAppendingPathComponent:@"CachedMedia"];
+        NSError *error;
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:&error]) {
+            NSLog(@"Failed to create CachedMedia directory: %@", error.localizedDescription);
+        }
+    });
+
+    return cacheDirectory;
+}
+
 - (void)loadImageData:(MLCMediaCompletionHandler)handler {
     [self _mlc_loadImageDataFromURL:self.imageUrl handler:handler];
 }
@@ -54,28 +70,50 @@
     [self _mlc_loadImageDataFromURL:self.url handler:handler];
 }
 
+- (NSString *)sha1Hash:(NSString *)string {
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
+        [output appendFormat:@"%02x", digest[i]];
+    }
+
+    return output;
+}
+
+- (NSString *)cachedPath:(NSString *)key {
+    NSString *fileName = [self sha1Hash:key];
+
+    return [[self.class _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
+}
+
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
     NSCache *cache = [self.class _mlc_sharedCache];
     NSData *cachedData = [cache objectForKey:key];
+    NSString *cachedPath = [self cachedPath:key];
+
     if (cachedData) {
         handler(cachedData, nil, YES);
         return;
     }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSData *data = [NSData dataWithContentsOfURL:url];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse * response, NSData *data, NSError *error) {
         if (data) {
             [cache setObject:data forKey:key];
+            [data writeToFile:cachedPath atomically:YES];
         }
         else {
+            data = [NSData dataWithContentsOfFile:cachedPath];
             [cache removeObjectForKey:key];
         }
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(data, nil, NO);
-        });
-    });
+        handler(data, error, NO);
+    }];
 }
 
 @end

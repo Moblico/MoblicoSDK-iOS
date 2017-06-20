@@ -61,7 +61,7 @@
  @param handler The request completion handler.
  */
 + (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)fintMediaForLocation:(MLCLocation *)location mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findMediaForLocation:(MLCLocation *)location mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
 
 /**
  This method requests all media for a specified event.
