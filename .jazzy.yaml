@@ -1,18 +1,18 @@
 skip_undocumented: false
 objc: true
 #clean: true
-xcodebuild_arguments: [--objc, Carthage/Build/iOS/MoblicoSDK.framework/Headers/MoblicoSDK.h, --, -x, objective-c, -fmodules, -isysroot, /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator10.2.sdk, -F, Carthage/Build/iOS]
+xcodebuild_arguments: [--objc, Carthage/Build/iOS/MoblicoSDK.framework/Headers/MoblicoSDK.h, --, -x, objective-c, -fmodules, -isysroot, /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator10.3.sdk, -F, Carthage/Build/iOS]
 author: Moblico LLC
 author_url: http://moblico.com
 module: MoblicoSDK
 module_version: 1.8
-copyright: © 2015 Moblico LLC
+copyright: © 2017 Moblico LLC
 github_url: https://github.com/Moblico/MoblicoSDK-iOS
 umbrella_header: MoblicoSDK/MoblicoSDK.h
 documentation: Guides/*.md
 theme: fullwidth
 
-swift_version: 3.0.2
+swift_version: 3.1.0
 # xcodebuild_arguments: [-x,-fmodules]
 # custom_categories:
 #   - name: Classes
