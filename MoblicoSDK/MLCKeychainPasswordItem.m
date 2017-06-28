@@ -151,7 +151,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
     if (![self readData:&readError]) {
         if (readError.code != MLCKeychainPasswordItemErrorCodeNoData) {
             if (error) *error = readError;
-            return nil;
+            return NO;
         }
 
         NSMutableDictionary<NSString *,id> *newItem = [self.class queryWithService:self.service account:self.account accessGroup:self.accessGroup].mutableCopy;
