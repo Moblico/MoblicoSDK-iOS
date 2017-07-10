@@ -140,6 +140,8 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 /// Indicates whether parameters are always passed in the query string.
 @property (atomic, class, assign, getter=isForceQueryParametersEnabled) BOOL forceQueryParametersEnabled;
 
+/// Indicates whether service calls are logged to the console.
+@property (atomic, class, assign, getter=isPersistentTokenEnabled) BOOL persistentTokenEnabled;
 #pragma mark Information
 ///------------------
 /// @name Information

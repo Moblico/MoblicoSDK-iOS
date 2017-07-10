@@ -28,6 +28,7 @@ static NSString *const MLCServiceManagerLocalhostEnabledKey = @"MLCServiceManage
 static NSString *const MLCServiceManagerLoggingEnabledKey = @"MLCServiceManagerLoggingEnabled";
 static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLDisabled";
 static NSString *const MLCServiceManagerForceQueryParametersEnabledKey = @"MLCServiceManagerForceQueryParametersEnabled";
+static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManagerPersistentToken";
 
 @interface MLCServiceManager ()
 
@@ -73,7 +74,7 @@ static NSString *const MLCServiceManagerForceQueryParametersEnabledKey = @"MLCSe
             NSString *password = credentials[@"password"];
             NSString *childKeyword = credentials[@"childKeyword"];
 
-            [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] childKeyword:childKeyword remember:YES];
+            [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] childKeyword:childKeyword];
         }
 	});
 
@@ -146,7 +147,14 @@ static NSString *_testingAPIKey = nil;
 
 - (void)setAuthenticationToken:(MLCAuthenticationToken *)authenticationToken {
     @synchronized (self) {
-        if (_authenticationToken != authenticationToken) {
+        if (MLCServiceManager.isPersistentTokenEnabled) {
+            NSDictionary *token = [MLCAuthenticationToken serialize:authenticationToken];
+            [self willChangeValueForKey:@"currentToken"];
+            [NSUserDefaults.standardUserDefaults setObject:token forKey:MLCServiceManagerPersistentTokenKey];
+            [NSUserDefaults.standardUserDefaults synchronize];
+            [self didChangeValueForKey:@"currentToken"];
+        }
+        else if (_authenticationToken != authenticationToken) {
             [self willChangeValueForKey:@"currentToken"];
             _authenticationToken = authenticationToken;
             [self didChangeValueForKey:@"currentToken"];
@@ -156,12 +164,23 @@ static NSString *_testingAPIKey = nil;
 
 - (MLCAuthenticationToken *)authenticationToken {
     @synchronized (self) {
+        if (MLCServiceManager.isPersistentTokenEnabled) {
+			NSDictionary *token = [NSUserDefaults.standardUserDefaults dictionaryForKey:MLCServiceManagerPersistentTokenKey];
+			return [[MLCAuthenticationToken alloc] initWithJSONObject:token];
+        }
         return _authenticationToken;
     }
 }
 
 - (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials {
     [self setCurrentUser:user childKeyword:nil remember:rememberCredentials];
+}
+
+- (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword {
+    @synchronized (self) {
+        self.currentUser = user;
+        self.childKeyword = childKeyword;
+    }
 }
 
 - (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword remember:(BOOL)rememberCredentials {
@@ -298,13 +317,18 @@ static NSString *_testingAPIKey = nil;
 + (BOOL)isForceQueryParametersEnabled {
     @synchronized(self) {
         NSNumber *force = [[NSUserDefaults standardUserDefaults] objectForKey:MLCServiceManagerForceQueryParametersEnabledKey];
-        if (force && !force.boolValue) {
-            return NO;
-        }
-        return YES;
+        return !force || force.boolValue;
     }
 }
 
+static BOOL _persistentTokenEnabled = NO;
++ (void)setPersistentTokenEnabled:(BOOL)persistToken {
+	_persistentTokenEnabled = persistToken;
+}
+
++ (BOOL)isPersistentTokenEnabled {
+	return _persistentTokenEnabled;
+}
 
 + (NSString *)host {
     if ([self isTestingEnabled]) {
