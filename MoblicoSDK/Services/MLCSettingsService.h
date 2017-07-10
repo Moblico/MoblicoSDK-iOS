@@ -31,12 +31,22 @@ typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings * _Nullable MLCSe
 
 @interface MLCSettings : NSObject
 
-- (nullable id)objectForKey:(NSString *)key;
-- (nullable id)objectForKeyedSubscript:(NSString *)key;
-- (nullable NSDictionary *)dictionaryForKey:(NSString *)key;
-- (nullable NSArray *)arrayForKey:(NSString *)key;
+- (nullable NSString *)objectForKey:(NSString *)key;
+- (nullable NSString *)objectForKeyedSubscript:(NSString *)key;
+- (nullable NSDictionary<NSString *, NSString *> *)dictionaryForKey:(NSString *)key;
+- (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key;
+
+- (nullable NSURL *)URLForKey:(NSString *)key;
+
+- (NSInteger)integerForKey:(NSString *)key;
+- (NSInteger)integerForKey:(NSString *)key defaultValue:(NSInteger)defaultValue;
+
+- (double)doubleForKey:(NSString *)key;
+- (double)doubleForKey:(NSString *)key defaultValue:(double)defaultValue;
+
 - (BOOL)boolForKey:(NSString *)key;
 - (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue;
+
 @end
 
 NS_ASSUME_NONNULL_END
