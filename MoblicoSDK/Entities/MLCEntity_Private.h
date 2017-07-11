@@ -20,7 +20,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *_scalarValues;
 @property (nonatomic, strong) NSMutableDictionary *_undefinedValues;
-@property (nonatomic, readwrite, strong) NSDictionary *_properties;
+@property (nonatomic, readwrite, strong) NSDictionary<NSString *, NSString *> *_properties;
 
 + (NSString *)stringFromValue:(id)value;
 + (NSDate *)dateFromTimeStampValue:(id)value;

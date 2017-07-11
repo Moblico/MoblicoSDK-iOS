@@ -157,7 +157,7 @@ typedef NS_ENUM(NSUInteger, MLCLocationCompareOrder) {
 /**
  The attributes for this location.
  */
-@property (copy, nonatomic) NSDictionary *attributes;
+@property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 /**
  The merchant id for this location.

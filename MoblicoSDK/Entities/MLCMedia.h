@@ -75,7 +75,7 @@ typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL from
 /**
  The attributes for this media.
  */
-@property (copy, nonatomic) NSDictionary *attributes;
+@property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 /**
  The sorting priority for this media.

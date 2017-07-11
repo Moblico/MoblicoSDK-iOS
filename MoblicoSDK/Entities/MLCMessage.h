@@ -31,21 +31,21 @@
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSArray *deviceIds;
+@property (nonatomic, strong) NSArray<NSString *> *deviceIds;
 
 /**
  The phone numbers for the recipients of this message.
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSArray *phoneNumbers;
+@property (nonatomic, strong) NSArray<NSString *> *phoneNumbers;
 
 /**
  The email addresses for the recipents of this message.
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSArray *emailAddresses;
+@property (nonatomic, strong) NSArray<NSString *> *emailAddresses;
 
 /**
  Convenience class method to create a MLCMessage object with the provided parameters.

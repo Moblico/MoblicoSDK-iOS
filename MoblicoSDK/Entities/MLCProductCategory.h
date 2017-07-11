@@ -8,10 +8,12 @@
 
 #import <MoblicoSDK/MoblicoSDK.h>
 
+@class MLCProductType;
+
 @interface MLCProductCategory : MLCEntity
 
 @property (nonatomic) NSUInteger productCategoryId;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSArray *productTypes;
+@property (nonatomic, copy) NSArray<MLCProductType *> *productTypes;
 
 @end

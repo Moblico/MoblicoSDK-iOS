@@ -22,6 +22,6 @@
 @property (copy, nonatomic) NSString *beaconIdentifier;
 @property (copy, nonatomic) NSString *beaconEnterNotificationText;
 @property (nonatomic, strong) CLBeaconRegion *beaconRegion;
-@property (copy, nonatomic) NSDictionary *attributes;
+@property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 @end

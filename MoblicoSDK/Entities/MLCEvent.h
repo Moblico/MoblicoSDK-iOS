@@ -106,7 +106,7 @@
 /**
  The attributes for this event.
  */
-@property (copy, nonatomic) NSDictionary *attributes;
+@property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 /**
  The URL for this event.
