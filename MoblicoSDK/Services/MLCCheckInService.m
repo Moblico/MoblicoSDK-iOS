@@ -20,24 +20,46 @@
 
 @end
 
+@interface MLCCheckInService ()
++ (instancetype)checkInWithLocation:(MLCLocation *)location
+                       userLocation:(CLLocation *)userLocation
+                   beaconIdentifier:(NSString *)beaconIdentifier
+                              event:(MLCEvent *)event
+                            handler:(MLCServiceResourceCompletionHandler)handler;
+
+@end
+
 @implementation MLCCheckInService
 
 + (Class<MLCEntityProtocol>)classForResource {
     return [MLCCheckIn class];
 }
 
-
 + (instancetype)checkInWithLocation:(MLCLocation *)location
                             handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self checkInWithLocation:location event:nil handler:handler];
+    return [self checkInWithLocation:location userLocation:nil beaconIdentifier:nil event:nil handler:handler];
 }
 
 + (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event
                             handler:(MLCServiceResourceCompletionHandler)handler {
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
-    if (location) parameters[@"locationId"] = @(location.locationId);
-    if (event) parameters[@"eventId"] = @(event.eventId);
+    return [self checkInWithLocation:location userLocation:nil beaconIdentifier:nil event:event handler:handler];
+}
 
++ (instancetype)checkInWithLocation:(MLCLocation *)location userLocation:(CLLocation *)userLocation beaconIdentifier:(NSString *)beaconIdentifier handler:(MLCServiceResourceCompletionHandler)handler {
+    return [self checkInWithLocation:location userLocation:userLocation beaconIdentifier:beaconIdentifier event:nil handler:handler];
+}
+
++ (instancetype)checkInWithLocation:(MLCLocation *)location userLocation:(CLLocation *)userLocation beaconIdentifier:(NSString *)beaconIdentifier event:(MLCEvent *)event handler:(MLCServiceResourceCompletionHandler)handler {
+
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:6];
+    if (location) parameters[@"locationId"] = @(location.locationId);
+    if (userLocation) {
+        parameters[@"latitude"] = @(userLocation.coordinate.latitude);
+        parameters[@"longitude"] = @(userLocation.coordinate.longitude);
+        parameters[@"locationAccuracy"] = @(userLocation.horizontalAccuracy);
+    }
+    if (beaconIdentifier) parameters[@"beaconIdentifier"] = beaconIdentifier;
+    if (event) parameters[@"eventId"] = @(event.eventId);
     MLCCheckIn *checkIn = [[MLCCheckIn alloc] initWithJSONObject:parameters];
 
     return [self createResource:checkIn handler:handler];
