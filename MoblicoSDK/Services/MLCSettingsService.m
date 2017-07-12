@@ -137,7 +137,6 @@
 }
 
 - (double)doubleForKey:(NSString *)key {
-    return [[MLCSettings.numberFormatter numberFromString:self.dictionary[key]] doubleValue];
     return [self doubleForKey:key defaultValue:0.0];
 }
 

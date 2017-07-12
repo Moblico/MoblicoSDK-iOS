@@ -21,9 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings * _Nullable MLCSettings,  NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
 
 @interface MLCSettingsService : MLCService
+@property (class, nonatomic, strong, readonly) MLCSettings *settings;
 
 + (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler;
-+ (MLCSettings *)settings;
 + (void)overrideSettings:(nullable NSDictionary *)settings;
 
 @end
@@ -33,17 +33,14 @@ typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings * _Nullable MLCSe
 
 - (nullable NSString *)objectForKey:(NSString *)key;
 - (nullable NSString *)objectForKeyedSubscript:(NSString *)key;
+
 - (nullable NSDictionary<NSString *, NSString *> *)dictionaryForKey:(NSString *)key;
 - (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key;
-
 - (nullable NSURL *)URLForKey:(NSString *)key;
-
 - (NSInteger)integerForKey:(NSString *)key;
 - (NSInteger)integerForKey:(NSString *)key defaultValue:(NSInteger)defaultValue;
-
 - (double)doubleForKey:(NSString *)key;
 - (double)doubleForKey:(NSString *)key defaultValue:(double)defaultValue;
-
 - (BOOL)boolForKey:(NSString *)key;
 - (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue;
 
