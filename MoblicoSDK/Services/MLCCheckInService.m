@@ -17,6 +17,10 @@
 
 @property (nonatomic) NSUInteger locationId;
 @property (nonatomic) NSUInteger eventId;
+@property (nonatomic) CLLocationDegrees latitude;
+@property (nonatomic) CLLocationDegrees longitude;
+@property (nonatomic) CLLocationAccuracy locationAccuracy;
+@property (nonatomic, copy) NSString *beaconIdentifier;
 
 @end
 
@@ -60,9 +64,8 @@
     }
     if (beaconIdentifier) parameters[@"beaconIdentifier"] = beaconIdentifier;
     if (event) parameters[@"eventId"] = @(event.eventId);
-    MLCCheckIn *checkIn = [[MLCCheckIn alloc] initWithJSONObject:parameters];
 
-    return [self createResource:checkIn handler:handler];
+    return [self create:@"checkIn" parameters:parameters handler:handler];
 }
 
 @end
