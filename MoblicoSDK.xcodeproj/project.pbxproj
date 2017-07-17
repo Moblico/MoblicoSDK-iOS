@@ -76,7 +76,6 @@
 		5BC7ABE01C6BE0BE003E4C9B /* MLCNotificationsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7B684C1B7A8D7600C63779 /* MLCNotificationsService.m */; };
 		5BC7ABE11C6BE0BE003E4C9B /* MLCValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B96EBB218AE86DF004991BC /* MLCValidation.m */; };
 		5BC7ABE21C6BE0BE003E4C9B /* MLCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B42708316B7158600DE981C /* MLCService.m */; };
-		5BC7ABE31C6BE0BE003E4C9B /* MLCServiceParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3D9FBD18F8C180000E9CC5 /* MLCServiceParameters.m */; };
 		5BC7ABE41C6BE0BE003E4C9B /* MLCPoints.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4A796F16BADB64000C39A4 /* MLCPoints.m */; };
 		5BC7ABE71C6BE0BE003E4C9B /* MLCUserTransactionsSummaryService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B402AE7189F6FAF00B302BB /* MLCUserTransactionsSummaryService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7ABE81C6BE0BE003E4C9B /* MLCEntityCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B81470D1B669FA400A36D4A /* MLCEntityCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -106,7 +105,6 @@
 		5BC7AC001C6BE0BE003E4C9B /* MLCEventsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B42707C16B7158600DE981C /* MLCEventsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7AC011C6BE0BE003E4C9B /* MLCMetric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4270B616B7216C00DE981C /* MLCMetric.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7AC021C6BE0BE003E4C9B /* MLCValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B96EBB118AE86DF004991BC /* MLCValidation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5BC7AC031C6BE0BE003E4C9B /* MLCServiceParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B3D9FBC18F8C180000E9CC5 /* MLCServiceParameters.h */; };
 		5BC7AC041C6BE0BE003E4C9B /* MLCStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BC1AB3C16BBC1E200E91D79 /* MLCStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7AC051C6BE0BE003E4C9B /* MLCUserTransactionsSummary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B402ADF189F613000B302BB /* MLCUserTransactionsSummary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC7AC061C6BE0BE003E4C9B /* MLCImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4A796816BAD19C000C39A4 /* MLCImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -158,8 +156,6 @@
 		5B2ABCD319631FFE006246CC /* MLCProductCategoriesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCProductCategoriesService.m; sourceTree = "<group>"; };
 		5B2ABCD819633EC3006246CC /* MLCProductsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCProductsService.h; sourceTree = "<group>"; };
 		5B2ABCD919633EC3006246CC /* MLCProductsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCProductsService.m; sourceTree = "<group>"; };
-		5B3D9FBC18F8C180000E9CC5 /* MLCServiceParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCServiceParameters.h; sourceTree = "<group>"; };
-		5B3D9FBD18F8C180000E9CC5 /* MLCServiceParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCServiceParameters.m; sourceTree = "<group>"; };
 		5B402AD5189F5E6400B302BB /* MLCUserTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCUserTransaction.h; sourceTree = "<group>"; };
 		5B402AD6189F5E6400B302BB /* MLCUserTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCUserTransaction.m; sourceTree = "<group>"; };
 		5B402ADF189F613000B302BB /* MLCUserTransactionsSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCUserTransactionsSummary.h; sourceTree = "<group>"; };
@@ -294,21 +290,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5B3D9FBB18F8C0FE000E9CC5 /* Parameters */ = {
-			isa = PBXGroup;
-			children = (
-				5B3D9FBC18F8C180000E9CC5 /* MLCServiceParameters.h */,
-				5B3D9FBD18F8C180000E9CC5 /* MLCServiceParameters.m */,
-			);
-			path = Parameters;
-			sourceTree = "<group>";
-		};
-		5B42707B16B7158600DE981C /* Services */ = {
+		5BDD6B241F1D327100EACCA1 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				5B7B68611B7ABE5D00C63779 /* MLCAdsService.h */,
-				5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */,
-				5BD938451E8B1EEB00B1FDC9 /* MLCConcurrentService.m */,
 				5B7B68621B7ABE5D00C63779 /* MLCAdsService.m */,
 				5B4A798316BB1E65000C39A4 /* MLCAffinitiesService.h */,
 				5B4A798416BB1E65000C39A4 /* MLCAffinitiesService.m */,
@@ -318,6 +303,8 @@
 				5B5F672316EFC4E100956B4A /* MLCBasicService.m */,
 				5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */,
 				5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */,
+				5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */,
+				5BD938451E8B1EEB00B1FDC9 /* MLCConcurrentService.m */,
 				5B4457A41CBFFE58003CFA64 /* MLCCredentialsService.h */,
 				5B4457A51CBFFE58003CFA64 /* MLCCredentialsService.m */,
 				5B4A797416BAFD4D000C39A4 /* MLCDealsService.h */,
@@ -369,12 +356,11 @@
 				5B402AE4189F62CB00B302BB /* MLCUserTransactionsService.m */,
 				5B402AE7189F6FAF00B302BB /* MLCUserTransactionsSummaryService.h */,
 				5B402AE8189F6FAF00B302BB /* MLCUserTransactionsSummaryService.m */,
-				5B3D9FBB18F8C0FE000E9CC5 /* Parameters */,
 			);
-			path = Services;
+			name = Services;
 			sourceTree = "<group>";
 		};
-		5B42708816B7158600DE981C /* Entities */ = {
+		5BDD6B251F1D328D00EACCA1 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
 				5B7B685B1B7AB89F00C63779 /* MLCAd.h */,
@@ -433,7 +419,26 @@
 				5B402ADF189F613000B302BB /* MLCUserTransactionsSummary.h */,
 				5B402AE0189F613000B302BB /* MLCUserTransactionsSummary.m */,
 			);
-			path = Entities;
+			name = Entities;
+			sourceTree = "<group>";
+		};
+		5BDD6B261F1D332A00EACCA1 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
+				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
+				5B81470D1B669FA400A36D4A /* MLCEntityCache.h */,
+				5B81470E1B669FA400A36D4A /* MLCEntityCache.m */,
+				5BEED7FA1E9D79020021125E /* MLCKeychainPasswordItem.h */,
+				5BEED7FB1E9D79020021125E /* MLCKeychainPasswordItem.m */,
+				5B7063881CDB9B8700AE86A0 /* MLCLogger.h */,
+				5B70638A1CDBA04100AE86A0 /* MLCLogger.m */,
+				5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */,
+				5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */,
+				5B96EBB118AE86DF004991BC /* MLCValidation.h */,
+				5B96EBB218AE86DF004991BC /* MLCValidation.m */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 		5BECA8D716A850DF00F0E4B5 = {
@@ -459,23 +464,12 @@
 		5BECA8E716A850DF00F0E4B5 /* MoblicoSDK */ = {
 			isa = PBXGroup;
 			children = (
-				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
-				5BEED7FA1E9D79020021125E /* MLCKeychainPasswordItem.h */,
-				5BEED7FB1E9D79020021125E /* MLCKeychainPasswordItem.m */,
-				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
-				5B81470D1B669FA400A36D4A /* MLCEntityCache.h */,
-				5B81470E1B669FA400A36D4A /* MLCEntityCache.m */,
-				5B7063881CDB9B8700AE86A0 /* MLCLogger.h */,
-				5B70638A1CDBA04100AE86A0 /* MLCLogger.m */,
-				5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */,
-				5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */,
-				5B96EBB118AE86DF004991BC /* MLCValidation.h */,
-				5B96EBB218AE86DF004991BC /* MLCValidation.m */,
 				5BECA8EA16A850DF00F0E4B5 /* MoblicoSDK.h */,
-				5B42708816B7158600DE981C /* Entities */,
-				5B42707B16B7158600DE981C /* Services */,
-				5BECA8E816A850DF00F0E4B5 /* Supporting Files */,
 				5BB8F28F17849952006A86EF /* version.h */,
+				5BDD6B251F1D328D00EACCA1 /* Entities */,
+				5BDD6B241F1D327100EACCA1 /* Services */,
+				5BDD6B261F1D332A00EACCA1 /* Utility */,
+				5BECA8E816A850DF00F0E4B5 /* Supporting Files */,
 			);
 			path = MoblicoSDK;
 			sourceTree = "<group>";
@@ -527,7 +521,6 @@
 				5BC7AC001C6BE0BE003E4C9B /* MLCEventsService.h in Headers */,
 				5BC7AC011C6BE0BE003E4C9B /* MLCMetric.h in Headers */,
 				5BC7AC021C6BE0BE003E4C9B /* MLCValidation.h in Headers */,
-				5BC7AC031C6BE0BE003E4C9B /* MLCServiceParameters.h in Headers */,
 				5BC7AC041C6BE0BE003E4C9B /* MLCStatus.h in Headers */,
 				5BC7AC051C6BE0BE003E4C9B /* MLCUserTransactionsSummary.h in Headers */,
 				5BC7AC061C6BE0BE003E4C9B /* MLCImage.h in Headers */,
@@ -712,7 +705,6 @@
 				5BC7ABE01C6BE0BE003E4C9B /* MLCNotificationsService.m in Sources */,
 				5BC7ABE11C6BE0BE003E4C9B /* MLCValidation.m in Sources */,
 				5BC7ABE21C6BE0BE003E4C9B /* MLCService.m in Sources */,
-				5BC7ABE31C6BE0BE003E4C9B /* MLCServiceParameters.m in Sources */,
 				5BC7ABE41C6BE0BE003E4C9B /* MLCPoints.m in Sources */,
 				5B4457A71CBFFE58003CFA64 /* MLCCredentialsService.m in Sources */,
 			);
