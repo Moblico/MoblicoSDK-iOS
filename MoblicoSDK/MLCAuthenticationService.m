@@ -55,6 +55,12 @@
     if (socialToken) parameters[@"socialToken"] = socialToken;
     if (childKeyword.length) parameters[@"childKeyword"] = childKeyword;
 
+#if TARGET_OS_IPHONE
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![[UIDevice currentDevice].model isEqualToString:@"iPhone"]) {
+        parameters[@"platformName"] = @"iPhone";
+    }
+#endif
+
     return [self read:[MLCAuthenticationToken collectionName] parameters:parameters handler:handler];
 }
 
