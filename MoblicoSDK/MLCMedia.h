@@ -100,8 +100,11 @@ typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL from
 @property (copy, nonatomic) NSString *externalId;
 
 - (void)loadImageData:(MLCMediaCompletionHandler)handler;
+@property (strong, nonatomic, readonly) NSData *cachedImageData;
 - (void)loadThumbData:(MLCMediaCompletionHandler)handler;
+@property (strong, nonatomic, readonly) NSData *cachedThumbData;
 - (void)loadData:(MLCMediaCompletionHandler)handler;
+@property (strong, nonatomic, readonly) NSData *cachedData;
 
 @end
 

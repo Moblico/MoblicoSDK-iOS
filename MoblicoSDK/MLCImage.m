@@ -19,8 +19,6 @@
 #import <CommonCrypto/CommonDigest.h>
 
 @interface MLCImage ()
-
-@property (strong, nonatomic, readwrite) NSData *data;
 @end
 
 @implementation MLCImage
@@ -68,19 +66,14 @@
                                                       @"lastUpdateDate": lastUpdateDate}];
 }
 
-- (void)loadImageData {
-    if (self.data) {
-        self.data = self.data;
-        return;
-    }
-
-    [self loadImageData:^(NSData *data, NSError *error, BOOL fromCache, CGFloat scale) {
-        self.data = data ?: [NSData data];
-    }];
-}
-
 - (void)loadImageData:(MLCImageCompletionHandler)handler {
     return [self _mlc_loadImageDataFromURL:self.url handler:handler];
+}
+
+- (NSData *)cachedImageData {
+    NSString *key = [self.url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
+    NSCache *cache = [self.class _mlc_sharedCache];
+    return [cache objectForKey:key];
 }
 
 + (NSCache *)_mlc_sharedCache {

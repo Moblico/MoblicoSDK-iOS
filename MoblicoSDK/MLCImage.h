@@ -40,13 +40,9 @@ typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL from
 @property (strong, nonatomic) NSDate *lastUpdateDate;
 
 - (void)loadImageData:(MLCImageCompletionHandler)handler;
+@property (strong, nonatomic, readonly) NSData *cachedImageData;
 
 - (instancetype)initWithURLString:(NSString *)URLString;
 + (instancetype)deserializeFromString:(NSString *)string;
 
-@end
-
-@interface MLCImage (Deprecated)
-@property (nonatomic, readonly) NSData *data __attribute__((deprecated ("Use 'loadImageData:' instead.")));
-- (void)loadImageData __attribute__((deprecated ("Use 'loadImageData:' instead.")));
 @end

@@ -62,12 +62,24 @@
     [self _mlc_loadImageDataFromURL:self.imageUrl handler:handler];
 }
 
+- (NSData *)cachedImageData {
+    return [self _mlc_cachedImageDataFromURL:self.imageUrl];
+}
+
 - (void)loadThumbData:(MLCMediaCompletionHandler)handler {
     [self _mlc_loadImageDataFromURL:self.thumbUrl handler:handler];
 }
 
+- (NSData *)cachedThumbData {
+    return [self _mlc_cachedImageDataFromURL:self.thumbUrl];
+}
+
 - (void)loadData:(MLCMediaCompletionHandler)handler {
     [self _mlc_loadImageDataFromURL:self.url handler:handler];
+}
+
+- (NSData *)cachedData {
+    return [self _mlc_cachedImageDataFromURL:self.url];
 }
 
 - (NSString *)sha1Hash:(NSString *)string {
@@ -114,6 +126,12 @@
         }
         handler(data, error, NO);
     }];
+}
+
+- (NSData *)_mlc_cachedImageDataFromURL:(NSURL *)url {
+    NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
+    NSCache *cache = [self.class _mlc_sharedCache];
+    return [cache objectForKey:key];
 }
 
 @end
