@@ -27,14 +27,8 @@
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
 
-    if ([self.image isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *image = (NSDictionary *)self.image;
-
-        if (image.count) {
-            self.image = [[MLCImage alloc] initWithJSONObject:image];
-        } else {
-            self.image = nil;
-        }
+    if (self) {
+        _image = [[MLCImage alloc] initWithJSONObject:jsonObject[@"image"]];
     }
 
     return self;
@@ -42,9 +36,9 @@
 
 + (NSDictionary *)serialize:(MLCDeal *)deal {
     NSMutableDictionary *serializedObject = [[super serialize:deal] mutableCopy];
-    
-    if (deal.image) {
-        serializedObject[@"image"] = [[deal.image class] serialize:deal.image];
+    MLCImage *image = deal.image;
+    if (image) {
+        serializedObject[@"image"] = [[image class] serialize:image];
     }
     
     return [serializedObject mutableCopy];

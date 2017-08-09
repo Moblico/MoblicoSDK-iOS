@@ -1,10 +1,18 @@
-//
-//  MLCUserTansaction.h
-//  MoblicoSDK
-//
-//  Created by Cameron Knight on 2/2/14.
-//  Copyright (c) 2014 Moblico Solutions LLC. All rights reserved.
-//
+/*
+ Copyright 2012 Moblico Solutions LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this work except in compliance with the License.
+ You may obtain a copy of the License in the LICENSE file, or at:
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 #import <MoblicoSDK/MLCEntity.h>
 
@@ -21,8 +29,8 @@ typedef NS_ENUM(NSInteger, MLCUserTransactionType) {
 @property (nonatomic) NSUInteger userTransactionId;
 @property (nonatomic) double amount;
 @property (nonatomic) MLCUserTransactionType type;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSString *details;
-@property (nonatomic, strong) NSDate *createDate;
+@property (copy, nonatomic) NSString *name;
+@property (copy, nonatomic) NSString *details;
+@property (strong, nonatomic) NSDate *createDate;
 
 @end

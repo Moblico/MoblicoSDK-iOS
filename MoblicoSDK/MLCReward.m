@@ -20,9 +20,9 @@
 @implementation MLCReward
 
 + (NSArray *)ignoredPropertiesDuringSerialization {
-    NSArray *parrentArray = [super ignoredPropertiesDuringSerialization];
+    NSArray *parentArray = [super ignoredPropertiesDuringSerialization];
 
-    return [@[@"dealId", @"availableRedemptions", @"redeemable", @"isRedeemable"] arrayByAddingObjectsFromArray:parrentArray];
+    return [@[@"dealId", @"availableRedemptions", @"redeemable", @"isRedeemable"] arrayByAddingObjectsFromArray:parentArray];
 }
 
 - (void)setDealId:(NSUInteger)dealId {

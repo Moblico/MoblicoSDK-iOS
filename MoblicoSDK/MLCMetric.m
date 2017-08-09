@@ -64,14 +64,6 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
     return [@[@"payload"] arrayByAddingObjectsFromArray:parentArray];
 }
 
-- (void)setPayload:(NSString *)payload {
-    self.text = payload;
-}
-
-- (NSString *)payload {
-    return self.text;
-}
-
 - (NSDate *)timeStamp {
     if (!_timeStamp) {
         _timeStamp = [NSDate date];
@@ -80,23 +72,15 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
     return _timeStamp;
 }
 
-+ (instancetype)metricWithType:(MLCMetricType)type payload:(NSString *)payload {
-    return [self metricWithType:type text:payload location:nil username:nil];
-}
-
-+ (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
-    return [self metricWithType:type text:text location:nil username:username];
-}
-
 + (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
-    MLCMetric *metric = [[MLCMetric alloc] init];
+    MLCMetric *metric = [[self alloc] init];
     metric.type = type;
     metric.text = text;
     metric.username = username;
     metric.timeStamp = [NSDate date];
     metric.location = location;
 
-    CLLocation *coreLocation = ([MLCMetricsManager sharedMetricsManager].locationDelegate).location;
+    CLLocation *coreLocation = (MLCMetricsManager.sharedMetricsManager.locationDelegate).location;
     if (coreLocation) {
         metric.latitude = coreLocation.coordinate.latitude;
         metric.longitude = coreLocation.coordinate.longitude;
@@ -108,7 +92,7 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
 + (NSDictionary *)serialize:(MLCMetric *)metric {
     NSMutableDictionary *serializedObject = [[super serialize:metric] mutableCopy];
     
-    NSString *type = [MLCMetric stringForMetricType:metric.type];
+    NSString *type = [self stringForMetricType:metric.type];
     serializedObject[@"type"] = type;
 
     [serializedObject removeObjectForKey:@"location"];

@@ -41,9 +41,9 @@
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
     if (typeName.length) searchParameters[@"locationTypeName"] = typeName;
     if (postalCode.length) searchParameters[@"zipcode"] = postalCode;
-    if (latitude) searchParameters[@"latitude"] = @(latitude);
-    if (longitude) searchParameters[@"longitude"] = @(longitude);
-    if (radius) searchParameters[@"radius"] = @(radius);
+    if ((int)latitude) searchParameters[@"latitude"] = @(latitude);
+    if ((int)longitude) searchParameters[@"longitude"] = @(longitude);
+    if ((int)radius) searchParameters[@"radius"] = @(radius);
 
     return searchParameters;
 }

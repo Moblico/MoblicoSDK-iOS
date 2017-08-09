@@ -14,7 +14,7 @@
     static dispatch_once_t pred;
     static NSURL * documentsDirectory = nil;
     dispatch_once(&pred, ^{
-        NSArray *paths = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
+        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory
                                                                 inDomains:NSUserDomainMask];
         documentsDirectory = paths.firstObject;
     });
@@ -28,7 +28,7 @@
 }
 
 + (BOOL)entityExistsWithKey:(NSString *)key {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self URL:key].path];
+    return [NSFileManager.defaultManager fileExistsAtPath:[self URL:key].path];
 }
 
 + (id)retrieveEntityWithKey:(NSString *)key {
@@ -40,7 +40,7 @@
     
     return [NSKeyedArchiver archiveRootObject:object
                                        toFile:path]
-    && [[NSFileManager defaultManager] setAttributes:@{
+    && [NSFileManager.defaultManager setAttributes:@{
                                                        NSFileProtectionKey:
                                                            NSFileProtectionNone
                                                        }
@@ -49,22 +49,20 @@
 }
 
 + (BOOL)clearEntityWithKey:(NSString *)key {
-    return [[NSFileManager defaultManager] removeItemAtURL:[self URL:key] error:NULL];
+    return [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:NULL];
 }
 
 + (BOOL)clearCache {
     __block BOOL hadError = YES;
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *contents = [fileManager contentsOfDirectoryAtURL:[self documentsURL]
+    NSArray *contents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:[self documentsURL]
                                    includingPropertiesForKeys:nil
                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                         error:NULL];
     
     
     [contents enumerateObjectsWithOptions:NSEnumerationConcurrent
-                               usingBlock:^(NSURL *fileURL, NSUInteger idx, BOOL *stop) {
-                                   if (![fileManager removeItemAtURL:fileURL
+                               usingBlock:^(NSURL *fileURL, __unused NSUInteger idx, BOOL *stop) {
+                                   if (![NSFileManager.defaultManager removeItemAtURL:fileURL
                                                                error:NULL]) {
                                        *stop = YES;
                                        hadError = YES;

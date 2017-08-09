@@ -30,7 +30,3 @@
 + (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler;
 @end
-
-@interface MLCRewardsService (Deprecated)
-+ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler __attribute__((deprecated ("Use 'redeemReward:handler:' instead.")));
-@end

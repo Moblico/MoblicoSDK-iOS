@@ -19,9 +19,9 @@
 typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject,  NSError *error, NSHTTPURLResponse *response);
 
 @interface MLCService () <NSURLConnectionDataDelegate>
-@property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionhandler;
+@property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionHandler;
 @property (strong, nonatomic) NSURLConnection *connection;
-@property (strong, nonatomic) NSURLRequest *request;
+@property (copy, nonatomic) NSURLRequest *request;
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
 @property (strong, nonatomic) dispatch_group_t dispatchGroup;

@@ -50,9 +50,4 @@
     [self sendMetric:metric];
 }
 
-
-+ (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload {
-    [self sendMetricWithType:type text:payload location:nil username:nil];
-}
-
 @end

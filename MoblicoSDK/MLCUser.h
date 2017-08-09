@@ -191,11 +191,11 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
  */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
 
-@property (strong, nonatomic) NSString *attr1;
-@property (strong, nonatomic) NSString *attr2;
-@property (strong, nonatomic) NSString *attr3;
-@property (strong, nonatomic) NSString *attr4;
-@property (strong, nonatomic) NSString *attr5;
+@property (copy, nonatomic) NSString *attr1;
+@property (copy, nonatomic) NSString *attr2;
+@property (copy, nonatomic) NSString *attr3;
+@property (copy, nonatomic) NSString *attr4;
+@property (copy, nonatomic) NSString *attr5;
 
 @property (copy, nonatomic) NSString *externalId;
 @property (nonatomic) NSUInteger locationId;
@@ -237,29 +237,5 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
  @since Available in MoblicoSDK 1.5 and later.
  */
 + (instancetype)userWithSocialType:(MLCUserSocialType)socialType socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken;
-
-@end
-
-@interface MLCUser (Deprecated)
-
-/**
- The contactPreference property has been deprecated,
- and will be removed in the next major release.
-
- @deprecated Use 'contactPreferenceType' instead.
-
- @see contactPreferenceType
- */
-@property (copy, nonatomic) NSString *contactPreference __attribute__((deprecated ("Use 'contactPreferenceType' instead.")));
-
-/**
- The gender property has been deprecated,
- and will be removed in the next major release.
-
- @deprecated Use 'genderType' instead.
-
- @see genderType
- */
-@property (copy, nonatomic) NSString *gender __attribute__((deprecated ("Use 'genderType' instead.")));
 
 @end

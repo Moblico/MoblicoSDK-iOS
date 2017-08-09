@@ -66,7 +66,7 @@
 /**
  Optional data about this affinity.
  */
-@property (nonatomic) NSString *optional;
+@property (copy, nonatomic) NSString *optional;
 
 /**
  The amount of points this affinity is worth.

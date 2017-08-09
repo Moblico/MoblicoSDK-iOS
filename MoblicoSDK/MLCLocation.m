@@ -48,24 +48,24 @@
 
         if ([jsonObject[@"geoNotificationEnabled"] boolValue]) {
             CLLocationCoordinate2D center = CLLocationCoordinate2DMake(self.latitude, self.longitude);
-            self.geoFenceRegion = [[CLCircularRegion alloc] initWithCenter:center
+            _geoFenceRegion = [[CLCircularRegion alloc] initWithCenter:center
                                                                     radius:self.geoFenceRadius
                                                                 identifier:identifier];
-            self.geoFenceRegion.notifyOnEntry = YES;
-            self.geoFenceRegion.notifyOnExit = YES;
+            _geoFenceRegion.notifyOnEntry = YES;
+            _geoFenceRegion.notifyOnExit = YES;
         }
         if ([jsonObject[@"beaconNotificationEnabled"] boolValue]) {
             NSArray *beacon = [jsonObject[@"beaconIdentifier"] componentsSeparatedByString:@","];
             CLBeaconRegion *region;
             if (beacon.count >= 3) {
                 NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:beacon[0]];
-                CLBeaconMajorValue majorValue = ((NSString *)beacon[1]).integerValue;
-                CLBeaconMinorValue minorValue = ((NSString *)beacon[2]).integerValue;
+                CLBeaconMajorValue majorValue = (CLBeaconMajorValue)((NSString *)beacon[1]).integerValue;
+                CLBeaconMinorValue minorValue = (CLBeaconMinorValue)((NSString *)beacon[2]).integerValue;
                 region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID major:majorValue minor:minorValue identifier:identifier];
             }
             else if (beacon.count >= 2) {
                 NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:beacon[0]];
-                CLBeaconMajorValue majorValue = ((NSString *)beacon[1]).integerValue;
+                CLBeaconMajorValue majorValue = (CLBeaconMajorValue)((NSString *)beacon[1]).integerValue;
                 region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID major:majorValue identifier:identifier];
             }
             else if (beacon.count >= 1) {
@@ -77,12 +77,12 @@
                 region.notifyEntryStateOnDisplay = YES;
                 region.notifyOnEntry = YES;
                 region.notifyOnExit = YES;
-                self.beaconRegion = region;
+                _beaconRegion = region;
             }
 
-            self.beaconDesiredProximity = [MLCLocation proximityFromString:jsonObject[@"beaconRange"]];
-            self.beaconMinimumCheckInProximity = [MLCLocation proximityFromString:jsonObject[@"checkinRange"]];
-            self.beaconLastProximity = CLProximityUnknown;
+            _beaconDesiredProximity = [[self class] proximityFromString:jsonObject[@"beaconRange"]];
+            _beaconMinimumCheckInProximity = [[self class] proximityFromString:jsonObject[@"checkinRange"]];
+            _beaconLastProximity = CLProximityUnknown;
         }
 
     }

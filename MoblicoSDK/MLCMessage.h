@@ -1,10 +1,18 @@
-//
-//  MLCMessage.h
-//  MoblicoSDK
-//
-//  Created by Cameron Knight on 10/8/13.
-//  Copyright (c) 2013 Moblico Solutions LLC. All rights reserved.
-//
+/*
+ Copyright 2012 Moblico Solutions LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this work except in compliance with the License.
+ You may obtain a copy of the License in the LICENSE file, or at:
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 #import <MoblicoSDK/MLCEntity.h>
 
@@ -24,28 +32,28 @@
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSString *text;
+@property (copy, nonatomic) NSString *text;
 
 /**
  The device IDs for the recipents of this message.
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSArray<NSString *> *deviceIds;
+@property (copy, nonatomic) NSArray<NSString *> *deviceIds;
 
 /**
  The phone numbers for the recipients of this message.
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSArray<NSString *> *phoneNumbers;
+@property (copy, nonatomic) NSArray<NSString *> *phoneNumbers;
 
 /**
  The email addresses for the recipents of this message.
 
  @since Available in MoblicoSDK 1.4 and later.
  */
-@property (nonatomic, strong) NSArray<NSString *> *emailAddresses;
+@property (copy, nonatomic) NSArray<NSString *> *emailAddresses;
 
 /**
  Convenience class method to create a MLCMessage object with the provided parameters.

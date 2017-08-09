@@ -1,10 +1,18 @@
-//
-//  MLCGroupsService.m
-//  MoblicoSDK
-//
-//  Created by Cameron Knight on 12/22/13.
-//  Copyright (c) 2013 Moblico Solutions LLC. All rights reserved.
-//
+/*
+ Copyright 2012 Moblico Solutions LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this work except in compliance with the License.
+ You may obtain a copy of the License in the LICENSE file, or at:
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 #import "MLCService_Private.h"
 #import "MLCGroupsService.h"
@@ -41,7 +49,7 @@
 }
 
 + (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
-    MLCUser *user = [MLCServiceManager sharedServiceManager].currentUser;
+    MLCUser *user = MLCServiceManager.sharedServiceManager.currentUser;
     return [self addUser:user toGroup:group handler:handler];
 }
 
@@ -65,7 +73,7 @@
 }
 
 + (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
-    MLCUser *user = [MLCServiceManager sharedServiceManager].currentUser;
+    MLCUser *user = MLCServiceManager.sharedServiceManager.currentUser;
     return [self addUser:user toGroupNamed:groupName handler:handler];
 }
 
@@ -75,7 +83,7 @@
 }
 
 + (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
-    MLCUser *user = [MLCServiceManager sharedServiceManager].currentUser;
+    MLCUser *user = MLCServiceManager.sharedServiceManager.currentUser;
     return [self removeUser:user fromGroupNamed:groupName handler:handler];
 }
 

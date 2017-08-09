@@ -48,27 +48,7 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
 
 @end
 
-@interface MLCUsersService (Deprecated)
-
-/**
- @deprecated Use 'destroyDeviceForUser:handler:' instead.
-
- @since Deprecated in MoblicoSDK 1.2.
- 
- @see +destroyDeviceForUser:handler:
- */
-+ (instancetype)destroyDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler
-    __attribute__((deprecated ("Use 'destroyDeviceForUser:handler:' instead.")));
-
-/**
- @deprecated Use 'updateDeviceWithDeviceToken:forUser:handler:' instead.
-
- @since Deprecated in MoblicoSDK 1.2.
- 
- @see +updateDeviceWithDeviceToken:forUser:handler:
- */
-+ (instancetype)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler
-    __attribute__((deprecated ("Use 'updateDeviceWithDeviceId:forUser:handler:' instead.")));
+@interface MLCUsersService (Unavailable)
 
 /**
  @since Unavailable in this version of the MoblicoSDK.

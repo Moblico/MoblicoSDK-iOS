@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -109,12 +109,12 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
  
  Specify additional information about the metric i.e. screen name.
  */
-@property (strong, nonatomic) NSString *text;
+@property (copy, nonatomic) NSString *text;
 
 /**
  The username for this metric. (optional)
  */
-@property (strong, nonatomic) NSString *username;
+@property (copy, nonatomic) NSString *username;
 
 
 /**
@@ -154,39 +154,5 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
  @see +[MLCMetricsService sendMetric:]
  */
 + (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username;
-
-@end
-
-@interface MLCMetric (Deprecated)
-
-/**
- This method is no longer used,
- and will be removed in the next major release.
-
- @deprecated Use 'metricWithType:text:location:username:' instead.
-
- @see +metricWithType:text:location:username:
- */
-+ (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username __attribute__((deprecated ("Use 'metricWithType:text:location:username:' instead.")));
-
-/**
- This method is no longer used,
- and will be removed in the next major release.
-
- @deprecated Use 'metricWithType:text:location:username:' instead.
-
- @see +metricWithType:text:location:username:
- */
-+ (instancetype)metricWithType:(MLCMetricType)type payload:(NSString *)payload __attribute__((deprecated ("Use 'metricWithType:text:location:username:' instead.")));
-
-/**
- The payload property has been renamed to text,
- and will be removed in the next major release.
-
- @deprecated Use 'text' instead.
-
- @see text
- */
-@property (strong, nonatomic) NSString *payload __attribute__((deprecated ("Use 'text' instead.")));
 
 @end

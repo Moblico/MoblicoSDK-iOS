@@ -21,7 +21,7 @@
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
-        self.timeZone = [NSTimeZone timeZoneWithName:jsonObject[@"timeZone"]];
+        _timeZone = [NSTimeZone timeZoneWithName:jsonObject[@"timeZone"]];
     }
     return self;
 }

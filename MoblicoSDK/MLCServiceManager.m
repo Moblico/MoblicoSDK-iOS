@@ -50,7 +50,7 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 - (NSString *)serviceName {
     @synchronized(self) {
         if (!_serviceName) {
-            NSString *appName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
+            NSString *appName = NSBundle.mainBundle.infoDictionary[@"CFBundleName"];
             _serviceName = [@"com.moblico.SDK.credentials." stringByAppendingString:appName];
         }
         return _serviceName;
@@ -65,7 +65,7 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 	static MLCServiceManager *sharedInstance = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		sharedInstance = [[MLCServiceManager alloc] init];
+		sharedInstance = [[self alloc] init];
         NSString *username = sharedInstance.keychainItemData[(__bridge id)kSecAttrAccount];
 //        NSString *password = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
         NSDictionary *credentials = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
@@ -146,18 +146,19 @@ static NSString *_testingAPIKey = nil;
 }
 
 - (void)setAuthenticationToken:(MLCAuthenticationToken *)authenticationToken {
+    NSString *currentTokenKey = NSStringFromSelector(@selector(currentToken));
     @synchronized (self) {
         if (MLCServiceManager.isPersistentTokenEnabled) {
             NSDictionary *token = [MLCAuthenticationToken serialize:authenticationToken];
-            [self willChangeValueForKey:@"currentToken"];
+            [self willChangeValueForKey:currentTokenKey];
             [NSUserDefaults.standardUserDefaults setObject:token forKey:MLCServiceManagerPersistentTokenKey];
             [NSUserDefaults.standardUserDefaults synchronize];
-            [self didChangeValueForKey:@"currentToken"];
+            [self didChangeValueForKey:currentTokenKey];
         }
         else if (_authenticationToken != authenticationToken) {
-            [self willChangeValueForKey:@"currentToken"];
+            [self willChangeValueForKey:currentTokenKey];
             _authenticationToken = authenticationToken;
-            [self didChangeValueForKey:@"currentToken"];
+            [self didChangeValueForKey:currentTokenKey];
         }
     }
 }
@@ -211,33 +212,31 @@ static NSString *_testingAPIKey = nil;
 
 + (void)setTestingEnabled:(BOOL)testing {
     @synchronized(self) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setBool:testing forKey:MLCServiceManagerTestingEnabledKey];
-        [defaults synchronize];
+        [NSUserDefaults.standardUserDefaults setBool:testing forKey:MLCServiceManagerTestingEnabledKey];
+        [NSUserDefaults.standardUserDefaults synchronize];
 
         if (self.currentAPIKey.length) {
-            [[self sharedServiceManager] setAuthenticationToken:nil];
+            self.sharedServiceManager.authenticationToken = nil;
         }
     }
 }
 
 + (BOOL)isTestingEnabled {
     @synchronized(self) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:MLCServiceManagerTestingEnabledKey];
+        return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerTestingEnabledKey];
     }
 }
 
 + (void)setLoggingEnabled:(BOOL)logging {
     @synchronized(self) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setBool:logging forKey:MLCServiceManagerLoggingEnabledKey];
-        [defaults synchronize];
+        [NSUserDefaults.standardUserDefaults setBool:logging forKey:MLCServiceManagerLoggingEnabledKey];
+        [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
 + (BOOL)isLoggingEnabled {
     @synchronized(self) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:MLCServiceManagerLoggingEnabledKey];
+        return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerLoggingEnabledKey];
     }
 }
 
@@ -294,29 +293,27 @@ static NSString *_testingAPIKey = nil;
 
 + (void)setSSLDisabled:(BOOL)disabled {
     @synchronized(self) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setBool:disabled forKey:MLCServiceManagerSSLDisabledKey];
-        [defaults synchronize];
+        [NSUserDefaults.standardUserDefaults setBool:disabled forKey:MLCServiceManagerSSLDisabledKey];
+        [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
 + (BOOL)isSSLDisabled {
     @synchronized(self) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:MLCServiceManagerSSLDisabledKey];
+        return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerSSLDisabledKey];
     }
 }
 
 + (void)setForceQueryParametersEnabled:(BOOL)disabled {
     @synchronized(self) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setBool:disabled forKey:MLCServiceManagerForceQueryParametersEnabledKey];
-        [defaults synchronize];
+        [NSUserDefaults.standardUserDefaults setBool:disabled forKey:MLCServiceManagerForceQueryParametersEnabledKey];
+        [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
 + (BOOL)isForceQueryParametersEnabled {
     @synchronized(self) {
-        NSNumber *force = [[NSUserDefaults standardUserDefaults] objectForKey:MLCServiceManagerForceQueryParametersEnabledKey];
+        NSNumber *force = [NSUserDefaults.standardUserDefaults objectForKey:MLCServiceManagerForceQueryParametersEnabledKey];
         return !force || force.boolValue;
     }
 }
@@ -343,7 +340,7 @@ static BOOL _persistentTokenEnabled = NO;
 }
 
 + (NSString *)sdkVersion {
-    return @(MOBLICO_SDK_VERSION_STRING);
+    return @(MoblicoSDKVersionNumber).stringValue;
 }
 
 - (NSDictionary *)genericPasswordQuery {
@@ -457,10 +454,10 @@ static BOOL _persistentTokenEnabled = NO;
 	return returnDictionary;
 }
 
-- (void)writeToKeychain {    
+- (BOOL)writeToKeychain {
     CFDictionaryRef attributes = NULL;
     NSMutableDictionary *updateItem = nil;
-	__unused OSStatus result;
+	OSStatus result;
 
     if (SecItemCopyMatching((__bridge CFDictionaryRef)self.genericPasswordQuery, (CFTypeRef *)&attributes) == noErr) {
         // First we need the attributes from the Keychain.
@@ -483,22 +480,8 @@ static BOOL _persistentTokenEnabled = NO;
     }
 	
 	if (attributes) CFRelease(attributes);
-}
 
-#pragma mark -
-#pragma mark Deprecated
-
-- (NSString *)username {
-    return self.currentUser.username;
-}
-
-- (NSString *)password {
-    return self.currentUser.password;
-}
-
-- (void)setUsername:(NSString *)username password:(NSString *)password remember:(BOOL)rememberCredentials {
-    MLCUser *user = [MLCUser userWithUsername:username password:password];
-    [self setCurrentUser:user remember:rememberCredentials];
+    return result == noErr;
 }
 
 @end

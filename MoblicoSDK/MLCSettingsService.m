@@ -36,8 +36,8 @@
                           handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               MLCSettings *settings = nil;
                               if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
-                                  [[NSUserDefaults standardUserDefaults] setObject:jsonObject forKey:@"MLCSettings"];
-                                  [[NSUserDefaults standardUserDefaults] synchronize];
+                                  [NSUserDefaults.standardUserDefaults setObject:jsonObject forKey:@"MLCSettings"];
+                                  [NSUserDefaults.standardUserDefaults synchronize];
                                   settings = [self settings];
                               }
                               handler(settings, error, response);
@@ -46,9 +46,9 @@
 }
 
 + (MLCSettings *)settings {
-    NSDictionary *settings = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettings"];
+    NSDictionary *settings = [NSUserDefaults.standardUserDefaults dictionaryForKey:@"MLCSettings"];
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:settings];
-    NSDictionary *override = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"MLCSettingsOverride"];
+    NSDictionary *override = [NSUserDefaults.standardUserDefaults dictionaryForKey:@"MLCSettingsOverride"];
     if (override.count > 0) {
         [dictionary addEntriesFromDictionary:override];
     }
@@ -56,8 +56,8 @@
 }
 
 + (void)overrideSettings:(NSDictionary *)override {
-    [[NSUserDefaults standardUserDefaults] setObject:override forKey:@"MLCSettingsOverride"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [NSUserDefaults.standardUserDefaults setObject:override forKey:@"MLCSettingsOverride"];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 @end
@@ -67,7 +67,7 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = [super init];
     if (self) {
-        self.dictionary = dictionary;
+        _dictionary = dictionary;
     }
     return self;
 }

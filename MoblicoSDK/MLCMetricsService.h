@@ -88,17 +88,3 @@
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username;
 
 @end
-
-@interface MLCMetricsService (Deprecated)
-
-/**
- This method is no longer used,
- and will be removed in the next major release.
-
- @deprecated Use 'sendMetricWithType:text:location:username:' instead.
-
- @see +sendMetricWithType:text:location:username:
- */
-+ (void)sendMetricWithType:(MLCMetricType)type payload:(NSString *)payload __attribute__((deprecated ("Use 'sendMetricWithType:text:location:username:' instead.")));
-
-@end

@@ -50,7 +50,7 @@
         NSString *searchPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
         cacheDirectory = [searchPath stringByAppendingPathComponent:@"CachedMedia"];
         NSError *error;
-        if (![[NSFileManager defaultManager] createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:&error]) {
+        if (![NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:&error]) {
             NSLog(@"Failed to create CachedMedia directory: %@", error.localizedDescription);
         }
     });
@@ -100,12 +100,12 @@
 - (NSString *)cachedPath:(NSString *)key {
     NSString *fileName = [self sha1Hash:key];
 
-    return [[self.class _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
+    return [[[self class] _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
 }
 
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [self.class _mlc_sharedCache];
+    NSCache *cache = [[self class] _mlc_sharedCache];
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
 
@@ -116,22 +116,30 @@
 
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse * response, NSData *data, NSError *error) {
+        NSHTTPURLResponse *httpResponse;
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            httpResponse = (NSHTTPURLResponse *)response;
+        }
+
         if (data) {
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];
-        }
-        else {
-            data = [NSData dataWithContentsOfFile:cachedPath];
+            handler(data, error, NO);
+        } else if (httpResponse.statusCode == 404 || httpResponse.statusCode == 200) {
             [cache removeObjectForKey:key];
+            [NSFileManager.defaultManager removeItemAtPath:cachedPath error:nil];
+            handler(data, error, NO);
+        } else {
+            NSData *fallbackData = [NSData dataWithContentsOfFile:cachedPath];
+            handler(fallbackData, error, NO);
         }
-        handler(data, error, NO);
     }];
 }
 
 - (NSData *)_mlc_cachedImageDataFromURL:(NSURL *)url {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [self.class _mlc_sharedCache];
-    return [cache objectForKey:key];
+    NSCache *cache = [[self class] _mlc_sharedCache];
+    return [cache objectForKey:key] ?: [NSData dataWithContentsOfFile:[self cachedPath:key]];
 }
 
 @end

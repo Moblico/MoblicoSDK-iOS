@@ -79,7 +79,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 }
 
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self readResourceWithUniqueIdentifier:username ? username : @"" handler:handler];
+    return [self readResourceWithUniqueIdentifier:username ?: @"" handler:handler];
 }
 
 + (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -122,23 +122,15 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     return [self create:path parameters:parameters handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
         if (!error) {
             MLCUser *user = [MLCUser userWithUsername:username];
-            [[MLCServiceManager sharedServiceManager] setCurrentUser:user remember:NO];
+            [MLCServiceManager.sharedServiceManager setCurrentUser:user remember:NO];
         }
         handler(status, error, response);
     }];
 }
 
-+ (instancetype)createDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [self addDeviceWithDeviceToken:(id)deviceId toUser:user handler:handler];
-}
-
-+ (instancetype)updateDeviceWithDeviceToken:(NSData *)deviceToken forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [self addDeviceWithDeviceToken:deviceToken toUser:user handler:handler];
-}
-
 + (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
     NSString *deviceId = MLCDeviceIdFromDeviceToken(deviceToken);
-    [[NSUserDefaults standardUserDefaults] setObject:deviceId forKey:@"MLCDeviceId"];
+    [NSUserDefaults.standardUserDefaults setObject:deviceId forKey:@"MLCDeviceId"];
     
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"device"]];
     
@@ -147,7 +139,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 }
 
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"MLCDeviceId"];
+    NSString *deviceId = [NSUserDefaults.standardUserDefaults stringForKey:@"MLCDeviceId"];
 
     if (!deviceId.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing device for user: %@", nil), user];
@@ -160,16 +152,8 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
     return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(BOOL success, NSError *error, NSHTTPURLResponse *response) {
         if (success) {
-            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"MLCDeviceId"];
+            [NSUserDefaults.standardUserDefaults setObject:nil forKey:@"MLCDeviceId"];
         }
-        handler(success, error, response);
-    }];
-}
-
-+ (instancetype)destroyDeviceWithDeviceId:(NSString *)deviceId forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"device"]];
-
-    return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(BOOL success, NSError *error, NSHTTPURLResponse *response) {
         handler(success, error, response);
     }];
 }

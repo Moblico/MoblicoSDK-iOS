@@ -61,40 +61,6 @@ static NSArray<NSString *> *_requiredParameters = nil;
     }
 }
 
-- (void)setContactPreference:(NSString *)contactPreference {
-    if (contactPreference.length) {
-        [self setSafeValue:@([[self class] contactPreferenceTypeFromString:contactPreference]) forKey:@"contactPreferenceType"];
-    }
-    else {
-        [self setSafeValue:nil forKey:@"contactPreferenceType"];
-    }
-}
-
-- (NSString *)contactPreference {
-    id value = [self valueForKey:@"contactPreferenceType"];
-    if (value && value != [NSNull null]) {
-        return [[self class] stringForContactPreferenceType:[value unsignedIntegerValue]];
-    }
-    return nil;
-}
-
-- (void)setGender:(NSString *)gender {
-    if (gender.length) {
-        [self setSafeValue:@([[self class] genderTypeFromString:gender]) forKey:@"genderType"];
-    }
-    else {
-        [self setSafeValue:nil forKey:@"genderType"];
-    }
-}
-
-- (NSString *)gender {
-    id value = [self valueForKey:@"genderType"];
-    if (value && value != [NSNull null]) {
-        return [[self class] stringForGenderType:[value unsignedIntegerValue]];
-    }
-    return nil;
-}
-
 + (NSArray *)ignoredPropertiesDuringSerialization {
     return @[@"genderType", @"contactPreferenceType", @"socialType"];
 }
@@ -201,6 +167,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.dateFormat = @"MM/dd/yyyy";
     });
     return dateFormatter;
@@ -215,27 +182,27 @@ static NSArray<NSString *> *_requiredParameters = nil;
     if (self) {
         NSDictionary *attributes = jsonObject[@"attributes"];
         if (attributes) {
-            [self setSafeValue:attributes[@"attr1"] forKey:@"attr1"];
-            [self setSafeValue:attributes[@"attr2"] forKey:@"attr2"];
-            [self setSafeValue:attributes[@"attr3"] forKey:@"attr3"];
-            [self setSafeValue:attributes[@"attr4"] forKey:@"attr4"];
-            [self setSafeValue:attributes[@"attr5"] forKey:@"attr5"];
+            [self setSafeValue:attributes[@"attr1"] forKey:NSStringFromSelector(@selector(attr1))];
+            [self setSafeValue:attributes[@"attr2"] forKey:NSStringFromSelector(@selector(attr2))];
+            [self setSafeValue:attributes[@"attr3"] forKey:NSStringFromSelector(@selector(attr3))];
+            [self setSafeValue:attributes[@"attr4"] forKey:NSStringFromSelector(@selector(attr4))];
+            [self setSafeValue:attributes[@"attr5"] forKey:NSStringFromSelector(@selector(attr5))];
         }
 
         NSString *dateOfBirth = jsonObject[@"dateOfBirth"];
         if ([dateOfBirth isKindOfClass:[NSString class]]) {
-            NSDate *date = [[MLCUser dateOfBirthDateFormatter] dateFromString:dateOfBirth];
-            [self setSafeValue:date forKey:@"dateOfBirth"];
+            NSDate *date = [[[self class] dateOfBirthDateFormatter] dateFromString:dateOfBirth];
+            [self setSafeValue:date forKey:NSStringFromSelector(@selector(dateOfBirth))];
         }
 
         if (jsonObject[@"social"] != [NSNull null] && [jsonObject[@"social"] length]) {
-            [self setSafeValue:@([MLCUser socialTypeFromString:jsonObject[@"social"]]) forKey:@"socialType"];
+            [self setSafeValue:@([[self class] socialTypeFromString:jsonObject[@"social"]]) forKey:NSStringFromSelector(@selector(socialType))];
         }
         if (jsonObject[@"gender"] != [NSNull null] && [jsonObject[@"gender"] length]) {
-            [self setSafeValue:@([MLCUser genderTypeFromString:jsonObject[@"gender"]]) forKey:@"genderType"];
+            [self setSafeValue:@([[self class] genderTypeFromString:jsonObject[@"gender"]]) forKey:NSStringFromSelector(@selector(genderType))];
         }
         if (jsonObject[@"contactPreference"] != [NSNull null] && [jsonObject[@"contactPreference"] length]) {
-            [self setSafeValue:@([MLCUser contactPreferenceTypeFromString:jsonObject[@"contactPreference"]]) forKey:@"contactPreferenceType"];
+            [self setSafeValue:@([[self class] contactPreferenceTypeFromString:jsonObject[@"contactPreference"]]) forKey:NSStringFromSelector(@selector(contactPreferenceType))];
         }
 
 //        self.socialType = [MLCUser socialTypeFromString:jsonObject[@"social"]];
@@ -263,11 +230,12 @@ static NSArray<NSString *> *_requiredParameters = nil;
         serializedObject[@"gender"] = [self stringForGenderType:user.genderType];
     }
 
-    id value = [user valueForKey:@"contactPreferenceType"];
+
+    id value = [user valueForKey:NSStringFromSelector(@selector(contactPreferenceType))];
     
     if (value && value != [NSNull null]) {
-        NSString *contactPrefernce = [self stringForContactPreferenceType:user.contactPreferenceType];
-        serializedObject[@"contactPreference"] = contactPrefernce;
+        NSString *contactPreference = [self stringForContactPreferenceType:user.contactPreferenceType];
+        serializedObject[@"contactPreference"] = contactPreference;
     }
     else {
         [serializedObject removeObjectForKey:@"contactPreference"];
@@ -303,7 +271,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
 }
 
 + (MLCValidations *)validations {
-    MLCValidations *validations = [super validations];
+    MLCValidations *validations = super.validations;
     if (validations.count) {
         return validations;
     }
@@ -338,18 +306,18 @@ static NSArray<NSString *> *_requiredParameters = nil;
     validations[@"gender"] = [self validatePresenceOfRequiredKey:@"gender" withMessage:@"Your gender is required."];
 
     validations[@"optinEmail"] = [[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
-                                                       validationTest:^BOOL(MLCUser *user, NSString *key, NSString *value) {
-                                                           BOOL selected = [value boolValue];
+                                                       validationTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
+                                                           BOOL selected = value.boolValue;
                                                            NSString *email = user.email;
-                                                           BOOL valid = email.length && [user validateValue:&email forKey:@"email" error:nil];
+                                                           BOOL valid = email.length && [user validateValue:&email forKey:NSStringFromSelector(@selector(email)) error:nil];
                                                            return !selected || valid;
                                                        }];
 
     validations[@"optinPhone"] = [[MLCValidate alloc] initWithMessage:@"A valid mobile phone number is required for Phone Alerts."
-                                                       validationTest:^BOOL(MLCUser *user, NSString *key, NSString *value) {
-                                                           BOOL selected = [value boolValue];
+                                                       validationTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
+                                                           BOOL selected = value.boolValue;
                                                            NSString *phone = user.phone;
-                                                           BOOL valid = phone.length && [user validateValue:&phone forKey:@"phone" error:nil];
+                                                           BOOL valid = phone.length && [user validateValue:&phone forKey:NSStringFromSelector(@selector(phone)) error:nil];
                                                            return !selected || valid;
                                                        }];
 

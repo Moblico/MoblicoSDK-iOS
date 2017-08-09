@@ -76,19 +76,19 @@
     }
     [MLCServiceManager.sharedServiceManager authenticateRequest:self.request handler:^(NSURLRequest *authenticatedRequest, NSError *error, NSHTTPURLResponse *response) {
         if (error) {
-            self.jsonCompletionhandler(self, nil, error, response);
+            self.jsonCompletionHandler(self, nil, error, response);
         } else {
             self.request = authenticatedRequest;
             self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];
             NSMutableString *headers = [NSMutableString string];
 
-            [authenticatedRequest.allHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+            [authenticatedRequest.allHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
                 [headers appendFormat:@" -H '%@: %@'", key, obj];
             }];
 
             MLCDebugLog(@"curl -X %@ \"%@\"%@", authenticatedRequest.HTTPMethod, [authenticatedRequest.URL absoluteString], headers);
 #if TARGET_OS_IPHONE
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+            UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
 #endif
             [self.connection start];
         }
@@ -102,7 +102,7 @@
 
 + (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler {
     MLCService *service = [[[self class] alloc] init];
-    service.jsonCompletionhandler = handler;
+    service.jsonCompletionHandler = handler;
     service.request = [self requestWithMethod:method path:path parameters:parameters];
 
     return service;
@@ -118,11 +118,11 @@
                        parameters:parameters
                           handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
 
-                              __weak __typeof__(self) __self = self;
+                              __weak __typeof__(self) weakSelf = self;
 							  if (handler) {
 //								  handler([[MLCStatus alloc] initWithJSONObject:jsonObject], error, response);
                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                      id<MLCEntityProtocol> resource = [__self deserializeResource:jsonObject];
+                                      id<MLCEntityProtocol> resource = [weakSelf deserializeResource:jsonObject];
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           handler(resource, error, response);
                                           service.dispatchGroup = nil;
@@ -304,7 +304,10 @@
 }
 
 + (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string {
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(nil, (__bridge CFStringRef)(string), NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"), kCFStringEncodingUTF8);
+    NSMutableCharacterSet *set = [NSCharacterSet.illegalCharacterSet.invertedSet mutableCopy];
+    [set removeCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"];
+    return [string stringByAddingPercentEncodingWithAllowedCharacters:set];
+//    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(nil, (__bridge CFStringRef)(string), NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"), kCFStringEncodingUTF8);
 //    NSMutableCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet].mutableCopy;
 //    [set removeCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"];
 //    return [string stringByAddingPercentEncodingWithAllowedCharacters:set];
@@ -354,7 +357,7 @@
     if (parameters.count == 0) return nil;
 
     NSMutableArray *queryItems = [NSMutableArray arrayWithCapacity:parameters.count];
-    [parameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, __unused BOOL * _Nonnull stop) {
         NSString *value = obj;
 
         if ([obj isKindOfClass:[NSArray class]]) {
@@ -404,15 +407,20 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	request.HTTPMethod = [self stringFromMLCServiceRequestMethod:method];
 
-    NSString *path = [NSString pathWithComponents:@[@"/", @"services", [MLCServiceManager apiVersion], servicePath]];
+    NSString *path = [NSString pathWithComponents:@[@"/", @"services", MLCServiceManager.apiVersion, servicePath]];
 
     NSURLComponents *components = [[NSURLComponents alloc] init];
-    components.scheme = [MLCServiceManager isSSLDisabled] ? @"http" : @"https";
-    components.host = [MLCServiceManager host];
+    components.scheme = MLCServiceManager.isSSLDisabled ? @"http" : @"https";
+    components.host = MLCServiceManager.host;
     components.path = path;
+    components.queryItems = [self queryItemsFromParameters:parameters];
+    NSString *query1 = components.query;
     components.percentEncodedQuery = [self oldSerializeParameters:parameters];
-//    components.queryItems = [self queryItemsFromParameters:parameters];
-    BOOL alwaysUseQueryParams = [MLCServiceManager isForceQueryParametersEnabled];
+    NSString *query2 = components.query;
+    if (![query1 isEqualToString:query2]) {
+        NSLog(@"Percent Escaping Differs\nqueryItemsFromParameters: %@\n  oldSerializeParameters: %@", query1, query2);
+    }
+    BOOL alwaysUseQueryParams = MLCServiceManager.isForceQueryParametersEnabled;
     
     if (components.query.length && !(alwaysUseQueryParams || method == MLCServiceRequestMethodGET || method == MLCServiceRequestMethodDELETE)) {
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
@@ -458,20 +466,20 @@
         NSString *model;
         NSString *systemName;
         NSString *systemVersion;
-        NSString *locale = [NSLocale currentLocale].localeIdentifier;
+        NSString *locale = NSLocale.currentLocale.localeIdentifier;
 
 #if TARGET_OS_IPHONE
-        model = [UIDevice currentDevice].model;
-        systemName = [UIDevice currentDevice].systemName;
-        systemVersion = [UIDevice currentDevice].systemVersion;
+        model = UIDevice.currentDevice.model;
+        systemName = UIDevice.currentDevice.systemName;
+        systemVersion = UIDevice.currentDevice.systemVersion;
 #else
         model = @"Macintosh";
         systemName = @"Mac OS X";
         systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"][@"ProductVersion"];
 #endif
 
-        NSString *appName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
-        NSString *appVersion = @(MOBLICO_SDK_VERSION_STRING);
+        NSString *appName = NSBundle.mainBundle.infoDictionary[@"CFBundleName"];
+        NSString *appVersion = @(MoblicoSDKVersionNumber).stringValue;
         userAgent = [NSString stringWithFormat:@"%@ %@ (%@; %@ %@; %@)", appName, appVersion, model, systemName, systemVersion, locale];
 
 		return userAgent;
@@ -489,62 +497,51 @@
 	[self.receivedData appendData:data];
 }
 
+- (NSDictionary *)logDictionaryWithResponse:(id)response error:(NSError *)error {
+
+    NSString *responseString;
+    if (response) {
+        responseString = [response description];
+    } else if (self.receivedData.length > 0) {
+        responseString = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+    }
+
+    return @{@"response": responseString ?: @"",
+             @"url": self.request.URL ?: @"",
+             @"method": self.request.HTTPMethod ?: @"",
+             @"body": self.request.HTTPBody ?: @"",
+             @"requestHeader": self.request.allHTTPHeaderFields ?: @"",
+             @"responseHeaders": self.httpResponse.allHeaderFields ?: @"",
+             @"statusCode": @(self.httpResponse.statusCode).stringValue,
+             @"statusCodeString": [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode],
+             @"error": error.localizedDescription ?: @""};
+}
+
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
 #if TARGET_OS_IPHONE
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 #endif
     
     MLCDebugLog(@"connection:didFailWithError:%@", error);
-    NSMutableDictionary *logDictionary = [NSMutableDictionary dictionary];
-    if (self.request.URL) logDictionary[@"url"] = self.request.URL;
-    if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
-    if (self.request.HTTPBody) logDictionary[@"body"] = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
-    if (self.request.allHTTPHeaderFields) logDictionary[@"requestHeader"] = self.request.allHTTPHeaderFields;
-    if (self.httpResponse.allHeaderFields) logDictionary[@"responseHeaders"] = self.httpResponse.allHeaderFields;
-    if (self.httpResponse.statusCode) {
-        logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
-        logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
-    }
-    MLCDebugLog(@"\n=====\n%@\n=====", logDictionary);
+    MLCDebugLog(@"\n=====\n%@\n=====", [self logDictionaryWithResponse:nil error:error]);
 
-    self.jsonCompletionhandler(self, nil, error, self.httpResponse);
+    self.jsonCompletionHandler(self, nil, error, self.httpResponse);
 }
 
-- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 #if TARGET_OS_IPHONE
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 #endif
 
     NSError *error;
     id jsonObject = nil;
 
     if ((self.receivedData).length) {
-        #pragma clang diagnostic push
-        #pragma clang diagnostic ignored "-Wassign-enum"
         jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:0 error:&error];
-        #pragma clang diagnostic pop
-    }
-
-    if (error) {
-        //        self.jsonCompletionhandler(nil, error, self.httpResponse);
-        error = nil;
-        jsonObject = nil;
-    }
-
-    NSMutableDictionary *logDictionary = [NSMutableDictionary dictionary];
-    if (jsonObject) logDictionary[@"response"] = jsonObject;
-    if (self.request.URL) logDictionary[@"url"] = self.request.URL;
-    if (self.request.HTTPMethod) logDictionary[@"method"] = self.request.HTTPMethod;
-    if (self.request.HTTPBody) logDictionary[@"body"] = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
-    if (self.request.allHTTPHeaderFields) logDictionary[@"requestHeader"] = self.request.allHTTPHeaderFields;
-    if (self.httpResponse.allHeaderFields) logDictionary[@"responseHeaders"] = self.httpResponse.allHeaderFields;
-    if (self.httpResponse.statusCode) {
-        logDictionary[@"statusCode"] = @(self.httpResponse.statusCode);
-        logDictionary[@"statusCodeString"] = [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode];
     }
 
     MLCDebugLog(@"connectionDidFinishLoading: %@", connection);
-    MLCDebugLog(@"\n=====\n%@\n=====", logDictionary);
+    MLCDebugLog(@"\n=====\n%@\n=====", [self logDictionaryWithResponse:jsonObject error:error]);
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *statusJSON = jsonObject[@"status"];
@@ -556,45 +553,15 @@
                     message = @"Unknown Error";
                 }
                 NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey:message, @"status": status}];
-                self.jsonCompletionhandler(self, nil, statusError, self.httpResponse);
+                self.jsonCompletionHandler(self, nil, statusError, self.httpResponse);
 				self.receivedData = nil;
                 return;
             }
         }
     }
-//	Class EntityClass = [[self class] classForResource];
-//	NSLog(@"connectionFinishedEntityClass: %@", EntityClass);
 
-//	BOOL entityHasStatus = [EntityClass instancesRespondToSelector:NSSelectorFromString(@"status")];
-//	NSLog(@"entityHasStatus: %@", entityHasStatus ? @"YES" : @"NO");
-//    if (!entityHasStatus && [jsonObject isKindOfClass:[NSDictionary class]] && jsonObject[@"status"]) {
-//        NSDictionary *statusDictionary = jsonObject[@"status"];
-//        MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:statusDictionary];
-//        NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: status.message, @"status": status}];
-//        self.jsonCompletionhandler(nil, statusError, self.httpResponse);
-//    } else {
-        self.jsonCompletionhandler(self, jsonObject, error, self.httpResponse);
-		self.receivedData = nil;
-
-//    }
-}
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
-    MLCDebugLog(@"connection: %@ canAuthenticateAgainstProtectionSpace: %@", connection, protectionSpace);
-    
-	return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    MLCDebugLog(@"connection: %@ didReceiveAuthenticationChallenge: %@", connection, challenge);
-	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] &&
-        [challenge.protectionSpace.host isEqualToString:[MLCServiceManager host]] &&
-        [MLCServiceManager isTestingEnabled]) {
-        NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
-    }
-    
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+    self.jsonCompletionHandler(self, jsonObject, nil, self.httpResponse);
+    self.receivedData = nil;
 }
 
 - (void)connection:(nonnull NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(nonnull NSURLAuthenticationChallenge *)challenge {

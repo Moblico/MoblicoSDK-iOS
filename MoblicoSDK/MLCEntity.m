@@ -20,7 +20,7 @@
 #import "MLCValidation.h"
 #import "MLCLogger.h"
 
-
+static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 //#define MLCEntityLog(fmt, ...) MLCInfoLog(fmt, ##__VA_ARGS__);
 #define MLCEntityLog(...)
 
@@ -66,11 +66,11 @@
     if (![super validateValue:ioValue forKey:inKey error:outError]) {
         return NO;
     }
-    if (self.class.validations == nil) {
+    if ([self class].validations == nil) {
         return YES;
     }
 
-    MLCValidationResults *results = [self.class.validations validate:self key:inKey value:ioValue];
+    MLCValidationResults *results = [[self class].validations validate:self key:inKey value:ioValue];
     if (outError) {
         *outError = results.firstError;
     }
@@ -113,7 +113,7 @@
     id key = [[self class] uniqueIdentifierKey];
     id value = [self valueForKey:key];
 
-    return [MLCEntity stringFromValue:value];
+    return [[self class] stringFromValue:value];
 }
 
 - (void)setSafeValue:(id)value forKey:(NSString *)key {
@@ -129,11 +129,11 @@
 
     if (self) {
         NSDictionary *properties = [self propertiesForClass:[self class]];
-        [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, BOOL * _Nonnull stop) {
+        [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, __unused BOOL * _Nonnull stop) {
 
             if ([type characterAtIndex:0] != '@') {
                 @try {
-                    [self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:nil];
+                    [self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:MLCEntityKeyValueChangedContext];
                 } @catch (NSException * __unused exception) {}
             }
         }];
@@ -151,7 +151,7 @@
 
 - (void)dealloc {
     NSDictionary *properties = [self propertiesForClass:[self class]];
-    [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, BOOL * _Nonnull stop) {
+    [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, __unused BOOL * _Nonnull stop) {
 
         if ([type characterAtIndex:0] != '@') {
             @try {
@@ -163,6 +163,11 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object != self || context != MLCEntityKeyValueChangedContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+    
     id value = [super valueForKey:keyPath];//change[NSKeyValueChangeNewKey];
     MLCEntityLog(@"Changed value at key path: %@ change: %@ value: %@", keyPath, change, value);
     NSDictionary *properties = self._properties;
@@ -250,7 +255,7 @@
 + (NSDate *)dateFromTimeStampValue:(id)value {
     double timestamp = [self doubleFromValue:value];
 
-    if (timestamp) {
+    if ((int)timestamp) {
         return [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
     }
 
@@ -442,7 +447,8 @@
     NSArray *ignore = [self ignoredPropertiesDuringSerialization];
     NSDictionary *rename = [self renamedPropertiesDuringSerialization];
 
-    [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
+    [properties enumerateKeysAndObjectsUsingBlock:^(id name, id type, __unused BOOL *stop) {
+        id key = name;
         MLCEntityLog(@"Key: %@ Type: %@", key, type);
         if ([key isEqualToString:@"properties"] || [key isEqualToString:@"_properties"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"description"]) {
             return;
@@ -453,17 +459,17 @@
         id value = [entity valueForKey:key];
         if (!value || value == [NSNull null]) return;
 
-        Class ValueClass = [MLCEntity classFromType:type];
+        Class ValueClass = [self classFromType:type];
         if ([ValueClass isSubclassOfClass:[MLCEntity class]]) {
             value = [ValueClass serialize:value];
         } else if ([ValueClass isSubclassOfClass:[NSDate class]]) {
-            value = [MLCEntity timeStampFromDate:value];
+            value = [self timeStampFromDate:value];
         } else if ([ValueClass isSubclassOfClass:[NSURL class]]) {
             NSURL *url = value;
             value = url.absoluteString;
         } else if ([type characterAtIndex:0] == 'c' || [type characterAtIndex:0] == @encode(BOOL)[0] || [type characterAtIndex:0] == @encode(bool)[0]) {
             MLCEntityLog(@"it's a bool! %@", value);
-            value = [MLCEntity boolFromValue:value] ? @"true" : @"false";
+            value = [self boolFromValue:value] ? @"true" : @"false";
         }
 
         if (rename[key]) {
@@ -484,11 +490,15 @@
     return __properties;
 }
 
-- (NSDictionary *)propertiesForClass:(Class)cls {
+- (NSDictionary *)propertiesForClass:(Class)classType {
+    if (classType == [MLCEntity class]) {
+        return @{};
+    }
+
     NSMutableDictionary *results = [NSMutableDictionary dictionary];
 
     unsigned int outCount, idx;
-    objc_property_t *properties = class_copyPropertyList(cls, &outCount);
+    objc_property_t *properties = class_copyPropertyList(classType, &outCount);
 
     for (idx = 0; idx < outCount; idx++) {
         objc_property_t property = properties[idx];
@@ -511,8 +521,8 @@
     }
     free(properties);
 
-    if ([cls superclass] != [MLCEntity class]) {
-        [results addEntriesFromDictionary:[self propertiesForClass:[cls superclass]]];
+    if ([classType superclass] != [MLCEntity class]) {
+        [results addEntriesFromDictionary:[self propertiesForClass:[classType superclass]]];
     }
 
     return [results copy];
@@ -522,11 +532,7 @@
     if ([type characterAtIndex:0] != @encode(id)[0]) return nil;
 
     NSMutableString *className = [type mutableCopy];
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wassign-enum"
     [className replaceOccurrencesOfString:@"\"" withString:@"" options:0 range:NSMakeRange(0, className.length)];
-#pragma clang diagnostic pop
 
     if ([className hasPrefix:@"@"]) {
         [className deleteCharactersInRange:NSMakeRange(0, 1)];
@@ -548,7 +554,8 @@
     return self._undefinedValues[key];
 }
 
-- (void)setValue:(id)value forKey:(NSString *)key type:(NSString *)type {
+- (void)setValue:(id)newValue forKey:(NSString *)key type:(NSString *)type {
+    id value = newValue;
     /*
      Code clean up inspired by Mike Ash:
      http://www.mikeash.com/pyblog/friday-qa-2013-02-08-lets-build-key-value-coding.html
@@ -575,7 +582,7 @@
 
     // Object
     if (typeChar == @encode(id)[0]) {
-        Class ClassType = [MLCEntity classFromType:type];
+        Class ClassType = [[self class] classFromType:type];
         id obj = nil;
 
         if ([value isKindOfClass:ClassType]) {
@@ -583,12 +590,12 @@
         } else if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
             obj = [[ClassType alloc] initWithJSONObject:value];
         } else {
-            if ([ClassType isSubclassOfClass:[NSString class]]) obj = [MLCEntity stringFromValue:value];
-            if ([ClassType isSubclassOfClass:[NSDate class]]) obj = [MLCEntity dateFromTimeStampValue:value];
-            if ([ClassType isSubclassOfClass:[NSNumber class]]) obj = [MLCEntity numberFromDoubleValue:value];
-            if ([ClassType isSubclassOfClass:[NSURL class]]) obj = [MLCEntity URLFromValue:value];
-            if ([ClassType isSubclassOfClass:[NSArray class]]) obj = [MLCEntity arrayFromValue:value];
-            if ([ClassType isSubclassOfClass:[NSDictionary class]]) obj = [MLCEntity dictionaryFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSString class]]) obj = [[self class] stringFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSDate class]]) obj = [[self class] dateFromTimeStampValue:value];
+            if ([ClassType isSubclassOfClass:[NSNumber class]]) obj = [[self class] numberFromDoubleValue:value];
+            if ([ClassType isSubclassOfClass:[NSURL class]]) obj = [[self class] URLFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSArray class]]) obj = [[self class] arrayFromValue:value];
+            if ([ClassType isSubclassOfClass:[NSDictionary class]]) obj = [[self class] dictionaryFromValue:value];
         }
         [self setValue:obj forKey:key];
         return;
@@ -604,7 +611,7 @@ f.numberStyle = NSNumberFormatterDecimalStyle; \
 NSNumber *number = [f numberFromString:value]; \
 if(number)value=number;\
 }\
-NSNumber *number = @([MLCEntity selectorpart ## FromValue: value ]); \
+NSNumber *number = @([[self class] selectorpart ## FromValue: value ]); \
 [self setValue:number forKey:key]; \
 return; \
 }
@@ -651,7 +658,7 @@ return; \
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     NSDictionary *properties = self._properties;
-    [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
+    [properties enumerateKeysAndObjectsUsingBlock:^(id key, __unused id type, __unused BOOL *stop) {
         id value = [self valueForKey:key];
 
         [coder encodeObject:value forKey:key];
@@ -663,7 +670,7 @@ return; \
 
     if (self) {
         NSDictionary *properties = self._properties;
-        [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
+        [properties enumerateKeysAndObjectsUsingBlock:^(id key, __unused id type, __unused BOOL *stop) {
             id value = [coder decodeObjectForKey:key];
             [self setValue:value forKey:key];
         }];
@@ -673,17 +680,17 @@ return; \
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    id copyedObject = [[[self class] allocWithZone:zone] init];
+    id copiedObject = [[[self class] allocWithZone:zone] init];
 
-    if (copyedObject) {
+    if (copiedObject) {
         NSDictionary *properties = self._properties;
         [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
             id value = [self valueForKey:key];
-            [copyedObject setValue:value forKey:key type:type];
+            [copiedObject setValue:value forKey:key type:type];
         }];
     }
 
-    return copyedObject;
+    return copiedObject;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -705,9 +712,9 @@ return; \
     return this.description.hash;
 }
 
-- (NSString *)setterToGetter:(NSString *)sel {
-    if ([sel hasPrefix:@"set"] && [sel hasSuffix:@":"]) {
-        NSString *prop = [sel substringWithRange:NSMakeRange(3, sel.length - 4)];
+- (NSString *)setterToGetter:(NSString *)selector {
+    if ([selector hasPrefix:@"set"] && [selector hasSuffix:@":"]) {
+        NSString *prop = [selector substringWithRange:NSMakeRange(3, selector.length - 4)];
         NSString *firstCharacter = [prop substringToIndex:1].lowercaseString;
         return [prop stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:firstCharacter];
     }
@@ -716,14 +723,14 @@ return; \
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
     //    MLCEntityLog(@"methodSignatureForSelector: %@", NSStringFromSelector(selector));
-    NSMethodSignature *sig = [super methodSignatureForSelector:selector];
-    if (!sig) {
+    NSMethodSignature *signature = [super methodSignatureForSelector:selector];
+    if (!signature) {
         MLCEntityLog(@"Selector Not Found Here!!!! sel: %@", NSStringFromSelector(selector));
     }
 
-    NSString *sel = NSStringFromSelector(selector);
-    NSString *setter = [self setterToGetter:sel];
-    NSString *type = self._properties[setter ?: sel];
+    NSString *selectorString = NSStringFromSelector(selector);
+    NSString *setter = [self setterToGetter:selectorString];
+    NSString *type = self._properties[setter ?: selectorString];
     if (type) {
         MLCEntityLog(@"Selector is in Properties.");
         NSString *format = setter ? @"v@:%@" : @"%@@:";
@@ -749,7 +756,7 @@ return; \
     //        return [NSMethodSignature signatureWithObjCTypes:[name cStringUsingEncoding:NSUTF8StringEncoding]];
     //    }
 
-    return sig;
+    return signature;
 }
 
 //- (id)forwardValueForKey:(NSString *)key type:(NSString *)type {
@@ -788,30 +795,30 @@ return; \
 //
 //
 //}
-
-- (NSNumber *)numberWithBytes:(const void *)value objCType:(const char *)type {
-    MLCEntityLog(@"intype: %s", type);
-#define CASE(ctype, selectorpart) \
-if(type[0] == @encode(ctype)[0]) {\
-return [NSNumber numberWith ## selectorpart:(ctype)value];}
-
-    CASE(char, Char);
-    CASE(unsigned char, UnsignedChar);
-    CASE(short, Short);
-    CASE(unsigned short, UnsignedShort);
-    CASE(int, Int);
-    CASE(unsigned int, UnsignedInt);
-    CASE(long, Long);
-    CASE(unsigned long, UnsignedLong);
-    CASE(long long, LongLong);
-    CASE(unsigned long long, UnsignedLongLong);
-    //    CASE(float, Float);
-    //    CASE(double, Double);
-
-#undef CASE
-
-    return nil;
-}
+//
+//- (NSNumber *)numberWithBytes:(const void *)value objCType:(const char *)type {
+//    MLCEntityLog(@"intype: %s", type);
+//#define CASE(ctype, selectorpart) \
+//if(type[0] == @encode(ctype)[0]) {\
+//return [NSNumber numberWith ## selectorpart:(ctype)value];}
+//
+//    CASE(char, Char);
+//    CASE(unsigned char, UnsignedChar);
+//    CASE(short, Short);
+//    CASE(unsigned short, UnsignedShort);
+//    CASE(int, Int);
+//    CASE(unsigned int, UnsignedInt);
+//    CASE(long, Long);
+//    CASE(unsigned long, UnsignedLong);
+//    CASE(long long, LongLong);
+//    CASE(unsigned long long, UnsignedLongLong);
+//    //    CASE(float, Float);
+//    //    CASE(double, Double);
+//
+//#undef CASE
+//
+//    return nil;
+//}
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
     MLCEntityLog(@"forwardInvocation: %@", invocation);
@@ -831,11 +838,11 @@ return [NSNumber numberWith ## selectorpart:(ctype)value];}
                 self._undefinedValues[setter] = obj;
             }
             else {
-                const char * atype = [invocation.methodSignature getArgumentTypeAtIndex:2];
+                const char * argumentType = [invocation.methodSignature getArgumentTypeAtIndex:2];
                 NSNumber *value = nil;
                 
 #define CASE(ctype, selectorpart) \
-if(atype[0] == @encode(ctype)[0]) {\
+if(argumentType[0] == @encode(ctype)[0]) {\
 MLCEntityLog(@"Type: %s", @encode(ctype)); \
 ctype val = 0; \
 [invocation getArgument:&val atIndex:2]; \

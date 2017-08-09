@@ -56,7 +56,7 @@
     if (childKeyword.length) parameters[@"childKeyword"] = childKeyword;
 
 #if TARGET_OS_IPHONE
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![[UIDevice currentDevice].model isEqualToString:@"iPhone"]) {
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![UIDevice.currentDevice.model isEqualToString:@"iPhone"]) {
         parameters[@"platformName"] = @"iPhone";
     }
 #endif
@@ -68,7 +68,7 @@
     [self cancel];
     self.connection = [NSURLConnection connectionWithRequest:self.request delegate:self];
 #if TARGET_OS_IPHONE
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
 #endif
     [self.connection start];
 }

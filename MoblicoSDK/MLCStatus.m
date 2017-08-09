@@ -30,9 +30,9 @@ NSString *const MLCStatusErrorDomain = @"MLCStatusErrorDomain";
 
     if (self) {
         if (statusType && statusType != (id)[NSNull null]) {
-            self.type = statusType.integerValue;
+            _type = statusType.integerValue;
         } else {
-            self.type = MLCStatusTypeMissing;
+            _type = MLCStatusTypeMissing;
         }
     }
 

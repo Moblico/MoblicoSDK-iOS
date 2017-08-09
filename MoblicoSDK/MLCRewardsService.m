@@ -52,22 +52,16 @@
     return [self redeemReward:reward autoPurchase:NO handler:handler];
 }
 
-+ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [self redeemReward:reward withOfferCode:offerCode autoPurchase:NO handler:handler];
-}
-
 + (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [self redeemReward:reward withOfferCode:reward.offerCode autoPurchase:autoPurchase handler:handler];
-}
+    NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName],
+                                                        reward.uniqueIdentifier,
+                                                        @"redeem"]];
 
-+ (instancetype)redeemReward:(MLCReward *)reward withOfferCode:(NSString *)offerCode autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"redeem"]];
-
-    NSDictionary *parameters = @{@"offerCode": offerCode, @"autoPurchase": autoPurchase ? @"true" : @"false"};
+    NSDictionary *parameters = @{@"offerCode": reward.offerCode,
+                                 @"autoPurchase": autoPurchase ? @"true" : @"false"};
 
     return [self update:resource parameters:parameters handler:handler];
 }
-
 
 + (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler {
     NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"purchase"]];
