@@ -26,10 +26,14 @@ Pods
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 # Carthage/Checkouts
-
 Carthage/Build
 
 # Custom
 MoblicoSDK.framework
 docs
 *.xcscmblueprint
+
+# AppCode
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/*.iws
