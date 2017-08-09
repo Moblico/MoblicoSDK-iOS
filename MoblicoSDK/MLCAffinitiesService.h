@@ -15,7 +15,9 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
 @class MLCLocation;
+
 /**
  Moblico affinity facilitates a points plus rewards system.
  The Moblico admin portal provides the means to define actions
@@ -24,7 +26,7 @@
  Please see the Moblico admin portal for more information concerning
  affinity setup and usage including how to setup your own unique rewards.
  
- Use the MLCAffinitiesService class to retrieve affinites from the Moblic Admin Portal.
+ Use the MLCAffinitiesService class to retrieve affinites from the Moblico Admin Portal.
  */
 @interface MLCAffinitiesService : MLCService
 
@@ -34,11 +36,18 @@
 
  @param handler Completion handler.
 
- @return A MLCAffinitiesService instance which conforms to the MLCService.
+ @return A MLCAffinitiesService instance which conforms to MLCServiceProtocol.
  */
-
 + (instancetype)listAffinities:(MLCServiceCollectionCompletionHandler)handler;
 
+/**
+ This method creates a service that retrieves the list of affinities
+ for a specific location that are currently available via the Moblico admin portal.
+
+ @param location Location for affinities.
+ @param handler Completion handler.
+ @return A MLCAffinitiesService instance which conforms to the MLCServiceProtocol protocol.
+ */
 + (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
 
 @end

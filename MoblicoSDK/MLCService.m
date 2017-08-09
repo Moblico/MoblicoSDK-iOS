@@ -548,7 +548,7 @@
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *statusJSON = jsonObject[@"status"];
-        if (statusJSON && [statusJSON isKindOfClass:[NSDictionary class]]) {
+        if ([statusJSON isKindOfClass:[NSDictionary class]]) {
             MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:statusJSON];
             if (status.type != MLCStatusTypeSuccess) {
                 NSString *message = status.message;
