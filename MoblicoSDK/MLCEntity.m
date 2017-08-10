@@ -20,7 +20,7 @@
 #import "MLCValidation.h"
 #import "MLCLogger.h"
 
-static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
+static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 //#define MLCEntityLog(fmt, ...) MLCInfoLog(fmt, ##__VA_ARGS__);
 #define MLCEntityLog(...)
 
@@ -38,30 +38,35 @@ static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext
 
 - (BOOL)validate:(out NSError *__autoreleasing *)outError {
     NSDictionary *properties = self._properties;
-    NSMutableArray * errors = [NSMutableArray arrayWithCapacity:properties.count];
+    NSMutableArray *errors = [NSMutableArray arrayWithCapacity:properties.count];
 
     for (id key in properties) {
         id value = [self valueForKey:key];
-        NSError * error = nil;
+        NSError *error = nil;
         if (![self validateValue:&value forKey:key error:&error]) {
             if (!error) {
-                error = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationUnknownError userInfo:@{ NSLocalizedDescriptionKey : @"Unknown error" }];
+                error = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationUnknownError userInfo:@{NSLocalizedDescriptionKey: @"Unknown error"}];
             }
             [errors addObject:error];
         }
     }
 
-    if (errors.count == 0) return YES;
+    if (errors.count == 0) {
+        return YES;
+    }
 
     if (outError != NULL) {
-        if (errors.count == 1) *outError = errors.firstObject;
-        else *outError = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationMultipleErrorsError userInfo:@{ MLCValidationDetailedErrorsKey : errors }];
+        if (errors.count == 1) {
+            *outError = errors.firstObject;
+        } else {
+            *outError = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationMultipleErrorsError userInfo:@{MLCValidationDetailedErrorsKey: errors}];
+        }
     }
 
     return NO;
 }
 
-- (BOOL)validateValue:(inout id  _Nullable __autoreleasing *)ioValue forKey:(NSString *)inKey error:(out NSError * _Nullable __autoreleasing *)outError {
+- (BOOL)validateValue:(inout id _Nullable __autoreleasing *)ioValue forKey:(NSString *)inKey error:(out NSError *_Nullable __autoreleasing *)outError {
 
     if (![super validateValue:ioValue forKey:inKey error:outError]) {
         return NO;
@@ -129,12 +134,12 @@ static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext
 
     if (self) {
         NSDictionary *properties = [self propertiesForClass:[self class]];
-        [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, __unused BOOL * _Nonnull stop) {
+        [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
 
             if ([type characterAtIndex:0] != '@') {
                 @try {
                     [self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:MLCEntityKeyValueChangedContext];
-                } @catch (NSException * __unused exception) {}
+                } @catch (NSException *__unused exception) {}
             }
         }];
         //        id type = properties[key];
@@ -151,7 +156,7 @@ static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext
 
 - (void)dealloc {
     NSDictionary *properties = [self propertiesForClass:[self class]];
-    [properties enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull type, __unused BOOL * _Nonnull stop) {
+    [properties enumerateKeysAndObjectsUsingBlock:^(id key, id type, __unused BOOL *stop) {
 
         if ([type characterAtIndex:0] != '@') {
             @try {
@@ -167,7 +172,7 @@ static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
         return;
     }
-    
+
     id value = [super valueForKey:keyPath];//change[NSKeyValueChangeNewKey];
     MLCEntityLog(@"Changed value at key path: %@ change: %@ value: %@", keyPath, change, value);
     NSDictionary *properties = self._properties;
@@ -231,13 +236,13 @@ static void * MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext
 
 + (NSString *)stringFromValue:(id)value {
     if ([value isKindOfClass:[NSNumber class]]
-        && (
+            && (
 
             [value objCType][0] == @encode(BOOL)[0] ||
-            [value objCType][0] == @encode(bool)[0] ||
-            [value objCType][0] == 'c'
-            )
-        ) {
+                    [value objCType][0] == @encode(bool)[0] ||
+                    [value objCType][0] == 'c'
+    )
+            ) {
         return [value boolValue] ? @"true" : @"false";
     }
 
@@ -827,7 +832,7 @@ return; \
     MLCEntityLog(@"forwardInvocation: %@ selector: %@", invocation, key);
     NSString *setter = [self setterToGetter:key];
     NSString *type = self._properties[setter ?: key];
-    
+
     if (type) {
         MLCEntityLog(@"getting %@ (%@)", key, type);
         if ([key hasPrefix:@"set"]) {
@@ -836,18 +841,17 @@ return; \
                 id obj = nil;
                 [invocation getArgument:&obj atIndex:2];
                 self._undefinedValues[setter] = obj;
-            }
-            else {
-                const char * argumentType = [invocation.methodSignature getArgumentTypeAtIndex:2];
+            } else {
+                const char *argumentType = [invocation.methodSignature getArgumentTypeAtIndex:2];
                 NSNumber *value = nil;
-                
+
 #define CASE(ctype, selectorpart) \
 if(argumentType[0] == @encode(ctype)[0]) {\
 MLCEntityLog(@"Type: %s", @encode(ctype)); \
 ctype val = 0; \
 [invocation getArgument:&val atIndex:2]; \
 value = [NSNumber numberWith ## selectorpart:val];}
-                
+
                 CASE(char, Char);
                 CASE(unsigned char, UnsignedChar);
                 CASE(short, Short);
@@ -861,7 +865,7 @@ value = [NSNumber numberWith ## selectorpart:val];}
                 CASE(float, Float);
                 CASE(double, Double);
 #undef CASE
-                
+
                 //                void* val = NULL;
                 //                [invocation getArgument:&val atIndex:2];
                 //                id value = [NSValue valueWithPointer:val];
@@ -884,11 +888,10 @@ value = [NSNumber numberWith ## selectorpart:val];}
                 return;
             }
         }
-        
+
         if (invocation.methodSignature.methodReturnType[0] == '@') {
             [invocation setReturnValue:&obj];
-        }
-        else if ([obj isKindOfClass:[NSValue class]]) {
+        } else if ([obj isKindOfClass:[NSValue class]]) {
             MLCEntityLog(@"NSValue type: %@ (%@) (%@)", obj, @([obj objCType]), @(invocation.methodSignature.methodReturnType));
             NSValue *currentVal = (NSValue *)obj;
             char *returnValue = calloc(invocation.methodSignature.methodReturnLength, sizeof(char));

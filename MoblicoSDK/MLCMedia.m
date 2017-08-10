@@ -15,7 +15,6 @@
  */
 
 #import "MLCMedia.h"
-#import "MLCEntity_Private.h"
 #import <CommonCrypto/CommonDigest.h>
 
 @interface MLCMedia ()
@@ -115,7 +114,7 @@
     }
 
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse * response, NSData *data, NSError *error) {
+    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         NSHTTPURLResponse *httpResponse;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             httpResponse = (NSHTTPURLResponse *)response;

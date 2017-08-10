@@ -17,11 +17,11 @@
 #import <MoblicoSDK/MLCEntity.h>
 
 typedef NS_ENUM(NSInteger, MLCUserTransactionType) {
-	MLCUserTransactionTypeUnknown = -1,
-	MLCUserTransactionTypePointsEarned,
-	MLCUserTransactionTypePointsSpent,
-	MLCUserTransactionTypeCurrencySaved,
-	MLCUserTransactionTypeCurrencySpent
+    MLCUserTransactionTypeUnknown = -1,
+    MLCUserTransactionTypePointsEarned,
+    MLCUserTransactionTypePointsSpent,
+    MLCUserTransactionTypeCurrencySaved,
+    MLCUserTransactionTypeCurrencySpent
 };
 
 @interface MLCUserTransaction : MLCEntity

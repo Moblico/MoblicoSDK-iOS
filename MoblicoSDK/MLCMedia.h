@@ -17,6 +17,7 @@
 #import <MoblicoSDK/MLCEntity.h>
 
 typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL fromCache);
+
 /**
  The media facility provides the means to reference and provide dynamic meta data
  for any type of content required.

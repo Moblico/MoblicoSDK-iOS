@@ -16,9 +16,10 @@
 
 #import <MoblicoSDK/MLCService.h>
 @class MLCSettings;
+
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings * _Nullable MLCSettings,  NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
+typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings *_Nullable MLCSettings, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 @interface MLCSettingsService : MLCService
 @property (class, nonatomic, strong, readonly) MLCSettings *settings;

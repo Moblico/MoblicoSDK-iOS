@@ -43,7 +43,7 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCServiceDetailedErrorsKey";
     service.error = error;
     service.jsonHandler = handler;
     service.response = response;
-    
+
     return service;
 }
 
@@ -57,7 +57,7 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCServiceDetailedErrorsKey";
 }
 
 - (void)cancel {
-    
+
 }
 
 + (NSError *)serviceErrorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion {
@@ -81,6 +81,5 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCServiceDetailedErrorsKey";
 + (NSError *)serviceErrorWithErrors:(NSArray<NSError *> *)errors {
     return [NSError errorWithDomain:MLCServiceErrorDomain code:MLCServiceErrorCodeMultipleErrors userInfo:@{MLCServiceDetailedErrorsKey: errors}];
 }
-
 
 @end

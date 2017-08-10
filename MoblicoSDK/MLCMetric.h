@@ -48,28 +48,28 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
     /// Specifies a custom metric used for triggers.
     MLCMetricTypeCustom,
 
-	/// Specifies that the user has interacted with a deal.
+    /// Specifies that the user has interacted with a deal.
     MLCMetricTypeViewDeal,
 
-	/// Specifies that the user has interacted with a reward.
+    /// Specifies that the user has interacted with a reward.
     MLCMetricTypeViewReward,
 
-	/// Specifies that the user has interacted with a location.
+    /// Specifies that the user has interacted with a location.
     MLCMetricTypeViewLocation,
 
-	/// Specifies that the user has interacted with an event.
+    /// Specifies that the user has interacted with an event.
     MLCMetricTypeViewEvent,
 
-	/// Specifies that the user has interacted with a media.
+    /// Specifies that the user has interacted with a media.
     MLCMetricTypeViewMedia,
 
-	/// Specifies that the user has shared the app.
+    /// Specifies that the user has shared the app.
     MLCMetricTypeShareApp,
 
-	/// Specifies that the user has shared a deal.
+    /// Specifies that the user has shared a deal.
     MLCMetricTypeShareDeal,
 
-	/// Specifies that the user has shared a reward.
+    /// Specifies that the user has shared a reward.
     MLCMetricTypeShareReward,
 
     /// Specifies that the user has shared a location.

@@ -33,12 +33,12 @@
     NSDictionary *searchParameters = nil;
 
     if (count && userTransactionId) {
-		searchParameters = @{@"count": @(count), @"before": @(userTransactionId)};
-	} else if (count) {
-		searchParameters = @{@"count": @(count)};
-	} else if (userTransactionId) {
-		searchParameters = @{@"before": @(userTransactionId)};
-	}
+        searchParameters = @{@"count": @(count), @"before": @(userTransactionId)};
+    } else if (count) {
+        searchParameters = @{@"count": @(count)};
+    } else if (userTransactionId) {
+        searchParameters = @{@"before": @(userTransactionId)};
+    }
 
     return [self findScopedResourcesForResource:user searchParameters:searchParameters handler:handler];
 }

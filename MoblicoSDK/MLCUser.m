@@ -48,6 +48,7 @@ static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
 @dynamic merchantId;
 
 static NSArray<NSString *> *_requiredParameters = nil;
+
 + (NSArray<NSString *> *)requiredParameters {
     if (!_requiredParameters) {
         _requiredParameters = @[];
@@ -85,14 +86,9 @@ static NSArray<NSString *> *_requiredParameters = nil;
 }
 
 + (instancetype)userWithUsername:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken {
-    NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:
-                                       (username != nil) +
-                                       (password != nil) +
-                                       (social != nil) +
-                                       (socialToken != nil)
-                                       ];
+    NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
 
-	if (username) properties[@"username"] = username;
+    if (username) properties[@"username"] = username;
     if (password) properties[@"password"] = password;
     if (social) properties[@"social"] = social;
     if (socialToken) properties[@"socialToken"] = socialToken;
@@ -174,9 +170,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
 }
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
-//    if (jsonObject) {
-//        <#statements#>
-//    }
+
     self = [super initWithJSONObject:jsonObject];
 
     if (self) {
@@ -217,11 +211,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
 + (NSDictionary *)serialize:(MLCUser *)user {
     NSMutableDictionary *serializedObject = [[super serialize:user] mutableCopy];
 
-
-
     NSString *social = [self stringForSocialType:user.socialType];
-
-
     if (social) {
         serializedObject[@"social"] = social;
     }
@@ -232,12 +222,11 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
 
     id value = [user valueForKey:NSStringFromSelector(@selector(contactPreferenceType))];
-    
+
     if (value && value != [NSNull null]) {
         NSString *contactPreference = [self stringForContactPreferenceType:user.contactPreferenceType];
         serializedObject[@"contactPreference"] = contactPreference;
-    }
-    else {
+    } else {
         [serializedObject removeObjectForKey:@"contactPreference"];
     }
 
@@ -253,11 +242,11 @@ static NSArray<NSString *> *_requiredParameters = nil;
 //        NSLog(@"Password is empty!");
         [serializedObject removeObjectForKey:@"password"];
     }
-    
+
     if (user.dateOfBirth) {
         serializedObject[@"dateOfBirth"] = [[self dateOfBirthDateFormatter] stringFromDate:user.dateOfBirth];
     }
-    
+
     return serializedObject;
 }
 

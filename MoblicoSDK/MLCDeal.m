@@ -15,7 +15,6 @@
  */
 
 #import "MLCDeal.h"
-#import "MLCEntity_Private.h"
 #import "MLCImage.h"
 
 @implementation MLCDeal
@@ -40,7 +39,7 @@
     if (image) {
         serializedObject[@"image"] = [[image class] serialize:image];
     }
-    
+
     return [serializedObject mutableCopy];
 }
 
@@ -49,7 +48,7 @@
     if (results != NSOrderedSame) {
         return results;
     }
-    
+
     results = [self.name localizedStandardCompare:other.name];
 
     if (results != NSOrderedSame) {

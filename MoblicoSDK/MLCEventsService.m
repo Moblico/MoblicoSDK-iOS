@@ -40,7 +40,7 @@
 + (instancetype)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler {
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:2];
     if (typeName.length) searchParameters[@"eventTypeName"] = typeName;
-    searchParameters[@"liveOnly"] = liveOnly ? @"true" : @"false" ;
+    searchParameters[@"liveOnly"] = liveOnly ? @"true" : @"false";
 
     return [self findEventsWithSearchParameters:searchParameters handler:handler];
 }

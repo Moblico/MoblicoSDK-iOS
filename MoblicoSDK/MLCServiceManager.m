@@ -18,7 +18,6 @@
 #import "MLCAuthenticationService.h"
 #import "MLCAuthenticationToken.h"
 #import "MLCUser.h"
-#import "MLCUsersService.h"
 #import "version.h"
 #import "MLCStatus.h"
 
@@ -48,7 +47,7 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 @synthesize currentUser = _currentUser;
 
 - (NSString *)serviceName {
-    @synchronized(self) {
+    @synchronized (self) {
         if (!_serviceName) {
             NSString *appName = NSBundle.mainBundle.infoDictionary[@"CFBundleName"];
             _serviceName = [@"com.moblico.SDK.credentials." stringByAppendingString:appName];
@@ -62,10 +61,10 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 //        return nil;
         [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You must set your API key before getting an instance of the ServiceManager." userInfo:nil] raise];
     }
-	static MLCServiceManager *sharedInstance = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		sharedInstance = [[self alloc] init];
+    static MLCServiceManager *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
         NSString *username = sharedInstance.keychainItemData[(__bridge id)kSecAttrAccount];
 //        NSString *password = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
         NSDictionary *credentials = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
@@ -76,31 +75,31 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 
             [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] childKeyword:childKeyword];
         }
-	});
+    });
 
-	return sharedInstance;
+    return sharedInstance;
 }
 
 static NSString *_apiKey = nil;
 static NSString *_testingAPIKey = nil;
 
 + (void)setAPIKey:(NSString *)apiKey {
-	@synchronized(self) {
+    @synchronized (self) {
         if (_apiKey != nil) {
             [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You can only set the API Key once." userInfo:nil] raise];
         }
-		_apiKey = [apiKey copy];
-	}
+        _apiKey = [apiKey copy];
+    }
 }
 
 + (NSString *)APIKey {
-    @synchronized(self) {
+    @synchronized (self) {
         return [_apiKey copy];
     }
 }
 
 + (void)setTestingAPIKey:(NSString *)apiKey {
-    @synchronized(self) {
+    @synchronized (self) {
         if (_testingAPIKey != nil) {
             [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You can only set the testing API Key once." userInfo:nil] raise];
         }
@@ -115,7 +114,7 @@ static NSString *_testingAPIKey = nil;
 }
 
 + (NSString *)currentAPIKey {
-    @synchronized(self) {
+    @synchronized (self) {
         if ([self isTestingEnabled]) {
             return [_testingAPIKey copy] ?: @"";
         }
@@ -154,8 +153,7 @@ static NSString *_testingAPIKey = nil;
             [NSUserDefaults.standardUserDefaults setObject:token forKey:MLCServiceManagerPersistentTokenKey];
             [NSUserDefaults.standardUserDefaults synchronize];
             [self didChangeValueForKey:currentTokenKey];
-        }
-        else if (_authenticationToken != authenticationToken) {
+        } else if (_authenticationToken != authenticationToken) {
             [self willChangeValueForKey:currentTokenKey];
             _authenticationToken = authenticationToken;
             [self didChangeValueForKey:currentTokenKey];
@@ -166,8 +164,8 @@ static NSString *_testingAPIKey = nil;
 - (MLCAuthenticationToken *)authenticationToken {
     @synchronized (self) {
         if (MLCServiceManager.isPersistentTokenEnabled) {
-			NSDictionary *token = [NSUserDefaults.standardUserDefaults dictionaryForKey:MLCServiceManagerPersistentTokenKey];
-			return [[MLCAuthenticationToken alloc] initWithJSONObject:token];
+            NSDictionary *token = [NSUserDefaults.standardUserDefaults dictionaryForKey:MLCServiceManagerPersistentTokenKey];
+            return [[MLCAuthenticationToken alloc] initWithJSONObject:token];
         }
         return _authenticationToken;
     }
@@ -185,7 +183,7 @@ static NSString *_testingAPIKey = nil;
 }
 
 - (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword remember:(BOOL)rememberCredentials {
-    @synchronized(self) {
+    @synchronized (self) {
         self.currentUser = user;
         self.childKeyword = childKeyword;
         self.authenticationToken = nil;
@@ -211,7 +209,7 @@ static NSString *_testingAPIKey = nil;
 //static BOOL _testing = nil;
 
 + (void)setTestingEnabled:(BOOL)testing {
-    @synchronized(self) {
+    @synchronized (self) {
         [NSUserDefaults.standardUserDefaults setBool:testing forKey:MLCServiceManagerTestingEnabledKey];
         [NSUserDefaults.standardUserDefaults synchronize];
 
@@ -222,20 +220,20 @@ static NSString *_testingAPIKey = nil;
 }
 
 + (BOOL)isTestingEnabled {
-    @synchronized(self) {
+    @synchronized (self) {
         return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerTestingEnabledKey];
     }
 }
 
 + (void)setLoggingEnabled:(BOOL)logging {
-    @synchronized(self) {
+    @synchronized (self) {
         [NSUserDefaults.standardUserDefaults setBool:logging forKey:MLCServiceManagerLoggingEnabledKey];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
 + (BOOL)isLoggingEnabled {
-    @synchronized(self) {
+    @synchronized (self) {
         return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerLoggingEnabledKey];
     }
 }
@@ -262,8 +260,7 @@ static NSString *_testingAPIKey = nil;
                     MLCAuthenticationService *retryService = [MLCAuthenticationService authenticateWithAPIKey:apiKey user:nil childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *retryNewToken, NSError *retryError, NSHTTPURLResponse *retryResponse) {
                         if (retryError) {
                             handler(nil, retryError, retryResponse);
-                        }
-                        else {
+                        } else {
                             self.authenticationToken = retryNewToken;
                             NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", retryNewToken.token];
                             [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
@@ -271,8 +268,7 @@ static NSString *_testingAPIKey = nil;
                         }
                     }];
                     [retryService start];
-                }
-                else {
+                } else {
                     handler(nil, error, response);
                 }
             } else {
@@ -292,39 +288,40 @@ static NSString *_testingAPIKey = nil;
 //static BOOL _sslDisabled = nil;
 
 + (void)setSSLDisabled:(BOOL)disabled {
-    @synchronized(self) {
+    @synchronized (self) {
         [NSUserDefaults.standardUserDefaults setBool:disabled forKey:MLCServiceManagerSSLDisabledKey];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
 + (BOOL)isSSLDisabled {
-    @synchronized(self) {
+    @synchronized (self) {
         return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerSSLDisabledKey];
     }
 }
 
 + (void)setForceQueryParametersEnabled:(BOOL)disabled {
-    @synchronized(self) {
+    @synchronized (self) {
         [NSUserDefaults.standardUserDefaults setBool:disabled forKey:MLCServiceManagerForceQueryParametersEnabledKey];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
 + (BOOL)isForceQueryParametersEnabled {
-    @synchronized(self) {
+    @synchronized (self) {
         NSNumber *force = [NSUserDefaults.standardUserDefaults objectForKey:MLCServiceManagerForceQueryParametersEnabledKey];
         return !force || force.boolValue;
     }
 }
 
 static BOOL _persistentTokenEnabled = NO;
+
 + (void)setPersistentTokenEnabled:(BOOL)persistToken {
-	_persistentTokenEnabled = persistToken;
+    _persistentTokenEnabled = persistToken;
 }
 
 + (BOOL)isPersistentTokenEnabled {
-	return _persistentTokenEnabled;
+    return _persistentTokenEnabled;
 }
 
 + (NSString *)host {
@@ -344,7 +341,7 @@ static BOOL _persistentTokenEnabled = NO;
 }
 
 - (NSDictionary *)genericPasswordQuery {
-    @synchronized(self) {
+    @synchronized (self) {
         if (!_genericPasswordQuery) {
             _genericPasswordQuery = [@{(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
                                        (__bridge id)kSecAttrService: self.serviceName,
@@ -359,7 +356,7 @@ static BOOL _persistentTokenEnabled = NO;
 }
 
 - (NSMutableDictionary *)keychainItemData {
-    @synchronized(self) {
+    @synchronized (self) {
         if (_keychainItemData) return _keychainItemData;
 
         NSDictionary *tempQuery = [NSDictionary dictionaryWithDictionary:self.genericPasswordQuery];
@@ -393,15 +390,15 @@ static BOOL _persistentTokenEnabled = NO;
 - (NSMutableDictionary *)dictionaryToSecItemFormat:(NSDictionary *)dictionaryToConvert {
     // The assumption is that this method will be called with a properly populated dictionary
     // containing all the right key/value pairs for a SecItem.
-    
+
     // Create a dictionary to return populated with the attributes and data.
     NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionaryWithDictionary:dictionaryToConvert];
-    
+
     // Add the Generic Password keychain item class attribute.
     returnDictionary[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
 
     // Convert the NSString to NSData to meet the requirements for the value type kSecValueData.
-	// This is where to store sensitive data that should be encrypted.
+    // This is where to store sensitive data that should be encrypted.
     NSDictionary *credentials = dictionaryToConvert[(__bridge id)kSecValueData];
 //    NSString *passwordString = dictionaryToConvert[(__bridge id)kSecValueData];
     returnDictionary[(__bridge id)kSecValueData] = [NSKeyedArchiver archivedDataWithRootObject:credentials];
@@ -413,10 +410,10 @@ static BOOL _persistentTokenEnabled = NO;
 - (NSMutableDictionary *)secItemFormatToDictionary:(NSDictionary *)dictionaryToConvert {
     // The assumption is that this method will be called with a properly populated dictionary
     // containing all the right key/value pairs for the UI element.
-    
+
     // Create a dictionary to return populated with the attributes and data.
     NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionaryWithDictionary:dictionaryToConvert];
-    
+
     // Add the proper search key and class attribute.
     returnDictionary[(__bridge id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
     returnDictionary[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
@@ -427,10 +424,10 @@ static BOOL _persistentTokenEnabled = NO;
     if (SecItemCopyMatching((__bridge CFDictionaryRef)returnDictionary, (CFTypeRef *)&passwordData) == noErr) {
         // Remove the search, class, and identifier key/value, we don't need them anymore.
         [returnDictionary removeObjectForKey:(__bridge id)kSecReturnData];
-        
+
         // Add the password to the dictionary, converting from NSData to NSString.
         NSData *data = (__bridge NSData *)passwordData;
-		NSDictionary *credentials = @{};
+        NSDictionary *credentials = @{};
         if (data != nil) {
             @try {
                 credentials = (NSDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -449,37 +446,37 @@ static BOOL _persistentTokenEnabled = NO;
         NSAssert(NO, @"Serious error, no matching item found in the keychain.\n");
     }
 
-	if (passwordData) CFRelease(passwordData);
-    
-	return returnDictionary;
+    if (passwordData) CFRelease(passwordData);
+
+    return returnDictionary;
 }
 
 - (BOOL)writeToKeychain {
     CFDictionaryRef attributes = NULL;
     NSMutableDictionary *updateItem = nil;
-	OSStatus result;
+    OSStatus result;
 
     if (SecItemCopyMatching((__bridge CFDictionaryRef)self.genericPasswordQuery, (CFTypeRef *)&attributes) == noErr) {
         // First we need the attributes from the Keychain.
         updateItem = [NSMutableDictionary dictionaryWithDictionary:(__bridge NSDictionary *)attributes];
         // Second we need to add the appropriate search key/values.
         updateItem[(__bridge id)kSecClass] = self.genericPasswordQuery[(__bridge id)kSecClass];
-        
+
         // Lastly, we need to set up the updated attribute list being careful to remove the class.
         NSMutableDictionary *tempCheck = [self dictionaryToSecItemFormat:self.keychainItemData];
         [tempCheck removeObjectForKey:(__bridge id)kSecClass];
-        
+
         // An implicit assumption is that you can only update a single item at a time.
-		
+
         result = SecItemUpdate((__bridge CFDictionaryRef)updateItem, (__bridge CFDictionaryRef)tempCheck);
-		NSAssert( result == noErr, @"Couldn't update the Keychain Item. %@", @(result));
+        NSAssert(result == noErr, @"Couldn't update the Keychain Item. %@", @(result));
     } else {
         // No previous item found; add the new one.
         result = SecItemAdd((__bridge CFDictionaryRef)[self dictionaryToSecItemFormat:self.keychainItemData], NULL);
-        NSAssert( result == noErr, @"Couldn't add the Keychain Item. %@", @(result));
+        NSAssert(result == noErr, @"Couldn't add the Keychain Item. %@", @(result));
     }
-	
-	if (attributes) CFRelease(attributes);
+
+    if (attributes) CFRelease(attributes);
 
     return result == noErr;
 }

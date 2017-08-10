@@ -16,7 +16,7 @@
 
 #import <MoblicoSDK/MLCService.h>
 
-typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject,  NSError *error, NSHTTPURLResponse *response);
+typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response);
 
 @interface MLCService () <NSURLConnectionDataDelegate>
 @property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionHandler;

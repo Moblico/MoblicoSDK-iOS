@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, MLCAdServiceType) {
  @return A MLCAdsService instance which conforms to the MLCServiceProtocol protocol.
  */
 + (instancetype)findAdsWithType:(MLCAdServiceType)type context:(NSString *)context handler:(MLCServiceCollectionCompletionHandler)handler;
+
 /**
  Retrieve a single ad.
 
@@ -55,6 +56,7 @@ typedef NS_ENUM(NSUInteger, MLCAdServiceType) {
  @return A MLCAdsService instance which conforms to the MLCServiceProtocol protocol.
  */
 + (instancetype)readAdWithType:(MLCAdServiceType)type context:(NSString *)context handler:(MLCServiceResourceCompletionHandler)handler;
+
 /**
  Retrieve a single banner ad.
 

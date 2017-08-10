@@ -16,6 +16,7 @@
 
 #import "MLCNotification.h"
 #import "MLCEntity_Private.h"
+
 @implementation MLCNotification
 
 //+ (id)deserialize:(id)object {
@@ -41,11 +42,9 @@
 //}
 
 + (NSDictionary *)renamedPropertiesDuringDeserialization {
-    NSMutableDictionary *renamed = [@{
-                                      @"notificationMessage" : @"message",
-                                      @"notificationTitle" : @"title",
-                                      @"notificationType" : @"type"
-                                      } mutableCopy];
+    NSMutableDictionary *renamed = [@{@"notificationMessage": @"message",
+                                      @"notificationTitle": @"title",
+                                      @"notificationType": @"type"} mutableCopy];
 
     [renamed addEntriesFromDictionary:[super renamedPropertiesDuringDeserialization]];
 

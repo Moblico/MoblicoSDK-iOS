@@ -16,7 +16,7 @@
 
 #import "MLCMerchantsService.h"
 #import "MLCService_Private.h"
-#import "MLCMerchant.h"
+
 @implementation MLCMerchantsService
 
 + (Class<MLCEntityProtocol>)classForResource {

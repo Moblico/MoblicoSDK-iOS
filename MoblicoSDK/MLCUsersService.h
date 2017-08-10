@@ -53,7 +53,6 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
 /**
  @since Unavailable in this version of the MoblicoSDK.
  */
-+ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler
-    __attribute__((unavailable ("'destroyUser:handler:' is not available with this version of the Moblico SDK.")));
++ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler __attribute__((unavailable ("'destroyUser:handler:' is not available with this version of the Moblico SDK.")));
 
 @end

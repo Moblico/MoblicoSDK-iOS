@@ -19,11 +19,11 @@
 @implementation MLCList
 
 + (NSString *)resourceName {
-	return @"list";
+    return @"list";
 }
 
 + (NSString *)collectionName {
-	return @"lists";
+    return @"lists";
 }
 
 @end

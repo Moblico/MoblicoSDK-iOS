@@ -22,9 +22,9 @@
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     NSMutableDictionary *adJson = [jsonObject mutableCopy];
-    NSString *clickToCall = adJson[@"clickToCall"];
-    if ([clickToCall isKindOfClass:[NSString class]] && clickToCall.length && ![clickToCall hasPrefix:@"tel:"]) {
-        adJson[@"clickToCall"] = [NSString stringWithFormat:@"tel:%@", clickToCall];
+    NSString *clickToCall = [MLCEntity stringFromValue:adJson[@"clickToCall"]];
+    if (clickToCall.length > 0 && ![clickToCall hasPrefix:@"tel:"]) {
+        adJson[@"clickToCall"] = [@"tel:" stringByAppendingString:clickToCall];
     }
 
     self = [super initWithJSONObject:adJson];

@@ -119,7 +119,7 @@
                           handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
 
                               __weak __typeof__(self) weakSelf = self;
-							  if (handler) {
+                              if (handler) {
 //								  handler([[MLCStatus alloc] initWithJSONObject:jsonObject], error, response);
                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                       id<MLCEntityProtocol> resource = [weakSelf deserializeResource:jsonObject];
@@ -128,8 +128,7 @@
                                           service.dispatchGroup = nil;
                                       });
                                   });
-							  }
-                              else {
+                              } else {
                                   service.dispatchGroup = nil;
                               }
                           }];
@@ -154,14 +153,12 @@
                                   MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
                                   if (status) {
                                       success = status.type == MLCStatusTypeSuccess;
-                                  }
-                                  else {
+                                  } else {
                                       success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
                                   }
                                   handler(success, error, response);
                                   service.dispatchGroup = nil;
-                              }
-                              else {
+                              } else {
                                   service.dispatchGroup = nil;
                               }
                           }];
@@ -183,14 +180,12 @@
                                   MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
                                   if (status) {
                                       success = status.type == MLCStatusTypeSuccess;
-                                  }
-                                  else {
+                                  } else {
                                       success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
                                   }
                                   handler(success, error, response);
                                   service.dispatchGroup = nil;
-                              }
-                              else {
+                              } else {
                                   service.dispatchGroup = nil;
                               }
                           }];
@@ -357,7 +352,7 @@
     if (parameters.count == 0) return nil;
 
     NSMutableArray *queryItems = [NSMutableArray arrayWithCapacity:parameters.count];
-    [parameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, __unused BOOL * _Nonnull stop) {
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         NSString *value = obj;
 
         if ([obj isKindOfClass:[NSArray class]]) {
@@ -402,10 +397,10 @@
 //}
 
 + (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)servicePath parameters:(NSDictionary *)parameters {
-	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-	request.HTTPMethod = [self stringFromMLCServiceRequestMethod:method];
+    request.HTTPMethod = [self stringFromMLCServiceRequestMethod:method];
 
     NSString *path = [NSString pathWithComponents:@[@"/", @"services", MLCServiceManager.apiVersion, servicePath]];
 
@@ -421,32 +416,32 @@
         NSLog(@"Percent Escaping Differs\nqueryItemsFromParameters: %@\n  oldSerializeParameters: %@", query1, query2);
     }
     BOOL alwaysUseQueryParams = MLCServiceManager.isForceQueryParametersEnabled;
-    
+
     if (components.query.length && !(alwaysUseQueryParams || method == MLCServiceRequestMethodGET || method == MLCServiceRequestMethodDELETE)) {
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
         request.HTTPBody = [components.query dataUsingEncoding:NSUTF8StringEncoding];
         components.query = nil;
     }
 
-	request.URL = components.URL;
+    request.URL = components.URL;
     [request setValue:[self userAgent] forHTTPHeaderField:@"User-Agent"];
 
-	return request;
+    return request;
 }
 
 + (NSString *)stringFromMLCServiceRequestMethod:(MLCServiceRequestMethod)method {
-	switch (method) {
-		case MLCServiceRequestMethodGET:
-        return @"GET";
-		case MLCServiceRequestMethodPOST:
-        return @"POST";
-		case MLCServiceRequestMethodPUT:
-        return @"PUT";
-		case MLCServiceRequestMethodDELETE:
-        return @"DELETE";
-	}
+    switch (method) {
+        case MLCServiceRequestMethodGET:
+            return @"GET";
+        case MLCServiceRequestMethodPOST:
+            return @"POST";
+        case MLCServiceRequestMethodPUT:
+            return @"PUT";
+        case MLCServiceRequestMethodDELETE:
+            return @"DELETE";
+    }
 
-	return nil;
+    return nil;
 }
 
 - (NSMutableData *)receivedData {
@@ -458,7 +453,7 @@
 }
 
 + (NSString *)userAgent {
-	@synchronized (self) {
+    @synchronized (self) {
         static NSString *userAgent = nil;
 
         if (userAgent) return userAgent;
@@ -482,19 +477,19 @@
         NSString *appVersion = @(MoblicoSDKVersionNumber).stringValue;
         userAgent = [NSString stringWithFormat:@"%@ %@ (%@; %@ %@; %@)", appName, appVersion, model, systemName, systemVersion, locale];
 
-		return userAgent;
-	}
+        return userAgent;
+    }
 }
 
 #pragma mark - NSURLConnectionDataDelegate
 
 - (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     self.httpResponse = (NSHTTPURLResponse *)response;
-	(self.receivedData).length = 0;
+    self.receivedData.length = 0;
 }
 
 - (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[self.receivedData appendData:data];
+    [self.receivedData appendData:data];
 }
 
 - (NSDictionary *)logDictionaryWithResponse:(id)response error:(NSError *)error {
@@ -521,7 +516,7 @@
 #if TARGET_OS_IPHONE
     UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 #endif
-    
+
     MLCDebugLog(@"connection:didFailWithError:%@", error);
     MLCDebugLog(@"\n=====\n%@\n=====", [self logDictionaryWithResponse:nil error:error]);
 
@@ -552,9 +547,9 @@
                 if (!message) {
                     message = @"Unknown Error";
                 }
-                NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey:message, @"status": status}];
+                NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: message, @"status": status}];
                 self.jsonCompletionHandler(self, nil, statusError, self.httpResponse);
-				self.receivedData = nil;
+                self.receivedData = nil;
                 return;
             }
         }
@@ -564,7 +559,7 @@
     self.receivedData = nil;
 }
 
-- (void)connection:(nonnull NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(nonnull NSURLAuthenticationChallenge *)challenge {
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     MLCDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
     MLCDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
 

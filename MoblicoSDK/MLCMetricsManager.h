@@ -26,6 +26,6 @@
 @interface MLCMetricsManager : NSObject
 
 @property (nonatomic, class, strong, readonly, nonnull) MLCMetricsManager *sharedMetricsManager;
-@property (nonatomic, weak, nullable) id <MLCMetricsManagerLocationDelegate> locationDelegate;
+@property (nonatomic, weak, nullable) id<MLCMetricsManagerLocationDelegate> locationDelegate;
 
 @end

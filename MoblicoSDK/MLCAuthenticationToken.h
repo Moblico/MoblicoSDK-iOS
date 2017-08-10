@@ -40,6 +40,6 @@
  
  @return YES if the token is not nil and hasn't expired, otherwise NO.
  */
-@property (NS_NONATOMIC_IOSONLY, getter=isValid, readonly) BOOL valid;
+@property (nonatomic, getter=isValid, readonly) BOOL valid;
 
 @end

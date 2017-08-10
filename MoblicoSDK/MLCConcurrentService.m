@@ -40,7 +40,7 @@
         [service start];
     }
 
-	__block MLCConcurrentServiceCompletionHandler handler = self.concurrentServiceCompletionHandler;
+    __block MLCConcurrentServiceCompletionHandler handler = self.concurrentServiceCompletionHandler;
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         if (handler != nil) {
             handler();

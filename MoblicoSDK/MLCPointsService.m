@@ -16,7 +16,6 @@
 
 #import "MLCService.h"
 #import "MLCService_Private.h"
-
 #import "MLCPointsService.h"
 #import "MLCPoints.h"
 #import "MLCUser.h"
@@ -52,7 +51,7 @@ static NSString *const MLCPointsTotalTypePointsString = @"POINTS";
     NSString *totalTypeName = [self stringForPointsTotalType:totalType];
     if (totalTypeName.length) parameters[@"totalTypeName"] = totalTypeName;
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"points"]];
-    
+
     return [self update:path parameters:parameters handler:handler];
 }
 

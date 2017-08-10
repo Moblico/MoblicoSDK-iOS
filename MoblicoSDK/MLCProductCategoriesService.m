@@ -16,7 +16,6 @@
 
 #import "MLCProductCategoriesService.h"
 #import "MLCService_Private.h"
-#import "MLCProductCategory.h"
 
 @implementation MLCProductCategoriesService
 

@@ -91,13 +91,13 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
 
 + (NSDictionary *)serialize:(MLCMetric *)metric {
     NSMutableDictionary *serializedObject = [[super serialize:metric] mutableCopy];
-    
+
     NSString *type = [self stringForMetricType:metric.type];
     serializedObject[@"type"] = type;
 
     [serializedObject removeObjectForKey:@"location"];
     NSUInteger locationId = metric.location.locationId;
-    
+
     if (locationId > 0) {
         serializedObject[@"locationId"] = @(locationId);
     }
@@ -109,7 +109,7 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
     NSString *longitude = @(metric.longitude).stringValue;
     longitude = [longitude substringToIndex:MIN((NSUInteger)16, longitude.length)];
     serializedObject[@"longitude"] = longitude;
-    
+
     return serializedObject;
 }
 

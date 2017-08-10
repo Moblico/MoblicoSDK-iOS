@@ -12,13 +12,12 @@
 
 + (NSURL *)documentsURL {
     static dispatch_once_t pred;
-    static NSURL * documentsDirectory = nil;
+    static NSURL *documentsDirectory = nil;
     dispatch_once(&pred, ^{
-        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory
-                                                                inDomains:NSUserDomainMask];
+        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
         documentsDirectory = paths.firstObject;
     });
-    
+
     return documentsDirectory;
 }
 
@@ -37,15 +36,15 @@
 
 + (BOOL)persistEntity:(id)object key:(NSString *)key {
     NSString *path = [self URL:key].path;
-    
+
     return [NSKeyedArchiver archiveRootObject:object
                                        toFile:path]
     && [NSFileManager.defaultManager setAttributes:@{
-                                                       NSFileProtectionKey:
-                                                           NSFileProtectionNone
-                                                       }
-                                        ofItemAtPath:path
-                                               error:NULL];
+                                                     NSFileProtectionKey:
+                                                         NSFileProtectionNone
+                                                     }
+                                      ofItemAtPath:path
+                                             error:NULL];
 }
 
 + (BOOL)clearEntityWithKey:(NSString *)key {
@@ -55,20 +54,18 @@
 + (BOOL)clearCache {
     __block BOOL hadError = YES;
     NSArray *contents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:[self documentsURL]
-                                   includingPropertiesForKeys:nil
-                                                      options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                        error:NULL];
-    
-    
+                                                    includingPropertiesForKeys:nil
+                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                                         error:NULL];
     [contents enumerateObjectsWithOptions:NSEnumerationConcurrent
                                usingBlock:^(NSURL *fileURL, __unused NSUInteger idx, BOOL *stop) {
                                    if (![NSFileManager.defaultManager removeItemAtURL:fileURL
-                                                               error:NULL]) {
+                                                                                error:NULL]) {
                                        *stop = YES;
                                        hadError = YES;
                                    }
                                }];
-    
+
     return !hadError;
 }
 

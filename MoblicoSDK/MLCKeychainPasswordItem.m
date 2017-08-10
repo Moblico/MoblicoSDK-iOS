@@ -18,7 +18,7 @@ NSString *const MLCKeychainPasswordItemErrorKeyOSStatus = @"OSStatus";
 + (NSError *)invalidStatus:(OSStatus)status;
 @end
 
-typedef NSString * MLCKeychainPasswordItemMatchLimit NS_STRING_ENUM;
+typedef NSString *MLCKeychainPasswordItemMatchLimit NS_STRING_ENUM;
 
 MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitOne = @"MLCKeychainPasswordItemMatchLimitOne";
 MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @"MLCKeychainPasswordItemMatchLimitAll";
@@ -66,7 +66,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 
 + (NSArray<MLCKeychainPasswordItem *> *)_itemsWithService:(NSString *)service accessGroup:(NSString *)accessGroup error:(NSError **)error {
 
-    NSDictionary<NSString *,id> *query = [self queryWithService:service account:nil accessGroup:accessGroup limit:MLCKeychainPasswordItemMatchLimitAll returnAttributes:@YES returnData:@NO];
+    NSDictionary<NSString *, id> *query = [self queryWithService:service account:nil accessGroup:accessGroup limit:MLCKeychainPasswordItemMatchLimitAll returnAttributes:@YES returnData:@NO];
 
     CFArrayRef queryResults = NULL;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&queryResults);
@@ -103,8 +103,8 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 }
 
 - (BOOL)setObject:(id)obj forKey:(NSString *)key error:(NSError **)error {
-    NSDictionary *attributesToUpdate = @{key : obj};
-    NSDictionary<NSString *,id> *query = [[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup];
+    NSDictionary *attributesToUpdate = @{key: obj};
+    NSDictionary<NSString *, id> *query = [[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup];
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
 
     if (error) *error = [MLCKeychainPasswordItemError invalidStatus:status];
@@ -113,7 +113,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 }
 
 - (id<NSCoding>)readData:(NSError **)error {
-    NSDictionary<NSString *,id> *query = [[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup limit:MLCKeychainPasswordItemMatchLimitOne returnAttributes:@YES returnData:@YES];
+    NSDictionary<NSString *, id> *query = [[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup limit:MLCKeychainPasswordItemMatchLimitOne returnAttributes:@YES returnData:@YES];
 
     CFDictionaryRef queryResult = NULL;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&queryResult);
@@ -134,7 +134,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         if (error) *error = [MLCKeychainPasswordItemError invalidData];
         return nil;
     }
-    
+
     NSData *data = result[(__bridge NSString *)kSecValueData];
     if (!data) {
         if (error) *error = [MLCKeychainPasswordItemError invalidData];
@@ -154,7 +154,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
             return NO;
         }
 
-        NSMutableDictionary<NSString *,id> *newItem = [[[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup] mutableCopy];
+        NSMutableDictionary<NSString *, id> *newItem = [[[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup] mutableCopy];
         newItem[(__bridge NSString *)kSecValueData] = archivedData;
         OSStatus status = SecItemAdd((__bridge CFDictionaryRef)newItem, nil);
         if (error) *error = [MLCKeychainPasswordItemError invalidStatus:status];
@@ -164,10 +164,10 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
     return [self setObject:archivedData forKey:(__bridge NSString *)kSecValueData error:error];
 }
 
-- (BOOL)renameAccount:(NSString *)account error:(NSError **)error{
+- (BOOL)renameAccount:(NSString *)account error:(NSError **)error {
     BOOL success = [self setObject:account
-                               forKey:(__bridge NSString *)kSecAttrAccount
-                                error:error];
+                            forKey:(__bridge NSString *)kSecAttrAccount
+                             error:error];
 
     if (success) {
         self.account = account;
@@ -177,19 +177,19 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 }
 
 + (BOOL)destroyItem:(MLCKeychainPasswordItem *)item error:(NSError **)error {
-    NSDictionary<NSString *,id> *query = [self queryWithService:item.service account:item.account accessGroup:item.accessGroup];
+    NSDictionary<NSString *, id> *query = [self queryWithService:item.service account:item.account accessGroup:item.accessGroup];
     OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
     if (error) *error = [MLCKeychainPasswordItemError invalidStatus:status];
     return status == noErr;
 }
 
 
-+ (NSDictionary<NSString *,id> *)queryWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup {
++ (NSDictionary<NSString *, id> *)queryWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup {
     return [self queryWithService:service account:account accessGroup:accessGroup limit:nil returnAttributes:nil returnData:nil];
 }
 
-+ (NSDictionary<NSString *,id> *)queryWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup limit:(NSString *)limit returnAttributes:(NSNumber *)returnAttributes returnData:(NSNumber *)returnData {
-    NSMutableDictionary<NSString *,id> *query = [NSMutableDictionary<NSString *,id> dictionary];
++ (NSDictionary<NSString *, id> *)queryWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup limit:(NSString *)limit returnAttributes:(NSNumber *)returnAttributes returnData:(NSNumber *)returnData {
+    NSMutableDictionary<NSString *, id> *query = [NSMutableDictionary<NSString *, id> dictionary];
     query[(__bridge id)kSecClass] = (__bridge id)(kSecClassGenericPassword);
     query[(__bridge id)kSecAttrService] = service;
 

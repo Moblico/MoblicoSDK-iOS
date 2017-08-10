@@ -24,7 +24,7 @@
 
 - (BOOL)isValid {
     NSDate *now = [NSDate date];
-    
+
     return ([self.tokenExpiry earlierDate:now] == now);
 }
 

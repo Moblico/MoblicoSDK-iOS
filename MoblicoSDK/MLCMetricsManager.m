@@ -19,13 +19,13 @@
 @implementation MLCMetricsManager
 
 + (instancetype)sharedMetricsManager {
-	static dispatch_once_t onceToken;
-	static MLCMetricsManager *sharedLocationManager;
-	dispatch_once(&onceToken, ^{
-		sharedLocationManager = [[self alloc] init];
-	});
+    static dispatch_once_t onceToken;
+    static MLCMetricsManager *sharedLocationManager;
+    dispatch_once(&onceToken, ^{
+        sharedLocationManager = [[self alloc] init];
+    });
 
-	return sharedLocationManager;
+    return sharedLocationManager;
 }
 
 

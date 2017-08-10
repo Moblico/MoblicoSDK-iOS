@@ -26,11 +26,10 @@
 }
 
 + (instancetype)readTransactionsSummaryForUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler {
-    NSString *path = [NSString pathWithComponents:@[
-                                                    [MLCUser collectionName],
-                                                    user.uniqueIdentifier,
-                                                    [[self classForResource] collectionName]
-                                                    ]];
+    NSArray *components =@[[MLCUser collectionName],
+                           user.uniqueIdentifier,
+                           [[self classForResource] collectionName]];
+    NSString *path = [NSString pathWithComponents:components];
 
     return [self read:path parameters:nil handler:handler];
 }

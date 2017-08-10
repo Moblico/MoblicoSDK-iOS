@@ -48,9 +48,9 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
     return self.validations.count;
 }
 
-- (NSMutableDictionary<NSString *,NSMutableArray<MLCValidate *> *> *)validations {
+- (NSMutableDictionary<NSString *, NSMutableArray<MLCValidate *> *> *)validations {
     if (!_validations) {
-        _validations = [NSMutableDictionary<NSString *,NSMutableArray<MLCValidate *> *> dictionary];
+        _validations = [NSMutableDictionary<NSString *, NSMutableArray<MLCValidate *> *> dictionary];
     }
     return _validations;
 }
@@ -72,16 +72,14 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 
     if ([obj isKindOfClass:[NSArray class]]) {
         [rules addObjectsFromArray:obj];
-    }
-    else if ([obj isKindOfClass:[MLCValidate class]]) {
+    } else if ([obj isKindOfClass:[MLCValidate class]]) {
         [rules addObject:obj];
-    }
-    else if ([obj isKindOfClass:[NSNull class]]) {
+    } else if ([obj isKindOfClass:[NSNull class]]) {
         [rules removeAllObjects];
     }
 }
 
-- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id  _Nullable __autoreleasing *)ioValue {
+- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing *)ioValue {
     MLCValidationResults *results = [[MLCValidationResults alloc] init];
     for (MLCValidate *rule in self[key]) {
         NSString *value = [MLCEntity stringFromValue:*ioValue];

@@ -40,16 +40,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
     /// Requests a representation of the specified resource.
-	MLCServiceRequestMethodGET NS_SWIFT_NAME(get),
-    
+    MLCServiceRequestMethodGET NS_SWIFT_NAME(get),
+
     /// Creates a resource.
-	MLCServiceRequestMethodPOST NS_SWIFT_NAME(post),
-    
+    MLCServiceRequestMethodPOST NS_SWIFT_NAME(post),
+
     /// Updates the specified resource.
-	MLCServiceRequestMethodPUT NS_SWIFT_NAME(put),
-    
+    MLCServiceRequestMethodPUT NS_SWIFT_NAME(put),
+
     /// Deletes the specified resource.
-	MLCServiceRequestMethodDELETE  NS_SWIFT_NAME(delete)
+    MLCServiceRequestMethodDELETE NS_SWIFT_NAME(delete)
 };
 
 /**
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
  */
-typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject,  NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
+typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 
 /**
@@ -69,7 +69,7 @@ typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject,  NSError
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
  */
-typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntityProtocol>  _Nullable resource, NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
+typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntityProtocol> _Nullable resource, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 /**
  The callback handler for collection MLCService requests
@@ -78,7 +78,7 @@ typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntityProtocol>  _Nulla
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
  */
-typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<MLCEntityProtocol> * _Nullable collection, NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
+typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<MLCEntityProtocol> *_Nullable collection, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 /**
  The callback handler for status MLCService requests
@@ -87,7 +87,7 @@ typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<MLCEntityProtocol> 
  @param error An error identifier.
  @param response The URL response returned by the service request that includes the HTTP response codes.
  */
-typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError * _Nullable error, NSHTTPURLResponse * _Nullable response);
+typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 /**
  Base class for all Moblico service objects.

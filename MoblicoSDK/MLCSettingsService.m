@@ -102,7 +102,7 @@
         }
         map[keyValue.firstObject] = keyValue.lastObject;
     }
-    
+
     return map;
 }
 
@@ -170,7 +170,7 @@
         case 'N':
             return NO;
         default:
-            ;
+            break;
     }
 
     NSNumber *number = [MLCSettings.numberFormatter numberFromString:value];

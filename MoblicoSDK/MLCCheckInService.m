@@ -19,7 +19,6 @@
 #import "MLCEntity_Private.h"
 #import "MLCLocation.h"
 #import "MLCEvent.h"
-#import "MLCStatus.h"
 
 @interface MLCCheckIn : MLCEntity
 

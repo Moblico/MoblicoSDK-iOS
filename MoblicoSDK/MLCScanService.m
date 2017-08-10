@@ -24,15 +24,15 @@
 
 + (instancetype)processScanWithQRCodeId:(NSString *)qrCodeId handler:(MLCServiceSuccessCompletionHandler)handler {
 
-	NSString *path = [NSString pathWithComponents:@[@"users",
-								   MLCServiceManager.sharedServiceManager.currentUser.username,
-								   @"points",
-								   @"scan"]];
-	return [self update:path parameters:@{@"qrCodeId": qrCodeId} handler:handler];
+    NSString *path = [NSString pathWithComponents:@[@"users",
+                                                    MLCServiceManager.sharedServiceManager.currentUser.username,
+                                                    @"points",
+                                                    @"scan"]];
+    return [self update:path parameters:@{@"qrCodeId": qrCodeId} handler:handler];
 }
 
 + (Class<MLCEntityProtocol>)classForResource {
-	return [MLCStatus class];
+    return [MLCStatus class];
 }
 
 @end

@@ -18,6 +18,7 @@
 @import CoreGraphics;
 
 typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache, CGFloat scale);
+
 /**
  A MLCImage object encapsulates the image data for a deal stored in 
  the Moblico Admin Portal.

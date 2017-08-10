@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param error The error that occured during authentication (will be nil if no error).
  @param response The data returned during authentication.
  */
-typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest * _Nullable authenticatedRequest, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
+typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *_Nullable authenticatedRequest, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
 
 /**
  The name of the exception raised when getting an instance of the `MLCServiceManager` before the API key is set.
@@ -104,7 +104,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  @param user                The MLCUser to use as the current user.
  @param rememberCredentials Store the credentials in the keystore?
  */
-- (void)setCurrentUser:(MLCUser * _Nullable)user remember:(BOOL)rememberCredentials;
+- (void)setCurrentUser:(nullable MLCUser *)user remember:(BOOL)rememberCredentials;
 
 /**
  Set the cuurent user for authentication and optionally store the credentials in the keychain.
@@ -113,7 +113,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  @param childKeyword        Account keyword used during authentication.
  @param rememberCredentials Store the credentials in the keystore?
  */
-- (void)setCurrentUser:(MLCUser * _Nullable)user childKeyword:(NSString * _Nullable)childKeyword remember:(BOOL)rememberCredentials;
+- (void)setCurrentUser:(nullable MLCUser *)user childKeyword:(NSString *_Nullable)childKeyword remember:(BOOL)rememberCredentials;
 
 /**
  Create an authenticated request.

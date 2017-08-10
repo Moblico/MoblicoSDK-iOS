@@ -38,8 +38,8 @@
 }
 
 - (NSInteger)availableRedemptions {
-	if (self.numberOfPurchases <= 0) return 0;
-	if (self.numberOfUsesPerCode <= 0) return NSIntegerMax;
+    if (self.numberOfPurchases <= 0) return 0;
+    if (self.numberOfUsesPerCode <= 0) return NSIntegerMax;
 
     return (self.numberOfPurchases * self.numberOfUsesPerCode) - self.redeemedCount;
 }

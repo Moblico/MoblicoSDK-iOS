@@ -49,7 +49,7 @@
 }
 
 + (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant typeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
-    
+
     NSDictionary *searchParameters = [self searchParametersForTypeNamed:typeName
                                                              postalCode:postalCode
                                                                latitude:latitude
@@ -85,7 +85,7 @@
     return [self listLocationsForResource:(id<MLCEntityProtocol>)merchant handler:handler];
 }
 
-+ (instancetype)listLocationsForResource:(id <MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listLocationsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

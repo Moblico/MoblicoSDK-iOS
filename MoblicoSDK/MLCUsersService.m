@@ -25,16 +25,16 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     if ([deviceToken isKindOfClass:[NSString class]]) {
         return (NSString *)deviceToken;
     }
-    
-	const unsigned char *bytes = deviceToken.bytes;
-	const NSUInteger length = deviceToken.length;
-	
-	NSMutableString *deviceId = [NSMutableString string];
-	for (NSUInteger idx = 0; idx < length; ++idx) {
-		[deviceId appendFormat:@"%02x", bytes[idx]];
-	}
-	
-	return [deviceId copy];
+
+    const unsigned char *bytes = deviceToken.bytes;
+    const NSUInteger length = deviceToken.length;
+
+    NSMutableString *deviceId = [NSMutableString string];
+    for (NSUInteger idx = 0; idx < length; ++idx) {
+        [deviceId appendFormat:@"%02x", bytes[idx]];
+    }
+
+    return [deviceId copy];
 }
 
 @implementation MLCUsersService
@@ -62,8 +62,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
         if (handler) {
             if (response.statusCode == 200) {
                 handler(YES, error, response);
-            }
-            else {
+            } else {
                 handler(NO, error, response);
             }
         }
@@ -131,9 +130,9 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 + (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
     NSString *deviceId = MLCDeviceIdFromDeviceToken(deviceToken);
     [NSUserDefaults.standardUserDefaults setObject:deviceId forKey:@"MLCDeviceId"];
-    
+
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"device"]];
-    
+
     // return [self create:path parameters:@{@"deviceId": deviceId} handler:handler];
     return [self update:path parameters:@{@"deviceId": deviceId} handler:handler];
 }

@@ -29,7 +29,7 @@
 + (NSDictionary *)renamedPropertiesDuringDeserialization {
     NSMutableDictionary *properties = [[super renamedPropertiesDuringDeserialization] mutableCopy];
     properties[@"isRegisterable"] = @"registerable";
-    
+
     return [properties copy];
 }
 

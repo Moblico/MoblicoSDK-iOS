@@ -40,7 +40,7 @@ static NSString *const MLCLeaderboardTypeOverallPointsString = @"overallPoints";
 + (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler {
     NSMutableDictionary *searchParameters = [@{@"type": [self stringFromMLCLeaderboardType:type]} mutableCopy];
     if (limit) searchParameters[@"leaderboardLimit"] = @(limit);
-    
+
     return [self findLeaderboardWithSearchParameters:searchParameters handler:handler];
 }
 

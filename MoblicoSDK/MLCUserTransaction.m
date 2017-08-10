@@ -51,33 +51,33 @@ static NSString *const MLCUserTransactionTypeUnknownString = @"UNKNOWN";
     if (![string isKindOfClass:[NSString class]]) return MLCUserTransactionTypeUnknown;
 
     NSString *uppercaseString = string.uppercaseString;
-	if ([uppercaseString isEqualToString:MLCUserTransactionTypePointsEarnedString]) return MLCUserTransactionTypePointsEarned;
-	if ([uppercaseString isEqualToString:MLCUserTransactionTypePointsSpentString]) return MLCUserTransactionTypePointsSpent;
-	if ([uppercaseString isEqualToString:MLCUserTransactionTypeCurrencySavedString]) return MLCUserTransactionTypeCurrencySaved;
-	if ([uppercaseString isEqualToString:MLCUserTransactionTypeCurrencySpentString]) return MLCUserTransactionTypeCurrencySpent;
+    if ([uppercaseString isEqualToString:MLCUserTransactionTypePointsEarnedString]) return MLCUserTransactionTypePointsEarned;
+    if ([uppercaseString isEqualToString:MLCUserTransactionTypePointsSpentString]) return MLCUserTransactionTypePointsSpent;
+    if ([uppercaseString isEqualToString:MLCUserTransactionTypeCurrencySavedString]) return MLCUserTransactionTypeCurrencySaved;
+    if ([uppercaseString isEqualToString:MLCUserTransactionTypeCurrencySpentString]) return MLCUserTransactionTypeCurrencySpent;
 
-	return MLCUserTransactionTypeUnknown;
+    return MLCUserTransactionTypeUnknown;
 }
 
 + (NSString *)stringForUserTransactionType:(MLCUserTransactionType)type {
-	switch (type) {
-		case MLCUserTransactionTypePointsEarned:
-			return MLCUserTransactionTypePointsEarnedString;
+    switch (type) {
+        case MLCUserTransactionTypePointsEarned:
+            return MLCUserTransactionTypePointsEarnedString;
 
-		case MLCUserTransactionTypeCurrencySaved:
-			return MLCUserTransactionTypeCurrencySavedString;
+        case MLCUserTransactionTypeCurrencySaved:
+            return MLCUserTransactionTypeCurrencySavedString;
 
-		case MLCUserTransactionTypeCurrencySpent:
-			return MLCUserTransactionTypeCurrencySpentString;
+        case MLCUserTransactionTypeCurrencySpent:
+            return MLCUserTransactionTypeCurrencySpentString;
 
-		case MLCUserTransactionTypePointsSpent:
-			return MLCUserTransactionTypePointsSpentString;
+        case MLCUserTransactionTypePointsSpent:
+            return MLCUserTransactionTypePointsSpentString;
 
         case MLCUserTransactionTypeUnknown:
-            ;
-	}
-    
-	return MLCUserTransactionTypeUnknownString;
+            break;
+    }
+
+    return MLCUserTransactionTypeUnknownString;
 }
 
 @end

@@ -44,7 +44,7 @@
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [[group class] collectionName], group.uniqueIdentifier]];
+    NSString * path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [[group class] collectionName], group.uniqueIdentifier]];
     return [self update:path parameters:nil handler:handler];
 }
 
@@ -63,12 +63,12 @@
             [failureReasons addObject:@"Invalid group name."];
         }
 
-        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid parameter.", nil), [[self classForResource] collectionName]];
+        NSString * description = [NSString stringWithFormat:NSLocalizedString(@"Invalid parameter.", nil), [[self classForResource] collectionName]];
         NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: [failureReasons componentsJoinedByString:@"\n"]}];
         return (MLCGroupsService *)[MLCInvalidService invalidServiceFailedWithError:error handler:handler];
     }
 
-    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
+    NSString * path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
     return [self update:path parameters:@{@"name": groupName} handler:handler];
 }
 
@@ -78,7 +78,7 @@
 }
 
 + (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
+    NSString * path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
     return [self destroy:path parameters:@{@"name": groupName} handler:handler];
 }
 

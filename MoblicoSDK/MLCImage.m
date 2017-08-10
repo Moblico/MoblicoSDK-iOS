@@ -44,7 +44,7 @@
     }
 
     self = [super initWithJSONObject:object];
-    
+
     return self;
 }
 
@@ -61,9 +61,10 @@
     NSString *url = components[1];
     NSString *lastUpdateDate = components[2];
 
-    return [[[self class] alloc] initWithJSONObject:@{@"id": imageId,
-                                                      @"url": url,
-                                                      @"lastUpdateDate": lastUpdateDate}];
+    NSDictionary *jsonObject = @{@"id": imageId,
+                                 @"url": url,
+                                 @"lastUpdateDate": lastUpdateDate};
+    return [[[self class] alloc] initWithJSONObject:jsonObject];
 }
 
 - (void)loadImageData:(MLCImageCompletionHandler)handler {

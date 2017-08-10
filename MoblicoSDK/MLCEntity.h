@@ -16,11 +16,12 @@
 
 @import Foundation;
 @class MLCValidations;
+
 /**
  All MLCEntity objects conform to the MLCEntity protocol.
  */
 @protocol MLCEntityProtocol <NSObject, NSCoding, NSCopying>
-@property (NS_NONATOMIC_IOSONLY, readonly, strong) id uniqueIdentifier;
+@property (nonatomic, readonly, strong) id uniqueIdentifier;
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
 + (NSDictionary *)serialize:(id<MLCEntityProtocol>)entity;

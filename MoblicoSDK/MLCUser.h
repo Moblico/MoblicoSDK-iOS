@@ -28,7 +28,7 @@ typedef NS_OPTIONS(NSUInteger, MLCUserContactPreferenceType) {
 
     /// Specifies that the user wishes to be contacted by email only.
     MLCUserContactPreferenceTypeEmail = (1 << 1),
-    
+
     /// Specifies that the user wishes to be contacted by either SMS or email.
     MLCUserContactPreferenceTypeBoth = (MLCUserContactPreferenceTypeSMS |
                                         MLCUserContactPreferenceTypeEmail)
@@ -43,7 +43,7 @@ typedef NS_ENUM(NSUInteger, MLCUserGenderType) {
 
     /// Specifies that the user is male.
     MLCUserGenderTypeMale,
-    
+
     /// Specifies that the user is female.
     MLCUserGenderTypeFemale
 };
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSUInteger, MLCUserGenderType) {
 typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
     /// No social media provider.
     MLCUserSocialTypeNone,
-    
+
     /// Facebook.
     MLCUserSocialTypeFacebook
 };
@@ -202,6 +202,7 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 @property (nonatomic) NSUInteger merchantId;
 
 @property (nonatomic, copy, class) NSArray<NSString *> *requiredParameters;
+
 /**
  Convenience class method to create a MLCUser object with the provided
  username.

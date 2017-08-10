@@ -15,6 +15,7 @@
  */
 
 @import Foundation;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MLCEntityProtocol;
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const MLCValidationErrorDomain;
 FOUNDATION_EXPORT NSString *const MLCValidationDetailedErrorsKey;
 
-typedef BOOL(^MLCValidationTest)(id<MLCEntityProtocol> entity, NSString *key, NSString * _Nullable value);
+typedef BOOL(^MLCValidationTest)(id<MLCEntityProtocol> entity, NSString *key, NSString *_Nullable value);
 
 typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
     MLCValidationUnknownError NS_SWIFT_NAME(unknown) = -1,
@@ -36,7 +37,7 @@ typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
 @property (nonatomic, assign, readonly) NSUInteger count;
 - (NSArray<MLCValidate *> *)objectForKeyedSubscript:(NSString *)key;
 - (void)setObject:(id)obj forKeyedSubscript:(NSString *)key;
-- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing * _Nonnull)ioValue;
+- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing *_Nonnull)ioValue;
 
 @end
 

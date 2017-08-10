@@ -21,7 +21,7 @@
 
 @property (nonatomic) NSUInteger merchantId;
 @property (copy, nonatomic) NSString *externalId;
-@property (nonatomic)  NSUInteger ownerUserId;
+@property (nonatomic) NSUInteger ownerUserId;
 @property (copy, nonatomic) NSString *name;
 @property (copy, nonatomic) NSString *redemptionType;
 @property (copy, nonatomic) NSString *status;
