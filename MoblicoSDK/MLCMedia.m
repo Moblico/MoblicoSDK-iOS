@@ -15,6 +15,7 @@
  */
 
 #import "MLCMedia.h"
+#import "MLCLogger.h"
 #import <CommonCrypto/CommonDigest.h>
 
 @interface MLCMedia ()
@@ -50,7 +51,7 @@
         cacheDirectory = [searchPath stringByAppendingPathComponent:@"CachedMedia"];
         NSError *error;
         if (![NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:&error]) {
-            NSLog(@"Failed to create CachedMedia directory: %@", error.localizedDescription);
+            MLCDebugLog(@"Failed to create CachedMedia directory: %@", error.localizedDescription);
         }
     });
 
@@ -102,8 +103,12 @@
     return [[[self class] _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
 }
 
+- (NSString *)_mlc_keyForURL:(NSURL *)url {
+    return [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
+}
+
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler {
-    NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
+    NSString *key = [self _mlc_keyForURL:url];
     NSCache *cache = [[self class] _mlc_sharedCache];
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
@@ -124,10 +129,6 @@
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];
             handler(data, error, NO);
-        } else if (httpResponse.statusCode == 404 || httpResponse.statusCode == 200) {
-            [cache removeObjectForKey:key];
-            [NSFileManager.defaultManager removeItemAtPath:cachedPath error:nil];
-            handler(data, error, NO);
         } else {
             NSData *fallbackData = [NSData dataWithContentsOfFile:cachedPath];
             handler(fallbackData, error, NO);
@@ -136,9 +137,7 @@
 }
 
 - (NSData *)_mlc_cachedImageDataFromURL:(NSURL *)url {
-    NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [[self class] _mlc_sharedCache];
-    return [cache objectForKey:key] ?: [NSData dataWithContentsOfFile:[self cachedPath:key]];
+    return [NSData dataWithContentsOfFile:[self cachedPath:[self _mlc_keyForURL:url]]];
 }
 
 @end

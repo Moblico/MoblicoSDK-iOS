@@ -496,7 +496,7 @@
 
     NSString *responseString;
     if (response) {
-        responseString = [response description];
+        responseString = response;
     } else if (self.receivedData.length > 0) {
         responseString = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
     }
