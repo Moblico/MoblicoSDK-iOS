@@ -14,6 +14,7 @@
  limitations under the License.
  */
 
+#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCEntity.h>
 
 FOUNDATION_EXPORT NSString *const MLCStatusErrorDomain;
@@ -484,19 +485,5 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
  The verbose message for the status.
  */
 @property (copy, nonatomic) NSString *verboseMessage;
-
-@end
-
-@interface MLCStatus (Deprecated)
-
-/**
- The statusType property has been deprecated,
- and will be removed in the next major release.
-
- @deprecated Use 'type' instead.
-
- @see type
- */
-@property (nonatomic) NSInteger statusType __attribute__((deprecated ("Use 'type' instead.")));
 
 @end

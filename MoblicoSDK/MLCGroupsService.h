@@ -14,6 +14,7 @@
  limitations under the License.
  */
 
+#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCService.h>
 @class MLCUser;
 @class MLCGroup;
@@ -40,6 +41,6 @@
 /**
  @since Unavailable in this version of the MoblicoSDK.
  */
-+ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCServiceResourceCompletionHandler)handler __attribute__((unavailable ("'readGroupWithGroupId:handler:' is not available with this version of the Moblico SDK.")));
++ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCServiceResourceCompletionHandler)handler MLC_UNAVAILABLE("'readGroupWithGroupId:handler:' is not available with this version of the Moblico SDK.");
 
 @end

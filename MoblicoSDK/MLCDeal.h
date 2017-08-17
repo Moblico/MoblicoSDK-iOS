@@ -14,6 +14,7 @@
  limitations under the License.
  */
 
+#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCEntity.h>
 
 @class MLCImage;
@@ -129,19 +130,5 @@
 @property (nonatomic, assign, readonly) NSInteger remainingMetGoals;
 
 - (NSComparisonResult)compare:(MLCDeal *)other;
-
-@end
-
-@interface MLCDeal (Deprecated)
-
-/**
- The description property has been renamed to details,
- and will be removed in the next major release.
-
- @deprecated Use 'details' instead.
-
- @see details
- */
-@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
 
 @end

@@ -14,10 +14,11 @@
  limitations under the License.
  */
 
-typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSError *error, NSHTTPURLResponse *response);
-
+#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCService.h>
 @class MLCUser;
+
+typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSError *error, NSHTTPURLResponse *response);
 
 @interface MLCUsersService : MLCService
 + (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
@@ -53,6 +54,6 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
 /**
  @since Unavailable in this version of the MoblicoSDK.
  */
-+ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler __attribute__((unavailable ("'destroyUser:handler:' is not available with this version of the Moblico SDK.")));
++ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler MLC_UNAVAILABLE("'destroyUser:handler:' is not available with this version of the Moblico SDK.");
 
 @end

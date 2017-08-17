@@ -11,6 +11,7 @@
 		5B4457A31CBFF380003CFA64 /* MLCCredential.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4457A11CBFF380003CFA64 /* MLCCredential.m */; };
 		5B4457A61CBFFE58003CFA64 /* MLCCredentialsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4457A41CBFFE58003CFA64 /* MLCCredentialsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4457A71CBFFE58003CFA64 /* MLCCredentialsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4457A51CBFFE58003CFA64 /* MLCCredentialsService.m */; };
+		5B470A601F452A2B00E21994 /* MLCAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B470A5F1F452A2B00E21994 /* MLCAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B7063891CDB9C2C00AE86A0 /* MLCLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B7063881CDB9B8700AE86A0 /* MLCLogger.h */; };
 		5B70638B1CDBA04100AE86A0 /* MLCLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B70638A1CDBA04100AE86A0 /* MLCLogger.m */; };
 		5B7BF49B1D00932300F5388B /* MLCList.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B7BF4971D00932300F5388B /* MLCList.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -196,6 +197,7 @@
 		5B4457A11CBFF380003CFA64 /* MLCCredential.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCCredential.m; sourceTree = "<group>"; };
 		5B4457A41CBFFE58003CFA64 /* MLCCredentialsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCCredentialsService.h; sourceTree = "<group>"; };
 		5B4457A51CBFFE58003CFA64 /* MLCCredentialsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCCredentialsService.m; sourceTree = "<group>"; };
+		5B470A5F1F452A2B00E21994 /* MLCAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCAvailability.h; sourceTree = "<group>"; };
 		5B4A796216BACA00000C39A4 /* MLCDeal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MLCDeal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5B4A796316BACA00000C39A4 /* MLCDeal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCDeal.m; sourceTree = "<group>"; };
 		5B4A796516BACA42000C39A4 /* MLCReward.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCReward.h; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 				5BDD6B241F1D327100EACCA1 /* Services */,
 				5BDD6B261F1D332A00EACCA1 /* Utility */,
 				5BECA8E816A850DF00F0E4B5 /* Supporting Files */,
+				5B470A5F1F452A2B00E21994 /* MLCAvailability.h */,
 			);
 			path = MoblicoSDK;
 			sourceTree = "<group>";
@@ -544,6 +547,7 @@
 				5BC7AC141C6BE0BE003E4C9B /* MLCAffinity.h in Headers */,
 				5BC7AC151C6BE0BE003E4C9B /* MLCProductCategory.h in Headers */,
 				5BC7AC161C6BE0BE003E4C9B /* MoblicoSDK.h in Headers */,
+				5B470A601F452A2B00E21994 /* MLCAvailability.h in Headers */,
 				5BC7AC171C6BE0BE003E4C9B /* MLCBasicService.h in Headers */,
 				5BC7AC181C6BE0BE003E4C9B /* MLCLocation.h in Headers */,
 				5B7BF49B1D00932300F5388B /* MLCList.h in Headers */,

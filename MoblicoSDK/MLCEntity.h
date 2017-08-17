@@ -34,8 +34,6 @@
 @property (nonatomic, readonly, class, strong) MLCValidations *validations;
 - (BOOL)validate:(out NSError *__autoreleasing *)error;
 
-//+ (instancetype)deserialize:(NSDictionary *)jsonObject __attribute__((deprecated ("Use 'initWithJSONObject:' instead.")));
-
 @end
 
 /**
@@ -44,4 +42,3 @@
 @interface MLCEntity : NSObject <MLCEntityProtocol>
 
 @end
-

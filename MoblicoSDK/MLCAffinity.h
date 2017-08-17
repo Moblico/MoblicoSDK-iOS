@@ -118,16 +118,3 @@
 @property (copy, nonatomic) NSString *affinityActionName;
 
 @end
-
-@interface MLCAffinity (Deprecated)
-/**
- The description property has been renamed to details,
- and will be removed in the next major release.
-
- @deprecated Use 'details' instead.
-
- @see details
- */
-@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
-
-@end

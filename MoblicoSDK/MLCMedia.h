@@ -108,17 +108,3 @@ typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL from
 @property (strong, nonatomic, readonly) NSData *cachedData;
 
 @end
-
-@interface MLCMedia (Deprecated)
-
-/**
- The description property has been renamed to details,
- and will be removed in the next major release.
-
- @deprecated Use 'details' instead.
-
- @see details
- */
-//@property (copy, nonatomic) NSString *description __attribute__((deprecated ("Use 'details' instead.")));
-
-@end
