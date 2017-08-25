@@ -103,8 +103,19 @@
     return [[[self class] _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
 }
 
+- (NSString *)_mlc_typeForURL:(NSURL *)url {
+    if (url == self.url) return @"url";
+    if (url == self.thumbUrl) return @"thumbUrl";
+    if (url == self.imageUrl) return @"imageUrl";
+
+    return @"";
+}
+
 - (NSString *)_mlc_keyForURL:(NSURL *)url {
-    return [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
+    NSString *type = [self _mlc_typeForURL:url];
+    return [type stringByAppendingFormat:@"-%@", @(self.mediaId)];
+//    return [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
+//    return url.absoluteString;
 }
 
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler {
