@@ -30,7 +30,7 @@
 @import UIKit;
 #endif
 
-//static BOOL ALWAYS_USE_QUERY_PARAMS = NO;
+static const BOOL MLCServiceShortLog = YES;
 
 @implementation MLCService
 
@@ -86,7 +86,9 @@
                 [headers appendFormat:@" -H '%@: %@'", key, obj];
             }];
 
-            MLCDebugLog(@"curl -X %@ \"%@\"%@", authenticatedRequest.HTTPMethod, [authenticatedRequest.URL absoluteString], headers);
+            if (!MLCServiceShortLog) {
+                MLCDebugLog(@"curl -X %@ \"%@\"%@", authenticatedRequest.HTTPMethod, [authenticatedRequest.URL absoluteString], headers);
+            }
 #if TARGET_OS_IPHONE
             UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
 #endif
@@ -272,6 +274,10 @@
 }
 
 + (id<MLCEntityProtocol>)deserializeResource:(NSDictionary *)resource {
+    if (resource == [NSNull null]) {
+        return nil;
+    }
+
     Class EntityClass = [self classForResource];
 
     if (EntityClass) {
@@ -412,7 +418,7 @@
     NSString *query1 = components.query;
     components.percentEncodedQuery = [self oldSerializeParameters:parameters];
     NSString *query2 = components.query;
-    if (![query1 isEqualToString:query2]) {
+    if (query1 != query2 && ![query1 isEqualToString:query2]) {
         NSLog(@"Percent Escaping Differs\nqueryItemsFromParameters: %@\n  oldSerializeParameters: %@", query1, query2);
     }
     BOOL alwaysUseQueryParams = MLCServiceManager.isForceQueryParametersEnabled;
@@ -492,24 +498,36 @@
     [self.receivedData appendData:data];
 }
 
-- (NSDictionary *)logDictionaryWithResponse:(id)response error:(NSError *)error {
+- (void)logDictionaryWithResponse:(id)response error:(NSError *)error {
+    NSString *className = NSStringFromClass([self class]);
 
-    NSString *responseString;
-    if (response) {
-        responseString = response;
-    } else if (self.receivedData.length > 0) {
-        responseString = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+    if (MLCServiceShortLog) {
+        if ([className isEqualToString:@"MLCMetricsService"]) {
+            // Don't log metrics.
+            return;
+        }
+        MLCDebugLog(@"%@ (%@): %@", @(self.httpResponse.statusCode).stringValue, className, self.request.URL ?: [NSNull null]);
+    } else {
+        NSString *responseObject;
+        if (response) {
+            responseObject = response;
+        } else if (self.receivedData.length > 0) {
+            responseObject = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+        }
+        
+        NSDictionary *data = @{@"class": className ?: [NSNull null],
+                               @"response": responseObject ?: [NSNull null],
+                               @"url": self.request.URL ?: [NSNull null],
+                               @"method": self.request.HTTPMethod ?: [NSNull null],
+                               @"body": self.request.HTTPBody ?: [NSNull null],
+                               @"requestHeader": self.request.allHTTPHeaderFields ?: [NSNull null],
+                               @"responseHeaders": self.httpResponse.allHeaderFields ?: [NSNull null],
+                               @"statusCode": @(self.httpResponse.statusCode).stringValue,
+                               @"statusCodeString": [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode],
+                               @"error": error.localizedDescription ?: [NSNull null]};
+        
+        MLCDebugLog(@"\n=====\n%@\n=====", data);
     }
-
-    return @{@"response": responseString ?: @"",
-             @"url": self.request.URL ?: @"",
-             @"method": self.request.HTTPMethod ?: @"",
-             @"body": self.request.HTTPBody ?: @"",
-             @"requestHeader": self.request.allHTTPHeaderFields ?: @"",
-             @"responseHeaders": self.httpResponse.allHeaderFields ?: @"",
-             @"statusCode": @(self.httpResponse.statusCode).stringValue,
-             @"statusCodeString": [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode],
-             @"error": error.localizedDescription ?: @""};
 }
 
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -517,8 +535,10 @@
     UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 #endif
 
-    MLCDebugLog(@"connection:didFailWithError:%@", error);
-    MLCDebugLog(@"\n=====\n%@\n=====", [self logDictionaryWithResponse:nil error:error]);
+    if (!MLCServiceShortLog) {
+        MLCDebugLog(@"connection:didFailWithError:%@", error);
+    }
+    [self logDictionaryWithResponse:nil error:error];
 
     self.jsonCompletionHandler(self, nil, error, self.httpResponse);
 }
@@ -532,11 +552,13 @@
     id jsonObject = nil;
 
     if ((self.receivedData).length) {
-        jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:0 error:&error];
+        jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:NSJSONReadingAllowFragments error:&error];
     }
 
-    MLCDebugLog(@"connectionDidFinishLoading: %@", connection);
-    MLCDebugLog(@"\n=====\n%@\n=====", [self logDictionaryWithResponse:jsonObject error:error]);
+    if (!MLCServiceShortLog) {
+        MLCDebugLog(@"connectionDidFinishLoading: %@", connection);
+    }
+    [self logDictionaryWithResponse:jsonObject error:error];
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *statusJSON = jsonObject[@"status"];
@@ -553,6 +575,8 @@
                 return;
             }
         }
+    } else if (jsonObject == [NSNull null]) {
+        jsonObject = nil;
     }
 
     self.jsonCompletionHandler(self, jsonObject, nil, self.httpResponse);
@@ -560,9 +584,10 @@
 }
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    MLCDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
-    MLCDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
-
+    if (!MLCServiceShortLog) {
+        MLCDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
+        MLCDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
+    }
 //    if ([MLCServiceManager isLoggingEnabled]) NSLog(@"challenge.sender: %@", challenge.sender);
     [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
 //    return;
