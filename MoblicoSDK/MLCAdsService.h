@@ -32,7 +32,7 @@ FOUNDATION_EXPORT MLCAdsServiceType const MLCAdsServiceTypeSponsor;
 /**
  Callback for read ad.
 
- @param resouce The Ad returned by the service request.
+ @param resource The Ad returned by the service request.
  @param error An error identifier.
  */
 MLCServiceCreateResourceCompletionHandler(MLCAdsService, MLCAd);

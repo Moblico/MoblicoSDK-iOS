@@ -29,8 +29,8 @@ NSErrorDomain const MLCStatusErrorDomain = @"MLCStatusErrorDomain";
     self = [super initWithJSONObject:statusParameters];
 
     if (self) {
-        if (statusType && statusType != (id)[NSNull null]) {
-            _type = statusType.integerValue;
+        if (statusType && (id)statusType != [NSNull null]) {
+            _type = (MLCStatusType)statusType.integerValue;
         } else {
             _type = MLCStatusTypeMissing;
         }

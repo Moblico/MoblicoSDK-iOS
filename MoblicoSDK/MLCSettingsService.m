@@ -161,14 +161,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
     return [self boolForKey:key defaultValue:NO];
 }
 
-- (NSNumber *)boolNumberForKey:(NSString *)key {
-    NSString *value = self.dictionary[key];
-    value = [value stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
-    if (!value || value.length == 0) {
-        return nil;
-    }
-
-    unichar c = [value characterAtIndex:0];
+- (NSNumber *)boolNumberFromUnichar:(unichar)c {
     switch (c) {
         case 't':
         case 'T':
@@ -181,11 +174,20 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
         case 'n':
         case 'N':
             return @NO;
+
         default:
-            break;
+            return nil;
+    }
+}
+
+- (NSNumber *)boolNumberForKey:(NSString *)key {
+    NSString *value = self.dictionary[key];
+    value = [value stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
+    if (!value || value.length == 0) {
+        return nil;
     }
 
-    return nil;
+    return [self boolNumberFromUnichar:[value characterAtIndex:0]];
 }
 
 - (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {

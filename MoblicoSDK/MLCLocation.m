@@ -44,12 +44,12 @@
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
-        NSString *identifier = [NSString stringWithFormat:@"%@-NOTIFICATION", @(self.locationId)];
+        NSString *identifier = [NSString stringWithFormat:@"%@-NOTIFICATION", @(_locationId)];
 
         if ([jsonObject[@"geoNotificationEnabled"] boolValue]) {
-            CLLocationCoordinate2D center = CLLocationCoordinate2DMake(self.latitude, self.longitude);
+            CLLocationCoordinate2D center = CLLocationCoordinate2DMake(_latitude, _longitude);
             _geoFenceRegion = [[CLCircularRegion alloc] initWithCenter:center
-                                                                radius:self.geoFenceRadius
+                                                                radius:_geoFenceRadius
                                                             identifier:identifier];
             _geoFenceRegion.notifyOnEntry = YES;
             _geoFenceRegion.notifyOnExit = YES;

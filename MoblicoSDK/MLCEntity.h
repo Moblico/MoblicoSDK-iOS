@@ -21,7 +21,7 @@
  Base class for all Moblico model objects.
  */
 NS_SWIFT_NAME(Entity)
-@interface MLCEntity : NSObject
+@interface MLCEntity : NSObject <NSCoding, NSCopying>
 @property (nonatomic, readonly, strong) id uniqueIdentifier;
 
 - (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject;

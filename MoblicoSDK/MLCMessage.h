@@ -32,7 +32,7 @@ NS_SWIFT_NAME(Message)
 @property (copy, nonatomic) NSString *text;
 
 /**
- The device IDs for the recipents of this message.
+ The device IDs for the recipients of this message.
  */
 @property (copy, nonatomic) NSArray<NSString *> *deviceIds;
 
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(Message)
 @property (copy, nonatomic) NSArray<NSString *> *phoneNumbers;
 
 /**
- The email addresses for the recipents of this message.
+ The email addresses for the recipients of this message.
  */
 @property (copy, nonatomic) NSArray<NSString *> *emailAddresses;
 

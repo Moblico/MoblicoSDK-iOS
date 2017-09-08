@@ -31,7 +31,7 @@ MLCServiceCreateCollectionCompletionHandler(MLCAffinitiesService, MLCAffinity);
  Please see the Moblico admin portal for more information concerning
  affinity setup and usage including how to setup your own unique rewards.
  
- Use the MLCAffinitiesService class to retrieve affinites from the Moblico Admin Portal.
+ Use the MLCAffinitiesService class to retrieve affinities from the Moblico Admin Portal.
  */
 NS_SWIFT_NAME(AffinitiesService)
 @interface MLCAffinitiesService : MLCService

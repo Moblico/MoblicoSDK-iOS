@@ -63,8 +63,8 @@ NS_SWIFT_NAME(Validate)
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)validatePresenceWithMessage:(NSString *)message NS_SWIFT_NAME(init(presence:));
-+ (instancetype)validateFormat:(NSString *)format message:(NSString *)message; // Case insensite
-+ (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message;
++ (instancetype)validateFormat:(NSString *)format message:(NSString *)message; // Case insensitive by default
++ (instancetype)validateCaseSensitiveFormat:(NSString *)format message:(NSString *)message;
 + (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message;
 - (instancetype)initWithMessage:(NSString *)message validateTest:(MLCValidateTest)test;
 @end
@@ -82,8 +82,8 @@ NS_ASSUME_NONNULL_END
 // validations[@"phoneNumber"] = [MLCValidate validatePresenceWitMessage:@"Your phone number is required."];
 // validations[@"phoneNumber"] = [MLCValidate validateFormat:@"[0-9]{10,11}" message:@"Invalid phone number."];
 
-// MLCUser.class.validations[@"attr3"] = [MLCValidate validatePresenceWitMessage:@"Your card number is required."];
-// MLCUser.class.validations[@"attr3"] = [MLCValidate validateFormate:@"4[0-9]{11}" message:@"Invalid card number."];
+// MLCUser.validations[@"attr3"] = [MLCValidate validatePresenceWitMessage:@"Your card number is required."];
+// MLCUser.validations[@"attr3"] = [MLCValidate validateFormat:@"4[0-9]{11}" message:@"Invalid card number."];
 
 // [validations validate:@"phoneNumber" value:@"8008675309"];
 

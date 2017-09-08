@@ -454,7 +454,7 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
 
 /**
  MLCStatus objects are created by services that do not retrieve data,
- but otherwise signify resuts when they are run.
+ but otherwise signify results when they are run.
  */
 NS_SWIFT_NAME(Status)
 @interface MLCStatus : MLCEntity

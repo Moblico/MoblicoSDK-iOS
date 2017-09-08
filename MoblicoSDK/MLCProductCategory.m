@@ -26,17 +26,23 @@
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
 
-    if ([self.productTypes isKindOfClass:[NSArray class]]) {
-        NSMutableArray *productTypes = [NSMutableArray arrayWithCapacity:self.productTypes.count];
+    if (self) {
+        NSArray *jsonProductTypes = jsonObject[@"productTypes"];
+        if ([jsonProductTypes isKindOfClass:[NSArray class]] && jsonProductTypes.count > 0) {
+            NSMutableArray *productTypes = [NSMutableArray arrayWithCapacity:jsonProductTypes.count];
 
-        for (id object in self.productTypes) {
-            MLCProductType *productType = [[MLCProductType alloc] initWithJSONObject:object];
-            if (productType) {
-                [productTypes addObject:productType];
+            for (id jsonProductType in jsonProductTypes) {
+                MLCProductType *productType = [[MLCProductType alloc] initWithJSONObject:jsonProductType];
+                if (productType) {
+                    [productTypes addObject:productType];
+                }
             }
+            
+            _productTypes = [productTypes copy];
         }
-
-        _productTypes = productTypes;
+        else {
+            _productTypes = @[];
+        }
     }
 
     return self;

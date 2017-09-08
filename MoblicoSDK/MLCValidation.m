@@ -131,6 +131,10 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
     return [self validateFormat:format caseSensitive:NO message:message];
 }
 
++ (instancetype)validateCaseSensitiveFormat:(NSString *)format message:(NSString *)message {
+    return [self validateFormat:format caseSensitive:YES message:message];
+}
+
 + (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message {
     NSString *predicateFormat = caseSensitive ? @"SELF MATCHES %@" : @"SELF MATCHES[c] %@";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFormat, format];

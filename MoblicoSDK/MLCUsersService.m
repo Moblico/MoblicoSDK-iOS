@@ -67,7 +67,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 }
 
 + (instancetype)createUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [self createResource:user handler:^(__kindof MLCEntity *resource, NSError *error) {
+    return [self createResource:user handler:^(__unused MLCEntity *resource, NSError *error) {
         handler(error == nil, error);
     }];
 }
@@ -117,7 +117,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     NSDictionary *parameters = parameters = @{@"username": username};
     NSString *path = [@"device" stringByAppendingPathComponent:device];
 
-    return [self create:path parameters:parameters handler:^(MLCStatus *status, NSError *error) {
+    return [self create:path parameters:parameters handler:^(__unused MLCEntity *resource, NSError *error) {
         MLCUser *user = nil;
         if (!error) {
             user = [MLCUser userWithUsername:username];
@@ -133,7 +133,6 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"device"]];
 
-    // return [self create:path parameters:@{@"deviceId": deviceId} handler:handler];
     return [self update:path parameters:@{@"deviceId": deviceId} handler:handler];
 }
 
@@ -168,7 +167,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
     path = [path stringByAppendingPathComponent:@"resetPassword"];
 
-    return [self create:path parameters:nil handler:^(__kindof MLCEntity *resource, NSError *error) {
+    return [self create:path parameters:nil handler:^(__unused MLCEntity *resource, NSError *error) {
         handler(error == nil, error);
     }];
 }

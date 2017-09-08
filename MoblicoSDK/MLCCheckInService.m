@@ -30,17 +30,6 @@ MLCCheckInServiceParameter const MLCCheckInServiceParameterEventId = @"eventId";
 MLCCheckInServiceParameter const MLCCheckInServiceParameterScanType = @"scanType";
 MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier = @"beaconIdentifier";
 
-@interface MLCCheckIn : MLCEntity
-
-@property (nonatomic) NSUInteger locationId;
-@property (nonatomic) NSUInteger eventId;
-@property (nonatomic) CLLocationDegrees latitude;
-@property (nonatomic) CLLocationDegrees longitude;
-@property (nonatomic) CLLocationAccuracy locationAccuracy;
-@property (nonatomic, copy) NSString *beaconIdentifier;
-
-@end
-
 @interface MLCCheckInService ()
 
 @end
@@ -78,7 +67,7 @@ MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier = @"
 }
 
 + (Class)classForResource {
-    return [MLCCheckIn class];
+    return Nil;
 }
 
 + (instancetype)checkInWithLocation:(MLCLocation *)location
@@ -92,14 +81,6 @@ MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier = @"
     return [self create:@"checkIn" parameters:params handler:^(__unused MLCEntity *resource, NSError *error) {
         handler(error == nil, error);
     }];
-}
-
-@end
-
-@implementation MLCCheckIn
-
-+ (NSString *)collectionName {
-    return @"checkIn";
 }
 
 @end

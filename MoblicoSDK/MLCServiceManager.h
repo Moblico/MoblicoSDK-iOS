@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  The callback handler for `authenticateRequest:handler:`
 
  @param authenticatedRequest The authenticated request.
- @param error The error that occured during authentication (will be nil if no error).
+ @param error The error that occurred during authentication (will be nil if no error).
  */
 typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *_Nullable authenticatedRequest, NSError *_Nullable error) NS_SWIFT_NAME(MLCServiceManager.AuthenticationCompletionHandler);
 
@@ -105,7 +105,7 @@ NS_SWIFT_NAME(ServiceManager)
 @property (readonly, nullable, copy) NSString *currentToken;
 
 /**
- Set the cuurent user for authentication and optionally store the credentials in the keychain.
+ Set the current user for authentication and optionally store the credentials in the keychain.
 
  @param user                The MLCUser to use as the current user.
  @param rememberCredentials Store the credentials in the keystore?
@@ -113,7 +113,7 @@ NS_SWIFT_NAME(ServiceManager)
 - (void)setCurrentUser:(nullable MLCUser *)user remember:(BOOL)rememberCredentials;
 
 /**
- Set the cuurent user for authentication and optionally store the credentials in the keychain.
+ Set the current user for authentication and optionally store the credentials in the keychain.
 
  @param user                The MLCUser to use as the current user.
  @param childKeyword        Account keyword used during authentication.

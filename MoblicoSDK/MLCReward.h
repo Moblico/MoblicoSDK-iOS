@@ -52,12 +52,12 @@ NS_SWIFT_NAME(Reward)
 @property (nonatomic) NSInteger maxPurchases;
 
 /**
- The date this deal will become avaiilable for purchase.
+ The date this deal will become available for purchase.
  */
 @property (strong, nonatomic) NSDate *startPurchaseDate;
 
 /**
- The date this deal will no longer be avaiilable for purchase.
+ The date this deal will no longer be available for purchase.
  */
 @property (strong, nonatomic) NSDate *endPurchaseDate;
 
@@ -70,9 +70,9 @@ NS_SWIFT_NAME(Reward)
 @property (nonatomic) BOOL cardRedemptionEnabled;
 
 /**
- The number of redemptions availble for this reward.
+ The number of redemptions available for this reward.
  
- The number of availble redemptions is calculated by:
+ The number of available redemptions is calculated by:
  
     numberOfPurchases * numberOfUsesPerCode - redeemedCount
 

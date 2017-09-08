@@ -16,7 +16,7 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
-/// The prefered method of contact for the user.
+/// The preferred method of contact for the user.
 typedef NSString *MLCUserContactPreference NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.ContactPreference);
 
 /// Specifies that the user does not wish to be contacted.
@@ -70,12 +70,12 @@ NS_SWIFT_NAME(User)
 @property (copy, nonatomic) NSString *socialToken;
 
 /**
- Specifies whether the user has opted in to recieving emails.
+ Specifies whether the user has opted in to receiving emails.
  */
 @property (nonatomic) BOOL optinEmail;
 
 /**
- Specifies whether the user has opted in to recieving phone text messages.
+ Specifies whether the user has opted in to receiving phone text messages.
  */
 @property (nonatomic) BOOL optinPhone;
 

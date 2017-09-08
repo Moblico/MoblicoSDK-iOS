@@ -11,9 +11,9 @@
 @implementation MLCEntityCache
 
 + (NSURL *)documentsURL {
-    static dispatch_once_t pred;
+    static dispatch_once_t onceToken;
     static NSURL *documentsDirectory = nil;
-    dispatch_once(&pred, ^{
+    dispatch_once(&onceToken, ^{
         NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
         documentsDirectory = paths.firstObject;
     });

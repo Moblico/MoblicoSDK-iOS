@@ -85,7 +85,7 @@ NS_SWIFT_NAME(Media)
 @property (nonatomic) NSUInteger priority;
 
 /**
- Specifices whether this media should be cached.
+ Specifies whether this media should be cached.
  */
 @property (nonatomic) BOOL shouldCache;
 
