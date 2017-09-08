@@ -20,6 +20,16 @@
 #import "MLCLocation.h"
 #import "MLCEvent.h"
 
+MLCCheckInServiceParameter const MLCCheckInServiceParameterCLLocation = @"clLocation";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterLatitude = @"latitude";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterLongitude = @"longitude";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterLocationAccuracy = @"locationAccuracy";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterPostalCode = @"zipcode";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterEvent = @"event";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterEventId = @"eventId";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterScanType = @"scanType";
+MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier = @"beaconIdentifier";
+
 @interface MLCCheckIn : MLCEntity
 
 @property (nonatomic) NSUInteger locationId;
@@ -32,47 +42,56 @@
 @end
 
 @interface MLCCheckInService ()
-+ (instancetype)checkInWithLocation:(MLCLocation *)location
-                       userLocation:(CLLocation *)userLocation
-                   beaconIdentifier:(NSString *)beaconIdentifier
-                              event:(MLCEvent *)event
-                            handler:(MLCServiceResourceCompletionHandler)handler;
 
 @end
 
 @implementation MLCCheckInService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (NSMutableDictionary *)sanitizeParameters:(MLCCheckInServiceParameters)parameters {
+    NSMutableDictionary *params = [parameters mutableCopy];
+    params[MLCCheckInServiceParameterScanType] = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterScanType]];
+    params[MLCCheckInServiceParameterPostalCode] = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterPostalCode]];
+    params[MLCCheckInServiceParameterBeaconIdentifier] = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterBeaconIdentifier]];
+    params[MLCCheckInServiceParameterEventId] = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterEventId]];
+    MLCEvent *event = params[MLCCheckInServiceParameterEvent];
+    if (event) {
+        params[MLCCheckInServiceParameterEvent] = nil;
+        params[MLCCheckInServiceParameterEventId] = [MLCEntity stringFromValue:@(event.eventId)];
+    }
+    NSString *latitude = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterLatitude]];
+    NSString *longitude = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterLongitude]];
+    NSString *locationAccuracy = [MLCEntity stringFromValue:params[MLCCheckInServiceParameterLocationAccuracy]];
+    CLLocation *location = params[MLCCheckInServiceParameterCLLocation];
+    if (location) {
+        params[MLCCheckInServiceParameterCLLocation] = nil;
+        latitude = [MLCEntity stringFromValue:@(location.coordinate.latitude)];
+        longitude = [MLCEntity stringFromValue:@(location.coordinate.longitude)];
+        locationAccuracy = [MLCEvent stringFromValue:@(location.horizontalAccuracy)];
+    }
+
+    NSUInteger maxLength = 16;
+    params[MLCCheckInServiceParameterLatitude] = [latitude substringToIndex:MIN(latitude.length, maxLength)];
+    params[MLCCheckInServiceParameterLongitude] = [longitude substringToIndex:MIN(longitude.length, maxLength)];
+    params[MLCCheckInServiceParameterLocationAccuracy] = [locationAccuracy substringToIndex:MIN(locationAccuracy.length, maxLength)];
+
+    return params;
+}
+
++ (Class)classForResource {
     return [MLCCheckIn class];
 }
 
 + (instancetype)checkInWithLocation:(MLCLocation *)location
-                            handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self checkInWithLocation:location userLocation:nil beaconIdentifier:nil event:nil handler:handler];
+                            handler:(MLCServiceSuccessCompletionHandler)handler {
+    return [self checkInWithLocation:location parameters:@{} handler:handler];
 }
 
-+ (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event
-                            handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self checkInWithLocation:location userLocation:nil beaconIdentifier:nil event:event handler:handler];
-}
-
-+ (instancetype)checkInWithLocation:(MLCLocation *)location userLocation:(CLLocation *)userLocation beaconIdentifier:(NSString *)beaconIdentifier handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self checkInWithLocation:location userLocation:userLocation beaconIdentifier:beaconIdentifier event:nil handler:handler];
-}
-
-+ (instancetype)checkInWithLocation:(MLCLocation *)location userLocation:(CLLocation *)userLocation beaconIdentifier:(NSString *)beaconIdentifier event:(MLCEvent *)event handler:(MLCServiceResourceCompletionHandler)handler {
-
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:6];
-    if (location) parameters[@"locationId"] = @(location.locationId);
-    if (userLocation) {
-        parameters[@"latitude"] = @(userLocation.coordinate.latitude);
-        parameters[@"longitude"] = @(userLocation.coordinate.longitude);
-        parameters[@"locationAccuracy"] = @(userLocation.horizontalAccuracy);
-    }
-    if (beaconIdentifier) parameters[@"beaconIdentifier"] = beaconIdentifier;
-    if (event) parameters[@"eventId"] = @(event.eventId);
-
-    return [self create:@"checkIn" parameters:parameters handler:handler];
++ (instancetype)checkInWithLocation:(MLCLocation *)location parameters:(nonnull MLCCheckInServiceParameters)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSMutableDictionary *params = [self sanitizeParameters:parameters];
+    params[@"locationId"] = @(location.locationId);
+    return [self create:@"checkIn" parameters:params handler:^(__unused MLCEntity *resource, NSError *error) {
+        handler(error == nil, error);
+    }];
 }
 
 @end

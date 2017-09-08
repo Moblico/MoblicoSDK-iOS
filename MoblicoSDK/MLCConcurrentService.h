@@ -14,16 +14,16 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCService.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^MLCConcurrentServiceCompletionHandler)(void);
+typedef void(^MLCConcurrentServiceCompletionHandler)(void) NS_SWIFT_NAME(MLCConcurrentService.CompletionHandler);
 
-
+NS_SWIFT_NAME(ConcurrentService)
 @interface MLCConcurrentService : MLCService
 
-+ (instancetype)concurrentServiceWithServices:(NSArray<__kindof MLCService *> *)services completionHandler:(_Nullable MLCConcurrentServiceCompletionHandler)completionHandler;
++ (instancetype)concurrentServiceWithServices:(NSArray<__kindof MLCService *> *)services completionHandler:(MLCConcurrentServiceCompletionHandler)completionHandler;
 
 @end
 

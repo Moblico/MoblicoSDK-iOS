@@ -16,14 +16,22 @@
 
 #import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCList;
 
+MLCServiceCreateResourceCompletionHandler(MLCListsService, MLCList);
+MLCServiceCreateCollectionCompletionHandler(MLCListsService, MLCList);
+
+NS_SWIFT_NAME(ListsService)
 @interface MLCListsService : MLCService
 
-+ (instancetype)listLists:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)readListWithListId:(NSUInteger)listId handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)createList:(MLCList *)list handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)listLists:(MLCListsServiceCollectionCompletionHandler)handler;
++ (instancetype)readListWithListId:(NSUInteger)listId handler:(MLCListsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readList(withId:handler:));
++ (instancetype)createList:(MLCList *)list handler:(MLCListsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(create(_:handler:));
 + (instancetype)updateList:(MLCList *)list handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)destroyList:(MLCList *)list handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

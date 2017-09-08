@@ -14,11 +14,12 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCEntity.h>
 
+NS_SWIFT_NAME(ProductType)
 @interface MLCProductType : MLCEntity
 
-@property (nonatomic) NSUInteger productTypeId;
+@property (nonatomic) NSUInteger productTypeId NS_SWIFT_NAME(id);
 @property (nonatomic, copy) NSString *name;
 
 @end

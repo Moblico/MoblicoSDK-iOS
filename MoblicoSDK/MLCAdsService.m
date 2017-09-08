@@ -18,55 +18,32 @@
 #import "MLCService_Private.h"
 #import "MLCAd.h"
 
+MLCAdsServiceType const MLCAdsServiceTypeBanner = @"AD_BANNER";
+MLCAdsServiceType const MLCAdsServiceTypePromo = @"AD_PROMO";
+MLCAdsServiceType const MLCAdsServiceTypeSponsor = @"AD_SPONSOR";
+
 @implementation MLCAdsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCAd class];
 }
 
-+ (NSString *)stringFromAdType:(MLCAdServiceType)type {
-    if (type == MLCAdServiceTypeBanner) {
-        return @"AD_BANNER";
-    }
-
-    if (type == MLCAdServiceTypePromo) {
-        return @"AD_PROMO";
-    }
-
-    if (type == MLCAdServiceTypeSponsor) {
-        return @"AD_SPONSOR";
-    }
-
-    return nil;
-}
-
-+ (instancetype)findAdsWithType:(MLCAdServiceType)type context:(NSString *)context handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findAdsWithType:(MLCAdsServiceType)type context:(NSString *)context handler:(MLCAdsServiceCollectionCompletionHandler)handler {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
-    NSString *adTypeName = [self stringFromAdType:type];
-    if (adTypeName) {
-        parameters[@"type"] = adTypeName;
-    }
+    parameters[@"type"] = type;
     if (context) {
         parameters[@"context"] = context;
     }
-
     return [self find:@"promos" searchParameters:parameters handler:handler];
 }
 
-+ (instancetype)readAdWithType:(MLCAdServiceType)type context:(NSString *)context handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readAdWithType:(MLCAdsServiceType)type context:(NSString *)context handler:(MLCAdsServiceResourceCompletionHandler)handler {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
-    NSString *adTypeName = [self stringFromAdType:type];
-    if (adTypeName) {
-        parameters[@"type"] = adTypeName;
-    }
+    parameters[@"type"] = type;
     if (context) {
         parameters[@"context"] = context;
     }
     return [self read:@"ad" parameters:parameters handler:handler];
-}
-
-+ (instancetype)readBannerAdWithContext:(NSString *)context handler:(MLCServiceResourceCompletionHandler)handler {
-    return [self readAdWithType:MLCAdServiceTypeBanner context:context handler:handler];
 }
 
 @end

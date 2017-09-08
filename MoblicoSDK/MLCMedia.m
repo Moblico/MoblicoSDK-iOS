@@ -19,8 +19,10 @@
 #import <CommonCrypto/CommonDigest.h>
 
 @interface MLCMedia ()
+
 - (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCMediaCompletionHandler)handler;
 + (NSCache *)_mlc_sharedCache;
+
 @end
 
 @implementation MLCMedia
@@ -130,7 +132,7 @@
     }
 
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(__unused NSURLResponse *response, NSData *data, NSError *error) {
         if (data) {
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];

@@ -31,7 +31,7 @@
     return [self update:path parameters:@{@"qrCodeId": qrCodeId} handler:handler];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCStatus class];
 }
 

@@ -14,20 +14,34 @@
  limitations under the License.
  */
 
-@import CoreLocation;
 #import <MoblicoSDK/MLCService.h>
+@import CoreLocation;
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString *MLCCheckInServiceParameter NS_STRING_ENUM NS_SWIFT_NAME(MLCCheckInService.Parameter);
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterCLLocation;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterLatitude;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterLongitude;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterLocationAccuracy;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterPostalCode;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterEvent;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterEventId;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterScanType;
+FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier;
+
+typedef NSDictionary<MLCCheckInServiceParameter, id> * MLCCheckInServiceParameters NS_SWIFT_NAME(MLCCheckInService.Parameters);
 
 @class MLCLocation;
 @class MLCEvent;
 
+NS_SWIFT_NAME(CheckInService)
 @interface MLCCheckInService : MLCService
 
-+ (instancetype)checkInWithLocation:(MLCLocation *)location handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)checkInWithLocation:(MLCLocation *)location handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)checkInWithLocation:(MLCLocation *)location event:(MLCEvent *)event handler:(MLCServiceResourceCompletionHandler)handler;
-
-+ (instancetype)checkInWithLocation:(MLCLocation *)location userLocation:(CLLocation *)userLocation beaconIdentifier:(NSString *)beaconIdentifier handler:(MLCServiceResourceCompletionHandler)handler;
-
-+ (instancetype)checkInWithLocation:(MLCLocation *)location userLocation:(CLLocation *)userLocation beaconIdentifier:(NSString *)beaconIdentifier event:(MLCEvent *)event handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)checkInWithLocation:(MLCLocation *)location parameters:(MLCCheckInServiceParameters)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

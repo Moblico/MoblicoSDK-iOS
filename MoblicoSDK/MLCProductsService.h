@@ -14,12 +14,22 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCProduct;
+
+MLCServiceCreateCollectionCompletionHandler(MLCProductsService, MLCProduct);
+
+NS_SWIFT_NAME(ProductsService)
 @interface MLCProductsService : MLCService
 
-+ (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findProductsWithProductTypes:(NSArray *)productTypes handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findProductsWithFilters:(NSString *)filters productTypes:(NSArray *)productTypes handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listProducts:(MLCProductsServiceCollectionCompletionHandler)handler;
++ (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCProductsServiceCollectionCompletionHandler)handler;
++ (instancetype)findProductsWithProductTypes:(NSArray<NSString *> *)productTypes handler:(MLCProductsServiceCollectionCompletionHandler)handler;
++ (instancetype)findProductsWithFilters:(NSString *)filters productTypes:(NSArray<NSString *> *)productTypes handler:(MLCProductsServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

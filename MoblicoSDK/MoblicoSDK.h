@@ -20,12 +20,18 @@
 #error "iOS 9 is the minimum required Target Deployment for MoblicoSDK."
 #endif
 
-#import <MoblicoSDK/version.h>
+
+//! Project version number for MoblicoSDK.
+FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
+
+//! Project version string for MoblicoSDK.
+FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
+
 #import <MoblicoSDK/MLCServiceManager.h>
 
 // Services
 #import <MoblicoSDK/MLCService.h>
-#import <MoblicoSDK/MLCBasicService.h>
+#import <MoblicoSDK/MLCGenericService.h>
 #import <MoblicoSDK/MLCConcurrentService.h>
 
 #import <MoblicoSDK/MLCAdsService.h>
@@ -90,3 +96,5 @@
 
 #import <MoblicoSDK/MLCEntityCache.h>
 #import <MoblicoSDK/MLCKeychainPasswordItem.h>
+
+#import <MoblicoSDK/MLCLogger.h>

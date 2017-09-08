@@ -16,38 +16,53 @@
 
 #import "MLCMetricsService.h"
 #import "MLCService_Private.h"
+#import "MLCMetric.h"
+
+static NSString *const MLCMetricsServiceParameterType = @"type";
+static NSString *const MLCMetricsServiceParameterText = @"text";
+static NSString *const MLCMetricsServiceParameterLocation = @"location";
+static NSString *const MLCMetricsServiceParameterUsername = @"username";
 
 @implementation MLCMetricsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return Nil;
 }
 
 + (void)sendMetric:(MLCMetric *)metric {
-    MLCMetricsService *service = [self createResource:metric handler:nil];
-    [service start];
+    [[self createResource:metric handler:nil] start];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type {
-    [self sendMetricWithType:type text:nil location:nil username:nil];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text {
-    [self sendMetricWithType:type text:text location:nil username:nil];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
+                                     MLCMetricsServiceParameterText: text}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location {
-    [self sendMetricWithType:type text:text location:location username:nil];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
+                                     MLCMetricsServiceParameterText: text,
+                                     MLCMetricsServiceParameterLocation: location}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
-    [self sendMetricWithType:type text:text location:nil username:username];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
+                                     MLCMetricsServiceParameterText: text,
+                                     MLCMetricsServiceParameterUsername: username}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
-    MLCMetric *metric = [MLCMetric metricWithType:type text:text location:location username:username];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
+                                     MLCMetricsServiceParameterText: text,
+                                     MLCMetricsServiceParameterLocation: location,
+                                     MLCMetricsServiceParameterUsername: username}];
+}
 
-    [self sendMetric:metric];
++ (void)sendMetricWithParameters:(NSDictionary *)parameters {
+    [self sendMetric:[[MLCMetric alloc] initWithJSONObject:parameters]];
 }
 
 @end

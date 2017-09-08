@@ -20,11 +20,12 @@
 typedef NS_ENUM(NSUInteger, MLCProductCompareOrder) {
     MLCProductCompareOrderTitle,
     MLCProductCompareOrderRevDate
-};
+} NS_SWIFT_NAME(MLCProduct.CompareOrder);
 
+NS_SWIFT_NAME(Product)
 @interface MLCProduct : MLCEntity
 
-@property (nonatomic) NSUInteger productId;
+@property (nonatomic) NSUInteger productId NS_SWIFT_NAME(id);
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *price;
 @property (nonatomic, copy) NSString *legalese;

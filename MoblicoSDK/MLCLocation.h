@@ -20,7 +20,7 @@
 typedef NS_ENUM(NSUInteger, MLCLocationCompareOrder) {
     MLCLocationCompareOrderDistance,
     MLCLocationCompareOrderName
-};
+} NS_SWIFT_NAME(MLCLocation.CompareOrder);
 
 /**
  Locations may be associated with users, events, deals, rewards
@@ -31,12 +31,13 @@ typedef NS_ENUM(NSUInteger, MLCLocationCompareOrder) {
  
  A MLCLocation object encapsulates the data of a location stored in the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(Location)
 @interface MLCLocation : MLCEntity
 
 /**
  A unique identifier for this location.
  */
-@property (nonatomic) NSUInteger locationId;
+@property (nonatomic) NSUInteger locationId NS_SWIFT_NAME(id);
 @property (nonatomic) NSUInteger accountId;
 
 /**

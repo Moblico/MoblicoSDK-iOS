@@ -14,49 +14,66 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCService.h>
+#import "MLCService.h"
+#import "MLCEntity.h"
 
-typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response);
+typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) NS_SWIFT_NAME(MLCService.InternalJSONCompletionHandler);
+typedef void(^MLCServiceInternalResourceCompletionHandler)(__kindof MLCEntity *resource, NSError *error) NS_SWIFT_NAME(MLCService.InternalResourceCompletionHandler);
+typedef void(^MLCServiceInternalCollectionCompletionHandler)(NSArray<__kindof MLCEntity *> *collection, NSError *error) NS_SWIFT_NAME(MLCService.InternalCollectionCompletionHandler);
 
 @interface MLCService () <NSURLConnectionDataDelegate>
+
 @property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionHandler;
 @property (strong, nonatomic) NSURLConnection *connection;
 @property (copy, nonatomic) NSURLRequest *request;
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
 @property (strong, nonatomic) dispatch_group_t dispatchGroup;
+@property (strong, nonatomic) NSError *invalidServiceError;
+@property (copy, nonatomic) MLCServiceJSONCompletionHandler invalidServiceJsonCompletionHandler;
+@property (copy, nonatomic) MLCServiceSuccessCompletionHandler invalidServiceSuccessCompletionHandler;
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)createResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)invalidServiceFailedWithError:(NSError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
-+ (instancetype)updateResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceSuccessCompletionHandler)handler;
++ (NSError *)errorWithCode:(MLCServiceErrorCode)code;
++ (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description;
++ (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion;
++ (NSError *)errorWithErrors:(NSArray<NSError *> *)errors;
 
-+ (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
-+ (instancetype)destroyResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)fetch:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
-+ (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)readResourceWithUniqueIdentifier:(id)uniqueIdentifier handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)create:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalResourceCompletionHandler)handler;
++ (instancetype)createResource:(MLCEntity *)resource handler:(MLCServiceInternalResourceCompletionHandler)handler;
 
-+ (instancetype)list:(NSString *)path handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listResources:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listScopedResourcesForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)update:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)updateResource:(MLCEntity *)resource handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findResourcesWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findScopedResourcesForResource:(id<MLCEntityProtocol>)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)destroy:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)destroyResource:(MLCEntity *)resource handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (NSArray<NSString *> *)scopeableResources;
-+ (BOOL)canScopeResource:(id<MLCEntityProtocol>)resource;
++ (instancetype)read:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalResourceCompletionHandler)handler;
++ (instancetype)readResourceWithUniqueIdentifier:(id)uniqueIdentifier handler:(MLCServiceInternalResourceCompletionHandler)handler;
 
-+ (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters;
++ (instancetype)list:(NSString *)path handler:(MLCServiceInternalCollectionCompletionHandler)handler;
++ (instancetype)listResources:(MLCServiceInternalCollectionCompletionHandler)handler;
++ (instancetype)listScopedResourcesForResource:(MLCEntity *)resource handler:(MLCServiceInternalCollectionCompletionHandler)handler;
+
++ (instancetype)find:(NSString *)path searchParameters:(NSDictionary<NSString *, id> *)searchParameters handler:(MLCServiceInternalCollectionCompletionHandler)handler;
++ (instancetype)findResourcesWithSearchParameters:(NSDictionary<NSString *, id> *)searchParameters handler:(MLCServiceInternalCollectionCompletionHandler)handler;
++ (instancetype)findScopedResourcesForResource:(MLCEntity *)resource searchParameters:(NSDictionary<NSString *, id> *)searchParameters handler:(MLCServiceInternalCollectionCompletionHandler)handler;
+
++ (NSArray<Class> *)scopeableResources;
++ (BOOL)canScopeResource:(MLCEntity *)resource;
+
++ (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters;
 + (NSString *)stringFromMLCServiceRequestMethod:(MLCServiceRequestMethod)method;
 + (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string;
 
-+ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler;
++ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler;
 
-+ (id<MLCEntityProtocol>)deserializeResource:(NSDictionary *)resource;
-+ (NSArray<MLCEntityProtocol> *)deserializeArray:(NSArray *)array;
-+ (Class<MLCEntityProtocol>)classForResource;
++ (MLCEntity *)deserializeResource:(NSDictionary<NSString *, id> *)resource;
++ (NSArray<MLCEntity *> *)deserializeArray:(NSArray<NSDictionary<NSString *, id> *> *)array;
++ (Class)classForResource;
 
 @end

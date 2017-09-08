@@ -34,7 +34,7 @@
     return [NSKeyedUnarchiver unarchiveObjectWithFile:[self URL:key].path];
 }
 
-+ (BOOL)persistEntity:(id)object key:(NSString *)key {
++ (BOOL)persistEntity:(id)object key:(NSString *)key error:(NSError **)error {
     NSString *path = [self URL:key].path;
 
     return [NSKeyedArchiver archiveRootObject:object
@@ -44,23 +44,27 @@
                                                          NSFileProtectionNone
                                                      }
                                       ofItemAtPath:path
-                                             error:NULL];
+                                             error:error];
 }
 
-+ (BOOL)clearEntityWithKey:(NSString *)key {
-    return [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:NULL];
++ (BOOL)clearEntityWithKey:(NSString *)key error:(NSError **)error {
+    return [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:error];
 }
 
-+ (BOOL)clearCache {
++ (BOOL)clearCache:(NSError **)error {
     __block BOOL hadError = YES;
     NSArray *contents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:[self documentsURL]
                                                     includingPropertiesForKeys:nil
                                                                        options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                         error:NULL];
+                                                                         error:error];
+    if (!contents) {
+        return NO;
+    }
+
     [contents enumerateObjectsWithOptions:NSEnumerationConcurrent
                                usingBlock:^(NSURL *fileURL, __unused NSUInteger idx, BOOL *stop) {
                                    if (![NSFileManager.defaultManager removeItemAtURL:fileURL
-                                                                                error:NULL]) {
+                                                                                error:error]) {
                                        *stop = YES;
                                        hadError = YES;
                                    }

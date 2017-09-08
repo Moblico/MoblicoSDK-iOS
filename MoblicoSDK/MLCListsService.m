@@ -20,19 +20,19 @@
 
 @implementation MLCListsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCList class];
 }
 
-+ (instancetype)listLists:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listLists:(MLCListsServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:nil handler:handler];
 }
 
-+ (instancetype)readListWithListId:(NSUInteger)listId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readListWithListId:(NSUInteger)listId handler:(MLCListsServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(listId) handler:handler];
 }
 
-+ (instancetype)createList:(MLCList *)resource handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)createList:(MLCList *)resource handler:(MLCListsServiceResourceCompletionHandler)handler {
     return [self createResource:resource handler:handler];
 }
 

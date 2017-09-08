@@ -17,22 +17,23 @@
 #import "MLCListItemsService.h"
 #import "MLCListItem.h"
 #import "MLCService_Private.h"
+#import "MLCList.h"
 
 @implementation MLCListItemsService
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCList"];
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCList class]];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCListItem class];
 }
 
-+ (instancetype)listListItemsForList:(MLCList *)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listListItemsForList:(MLCList *)resource handler:(MLCListItemsServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 
-+ (instancetype)createListItem:(MLCListItem *)listItem forList:(MLCList *)list handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)createListItem:(MLCListItem *)listItem forList:(MLCList *)list handler:(MLCListItemsServiceResourceCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[[[list class] collectionName], list.uniqueIdentifier, [[listItem class] collectionName]]];
     return [self create:path parameters:[[listItem class] serialize:listItem] handler:handler];
 }

@@ -25,35 +25,32 @@
 
 @interface MLCAuthenticationService ()
 
-+ (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)authenticateAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler;
 
 @end
 
 @implementation MLCAuthenticationService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCAuthenticationToken class];
 }
 
-+ (instancetype)authenticateWithAPIKey:(NSString *)apiKey user:(MLCUser *)user childKeyword:(NSString *)childKeyword handler:(MLCServiceResourceCompletionHandler)handler {
-    if (user.socialType != MLCUserSocialTypeNone) {
-        NSArray *components = [user.username componentsSeparatedByString:@"."];
-        NSString *social = [components.firstObject uppercaseString];
-
-        return [self authenticateWithAPIKey:apiKey username:user.username password:nil social:social socialToken:user.socialToken childKeyword:childKeyword handler:handler];
-    }
-
-    return [self authenticateWithAPIKey:apiKey username:user.username password:user.password social:nil socialToken:nil childKeyword:childKeyword handler:handler];
++ (instancetype)authenticateAPIKey:(NSString *)apiKey user:(MLCUser *)user childKeyword:(NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler {
+    return [self authenticateAPIKey:apiKey username:user.username password:user.password social:user.social socialToken:user.socialToken childKeyword:childKeyword handler:handler];
 }
 
-+ (instancetype)authenticateWithAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword handler:(MLCServiceResourceCompletionHandler)handler {
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:3];
-    if (apiKey) parameters[@"apikey"] = apiKey;
-    if (username) parameters[@"username"] = username;
-    if (password) parameters[@"password"] = password;
-    if (social) parameters[@"social"] = social;
-    if (socialToken) parameters[@"socialToken"] = socialToken;
-    if (childKeyword.length) parameters[@"childKeyword"] = childKeyword;
++ (instancetype)authenticateAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler {
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"apikey"] = apiKey;
+    parameters[@"username"] = username;
+    parameters[@"childKeyword"] = childKeyword;
+
+    if (social && socialToken) {
+        parameters[@"social"] = social;
+        parameters[@"socialToken"] = socialToken;
+    } else if (password) {
+        parameters[@"password"] = password;
+    }
 
 #if TARGET_OS_IPHONE
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![UIDevice.currentDevice.model isEqualToString:@"iPhone"]) {

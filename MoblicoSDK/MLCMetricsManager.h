@@ -17,12 +17,14 @@
 @import Foundation;
 @import CoreLocation;
 
+NS_SWIFT_NAME(MLCMetricsManager.LocationDelegate)
 @protocol MLCMetricsManagerLocationDelegate <NSObject>
 @required
 @property (nonatomic, readonly, copy, nullable) CLLocation *location;
 
 @end
 
+NS_SWIFT_NAME(MetricsManager)
 @interface MLCMetricsManager : NSObject
 
 @property (nonatomic, class, strong, readonly, nonnull) MLCMetricsManager *sharedMetricsManager;

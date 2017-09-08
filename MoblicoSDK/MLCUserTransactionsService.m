@@ -21,23 +21,22 @@
 
 @implementation MLCUserTransactionsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCUserTransaction class];
 }
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCUser"];
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCUser class]];
 }
 
-+ (instancetype)findTransactionsForUser:(MLCUser *)user before:(NSUInteger)userTransactionId count:(NSInteger)count handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSDictionary *searchParameters = nil;
++ (instancetype)findUserTransactionsForUser:(MLCUser *)user before:(NSUInteger)userTransactionId count:(NSInteger)count handler:(MLCUserTransactionsServiceCollectionCompletionHandler)handler {
+    NSMutableDictionary *searchParameters = [NSMutableDictionary dictionary];
 
-    if (count && userTransactionId) {
-        searchParameters = @{@"count": @(count), @"before": @(userTransactionId)};
-    } else if (count) {
-        searchParameters = @{@"count": @(count)};
-    } else if (userTransactionId) {
-        searchParameters = @{@"before": @(userTransactionId)};
+    if (count) {
+        searchParameters[@"count"] = @(count);
+    }
+    if (userTransactionId) {
+        searchParameters[@"before"] = @(userTransactionId);
     }
 
     return [self findScopedResourcesForResource:user searchParameters:searchParameters handler:handler];

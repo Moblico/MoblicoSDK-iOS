@@ -17,18 +17,19 @@
 #import <MoblicoSDK/MLCEntity.h>
 @import CoreGraphics;
 
-typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache, CGFloat scale);
+typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache, CGFloat scale) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 
 /**
  A MLCImage object encapsulates the image data for a deal stored in 
  the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(Image)
 @interface MLCImage : MLCEntity
 
 /**
  A unique identifier for this image.
  */
-@property (nonatomic) NSUInteger imageId;
+@property (nonatomic) NSUInteger imageId NS_SWIFT_NAME(id);
 @property (nonatomic) CGFloat scaleFactor;
 /**
  The URL for this image.

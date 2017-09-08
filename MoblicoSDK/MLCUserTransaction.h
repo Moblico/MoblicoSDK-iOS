@@ -22,11 +22,12 @@ typedef NS_ENUM(NSInteger, MLCUserTransactionType) {
     MLCUserTransactionTypePointsSpent,
     MLCUserTransactionTypeCurrencySaved,
     MLCUserTransactionTypeCurrencySpent
-};
+} NS_SWIFT_NAME(MLCUserTransaction.Type);
 
+NS_SWIFT_NAME(UserTransaction)
 @interface MLCUserTransaction : MLCEntity
 
-@property (nonatomic) NSUInteger userTransactionId;
+@property (nonatomic) NSUInteger userTransactionId NS_SWIFT_NAME(id);
 @property (nonatomic) double amount;
 @property (nonatomic) MLCUserTransactionType type;
 @property (copy, nonatomic) NSString *name;

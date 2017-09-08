@@ -15,20 +15,33 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCLocation;
 @class MLCMedia;
 @class MLCEvent;
 
+MLCServiceCreateResourceCompletionHandler(MLCEventsService, MLCEvent);
+MLCServiceCreateCollectionCompletionHandler(MLCEventsService, MLCEvent);
+
+NS_SWIFT_NAME(EventsService)
 @interface MLCEventsService : MLCService
 
-+ (instancetype)readEventWithEventId:(NSUInteger)eventId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readEventWithEventId:(NSUInteger)eventId handler:(MLCEventsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readEvent(withId:handler:));
 
-+ (instancetype)findEventsWithTypeNamed:(NSString *)typeName liveOnly:(BOOL)liveOnly handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findEventsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listEvents:(MLCEventsServiceCollectionCompletionHandler)handler;
 
-+ (instancetype)listSubEventsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listEventsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findEventsWithType:(NSString *)type handler:(MLCEventsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)findEventsWithType:(NSString *)type liveOnly:(BOOL)liveOnly handler:(MLCEventsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)listSubEventsForEvent:(MLCEvent *)event handler:(MLCEventsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)listEventsForLocation:(MLCLocation *)location handler:(MLCEventsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)listEventsForMedia:(MLCMedia *)media handler:(MLCEventsServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

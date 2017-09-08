@@ -15,9 +15,17 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+@class MLCNotification;
 
+NS_ASSUME_NONNULL_BEGIN
+
+MLCServiceCreateResourceCompletionHandler(MLCNotificationsService, MLCNotification);
+
+NS_SWIFT_NAME(NotificationsService)
 @interface MLCNotificationsService : MLCService
 
-+ (instancetype)readNotificationWithNotificationId:(NSUInteger)notificationId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readNotificationWithNotificationId:(NSUInteger)notificationId handler:(MLCNotificationsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readNotification(withId:handler:));
 
 @end
+
+NS_ASSUME_NONNULL_END

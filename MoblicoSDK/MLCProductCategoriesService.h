@@ -14,10 +14,19 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCProductCategory;
+
+MLCServiceCreateCollectionCompletionHandler(MLCProductCategoriesService, MLCProductCategory);
+
+NS_SWIFT_NAME(ProductCategoriesService)
 @interface MLCProductCategoriesService : MLCService
 
-+ (instancetype)listProductCategories:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listProductCategories:(MLCProductCategoriesServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

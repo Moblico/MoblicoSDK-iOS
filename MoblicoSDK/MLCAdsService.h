@@ -16,25 +16,34 @@
 
 #import <MoblicoSDK/MLCService.h>
 
-/**
- Type of Ads supported by Moblico.
+NS_ASSUME_NONNULL_BEGIN
 
- - MLCAdServiceTypeBanner: Banner ads
- - MLCAdServiceTypePromo: Promo ads
- - MLCAdServiceTypeSponsor: Sponsor ads
+/// Type of Ads supported by Moblico.
+typedef NSString *MLCAdsServiceType NS_STRING_ENUM NS_SWIFT_NAME(MLCAdsService.Type);
+/// Specifies a Banner ad.
+FOUNDATION_EXPORT MLCAdsServiceType const MLCAdsServiceTypeBanner;
+/// Specifies a Promo ad.
+FOUNDATION_EXPORT MLCAdsServiceType const MLCAdsServiceTypePromo;
+/// Specifies a Sponsor ad.
+FOUNDATION_EXPORT MLCAdsServiceType const MLCAdsServiceTypeSponsor;
+
+@class MLCAd;
+
+/**
+ Callback for read ad.
+
+ @param resouce The Ad returned by the service request.
+ @param error An error identifier.
  */
-typedef NS_ENUM(NSUInteger, MLCAdServiceType) {
-    /// Specifies a Banner ad.
-    MLCAdServiceTypeBanner,
-    /// Specifies a Promo ad.
-    MLCAdServiceTypePromo,
-    /// Specifies a Sponsor ad.
-    MLCAdServiceTypeSponsor
-};
+MLCServiceCreateResourceCompletionHandler(MLCAdsService, MLCAd);
+
+
+MLCServiceCreateCollectionCompletionHandler(MLCAdsService, MLCAd);
 
 /**
  Use the MLCAdsService class to retrieve ads from the Moblico Marketing Portal.
  */
+NS_SWIFT_NAME(AdsService)
 @interface MLCAdsService : MLCService
 
 /**
@@ -45,7 +54,7 @@ typedef NS_ENUM(NSUInteger, MLCAdServiceType) {
  @param handler Collection completion handler.
  @return A MLCAdsService instance which conforms to the MLCServiceProtocol protocol.
  */
-+ (instancetype)findAdsWithType:(MLCAdServiceType)type context:(NSString *)context handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findAdsWithType:(MLCAdsServiceType)type context:(nullable NSString *)context handler:(MLCAdsServiceCollectionCompletionHandler)handler;
 
 /**
  Retrieve a single ad.
@@ -55,15 +64,8 @@ typedef NS_ENUM(NSUInteger, MLCAdServiceType) {
  @param handler Resource completion handler.
  @return A MLCAdsService instance which conforms to the MLCServiceProtocol protocol.
  */
-+ (instancetype)readAdWithType:(MLCAdServiceType)type context:(NSString *)context handler:(MLCServiceResourceCompletionHandler)handler;
-
-/**
- Retrieve a single banner ad.
-
- @param context Context used by the backend.
- @param handler Resource completion handler.
- @return A MLCAdsService instance which conforms to the MLCServiceProtocol protocol.
- */
-+ (instancetype)readBannerAdWithContext:(NSString *)context handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readAdWithType:(MLCAdsServiceType)type context:(nullable NSString *)context handler:(MLCAdsServiceResourceCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

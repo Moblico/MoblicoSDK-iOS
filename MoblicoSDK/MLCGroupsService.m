@@ -19,32 +19,39 @@
 #import "MLCGroup.h"
 #import "MLCUser.h"
 #import "MLCServiceManager.h"
-#import "MLCInvalidService.h"
 
 @implementation MLCGroupsService
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCUser"];
++ (NSString *)pathForUser:(MLCUser *)user group:(MLCGroup *)group {
+	if (group) {
+		return [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [[group class] collectionName], group.uniqueIdentifier]];
+	}
+
+	return [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCUser class]];
+}
+
++ (Class)classForResource {
     return [MLCGroup class];
 }
 
-+ (instancetype)listGroups:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listGroups:(MLCGroupsServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:@{@"registrable": @YES} handler:handler];
 }
 
-+ (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listGroupsForResource:(id<MLCEntityProtocol>)user handler:handler];
++ (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
+    return [self listGroupsForResource:user handler:handler];
 }
 
-+ (instancetype)listGroupsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listGroupsForResource:(MLCEntity *)resource handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
     return [self findScopedResourcesForResource:resource searchParameters:@{@"registrable": @YES} handler:handler];
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString * path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [[group class] collectionName], group.uniqueIdentifier]];
+    NSString * path = [self pathForUser:user group:group];
     return [self update:path parameters:nil handler:handler];
 }
 
@@ -54,21 +61,24 @@
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
-    if (!user || groupName.length == 0) {
-        NSMutableArray *failureReasons = [NSMutableArray arrayWithCapacity:2];
-        if (!user) {
-            [failureReasons addObject:@"User is nil."];
-        }
-        if (groupName.length == 0) {
-            [failureReasons addObject:@"Invalid group name."];
-        }
-
-        NSString * description = [NSString stringWithFormat:NSLocalizedString(@"Invalid parameter.", nil), [[self classForResource] collectionName]];
-        NSError *error = [NSError errorWithDomain:@"MLCServiceErrorDomain" code:1000 userInfo:@{NSLocalizedDescriptionKey: description, NSLocalizedFailureReasonErrorKey: [failureReasons componentsJoinedByString:@"\n"]}];
-        return (MLCGroupsService *)[MLCInvalidService invalidServiceFailedWithError:error handler:handler];
+    NSMutableArray *errors = [NSMutableArray array];
+    if (!user) {
+        [errors addObject:[self errorWithCode:MLCServiceErrorCodeMissingParameter description:@"User is nil." recoverySuggestion:nil]];
+    }
+    if (groupName.length == 0) {
+        [errors addObject:[self errorWithCode:MLCServiceErrorCodeInvalidParameter description:@"Invalid group name." recoverySuggestion:nil]];
     }
 
-    NSString * path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
+    NSError *error = errors.firstObject;
+    if (errors.count > 1) {
+        error = [self errorWithErrors:errors];
+    }
+
+    if (error) {
+        return [self invalidServiceFailedWithError:error handler:handler];
+    }
+
+    NSString *path = [self pathForUser:user group:nil];
     return [self update:path parameters:@{@"name": groupName} handler:handler];
 }
 
@@ -77,9 +87,19 @@
     return [self addUser:user toGroupNamed:groupName handler:handler];
 }
 
++ (instancetype)removeUser:(MLCUser *)user fromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
+	NSString * path = [self pathForUser:user group:group];
+	return [self destroy:path parameters:nil handler:handler];
+}
+
++ (instancetype)removeCurrentUserFromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
+	MLCUser *user = MLCServiceManager.sharedServiceManager.currentUser;
+	return [self removeUser:user fromGroup:group handler:handler];
+}
+
 + (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString * path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
-    return [self destroy:path parameters:@{@"name": groupName} handler:handler];
+	NSString * path = [self pathForUser:user group:nil];
+	return [self destroy:path parameters:@{@"name": groupName} handler:handler];
 }
 
 + (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -87,4 +107,9 @@
     return [self removeUser:user fromGroupNamed:groupName handler:handler];
 }
 
++ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCGroupsServiceResourceCompletionHandler)handler {
+    // TODO: Add support to backend
+    NSString *reason = [NSString stringWithFormat:@"'%@' is not available in this version of the MoblicoSDK.", NSStringFromSelector(_cmd)];
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:reason userInfo:nil];
+}
 @end

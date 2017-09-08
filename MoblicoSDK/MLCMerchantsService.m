@@ -16,22 +16,23 @@
 
 #import "MLCMerchantsService.h"
 #import "MLCService_Private.h"
+#import "MLCMerchant.h"
 
 @implementation MLCMerchantsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCMerchant class];
 }
 
-+ (instancetype)readMerchantWithMerchantId:(NSUInteger)merchantId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readMerchantWithMerchantId:(NSUInteger)merchantId handler:(MLCMerchantsServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(merchantId) handler:handler];
 }
 
-+ (instancetype)findMerchantsWithBeaconRegionEnabled:(BOOL)beaconRegionEnabled handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findMerchantsWithBeaconRegionEnabled:(BOOL)beaconRegionEnabled handler:(MLCMerchantsServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:@{@"beaconRegionEnabled": @(beaconRegionEnabled)} handler:handler];
 }
 
-+ (instancetype)listMerchants:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listMerchants:(MLCMerchantsServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 

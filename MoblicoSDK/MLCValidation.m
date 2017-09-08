@@ -18,22 +18,28 @@
 #import "MLCEntity.h"
 #import "MLCEntity_Private.h"
 
-NSString *const MLCValidationErrorDomain = @"MLCValidationErrorDomain";
+NSErrorDomain const MLCValidationErrorDomain = @"MLCValidationErrorDomain";
 NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKey";
 
 @interface MLCValidations ()
+
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<MLCValidate *> *> *validations;
+
 @end
 
 @interface MLCValidate ()
-@property (nonatomic, copy) MLCValidationTest test;
+
+@property (nonatomic, copy) MLCValidateTest test;
 @property (nonatomic, copy) NSString *message;
+
 @end
 
-@interface MLCValidationResults ()
+@interface MLCValidation ()
+
 @property (nonatomic, strong) NSMutableArray<NSError *> *errors;
 - (void)addMessage:(NSString *)message;
 + (NSError *)errorWithMessage:(NSString *)message;
+
 @end
 
 @implementation MLCValidations
@@ -63,24 +69,30 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
     return rules;
 }
 
-- (void)setObject:(id)obj forKeyedSubscript:(NSString *)key {
-    NSMutableArray *rules = self.validations[key];
-    if (!rules) {
-        rules = [NSMutableArray<MLCValidate *> array];
-        self.validations[key] = rules;
-    }
-
-    if ([obj isKindOfClass:[NSArray class]]) {
-        [rules addObjectsFromArray:obj];
-    } else if ([obj isKindOfClass:[MLCValidate class]]) {
-        [rules addObject:obj];
-    } else if ([obj isKindOfClass:[NSNull class]]) {
-        [rules removeAllObjects];
+- (void)appendRule:(MLCValidate *)rule forKey:(NSString *)key {
+    NSMutableArray *validationRules = self.validations[key];
+    if (validationRules) {
+        [validationRules addObject:rule];
+    } else {
+        self.validations[key] = [@[rule] mutableCopy];
     }
 }
 
-- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing *)ioValue {
-    MLCValidationResults *results = [[MLCValidationResults alloc] init];
+- (void)appendRules:(NSArray<MLCValidate *> *)rules forKey:(NSString *)key {
+    NSMutableArray *validationRules = self.validations[key];
+    if (validationRules) {
+        [validationRules addObjectsFromArray:rules];
+    } else {
+        self.validations[key] = [rules mutableCopy];
+    }
+}
+
+- (void)setObject:(NSArray<MLCValidate *> *)obj forKeyedSubscript:(NSString *)key {
+    self.validations[key] = [obj mutableCopy];
+}
+
+- (MLCValidation *)validate:(MLCEntity *)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing *)ioValue {
+    MLCValidation *results = [[MLCValidation alloc] init];
     for (MLCValidate *rule in self[key]) {
         NSString *value = [MLCEntity stringFromValue:*ioValue];
         if (!rule.test(entity, key, value)) {
@@ -100,7 +112,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
     return description;
 }
 
-- (instancetype)initWithMessage:(NSString *)message validationTest:(MLCValidationTest)test {
+- (instancetype)initWithMessage:(NSString *)message validateTest:(MLCValidateTest)test {
     self = [super init];
     if (self) {
         _test = test;
@@ -110,13 +122,13 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 }
 
 + (instancetype)validatePresenceWithMessage:(NSString *)message {
-    return [[self alloc] initWithMessage:message validationTest:^BOOL(__unused id<MLCEntityProtocol> entity, __unused NSString *key, NSString *value) {
+    return [[self alloc] initWithMessage:message validateTest:^BOOL(__unused MLCEntity *entity, __unused NSString *key, NSString *value) {
         return value != nil && value.length > 0;
     }];
 }
 
 + (instancetype)validateFormat:(NSString *)format message:(NSString *)message {
-    return [self validateFormat:format caseSensitive:YES message:message];
+    return [self validateFormat:format caseSensitive:NO message:message];
 }
 
 + (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message {
@@ -126,7 +138,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 }
 
 + (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message {
-    return [[self alloc] initWithMessage:message validationTest:^BOOL(__unused id<MLCEntityProtocol> entity, __unused NSString *key, NSString *value) {
+    return [[self alloc] initWithMessage:message validateTest:^BOOL(__unused MLCEntity *entity, __unused NSString *key, NSString *value) {
         if (value == nil || value.length == 0) return YES;
         return [predicate evaluateWithObject:value];
     }];
@@ -134,7 +146,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 
 @end
 
-@implementation MLCValidationResults
+@implementation MLCValidation
 
 - (NSMutableArray<NSError *> *)errors {
     if (!_errors) {
@@ -249,7 +261,7 @@ NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKe
 
 }
 
-- (void)validateTest:(MLCValidationTest)test errorMessage:(NSString *)errorMessage {
+- (void)validateTest:(MLCValidateTest)test errorMessage:(NSString *)errorMessage {
     NSString *value = *self.ioValue;
     if (value && test && !test(value)) {
         [self.mutableErrors addObject:[MLCValidation errorWithMessage:errorMessage]];

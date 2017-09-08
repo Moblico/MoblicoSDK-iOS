@@ -16,12 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
+NS_SWIFT_NAME(EntityCache)
 @interface MLCEntityCache : NSObject
 
 + (id)retrieveEntityWithKey:(NSString *)key;
-+ (BOOL)persistEntity:(id)object key:(NSString *)key;
-+ (BOOL)clearEntityWithKey:(NSString *)key;
-+ (BOOL)clearCache;
++ (BOOL)persistEntity:(id<NSCoding>)object key:(NSString *)key error:(NSError **)error;
++ (BOOL)clearEntityWithKey:(NSString *)key error:(NSError **)error;
++ (BOOL)clearCache:(NSError **)error;
 + (BOOL)entityExistsWithKey:(NSString *)key;
 
 @end

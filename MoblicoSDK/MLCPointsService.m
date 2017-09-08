@@ -20,47 +20,42 @@
 #import "MLCPoints.h"
 #import "MLCUser.h"
 
-static NSString *const MLCPointsTotalTypeAccumulatedString = @"ACCUM";
-static NSString *const MLCPointsTotalTypePointsString = @"POINTS";
+MLCPointsServiceTotalType const MLCPointsServiceTotalTypePoints = @"POINTS";
+MLCPointsServiceTotalType const MLCPointsServiceTotalTypeAccumulated = @"ACCUM";
+MLCPointsServiceTotalType const MLCPointsServiceTotalTypeBoth = @"";
+
+static NSString *const MLCPointsServiceParameterTotalTypeName = @"totalTypeName";
+static NSString *const MLCPointsServiceParameterPointTypeName = @"pointTypeName";
+static NSString *const MLCPointsServiceParameterPoints = @"points";
+
+static NSString *const MLCPointsServicePointTypeInteractive = @"Interactive";
 
 @interface MLCPointsService ()
-
-+ (NSString *)stringForPointsTotalType:(MLCPointsTotalType)type;
 
 @end
 
 @implementation MLCPointsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCPoints class];
 }
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCUser"];
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCUser class]];
 }
 
-+ (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSDictionary *searchParameters = @{@"pointTypeName": @"Interactive"};
-
-    return [self findScopedResourcesForResource:(id<MLCEntityProtocol>)user searchParameters:searchParameters handler:handler];
++ (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCPointsServiceCollectionCompletionHandler)handler {
+    NSDictionary *searchParameters = @{MLCPointsServiceParameterPointTypeName: MLCPointsServicePointTypeInteractive};
+    return [self findScopedResourcesForResource:user searchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSMutableDictionary *parameters = [@{@"pointTypeName": @"Interactive"} mutableCopy];
-    parameters[@"points"] = @(points);
-    NSString *totalTypeName = [self stringForPointsTotalType:totalType];
-    if (totalTypeName.length) parameters[@"totalTypeName"] = totalTypeName;
-    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"points"]];
-
++ (instancetype)updateTotalType:(MLCPointsServiceTotalType)totalType toPoints:(NSInteger)points forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
+    NSMutableDictionary *parameters = [@{MLCPointsServiceParameterPointTypeName: MLCPointsServicePointTypeInteractive,
+                                         MLCPointsServiceParameterPoints: @(points)} mutableCopy];
+    if (totalType.length) parameters[MLCPointsServiceParameterTotalTypeName] = totalType;
+    NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCPoints collectionName]]];
     return [self update:path parameters:parameters handler:handler];
 }
 
-+ (NSString *)stringForPointsTotalType:(MLCPointsTotalType)type {
-    if (type == MLCPointsTotalTypeBoth) return nil;
-    if (type == MLCPointsTotalTypeAccumulated) return MLCPointsTotalTypeAccumulatedString;
-    if (type == MLCPointsTotalTypePoints) return MLCPointsTotalTypePointsString;
-
-    return nil;
-}
 
 @end

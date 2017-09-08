@@ -15,15 +15,26 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCDeal;
 @class MLCLocation;
 
+MLCServiceCreateResourceCompletionHandler(MLCDealsService, MLCDeal);
+MLCServiceCreateCollectionCompletionHandler(MLCDealsService, MLCDeal);
+
+NS_SWIFT_NAME(DealsService)
 @interface MLCDealsService : MLCService
 
-+ (instancetype)readDealWithDealId:(NSUInteger)dealId handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)listDeals:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listDealsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)readDealWithDealId:(NSUInteger)dealId handler:(MLCDealsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readDeal(withId:handler:));
+
++ (instancetype)listDeals:(MLCDealsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCDealsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)redeemDeal:(MLCDeal *)deal handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(redeem(_:handler:));
 
 @end
+
+NS_ASSUME_NONNULL_END

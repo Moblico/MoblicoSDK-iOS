@@ -15,22 +15,30 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCMessage;
 @class MLCDeal;
 @class MLCReward;
 
+MLCServiceCreateResourceCompletionHandler(MLCMessageService, MLCMessage);
+
+typedef NSString *MLCMessageServiceStatus NS_STRING_ENUM NS_SWIFT_NAME(MLCMessageService.Status);
+FOUNDATION_EXPORT MLCMessageServiceStatus const MLCMessageServiceStatusOpened;
+FOUNDATION_EXPORT MLCMessageServiceStatus const MLCMessageServiceStatusDelivered;
+
 typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
     MLCMessageServiceTypeShare
-};
+} NS_SWIFT_NAME(MLCMessageService.Type);
 
 /**
  Messages can be sent from mobile applications to multiple devices, using the
  device ID, phone number, and email address.
  
  Use the MLCMessageService to send a MLCMessage using the Moblico platform.
-
- @since Available in MoblicoSDK 1.4 and later.
  */
+NS_SWIFT_NAME(MessageService)
 @interface MLCMessageService : MLCService
 
 /**
@@ -40,12 +48,10 @@ typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
  @param handler The request completion handler.
 
  @return A MLCMessageService instance.
-
- @since Available in MoblicoSDK 1.4 and later.
  
  @see -[MLCService start]
  */
-+ (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceSuccessCompletionHandler)handler;
 
 /**
  This method is used to send a message with the provided parameters.
@@ -57,16 +63,15 @@ typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
  @param handler        The request completion handler.
 
  @return A MLCMessageService instance.
-
- @since Available in MoblicoSDK 1.4 and later.
  */
-+ (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(nullable NSArray<NSString *> *)deviceIds phoneNumbers:(nullable NSArray<NSString *> *)phoneNumbers emailAddresses:(nullable NSArray<NSString *> *)emailAddresses handler:(MLCServiceSuccessCompletionHandler)handler;
 
 
-+ (instancetype)readMessageForDeal:(MLCDeal *)deal type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)readMessageForReward:(MLCReward *)reward type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)readMessageForResource:(id<MLCEntityProtocol>)resource type:(MLCMessageServiceType)type handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readMessageForDeal:(MLCDeal *)deal type:(MLCMessageServiceType)type handler:(MLCMessageServiceResourceCompletionHandler)handler;
++ (instancetype)readMessageForReward:(MLCReward *)reward type:(MLCMessageServiceType)type handler:(MLCMessageServiceResourceCompletionHandler)handler;
 
-+ (instancetype)updateMessageWithMessageId:(NSUInteger)messageId status:(NSString *)status handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)updateMessageWithMessageId:(NSUInteger)messageId status:(MLCMessageServiceStatus)status handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(updateMessage(withId:status:handler:));
 
 @end
+
+NS_ASSUME_NONNULL_END

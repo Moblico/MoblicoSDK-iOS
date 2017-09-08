@@ -14,14 +14,24 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCMerchant;
+
+MLCServiceCreateResourceCompletionHandler(MLCMerchantsService, MLCMerchant);
+MLCServiceCreateCollectionCompletionHandler(MLCMerchantsService, MLCMerchant);
+
+NS_SWIFT_NAME(MerchantsService)
 @interface MLCMerchantsService : MLCService
 
-+ (instancetype)readMerchantWithMerchantId:(NSUInteger)merchantId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readMerchantWithMerchantId:(NSUInteger)merchantId handler:(MLCMerchantsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readMerchant(withId:handler:));
 
-+ (instancetype)findMerchantsWithBeaconRegionEnabled:(BOOL)beaconRegionEnabled handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findMerchantsWithBeaconRegionEnabled:(BOOL)beaconRegionEnabled handler:(MLCMerchantsServiceCollectionCompletionHandler)handler;
 
-+ (instancetype)listMerchants:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listMerchants:(MLCMerchantsServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

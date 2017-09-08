@@ -19,21 +19,27 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol MLCEntityProtocol;
-
-/**
- All MLCService objects conform to the MLCService protocol.
- */
-@protocol MLCServiceProtocol <NSObject>
-
-@required
-- (void)start;
-- (void)cancel;
-
-@end
-
-
 @class MLCStatus;
+
+FOUNDATION_EXPORT NSErrorDomain const MLCServiceErrorDomain NS_SWIFT_NAME(MLCService.ErrorDomain);
+FOUNDATION_EXPORT NSString *const MLCServiceDetailedErrorsKey NS_SWIFT_NAME(MLCService.DetailedErrorsKey);
+
+#ifdef NS_ERROR_ENUM
+typedef NS_ERROR_ENUM(MLCServiceErrorDomain, MLCServiceErrorCode) {
+    MLCServiceErrorCodeMissingParameter = 1000,
+    MLCServiceErrorCodeInvalidParameter,
+    MLCServiceErrorCodeInternalError,
+    MLCServiceErrorCodeMultipleErrors
+} NS_SWIFT_NAME(MLCService.Error);
+#else
+typedef NS_ENUM(NSInteger, MLCServiceErrorCode) {
+    MLCServiceErrorCodeMissingParameter = 1000,
+    MLCServiceErrorCodeInvalidParameter,
+    MLCServiceErrorCodeInternalError,
+    MLCServiceErrorCodeMultipleErrors
+} NS_SWIFT_NAME(MLCService.ErrorCode);
+#endif
+
 
 /**
  Indicates the method used in the request
@@ -50,50 +56,36 @@ typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
 
     /// Deletes the specified resource.
     MLCServiceRequestMethodDELETE NS_SWIFT_NAME(delete)
-};
+} NS_SWIFT_NAME(MLCService.RequestMethod);
 
 /**
  The callback handler for JSON MLCService requests
  
  @param jsonObject The JSON data returned by the service request.
  @param error An error identifier.
- @param response The URL response returned by the service request that includes the HTTP response codes.
  */
-typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
-
-
-/**
- The callback handler for resource MLCService requests
- 
- @param resource The object returned by the service request.
- @param error An error identifier.
- @param response The URL response returned by the service request that includes the HTTP response codes.
- */
-typedef void(^MLCServiceResourceCompletionHandler)(id<MLCEntityProtocol> _Nullable resource, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
-
-/**
- The callback handler for collection MLCService requests
-
- @param collection The array of resources returned by the service request.
- @param error An error identifier.
- @param response The URL response returned by the service request that includes the HTTP response codes.
- */
-typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<MLCEntityProtocol> *_Nullable collection, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
+typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.JSONCompletionHandler);
 
 /**
  The callback handler for status MLCService requests
  
  @param success Boolean indicating if the action was successful.
  @param error An error identifier.
- @param response The URL response returned by the service request that includes the HTTP response codes.
  */
-typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
+
+typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.SuccessCompletionHandler);
+
+#define MLCServiceCreateResourceCompletionHandler(Name, Type) typedef void(^Name ## ResourceCompletionHandler)(Type *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)
+
+#define MLCServiceCreateCollectionCompletionHandler(Name, Type) typedef void(^Name ## CollectionCompletionHandler)(NSArray<Type *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(Name.CollectionCompletionHandler)
 
 /**
  Base class for all Moblico service objects.
  */
-@interface MLCService : NSObject <MLCServiceProtocol>
-
+NS_SWIFT_NAME(Service)
+@interface MLCService : NSObject
+- (void)start;
+- (void)cancel;
 @end
 
 NS_ASSUME_NONNULL_END

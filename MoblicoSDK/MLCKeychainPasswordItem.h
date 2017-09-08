@@ -18,16 +18,29 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const MLCKeychainPasswordItemErrorDomain;
-FOUNDATION_EXPORT NSString *const MLCKeychainPasswordItemErrorKeyOSStatus;
+FOUNDATION_EXPORT NSErrorDomain const MLCKeychainPasswordItemErrorDomain NS_SWIFT_NAME(MLCKeychainPasswordItem.ErrorDomain);
+
+FOUNDATION_EXPORT NSString *const MLCKeychainPasswordItemOSStatusErrorKey NS_SWIFT_NAME(MLCKeychainPasswordItem.OSStatusErrorKey);
+
+#ifdef NS_ERROR_ENUM
+typedef NS_ERROR_ENUM(MLCKeychainPasswordItemErrorDomain, MLCKeychainPasswordItemErrorCode) {
+    MLCKeychainPasswordItemErrorCodeNoData,
+    MLCKeychainPasswordItemErrorCodeInvalidData,
+    MLCKeychainPasswordItemErrorCodeInvalidItem,
+    MLCKeychainPasswordItemErrorCodeInvalidStatus
+} NS_SWIFT_NAME(MLCKeychainPasswordItem.Error);
+#else
 typedef NS_ENUM(NSUInteger, MLCKeychainPasswordItemErrorCode) {
     MLCKeychainPasswordItemErrorCodeNoData,
     MLCKeychainPasswordItemErrorCodeInvalidData,
     MLCKeychainPasswordItemErrorCodeInvalidItem,
     MLCKeychainPasswordItemErrorCodeInvalidStatus
-};
+} NS_SWIFT_NAME(MLCKeychainPasswordItem.ErrorCode);
+#endif
 
+NS_SWIFT_NAME(KeychainPasswordItem)
 @interface MLCKeychainPasswordItem : NSObject
+
 @property (nonatomic, copy, readonly) NSString *service;
 @property (nonatomic, copy, readonly, nullable) NSString *accessGroup;
 @property (nonatomic, copy, readonly) NSString *account;

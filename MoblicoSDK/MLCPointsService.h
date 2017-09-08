@@ -15,17 +15,25 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString *MLCPointsServiceTotalType NS_STRING_ENUM NS_SWIFT_NAME(MLCPointsService.TotalType);
+FOUNDATION_EXPORT MLCPointsServiceTotalType const MLCPointsServiceTotalTypePoints;
+FOUNDATION_EXPORT MLCPointsServiceTotalType const MLCPointsServiceTotalTypeAccumulated;
+FOUNDATION_EXPORT MLCPointsServiceTotalType const MLCPointsServiceTotalTypeBoth;
+
 @class MLCUser;
+@class MLCPoints;
 
-typedef NS_OPTIONS(NSUInteger, MLCPointsTotalType) {
-    MLCPointsTotalTypePoints = (1 << 0),
-    MLCPointsTotalTypeAccumulated = (1 << 1),
-    MLCPointsTotalTypeBoth = (MLCPointsTotalTypePoints | MLCPointsTotalTypeAccumulated)
-};
+MLCServiceCreateCollectionCompletionHandler(MLCPointsService, MLCPoints);
 
+NS_SWIFT_NAME(PointsService)
 @interface MLCPointsService : MLCService
 
-+ (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)updatePoints:(NSInteger)points type:(MLCPointsTotalType)totalType forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCPointsServiceCollectionCompletionHandler)handler;
++ (instancetype)updateTotalType:(MLCPointsServiceTotalType)totalType toPoints:(NSInteger)points forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(update(_:to:for:handler:));
 
 @end
+
+NS_ASSUME_NONNULL_END

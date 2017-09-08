@@ -18,13 +18,14 @@
 @class MLCValidations;
 
 /**
- All MLCEntity objects conform to the MLCEntity protocol.
+ Base class for all Moblico model objects.
  */
-@protocol MLCEntityProtocol <NSObject, NSCoding, NSCopying>
+NS_SWIFT_NAME(Entity)
+@interface MLCEntity : NSObject
 @property (nonatomic, readonly, strong) id uniqueIdentifier;
 
-- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
-+ (NSDictionary *)serialize:(id<MLCEntityProtocol>)entity;
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject;
++ (NSDictionary<NSString *, id> *)serialize:(MLCEntity *)entity;
 
 + (NSString *)collectionName;
 + (NSString *)resourceName;
@@ -33,12 +34,5 @@
 
 @property (nonatomic, readonly, class, strong) MLCValidations *validations;
 - (BOOL)validate:(out NSError *__autoreleasing *)error;
-
-@end
-
-/**
- Base class for all Moblico model objects.
- */
-@interface MLCEntity : NSObject <MLCEntityProtocol>
 
 @end

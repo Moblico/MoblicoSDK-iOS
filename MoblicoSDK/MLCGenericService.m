@@ -14,12 +14,12 @@
  limitations under the License.
  */
 
-#import "MLCBasicService.h"
+#import "MLCGenericService.h"
 #import "MLCService_Private.h"
 
-@implementation MLCBasicService
+@implementation MLCGenericService
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCGenericServiceResourceCompletionHandler)handler {
     return [super create:path parameters:parameters handler:handler];
 }
 
@@ -31,15 +31,19 @@
     return [super destroy:path parameters:parameters handler:handler];
 }
 
-+ (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCGenericServiceResourceCompletionHandler)handler {
     return [super read:path parameters:parameters handler:handler];
 }
 
-+ (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCGenericServiceCollectionCompletionHandler)handler {
     return [super find:path searchParameters:searchParameters handler:handler];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (instancetype)fetch:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
+    return [super fetch:path parameters:parameters handler:handler];
+}
+
++ (Class)classForResource {
     return [super classForResource];
 }
 

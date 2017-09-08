@@ -16,14 +16,15 @@
 
 #import "MLCProductCategoriesService.h"
 #import "MLCService_Private.h"
+#import "MLCProductCategory.h"
 
 @implementation MLCProductCategoriesService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCProductCategory class];
 }
 
-+ (instancetype)listProductCategories:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listProductCategories:(MLCProductCategoriesServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 

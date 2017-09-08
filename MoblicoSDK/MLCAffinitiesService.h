@@ -16,7 +16,12 @@
 
 #import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCLocation;
+@class MLCAffinity;
+
+MLCServiceCreateCollectionCompletionHandler(MLCAffinitiesService, MLCAffinity);
 
 /**
  Moblico affinity facilitates a points plus rewards system.
@@ -28,6 +33,7 @@
  
  Use the MLCAffinitiesService class to retrieve affinites from the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(AffinitiesService)
 @interface MLCAffinitiesService : MLCService
 
 /**
@@ -38,7 +44,7 @@
 
  @return A MLCAffinitiesService instance which conforms to MLCServiceProtocol.
  */
-+ (instancetype)listAffinities:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listAffinities:(MLCAffinitiesServiceCollectionCompletionHandler)handler;
 
 /**
  This method creates a service that retrieves the list of affinities
@@ -48,6 +54,8 @@
  @param handler Completion handler.
  @return A MLCAffinitiesService instance which conforms to the MLCServiceProtocol protocol.
  */
-+ (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCAffinitiesServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

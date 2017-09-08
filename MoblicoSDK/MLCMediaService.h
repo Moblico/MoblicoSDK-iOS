@@ -15,15 +15,29 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString *MLCMediaServiceParameter NS_STRING_ENUM NS_SWIFT_NAME(MLCMediaService.Parameter);
+FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterMediaType;
+FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterMediaTypeCategory;
+FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterCategory;
+
+typedef NSDictionary<MLCMediaServiceParameter, id> * MLCMediaServiceParameters NS_SWIFT_NAME(MLCMediaService.Parameters);
+
 @class MLCLocation;
 @class MLCEvent;
 @class MLCMedia;
+
+MLCServiceCreateResourceCompletionHandler(MLCMediaService, MLCMedia);
+MLCServiceCreateCollectionCompletionHandler(MLCMediaService, MLCMedia);
 
 /**
  The media facility provides the means to reference and provide dynamic meta data for any type of content required.
 
  Media is loaded and managed using Moblico's admin tool.
  */
+NS_SWIFT_NAME(MediaService)
 @interface MLCMediaService : MLCService
 
 /**
@@ -36,23 +50,22 @@
 
  @see -[MLCService start]
  */
-+ (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCMediaServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readMedia(withId:handler:));
 
 /**
  This method requests all media for the specified type and category.
 
- @param mediaType The media type requested.
- @param mediaTypeCategory The media type category requested.
+ @param parameters Search parameters.
  @param handler The request completion handler.
  */
-+ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findMediaWithParameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler;
 
 /**
  This method requests all media.
 
  @param handler The request completion handler.
  */
-+ (instancetype)listMedia:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listMedia:(MLCMediaServiceCollectionCompletionHandler)handler;
 
 /**
  This method requests all media for a specified location.
@@ -60,8 +73,9 @@
  @param location The MLCLocation instance that the media are assigned to.
  @param handler The request completion handler.
  */
-+ (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findMediaForLocation:(MLCLocation *)location mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCMediaServiceCollectionCompletionHandler)handler;
+
++ (instancetype)findMediaForLocation:(MLCLocation *)location parameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler;
 
 /**
  This method requests all media for a specified event.
@@ -69,23 +83,13 @@
  @param event The MLCEvent instance that the media are assigned to.
  @param handler The request completion handler.
  */
-+ (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCMediaServiceCollectionCompletionHandler)handler;
 
 
++ (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCMediaServiceCollectionCompletionHandler)handler;
 
-+ (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findMediaForMedia:(MLCMedia *)media mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler;
-
-/**
- This method requests all media for a specified generic resource.
- 
- This is a generic method for requesting media that are assigned to another
- resource. For example, you can call this method with either a MLCEvent or
- MLCLocation instance as the resource.
-
- @param resource The resource that the media is assigned to.
- @param handler The request completion handler.
- */
-+ (instancetype)listMediaForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findMediaForMedia:(MLCMedia *)media parameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

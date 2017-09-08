@@ -17,75 +17,73 @@
 #import <MoblicoSDK/MLCEntity.h>
 @class MLCLocation;
 
-/**
- Indicates the type of metric.
- */
-typedef NS_ENUM(NSUInteger, MLCMetricType) {
-    /// Specifies that the application started.
-    MLCMetricTypeApplicationStart,
+/// Indicates the type of metric.
+typedef NSString *MLCMetricType NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(MLCMetric.Type);
 
-    /// Specifies that the application has exited.
-    MLCMetricTypeApplicationStop,
+/// Specifies that the application started.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeApplicationStart;
 
-    /// Specifies that the application has been sent to the background.
-    MLCMetricTypeInBackground,
+/// Specifies that the application has exited.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeApplicationStop;
 
-    /// Specifies that the application has resumed from the background.
-    MLCMetricTypeOutBackground,
+/// Specifies that the application has been sent to the background.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeInBackground;
 
-    /// Specifies that the application has presented a view.
-    MLCMetricTypeEnterPage,
+/// Specifies that the application has resumed from the background.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeOutBackground;
 
-    /// Specifies that the application has dismissed a view.
-    MLCMetricTypeExitPage,
+/// Specifies that the application has presented a view.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeEnterPage;
 
-    /// Specifies that the user has interacted an ad.
-    MLCMetricTypeAdClick,
+/// Specifies that the application has dismissed a view.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExitPage;
 
-    /// Specifies a generic tracking metric.
-    MLCMetricTypeTracking,
+/// Specifies that the user has interacted an ad.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeAdClick;
 
-    /// Specifies a custom metric used for triggers.
-    MLCMetricTypeCustom,
+/// Specifies a generic tracking metric.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeTracking;
 
-    /// Specifies that the user has interacted with a deal.
-    MLCMetricTypeViewDeal,
+/// Specifies a custom metric used for triggers.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeCustom;
 
-    /// Specifies that the user has interacted with a reward.
-    MLCMetricTypeViewReward,
+/// Specifies that the user has interacted with a deal.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewDeal;
 
-    /// Specifies that the user has interacted with a location.
-    MLCMetricTypeViewLocation,
+/// Specifies that the user has interacted with a reward.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewReward;
 
-    /// Specifies that the user has interacted with an event.
-    MLCMetricTypeViewEvent,
+/// Specifies that the user has interacted with a location.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewLocation;
 
-    /// Specifies that the user has interacted with a media.
-    MLCMetricTypeViewMedia,
+/// Specifies that the user has interacted with an event.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewEvent;
 
-    /// Specifies that the user has shared the app.
-    MLCMetricTypeShareApp,
+/// Specifies that the user has interacted with a media.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewMedia;
 
-    /// Specifies that the user has shared a deal.
-    MLCMetricTypeShareDeal,
+/// Specifies that the user has shared the app.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeShareApp;
 
-    /// Specifies that the user has shared a reward.
-    MLCMetricTypeShareReward,
+/// Specifies that the user has shared a deal.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeShareDeal;
 
-    /// Specifies that the user has shared a location.
-    MLCMetricTypeShareLocation,
-    MLCMetricTypeEnterGeoRegion,
-    MLCMetricTypeExitGeoRegion,
-    MLCMetricTypeEnterBeaconRegion,
-    MLCMetricTypeExitBeaconRegion,
-    MLCMetricTypeChangeGPS,
+/// Specifies that the user has shared a reward.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeShareReward;
+
+/// Specifies that the user has shared a location.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeShareLocation;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeEnterGeoRegion;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExitGeoRegion;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeEnterBeaconRegion;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExitBeaconRegion;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeChangeGPS;
 
 
-    MLCMetricTypeViewProduct,
-    MLCMetricTypeShareProduct,
-    MLCMetricTypeOpenProduct,
-    MLCMetricTypeExternalOpenProduct
-};
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewProduct;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeShareProduct;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeOpenProduct;
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExternalOpenProduct;
 
 /**
  Moblico metrics provide a means for mobile applications to track and report
@@ -95,6 +93,7 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
  
  A MLCMetric object encapsulates the data of a metric which will be sent to Moblico.
  */
+NS_SWIFT_NAME(Metric)
 @interface MLCMetric : MLCEntity
 
 /**
@@ -102,7 +101,7 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
  
  @see MLCMetricType
  */
-@property (nonatomic) MLCMetricType type;
+@property (copy, nonatomic) MLCMetricType type;
 
 /**
  The text for this metric. (optional)
@@ -137,7 +136,7 @@ typedef NS_ENUM(NSUInteger, MLCMetricType) {
  This time stamp will be automatically populated if you use the
  convenience class method metricWithType:text:username:.
  */
-@property (nonatomic, readonly) NSDate *timeStamp;
+@property (nonatomic, strong, readonly) NSDate *timeStamp;
 
 /**
  Convenience class method to create a MLCMetric object with the provided parameters.

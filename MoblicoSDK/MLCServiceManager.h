@@ -24,16 +24,21 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param authenticatedRequest The authenticated request.
  @param error The error that occured during authentication (will be nil if no error).
- @param response The data returned during authentication.
  */
-typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *_Nullable authenticatedRequest, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
+typedef void(^MLCServiceManagerAuthenticationCompletionHandler)(NSURLRequest *_Nullable authenticatedRequest, NSError *_Nullable error) NS_SWIFT_NAME(MLCServiceManager.AuthenticationCompletionHandler);
 
 /**
  The name of the exception raised when getting an instance of the `MLCServiceManager` before the API key is set.
  
  Also raised if the API key is set more than once.
  */
-FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
+FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException NS_SWIFT_NAME(MLCServiceManager.InvalidAPIKeyException);
+
+typedef NS_ENUM(NSInteger, MLCServiceManagerLogging) {
+    MLCServiceManagerLoggingDisabled = 0,
+    MLCServiceManagerLoggingEnabled = 1,
+    MLCServiceManagerLoggingEnabledVerbose NS_SWIFT_NAME(verbose)
+} NS_SWIFT_NAME(MLCServiceManager.Logging);
 
 /**
  `MLCServiceManager` keeps track of your Moblico API Key, and authenticates
@@ -45,6 +50,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  For user level authentication call `-[MLCServiceManager setCurrentUser:remember:]`
  on the shared instance.
  */
+NS_SWIFT_NAME(ServiceManager)
 @interface MLCServiceManager : NSObject
 
 #pragma mark Shared Instance
@@ -121,7 +127,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
  @param request The unauthenticated request which needs to be authenticated.
  @param handler Completion handler with the authenticated request.
  */
-- (void)authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler;
+- (void)authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler NS_SWIFT_NAME(authenticate(_:handler:));
 
 #pragma mark Configuration
 ///--------------------
@@ -135,7 +141,7 @@ FOUNDATION_EXPORT NSString *const MLCInvalidAPIKeyException;
 @property (atomic, class, assign, getter=isTestingEnabled) BOOL testingEnabled;
 
 /// Indicates whether service calls are logged to the console.
-@property (atomic, class, assign, getter=isLoggingEnabled) BOOL loggingEnabled;
+@property (atomic, class, assign) MLCServiceManagerLogging logging;
 
 /// Indicates whether parameters are always passed in the query string.
 @property (atomic, class, assign, getter=isForceQueryParametersEnabled) BOOL forceQueryParametersEnabled;

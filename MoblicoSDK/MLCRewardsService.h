@@ -15,18 +15,27 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCReward;
 @class MLCUser;
 @class MLCLocation;
 
+MLCServiceCreateResourceCompletionHandler(MLCRewardsService, MLCReward);
+MLCServiceCreateCollectionCompletionHandler(MLCRewardsService, MLCReward);
+
+NS_SWIFT_NAME(RewardsService)
 @interface MLCRewardsService : MLCService
 
-+ (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)listRewards:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listRewardsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler;;
-+ (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler;
-+ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCRewardsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readReward(withId:handler:));
++ (instancetype)listRewards:(MLCRewardsServiceCollectionCompletionHandler)handler;
++ (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCRewardsServiceCollectionCompletionHandler)handler;
++ (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCRewardsServiceCollectionCompletionHandler)handler;
++ (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(redeem(_:handler:));
++ (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(redeem(_:autoPurchase:handler:));
++ (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(purchase(_:handler:));
+
 @end
+
+NS_ASSUME_NONNULL_END

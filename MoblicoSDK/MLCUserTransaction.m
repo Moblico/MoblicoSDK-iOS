@@ -38,7 +38,7 @@ static NSString *const MLCUserTransactionTypeUnknownString = @"UNKNOWN";
     return self;
 }
 
-+ (NSDictionary *)serialize:(id<MLCEntityProtocol>)entity {
++ (NSDictionary *)serialize:(MLCEntity *)entity {
     NSMutableDictionary *dictionary = [[super serialize:entity] mutableCopy];
     if ([entity isKindOfClass:[MLCUserTransaction class]]) {
         MLCUserTransaction *transaction = (MLCUserTransaction *)entity;

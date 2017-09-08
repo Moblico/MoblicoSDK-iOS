@@ -15,10 +15,19 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
-@class MLCUser;
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCUser;
+@class MLCAuthenticationToken;
+
+MLCServiceCreateResourceCompletionHandler(MLCAuthenticationService, MLCAuthenticationToken);
+
+NS_SWIFT_NAME(AuthenticationService)
 @interface MLCAuthenticationService : MLCService
 
-+ (instancetype)authenticateWithAPIKey:(NSString *)apiKey user:(MLCUser *)user childKeyword:(NSString *)childKeyword handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)authenticateAPIKey:(NSString *)apiKey user:(nullable MLCUser *)user childKeyword:(nullable NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler NS_SWIFT_NAME(authenticate(apiKey:user:childKeyword:handler:));
 
 @end
+
+NS_ASSUME_NONNULL_END

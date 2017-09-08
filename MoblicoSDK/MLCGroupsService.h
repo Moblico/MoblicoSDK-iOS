@@ -14,22 +14,31 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCUser;
 @class MLCGroup;
 
+MLCServiceCreateResourceCompletionHandler(MLCGroupsService, MLCGroup);
+MLCServiceCreateCollectionCompletionHandler(MLCGroupsService, MLCGroup);
+
+NS_SWIFT_NAME(GroupsService)
 @interface MLCGroupsService : MLCService
 
-+ (instancetype)listGroups:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)listGroupsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listGroups:(MLCGroupsServiceCollectionCompletionHandler)handler;
+
++ (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler;
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
+
++ (instancetype)removeUser:(MLCUser *)user fromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)removeCurrentUserFromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler;
@@ -41,6 +50,8 @@
 /**
  @since Unavailable in this version of the MoblicoSDK.
  */
-+ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCServiceResourceCompletionHandler)handler MLC_UNAVAILABLE("'readGroupWithGroupId:handler:' is not available with this version of the Moblico SDK.");
++ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCGroupsServiceResourceCompletionHandler)handler __attribute__((unavailable("'readGroupWithGroupId:handler:' is not available with this version of the Moblico SDK.")));
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -24,12 +24,13 @@
  
  A MLCEvent object encapsulates the data of an event stored in the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(Event)
 @interface MLCEvent : MLCEntity
 
 /**
  A unique identifier for this event.
  */
-@property (nonatomic) NSUInteger eventId;
+@property (nonatomic) NSUInteger eventId NS_SWIFT_NAME(id);
 
 /**
  The unique identifier for the parent event associated with this event.

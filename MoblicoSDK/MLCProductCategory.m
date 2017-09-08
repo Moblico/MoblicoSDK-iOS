@@ -15,6 +15,7 @@
  */
 
 #import "MLCProductCategory.h"
+#import "MLCProductType.h"
 
 @implementation MLCProductCategory
 

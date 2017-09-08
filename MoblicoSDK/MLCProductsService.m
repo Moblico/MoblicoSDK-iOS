@@ -16,37 +16,38 @@
 
 #import "MLCProductsService.h"
 #import "MLCService_Private.h"
+#import "MLCProduct.h"
 
 @implementation MLCProductsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCProduct class];
 }
 
-+ (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self findProductsWithFilters:filters productTypes:nil handler:handler];
++ (instancetype)listProducts:(MLCProductsServiceCollectionCompletionHandler)handler {
+    return [self listResources:handler];
 }
 
-+ (instancetype)findProductsWithProductTypes:(NSArray *)productTypes handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self findProductsWithFilters:nil productTypes:productTypes handler:handler];
++ (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCProductsServiceCollectionCompletionHandler)handler {
+    return [self findProductsWithFilters:filters productTypes:@[] handler:handler];
 }
 
-+ (instancetype)findProductsWithFilters:(NSString *)filters productTypes:(NSArray *)productTypes handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findProductsWithProductTypes:(NSArray *)productTypes handler:(MLCProductsServiceCollectionCompletionHandler)handler {
+    return [self findProductsWithFilters:@"" productTypes:productTypes handler:handler];
+}
+
++ (instancetype)findProductsWithFilters:(NSString *)filters productTypes:(NSArray *)productTypes handler:(MLCProductsServiceCollectionCompletionHandler)handler {
     NSMutableDictionary *parameters = [@{} mutableCopy];
 
     if (productTypes.count) {
-        parameters[@"productTypes"] = [productTypes componentsJoinedByString:@","];
+        parameters[@"productTypes"] = [productTypes componentsJoinedByString:@"|"];
     }
 
     if (filters.length) {
         parameters[@"filters"] = filters;
     }
 
-    if (parameters.count) {
-        return [self findResourcesWithSearchParameters:parameters handler:handler];
-    }
-
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:parameters handler:handler];
 }
 
 

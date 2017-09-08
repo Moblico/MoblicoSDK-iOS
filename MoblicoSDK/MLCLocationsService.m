@@ -15,77 +15,97 @@
  */
 
 #import "MLCService_Private.h"
-
+#import "MLCEntity_Private.h"
 #import "MLCLocationsService.h"
 #import "MLCLocation.h"
+#import "MLCEvent.h"
+#import "MLCDeal.h"
+#import "MLCReward.h"
+#import "MLCMerchant.h"
+
+MLCLocationsServiceParameter const MLCLocationsServiceParameterType = @"type";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterPostalCode = @"zipcode";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterLatitude = @"latitude";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterLongitude = @"longitude";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterRadius = @"radius";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterPage = @"page";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterMerchantId = @"merchantId";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterCheckInEnabled = @"checkInEnabled";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterNotificationEnabled = @"notificationEnabled";
+MLCLocationsServiceParameter const MLCLocationsServiceParameterCLLocation = @"clLocation";
+
 
 @implementation MLCLocationsService
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCEvent", @"MLCDeal", @"MLCReward", @"MLCMerchant"];
++ (NSMutableDictionary *)sanitizeParameters:(MLCLocationsServiceParameters)parameters {
+    NSMutableDictionary *params = [parameters mutableCopy];
+    params[MLCLocationsServiceParameterType] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterType]];
+    params[MLCLocationsServiceParameterPostalCode] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterPostalCode]];
+    params[MLCLocationsServiceParameterRadius] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterRadius]];
+    params[MLCLocationsServiceParameterPage] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterPage]];
+    params[MLCLocationsServiceParameterMerchantId] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterMerchantId]];
+    params[MLCLocationsServiceParameterCheckInEnabled] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterCheckInEnabled]];
+    params[MLCLocationsServiceParameterNotificationEnabled] = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterNotificationEnabled]];
+
+    NSString *latitude = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterLatitude]];
+    NSString *longitude = [MLCEntity stringFromValue:params[MLCLocationsServiceParameterLongitude]];
+    CLLocation *location = params[MLCLocationsServiceParameterCLLocation];
+    if (location) {
+        params[MLCLocationsServiceParameterCLLocation] = nil;
+        latitude = [MLCEntity stringFromValue:@(location.coordinate.latitude)];
+        longitude = [MLCEntity stringFromValue:@(location.coordinate.longitude)];
+    }
+
+    NSUInteger maxLength = 16;
+    params[MLCLocationsServiceParameterLatitude] = [latitude substringToIndex:MIN(latitude.length, maxLength)];
+    params[MLCLocationsServiceParameterLongitude] = [longitude substringToIndex:MIN(longitude.length, maxLength)];
+
+    return params;
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCEvent class], [MLCDeal class], [MLCReward class], [MLCMerchant class]];
+}
+
++ (Class)classForResource {
     return [MLCLocation class];
 }
 
-+ (instancetype)readLocationWithLocationId:(NSUInteger)locationId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readLocationWithLocationId:(NSUInteger)locationId handler:(MLCLocationsServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(locationId) handler:handler];
 }
 
-+ (instancetype)findLocationsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self findResourcesWithSearchParameters:searchParameters handler:handler];
++ (instancetype)listLocations:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    return [self listResources:handler];
 }
 
-+ (NSDictionary *)searchParametersForTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius {
-    NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
-    if (typeName.length) searchParameters[@"locationTypeName"] = typeName;
-    if (postalCode.length) searchParameters[@"zipcode"] = postalCode;
-    if ((int)latitude) searchParameters[@"latitude"] = @(latitude);
-    if ((int)longitude) searchParameters[@"longitude"] = @(longitude);
-    if ((int)radius) searchParameters[@"radius"] = @(radius);
-
-    return searchParameters;
++ (instancetype)findLocationsWithParameters:(MLCLocationsServiceParameters)parameters handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    return [self findResourcesWithSearchParameters:[self sanitizeParameters:parameters] handler:handler];
 }
 
-+ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant typeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
-
-    NSDictionary *searchParameters = [self searchParametersForTypeNamed:typeName
-                                                             postalCode:postalCode
-                                                               latitude:latitude
-                                                              longitude:longitude
-                                                                 radius:radius];
-    return [self findLocationsForMerchant:merchant
-                         searchParameters:searchParameters
-                                  handler:handler];
++ (instancetype)listLocationsForEvent:(MLCEvent *)event handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    return [self listLocationsForResource:event handler:handler];
 }
 
-+ (instancetype)findLocationsWithTypeNamed:(NSString *)typeName postalCode:(NSString *)postalCode latitude:(double)latitude longitude:(double)longitude radius:(double)radius handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSDictionary *searchParameters = [self searchParametersForTypeNamed:typeName postalCode:postalCode latitude:latitude longitude:longitude radius:radius];
-    return [self findLocationsWithSearchParameters:searchParameters handler:handler];
++ (instancetype)listLocationsForDeal:(MLCDeal *)deal handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    return [self listLocationsForResource:deal handler:handler];
 }
 
-+ (instancetype)listLocationsForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntityProtocol>)event handler:handler];
++ (instancetype)listLocationsForReward:(MLCReward *)reward handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    return [self listLocationsForResource:reward handler:handler];
 }
 
-+ (instancetype)listLocationsForDeal:(MLCDeal *)deal handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntityProtocol>)deal handler:handler];
++ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant parameters:(MLCLocationsServiceParameters)parameters handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    NSMutableDictionary *searchParameters = [self sanitizeParameters:parameters];
+    [searchParameters removeObjectForKey:MLCLocationsServiceParameterMerchantId];
+    return [self findScopedResourcesForResource:merchant searchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)listLocationsForReward:(MLCReward *)reward handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntityProtocol>)reward handler:handler];
++ (instancetype)listLocationsForMerchant:(MLCMerchant *)merchant handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
+    return [self listLocationsForResource:merchant handler:handler];
 }
 
-+ (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self findScopedResourcesForResource:(id<MLCEntityProtocol>)merchant searchParameters:searchParameters handler:handler];
-}
-
-+ (instancetype)listLocationsForMerchant:(MLCMerchant *)merchant handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listLocationsForResource:(id<MLCEntityProtocol>)merchant handler:handler];
-}
-
-+ (instancetype)listLocationsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listLocationsForResource:resource handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

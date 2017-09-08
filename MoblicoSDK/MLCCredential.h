@@ -14,21 +14,23 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCEntity.h>
 
-@interface MLCCredential : MLCEntity
+NS_SWIFT_NAME(Account)
+@interface MLCAccount: MLCEntity
 
-@property (nonatomic) NSUInteger accountId;
-@property (nonatomic, copy) NSString *accountName;
-@property (nonatomic, copy) NSString *apiKey;
-@property (nonatomic, copy) NSString *keyword;
-@property (nonatomic) NSUInteger parentAccountId;
-
-//private long accountId;
-//private String accountName;
-//private String username;
-//private String apiKey;
-//private String keyword;
-//private long parentAccountId;
+@property (nonatomic) NSUInteger accountId NS_SWIFT_NAME(id);
+@property (nonatomic) NSUInteger parentId;
+@property (nonatomic, copy) NSString *name;
 
 @end
+
+NS_SWIFT_NAME(Credential)
+@interface MLCCredential : MLCEntity
+
+@property (nonatomic, strong) MLCAccount *account;
+@property (nonatomic, copy) NSString *apiKey;
+@property (nonatomic, copy) NSString *keyword;
+
+@end
+

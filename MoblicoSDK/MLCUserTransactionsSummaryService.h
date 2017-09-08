@@ -15,10 +15,19 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
-@class MLCUser;
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCUser;
+@class MLCUserTransactionsSummary;
+
+MLCServiceCreateResourceCompletionHandler(MLCUserTransactionsSummaryService, MLCUserTransactionsSummary);
+
+NS_SWIFT_NAME(UserTransactionsSummaryService)
 @interface MLCUserTransactionsSummaryService : MLCService
 
-+ (instancetype)readTransactionsSummaryForUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)readUserTransactionsSummaryForUser:(MLCUser *)user handler:(MLCUserTransactionsSummaryServiceResourceCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -18,41 +18,59 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol MLCEntityProtocol;
+@class MLCEntity;
 
-FOUNDATION_EXPORT NSString *const MLCValidationErrorDomain;
-FOUNDATION_EXPORT NSString *const MLCValidationDetailedErrorsKey;
+FOUNDATION_EXPORT NSErrorDomain const MLCValidationErrorDomain NS_SWIFT_NAME(MLCValidation.ErrorDomain);
+FOUNDATION_EXPORT NSString *const MLCValidationDetailedErrorsKey NS_SWIFT_NAME(MLCValidation.DetailedErrorsKey);
 
-typedef BOOL(^MLCValidationTest)(id<MLCEntityProtocol> entity, NSString *key, NSString *_Nullable value);
+typedef BOOL(^MLCValidateTest)(__kindof MLCEntity *entity, NSString *key, NSString *_Nullable value) NS_SWIFT_NAME(MLCValidate.Test);
 
+
+#ifdef NS_ERROR_ENUM
+typedef NS_ERROR_ENUM(MLCValidationErrorDomain, MLCValidationErrorCode) {
+    MLCValidationUnknownError NS_SWIFT_NAME(unknown) = -1,
+    MLCValidationError NS_SWIFT_NAME(error) = 0,
+    MLCValidationMultipleErrorsError NS_SWIFT_NAME(multiple) = 1
+} NS_SWIFT_NAME(MLCValidation.Error);
+#else
 typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
     MLCValidationUnknownError NS_SWIFT_NAME(unknown) = -1,
     MLCValidationError NS_SWIFT_NAME(error) = 0,
     MLCValidationMultipleErrorsError NS_SWIFT_NAME(multiple) = 1
-};
+} NS_SWIFT_NAME(MLCValidation.ErrorCode);
+#endif
 
-@class MLCValidate, MLCValidationResults;
+@class MLCValidate, MLCValidation;
 
+NS_SWIFT_NAME(Validations)
 @interface MLCValidations : NSObject
+
 @property (nonatomic, assign, readonly) NSUInteger count;
+
+- (void)appendRule:(MLCValidate *)rule forKey:(NSString *)key NS_SWIFT_NAME(append(_:forKey:));
+- (void)appendRules:(NSArray<MLCValidate *> *)rules forKey:(NSString *)key NS_SWIFT_NAME(append(_:forKey:));
+
 - (NSArray<MLCValidate *> *)objectForKeyedSubscript:(NSString *)key;
-- (void)setObject:(id)obj forKeyedSubscript:(NSString *)key;
-- (MLCValidationResults *)validate:(id<MLCEntityProtocol>)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing *_Nonnull)ioValue;
+- (void)setObject:(NSArray<MLCValidate *> *)obj forKeyedSubscript:(NSString *)key;
+
+- (MLCValidation *)validate:(MLCEntity *)entity key:(NSString *)key value:(inout id _Nullable __autoreleasing *_Nonnull)ioValue;
 
 @end
 
+NS_SWIFT_NAME(Validate)
 @interface MLCValidate : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)validatePresenceWithMessage:(NSString *)message NS_SWIFT_NAME(init(presence:));
-+ (instancetype)validateFormat:(NSString *)format message:(NSString *)message;
++ (instancetype)validateFormat:(NSString *)format message:(NSString *)message; // Case insensite
 + (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message;
 + (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message;
-- (instancetype)initWithMessage:(NSString *)message validationTest:(MLCValidationTest)test;
+- (instancetype)initWithMessage:(NSString *)message validateTest:(MLCValidateTest)test;
 @end
 
-@interface MLCValidationResults : NSObject
+NS_SWIFT_NAME(Validation)
+@interface MLCValidation : NSObject
 @property (nonatomic, readonly, copy, nullable) NSError *firstError;
 @property (nonatomic, readonly, copy, nullable) NSError *multipleErrorsError;
 @property (nonatomic, getter=isValid, readonly) BOOL valid;

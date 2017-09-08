@@ -22,6 +22,7 @@
 
  Tokens expire 24 hours after being issued.
  */
+NS_SWIFT_NAME(AuthenticationToken)
 @interface MLCAuthenticationToken : MLCEntity
 
 /**

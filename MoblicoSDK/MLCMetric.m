@@ -21,38 +21,37 @@
 
 @import CoreLocation;
 
-static NSString *const MLCMetricTypeApplicationStartString = @"Application_Start";
-static NSString *const MLCMetricTypeApplicationStopString = @"Application_Stop";
-static NSString *const MLCMetricTypeInBackgroundString = @"In_Background";
-static NSString *const MLCMetricTypeOutBackgroundString = @"Out_Background";
-static NSString *const MLCMetricTypeEnterPageString = @"Enter_Page";
-static NSString *const MLCMetricTypeExitPageString = @"Exit_Page";
-static NSString *const MLCMetricTypeAdClickString = @"Ad_Click";
-static NSString *const MLCMetricTypeTrackingString = @"Tracking";
-static NSString *const MLCMetricTypeCustomString = @"Custom";
-static NSString *const MLCMetricTypeViewDealString = @"View_Deal";
-static NSString *const MLCMetricTypeViewRewardString = @"View_Reward";
-static NSString *const MLCMetricTypeViewLocationString = @"View_Location";
-static NSString *const MLCMetricTypeViewEventString = @"View_Event";
-static NSString *const MLCMetricTypeViewMediaString = @"View_Media";
-static NSString *const MLCMetricTypeShareAppString = @"Share_App";
-static NSString *const MLCMetricTypeShareDealString = @"Share_Deal";
-static NSString *const MLCMetricTypeShareRewardString = @"Share_Reward";
-static NSString *const MLCMetricTypeShareLocationString = @"Share_Location";
-static NSString *const MLCMetricTypeEnterGeoRegionString = @"Enter_Geo_Region";
-static NSString *const MLCMetricTypeExitGeoRegionString = @"Exit_Geo_Region";
-static NSString *const MLCMetricTypeEnterBeaconRegionString = @"Enter_Beacon_Region";
-static NSString *const MLCMetricTypeExitBeaconRegionString = @"Exit_Beacon_Region";
-static NSString *const MLCMetricTypeChangeGPSString = @"Change_GPS";
-static NSString *const MLCMetricTypeViewProductString = @"View_Product";
-static NSString *const MLCMetricTypeShareProductString = @"Share_Product";
-static NSString *const MLCMetricTypeOpenProductString = @"Open_Product";
-static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_Product";
+MLCMetricType const MLCMetricTypeApplicationStart = @"Application_Start";
+MLCMetricType const MLCMetricTypeApplicationStop = @"Application_Stop";
+MLCMetricType const MLCMetricTypeInBackground = @"In_Background";
+MLCMetricType const MLCMetricTypeOutBackground = @"Out_Background";
+MLCMetricType const MLCMetricTypeEnterPage = @"Enter_Page";
+MLCMetricType const MLCMetricTypeExitPage = @"Exit_Page";
+MLCMetricType const MLCMetricTypeAdClick = @"Ad_Click";
+MLCMetricType const MLCMetricTypeTracking = @"Tracking";
+MLCMetricType const MLCMetricTypeCustom = @"Custom";
+MLCMetricType const MLCMetricTypeViewDeal = @"View_Deal";
+MLCMetricType const MLCMetricTypeViewReward = @"View_Reward";
+MLCMetricType const MLCMetricTypeViewLocation = @"View_Location";
+MLCMetricType const MLCMetricTypeViewEvent = @"View_Event";
+MLCMetricType const MLCMetricTypeViewMedia = @"View_Media";
+MLCMetricType const MLCMetricTypeShareApp = @"Share_App";
+MLCMetricType const MLCMetricTypeShareDeal = @"Share_Deal";
+MLCMetricType const MLCMetricTypeShareReward = @"Share_Reward";
+MLCMetricType const MLCMetricTypeShareLocation = @"Share_Location";
+MLCMetricType const MLCMetricTypeEnterGeoRegion = @"Enter_Geo_Region";
+MLCMetricType const MLCMetricTypeExitGeoRegion = @"Exit_Geo_Region";
+MLCMetricType const MLCMetricTypeEnterBeaconRegion = @"Enter_Beacon_Region";
+MLCMetricType const MLCMetricTypeExitBeaconRegion = @"Exit_Beacon_Region";
+MLCMetricType const MLCMetricTypeChangeGPS = @"Change_GPS";
+MLCMetricType const MLCMetricTypeViewProduct = @"View_Product";
+MLCMetricType const MLCMetricTypeShareProduct = @"Share_Product";
+MLCMetricType const MLCMetricTypeOpenProduct = @"Open_Product";
+MLCMetricType const MLCMetricTypeExternalOpenProduct = @"External_Open_Product";
 
 @interface MLCMetric ()
 
-@property (nonatomic, strong) NSDate *timeStamp;
-+ (NSString *)stringForMetricType:(MLCMetricType)type;
+@property (nonatomic, strong, readwrite) NSDate *timeStamp;
 
 @end
 
@@ -71,29 +70,32 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
 
     return _timeStamp;
 }
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
+    if (self) {
+        CLLocation *coreLocation = MLCMetricsManager.sharedMetricsManager.locationDelegate.location;
+        if (coreLocation) {
+            _timeStamp = [NSDate date];
+            _latitude = coreLocation.coordinate.latitude;
+            _longitude = coreLocation.coordinate.longitude;
+        }
+    }
+    return self;
+}
 
 + (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
-    MLCMetric *metric = [[self alloc] init];
-    metric.type = type;
-    metric.text = text;
-    metric.username = username;
-    metric.timeStamp = [NSDate date];
-    metric.location = location;
-
-    CLLocation *coreLocation = (MLCMetricsManager.sharedMetricsManager.locationDelegate).location;
-    if (coreLocation) {
-        metric.latitude = coreLocation.coordinate.latitude;
-        metric.longitude = coreLocation.coordinate.longitude;
-    }
-
-    return metric;
+    NSMutableDictionary *jsonObject = [NSMutableDictionary dictionary];
+    jsonObject[@"type"] = type;
+    jsonObject[@"text"] = text;
+    jsonObject[@"location"] = location;
+    jsonObject[@"username"] = username;
+    return [[self alloc] initWithJSONObject:jsonObject];
 }
 
 + (NSDictionary *)serialize:(MLCMetric *)metric {
     NSMutableDictionary *serializedObject = [[super serialize:metric] mutableCopy];
 
-    NSString *type = [self stringForMetricType:metric.type];
-    serializedObject[@"type"] = type;
+    serializedObject[@"type"] = metric.type;
 
     [serializedObject removeObjectForKey:@"location"];
     NSUInteger locationId = metric.location.locationId;
@@ -102,46 +104,16 @@ static NSString *const MLCMetricTypeExternalOpenProductString = @"External_Open_
         serializedObject[@"locationId"] = @(locationId);
     }
 
+    NSUInteger maxLength = 16;
     NSString *latitude = @(metric.latitude).stringValue;
-    latitude = [latitude substringToIndex:MIN((NSUInteger)16, latitude.length)];
+    latitude = [latitude substringToIndex:MIN(maxLength, latitude.length)];
     serializedObject[@"latitude"] = latitude;
 
     NSString *longitude = @(metric.longitude).stringValue;
-    longitude = [longitude substringToIndex:MIN((NSUInteger)16, longitude.length)];
+    longitude = [longitude substringToIndex:MIN(maxLength, longitude.length)];
     serializedObject[@"longitude"] = longitude;
 
     return serializedObject;
-}
-
-+ (NSString *)stringForMetricType:(MLCMetricType)type {
-    if (type == MLCMetricTypeApplicationStart) return MLCMetricTypeApplicationStartString;
-    if (type == MLCMetricTypeApplicationStop) return MLCMetricTypeApplicationStopString;
-    if (type == MLCMetricTypeInBackground) return MLCMetricTypeInBackgroundString;
-    if (type == MLCMetricTypeOutBackground) return MLCMetricTypeOutBackgroundString;
-    if (type == MLCMetricTypeEnterPage) return MLCMetricTypeEnterPageString;
-    if (type == MLCMetricTypeExitPage) return MLCMetricTypeExitPageString;
-    if (type == MLCMetricTypeAdClick) return MLCMetricTypeAdClickString;
-    if (type == MLCMetricTypeTracking) return MLCMetricTypeTrackingString;
-    if (type == MLCMetricTypeCustom) return MLCMetricTypeCustomString;
-    if (type == MLCMetricTypeViewDeal) return MLCMetricTypeViewDealString;
-    if (type == MLCMetricTypeViewReward) return MLCMetricTypeViewRewardString;
-    if (type == MLCMetricTypeViewLocation) return MLCMetricTypeViewLocationString;
-    if (type == MLCMetricTypeViewEvent) return MLCMetricTypeViewEventString;
-    if (type == MLCMetricTypeViewMedia) return MLCMetricTypeViewMediaString;
-    if (type == MLCMetricTypeShareApp) return MLCMetricTypeShareAppString;
-    if (type == MLCMetricTypeShareDeal) return MLCMetricTypeShareDealString;
-    if (type == MLCMetricTypeShareReward) return MLCMetricTypeShareRewardString;
-    if (type == MLCMetricTypeShareLocation) return MLCMetricTypeShareLocationString;
-    if (type == MLCMetricTypeEnterGeoRegion) return MLCMetricTypeEnterGeoRegionString;
-    if (type == MLCMetricTypeExitGeoRegion) return MLCMetricTypeExitGeoRegionString;
-    if (type == MLCMetricTypeEnterBeaconRegion) return MLCMetricTypeEnterBeaconRegionString;
-    if (type == MLCMetricTypeExitBeaconRegion) return MLCMetricTypeExitBeaconRegionString;
-    if (type == MLCMetricTypeChangeGPS) return MLCMetricTypeChangeGPSString;
-    if (type == MLCMetricTypeViewProduct) return MLCMetricTypeViewProductString;
-    if (type == MLCMetricTypeShareProduct) return MLCMetricTypeShareProductString;
-    if (type == MLCMetricTypeOpenProduct) return MLCMetricTypeOpenProductString;
-    if (type == MLCMetricTypeExternalOpenProduct) return MLCMetricTypeExternalOpenProductString;
-    return nil;
 }
 
 @end

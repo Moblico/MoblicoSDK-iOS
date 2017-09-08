@@ -20,11 +20,11 @@
 
 @implementation MLCNotificationsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCNotification class];
 }
 
-+ (instancetype)readNotificationWithNotificationId:(NSUInteger)notificationId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readNotificationWithNotificationId:(NSUInteger)notificationId handler:(MLCNotificationsServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(notificationId) handler:handler];
 }
 

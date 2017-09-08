@@ -18,26 +18,28 @@
 
 #import "MLCAffinitiesService.h"
 #import "MLCAffinity.h"
+#import "MLCLocation.h"
 
 @implementation MLCAffinitiesService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCAffinity class];
 }
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCLocation"];
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCLocation class]];
 }
 
-+ (instancetype)listAffinities:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listAffinities:(MLCAffinitiesServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
-+ (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listAffinitiesForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCAffinitiesServiceCollectionCompletionHandler)handler {
+    return [self listAffinitiesForResource:location handler:handler];
 }
 
-+ (instancetype)listAffinitiesForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listAffinitiesForResource:(MLCEntity *)resource handler:(MLCAffinitiesServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
+
 @end

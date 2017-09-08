@@ -18,8 +18,10 @@
 #import "MLCService_Private.h"
 
 @interface MLCConcurrentService ()
+
 @property (nonatomic, copy) NSArray<__kindof MLCService *> *services;
 @property (nonatomic, copy) MLCConcurrentServiceCompletionHandler concurrentServiceCompletionHandler;
+
 @end
 
 @implementation MLCConcurrentService

@@ -15,5 +15,36 @@
  */
 
 #import "MLCLogger.h"
+#import "MLCServiceManager.h"
 
-void _mlc_info_log() {};
+@implementation MLCLogger
+
++ (void)log:(NSString *)format, ... {
+    if (MLCServiceManager.logging == MLCServiceManagerLoggingDisabled) {
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    NSLogv(format, args);
+    va_end(args);
+}
+
++ (void)debugLog:(NSString *)format, ... {
+    if (MLCServiceManager.logging < MLCServiceManagerLoggingEnabledVerbose) {
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    NSLogv(format, args);
+    va_end(args);
+}
+
++ (void)logMessage:(NSString *)message {
+	[self log:@"%@", message];
+}
+
++ (void)debugLogMessage:(NSString *)message {
+	[self debugLog:@"%@", message];
+}
+
+@end

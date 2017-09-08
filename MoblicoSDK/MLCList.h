@@ -14,10 +14,13 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCEntity.h>
 
+NS_SWIFT_NAME(List)
 @interface MLCList : MLCEntity
-@property (nonatomic) NSUInteger listId;
+
+@property (nonatomic) NSUInteger listId NS_SWIFT_NAME(id);
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) NSDate *lastUpdateDate;
+
 @end

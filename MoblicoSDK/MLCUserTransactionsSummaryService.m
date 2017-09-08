@@ -21,11 +21,11 @@
 
 @implementation MLCUserTransactionsSummaryService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCUserTransactionsSummary class];
 }
 
-+ (instancetype)readTransactionsSummaryForUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readUserTransactionsSummaryForUser:(MLCUser *)user handler:(MLCUserTransactionsSummaryServiceResourceCompletionHandler)handler {
     NSArray *components =@[[MLCUser collectionName],
                            user.uniqueIdentifier,
                            [[self classForResource] collectionName]];

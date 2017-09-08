@@ -15,73 +15,72 @@
  */
 
 #import "MLCService_Private.h"
-
+#import "MLCEntity_Private.h"
 #import "MLCMediaService.h"
 #import "MLCMedia.h"
 #import "MLCLocation.h"
 #import "MLCEvent.h"
 
+MLCMediaServiceParameter const MLCMediaServiceParameterMediaType = @"mediaType";
+MLCMediaServiceParameter const MLCMediaServiceParameterMediaTypeCategory = @"mediaTypeCategory";
+MLCMediaServiceParameter const MLCMediaServiceParameterCategory = @"category";
+
 @implementation MLCMediaService
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCLocation", @"MLCEvent", @"MLCMedia"];
++ (NSMutableDictionary *)sanitizeParameters:(MLCMediaServiceParameters)parameters {
+    NSMutableDictionary *params = [parameters mutableCopy];
+    params[MLCMediaServiceParameterMediaType] = [MLCEntity stringFromValue:params[MLCMediaServiceParameterMediaType]];
+    params[MLCMediaServiceParameterMediaTypeCategory] = [MLCEntity stringFromValue:params[MLCMediaServiceParameterMediaTypeCategory]];
+    params[MLCMediaServiceParameterCategory] = [MLCEntity stringFromValue:params[MLCMediaServiceParameterCategory]];
+
+    return params;
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCLocation class], [MLCEvent class], [MLCMedia class]];
+}
+
++ (Class)classForResource {
     return [MLCMedia class];
 }
 
-+ (NSDictionary *)searchParametersWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category {
-    NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:5];
-    if (mediaType.length) searchParameters[@"mediaType"] = mediaType;
-    if (mediaTypeCategory.length) searchParameters[@"mediaTypeCategory"] = mediaTypeCategory;
-    if (category.length) searchParameters[@"category"] = category;
-
-    return [searchParameters copy];
-}
-
-+ (instancetype)findMediaWithMediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler {
-
-    NSDictionary *searchParameters = [self searchParametersWithMediaType:mediaType mediaTypeCategory:mediaTypeCategory category:category];
-
++ (instancetype)findMediaWithParameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler {
+    NSDictionary *searchParameters = [self sanitizeParameters:parameters];
     return [self findResourcesWithSearchParameters:searchParameters handler:handler];
 }
 
 
-+ (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readMediaWithMediaId:(NSUInteger)mediaId handler:(MLCMediaServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(mediaId) handler:handler];
 }
 
-+ (instancetype)listMedia:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listMedia:(MLCMediaServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
-+ (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCMediaServiceCollectionCompletionHandler)handler {
+    return [self listMediaForResource:location handler:handler];
 }
 
-+ (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntityProtocol>)event handler:handler];
++ (instancetype)listMediaForEvent:(MLCEvent *)event handler:(MLCMediaServiceCollectionCompletionHandler)handler {
+    return [self listMediaForResource:event handler:handler];
 }
 
-+ (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listMediaForResource:(id<MLCEntityProtocol>)media handler:handler];
++ (instancetype)listMediaForMedia:(MLCMedia *)media handler:(MLCMediaServiceCollectionCompletionHandler)handler {
+    return [self listMediaForResource:media handler:handler];
 }
 
-+ (instancetype)listMediaForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listMediaForResource:resource handler:(MLCMediaServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 
-+ (instancetype)findMediaForMedia:(MLCMedia *)media mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler {
-
-    NSDictionary *searchParameters = [self searchParametersWithMediaType:mediaType mediaTypeCategory:mediaTypeCategory category:category];
-
++ (instancetype)findMediaForMedia:(MLCMedia *)media parameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler {
+    NSDictionary *searchParameters = [self sanitizeParameters:parameters];
     return [self findScopedResourcesForResource:media searchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)findMediaForLocation:(MLCLocation *)location mediaType:(NSString *)mediaType mediaTypeCategory:(NSString *)mediaTypeCategory category:(NSString *)category handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSDictionary *searchParameters = [self searchParametersWithMediaType:mediaType mediaTypeCategory:mediaTypeCategory category:category];
-
++ (instancetype)findMediaForLocation:(MLCLocation *)location parameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler {
+    NSDictionary *searchParameters = [self sanitizeParameters:parameters];
     return [self findScopedResourcesForResource:location searchParameters:searchParameters handler:handler];
 }
 

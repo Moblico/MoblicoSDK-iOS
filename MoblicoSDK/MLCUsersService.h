@@ -14,38 +14,34 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCService.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCUser;
+@class MLCAccount;
 
-typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSError *error, NSHTTPURLResponse *response);
+MLCServiceCreateResourceCompletionHandler(MLCUsersService, MLCUser);
 
+typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(BOOL found, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
+
+NS_SWIFT_NAME(UsersService)
 @interface MLCUsersService : MLCService
-+ (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
-+ (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
-+ (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCUserServiceVerifyExistingUserCompletionHandler)handler;
-+ (instancetype)createUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)readUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
-+ (instancetype)readUserWithUsername:(NSString *)username handler:(MLCServiceResourceCompletionHandler)handler;
+
++ (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler;
++ (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler;
++ (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler;
++ (instancetype)createUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(create(_:handler:));
++ (instancetype)readUser:(MLCUser *)user handler:(MLCUsersServiceResourceCompletionHandler)handler;
++ (instancetype)readUserWithUsername:(NSString *)username handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
-+ (instancetype)addAccountId:(NSUInteger)accountId toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)createAnonymousDeviceWithDeviceToken:(NSData *)deviceToken handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)addUser:(MLCUser *)user toAccount:(MLCAccount *)account handler:(MLCServiceSuccessCompletionHandler)handler;
 
-/**
- @since Available in MoblicoSDK 1.2 and later.
- */
++ (instancetype)createAnonymousUserWithDeviceToken:(NSData *)deviceToken handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
-
-/**
- @since Available in MoblicoSDK 1.2 and later.
- */
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
-
-/**
- @since Available in MoblicoSDK 1.6 and later.
- */
-+ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end
 
@@ -54,6 +50,8 @@ typedef void(^MLCUserServiceVerifyExistingUserCompletionHandler)(BOOL found, NSE
 /**
  @since Unavailable in this version of the MoblicoSDK.
  */
-+ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler MLC_UNAVAILABLE("'destroyUser:handler:' is not available with this version of the Moblico SDK.");
++ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler __attribute__((unavailable("'destroyUser:handler:' is not available with this version of the Moblico SDK.")));
 
 @end
+
+NS_ASSUME_NONNULL_END

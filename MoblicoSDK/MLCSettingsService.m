@@ -17,7 +17,10 @@
 #import "MLCSettingsService.h"
 #import "MLCService_Private.h"
 
+static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
+
 @interface MLCSettings ()
+
 @property (nonatomic, copy) NSDictionary *dictionary;
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 @property (nonatomic, class, copy, readonly) NSNumberFormatter *numberFormatter;
@@ -25,40 +28,45 @@
 
 @implementation MLCSettingsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return Nil;
 }
 
 + (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler {
-    return [self serviceForMethod:MLCServiceRequestMethodGET
-                             path:@"settings"
-                       parameters:nil
-                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
-                              MLCSettings *settings = nil;
-                              if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
-                                  [NSUserDefaults.standardUserDefaults setObject:jsonObject forKey:@"MLCSettings"];
-                                  [NSUserDefaults.standardUserDefaults synchronize];
-                                  settings = [self settings];
-                              }
-                              handler(settings, error, response);
-                              service.dispatchGroup = nil;
-                          }];
+    return [self fetch:@"settings" parameters:nil handler:^(id jsonObject, NSError *error) {
+        MLCSettings *settings = nil;
+        if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
+            [NSUserDefaults.standardUserDefaults setObject:jsonObject forKey:@"MLCSettings"];
+            [NSUserDefaults.standardUserDefaults synchronize];
+            settings = self.settings;
+        }
+        handler(settings, error);
+    }];
 }
 
 + (MLCSettings *)settings {
-    NSDictionary *settings = [NSUserDefaults.standardUserDefaults dictionaryForKey:@"MLCSettings"];
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:settings];
-    NSDictionary *override = [NSUserDefaults.standardUserDefaults dictionaryForKey:@"MLCSettingsOverride"];
-    if (override.count > 0) {
-        [dictionary addEntriesFromDictionary:override];
-    }
+    NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
+    NSDictionary *settings = [defaults dictionaryForKey:@"MLCSettings"] ?: @{};
+    NSDictionary *settingsDefault = [defaults dictionaryForKey:@"MLCSettingsDefault"] ?: @{};
+    NSDictionary *settingsOverride = [defaults dictionaryForKey:@"MLCSettingsOverride"] ?: @{};
+
+    NSMutableDictionary *dictionary = [settingsDefault mutableCopy];
+    [dictionary addEntriesFromDictionary:settings];
+    [dictionary addEntriesFromDictionary:settingsOverride];
+
     return [[MLCSettings alloc] initWithDictionary:dictionary];
 }
 
-+ (void)overrideSettings:(NSDictionary *)override {
-    [NSUserDefaults.standardUserDefaults setObject:override forKey:@"MLCSettingsOverride"];
++ (void)overrideSettings:(NSDictionary *)overrideSettings {
+    [NSUserDefaults.standardUserDefaults setObject:overrideSettings forKey:@"MLCSettingsOverride"];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
+
++ (void)defaultSettings:(NSDictionary *)defaultSettings {
+    [NSUserDefaults.standardUserDefaults setObject:defaultSettings forKey:@"MLCSettingsDefault"];
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
+
 
 @end
 
@@ -127,6 +135,10 @@
     return numberFormatter;
 }
 
+- (NSNumber *)numberForKey:(NSString *)key {
+    return [MLCSettings.numberFormatter numberFromString:self.dictionary[key]] ?: [self boolNumberForKey:key];
+}
+
 - (NSInteger)integerForKey:(NSString *)key {
     return [self integerForKey:key defaultValue:0];
 }
@@ -149,11 +161,11 @@
     return [self boolForKey:key defaultValue:NO];
 }
 
-- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
+- (NSNumber *)boolNumberForKey:(NSString *)key {
     NSString *value = self.dictionary[key];
     value = [value stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
     if (!value || value.length == 0) {
-        return defaultValue;
+        return nil;
     }
 
     unichar c = [value characterAtIndex:0];
@@ -162,18 +174,27 @@
         case 'T':
         case 'y':
         case 'Y':
-            return YES;
+            return @YES;
 
         case 'f':
         case 'F':
         case 'n':
         case 'N':
-            return NO;
+            return @NO;
         default:
             break;
     }
 
-    NSNumber *number = [MLCSettings.numberFormatter numberFromString:value];
+    return nil;
+}
+
+- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
+    NSNumber *number = [self boolNumberForKey:key];
+    if (number) {
+        return number.boolValue;
+    }
+    NSString *value = self.dictionary[key];
+    number = [MLCSettings.numberFormatter numberFromString:value];
     return number ? number.boolValue : defaultValue;
 }
 

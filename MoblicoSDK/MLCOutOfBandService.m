@@ -21,10 +21,7 @@
 
 + (instancetype)outOfBandServiceWithEndPoint:(NSString *)endPoint parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     NSString *path = [@"outofband" stringByAppendingPathComponent:endPoint];
-    return [self serviceForMethod:MLCServiceRequestMethodGET path:path parameters:parameters handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
-        handler(jsonObject, error, response);
-        service.dispatchGroup = nil;
-    }];
+    return [self fetch:path parameters:parameters handler:handler];
 }
 
 @end

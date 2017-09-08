@@ -19,9 +19,11 @@
 @class MLCImage;
 
 /// A MLCAd object encapsulates the data for an ad stored in the Moblico Marketing Portal.
+NS_SWIFT_NAME(Ad)
 @interface MLCAd : MLCEntity
+
 /// Unique identifier for this ad.
-@property (nonatomic) NSUInteger adId;
+@property (nonatomic) NSUInteger adId NS_SWIFT_NAME(id);
 /// Date this ad was created.
 @property (strong, nonatomic) NSDate *createDate;
 /// Date this ad was last modified.

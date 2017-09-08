@@ -19,6 +19,7 @@
 #import <CommonCrypto/CommonDigest.h>
 
 @interface MLCImage ()
+
 @end
 
 @implementation MLCImage

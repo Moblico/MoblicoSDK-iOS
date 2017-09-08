@@ -75,7 +75,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         return YES;
     }
 
-    MLCValidationResults *results = [[self class].validations validate:self key:inKey value:ioValue];
+    MLCValidation *results = [[self class].validations validate:self key:inKey value:ioValue];
     if (outError) {
         *outError = results.firstError;
     }
@@ -438,7 +438,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return @{@"details": @"description"};
 }
 
-+ (NSDictionary *)serialize:(id<MLCEntityProtocol>)entityObject {
++ (NSDictionary *)serialize:(MLCEntity *)entityObject {
     if (![entityObject isKindOfClass:[MLCEntity class]]) {
         return nil;
     }
@@ -592,7 +592,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 
         if ([value isKindOfClass:ClassType]) {
             obj = value;
-        } else if ([ClassType conformsToProtocol:@protocol(MLCEntityProtocol)]) {
+        } else if (ClassType == [MLCEntity class]) {
             obj = [[ClassType alloc] initWithJSONObject:value];
         } else {
             if ([ClassType isSubclassOfClass:[NSString class]]) obj = [[self class] stringFromValue:value];

@@ -48,10 +48,10 @@
 //- (BOOL)validate:(NSError**)error;
 - (void)setSafeValue:(id)value forKey:(NSString *)key;
 
-+ (NSArray *)ignoredPropertiesDuringSerialization;
-+ (NSArray *)ignoredPropertiesDuringDeserialization;
++ (NSArray<NSString *> *)ignoredPropertiesDuringSerialization;
++ (NSArray<NSString *> *)ignoredPropertiesDuringDeserialization;
 
-+ (NSDictionary *)renamedPropertiesDuringSerialization;
-+ (NSDictionary *)renamedPropertiesDuringDeserialization;
++ (NSDictionary<NSString *, NSString *> *)renamedPropertiesDuringSerialization;
++ (NSDictionary<NSString *, NSString *> *)renamedPropertiesDuringDeserialization;
 
 @end

@@ -14,20 +14,27 @@
  limitations under the License.
  */
 
-/**
- Leaderboard types
- */
-typedef NS_ENUM(NSUInteger, MLCLeaderboardType) {
-    /// Overall Points
-    MLCLeaderboardTypeOverallPoints
-};
+#import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCLeader;
+
+/// Leaderboard types
+typedef NSString *MLCLeaderboardServiceType NS_STRING_ENUM NS_SWIFT_NAME(MLCLeaderboardService.Type);
+
+/// Overall Points
+FOUNDATION_EXPORT MLCLeaderboardServiceType const MLCLeaderboardServiceTypeOverallPoints;
+
+MLCServiceCreateCollectionCompletionHandler(MLCLeaderboardService, MLCLeader);
 /**
  MLCLeaderboardService used to retrieve leaders
  */
+NS_SWIFT_NAME(LeaderboardService)
 @interface MLCLeaderboardService : MLCService
 
-+ (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler;
-+ (instancetype)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findLeaderboardWithType:(MLCLeaderboardServiceType)type limit:(NSInteger)limit handler:(MLCLeaderboardServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

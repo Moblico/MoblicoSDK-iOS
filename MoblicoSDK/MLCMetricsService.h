@@ -17,6 +17,8 @@
 #import <MoblicoSDK/MLCService.h>
 #import <MoblicoSDK/MLCMetric.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Moblico metrics provide a means for mobile applications to track and report
  usage by functional area. The Moblico platform has an in-depth reporting facility
@@ -25,6 +27,7 @@
  
  Use the MLCMetricsService to send an MLCMetric to Moblico.
  */
+NS_SWIFT_NAME(MetricsService)
 @interface MLCMetricsService : MLCService
 
 #pragma mark Send a Metric
@@ -88,3 +91,5 @@
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username;
 
 @end
+
+NS_ASSUME_NONNULL_END

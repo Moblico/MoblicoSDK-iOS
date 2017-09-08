@@ -16,8 +16,16 @@
 
 #import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCCredential;
+
+MLCServiceCreateCollectionCompletionHandler(MLCCredentialsService, MLCCredential);
+NS_SWIFT_NAME(CredentialsService)
 @interface MLCCredentialsService : MLCService
 
-+ (instancetype)listCredentials:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)listCredentials:(MLCCredentialsServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

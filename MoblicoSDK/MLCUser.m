@@ -26,24 +26,20 @@
 
 @implementation MLCUser
 
-static NSString *const MLCUserSocialTypeNoneString = @"NONE";
-static NSString *const MLCUserSocialTypeFacebookString = @"FACEBOOK";
+MLCUserSocial const MLCUserSocialFacebook = @"FACEBOOK";
 
-static NSString *const MLCUserGenderTypeUndeclaredString = @"UNDECLARED";
-static NSString *const MLCUserGenderTypeMaleString = @"MALE";
-static NSString *const MLCUserGenderTypeFemaleString = @"FEMALE";
+MLCUserGender const MLCUserGenderUndeclared = @"UNDECLARED";
+MLCUserGender const MLCUserGenderMale = @"MALE";
+MLCUserGender const MLCUserGenderFemale = @"FEMALE";
 
-static NSString *const MLCUserContactPreferenceTypeNoneString = @"NONE";
-static NSString *const MLCUserContactPreferenceTypeSMSString = @"SMS";
-static NSString *const MLCUserContactPreferenceTypeEmailString = @"EMAIL";
-static NSString *const MLCUserContactPreferenceTypeBothString = @"BOTH";
+MLCUserContactPreference const MLCUserContactPreferenceNone = @"NONE";
+MLCUserContactPreference const MLCUserContactPreferenceSMS = @"SMS";
+MLCUserContactPreference const MLCUserContactPreferenceEmail = @"EMAIL";
+MLCUserContactPreference const MLCUserContactPreferenceBoth = @"BOTH";
 
 @dynamic age;
 @dynamic optinEmail;
 @dynamic optinPhone;
-@dynamic socialType;
-@dynamic contactPreferenceType;
-@dynamic genderType;
 @dynamic locationId;
 @dynamic merchantId;
 
@@ -78,8 +74,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
     return [self userWithUsername:username password:password social:nil socialToken:nil];
 }
 
-+ (instancetype)userWithSocialType:(MLCUserSocialType)socialType socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken {
-    NSString *social = [self stringForSocialType:socialType];
++ (instancetype)userWithSocial:(MLCUserSocial)social socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken {
     NSString *username = [NSString stringWithFormat:@"%@.%@.%@", social.uppercaseString, socialId, socialUsername];
 
     return [self userWithUsername:username password:nil social:social socialToken:socialToken];
@@ -95,67 +90,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
     if (properties.count == 0) return nil;
 
-//    NSLog(@"properties: %@", properties);
     return [[[self class] alloc] initWithJSONObject:properties];
-}
-
-+ (MLCUserSocialType)socialTypeFromString:(NSString *)string {
-    if (![string isKindOfClass:[NSString class]]) return MLCUserSocialTypeNone;
-
-    if ([string isEqualToString:MLCUserSocialTypeNoneString]) return MLCUserSocialTypeNone;
-    if ([string isEqualToString:MLCUserSocialTypeFacebookString]) return MLCUserSocialTypeFacebook;
-
-    return MLCUserSocialTypeNone;
-}
-
-+ (NSString *)stringForSocialType:(MLCUserSocialType)socialType {
-    if (socialType == MLCUserSocialTypeNone) return MLCUserSocialTypeNoneString;
-    if (socialType == MLCUserSocialTypeFacebook) return MLCUserSocialTypeFacebookString;
-
-    return nil;
-}
-
-+ (MLCUserGenderType)genderTypeFromString:(NSString *)string {
-    if (![string isKindOfClass:[NSString class]]) return MLCUserGenderTypeUndeclared;
-
-    NSString *uppercaseString = string.uppercaseString;
-    if ([uppercaseString isEqualToString:MLCUserGenderTypeUndeclaredString]) return MLCUserGenderTypeUndeclared;
-    if ([uppercaseString isEqualToString:MLCUserGenderTypeMaleString]) return MLCUserGenderTypeMale;
-    if ([uppercaseString isEqualToString:MLCUserGenderTypeFemaleString]) return MLCUserGenderTypeFemale;
-
-    return MLCUserGenderTypeUndeclared;
-}
-
-+ (NSString *)stringForGenderType:(MLCUserGenderType)type {
-
-    if (type == MLCUserGenderTypeUndeclared) return MLCUserGenderTypeUndeclaredString;
-    if (type == MLCUserGenderTypeMale) return MLCUserGenderTypeMaleString;
-    if (type == MLCUserGenderTypeFemale) return MLCUserGenderTypeFemaleString;
-
-
-    return nil;
-}
-
-+ (MLCUserContactPreferenceType)contactPreferenceTypeFromString:(NSString *)string {
-    if (![string isKindOfClass:[NSString class]]) return MLCUserContactPreferenceTypeNone;
-
-    NSString *contactPreference = string.uppercaseString;
-    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeNoneString]) return MLCUserContactPreferenceTypeNone;
-    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeSMSString]) return MLCUserContactPreferenceTypeSMS;
-    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeEmailString]) return MLCUserContactPreferenceTypeEmail;
-    if ([contactPreference isEqualToString:MLCUserContactPreferenceTypeBothString]) return MLCUserContactPreferenceTypeBoth;
-
-
-    return MLCUserContactPreferenceTypeNone;
-}
-
-+ (NSString *)stringForContactPreferenceType:(MLCUserContactPreferenceType)type {
-    if (type == MLCUserContactPreferenceTypeBoth) return MLCUserContactPreferenceTypeBothString;
-    if (type == MLCUserContactPreferenceTypeEmail) return MLCUserContactPreferenceTypeEmailString;
-    if (type == MLCUserContactPreferenceTypeNone) return MLCUserContactPreferenceTypeNoneString;
-    if (type == MLCUserContactPreferenceTypeSMS) return MLCUserContactPreferenceTypeSMSString;
-
-    return nil;
 }
 
 + (NSDateFormatter *)dateOfBirthDateFormatter {
@@ -188,21 +123,6 @@ static NSArray<NSString *> *_requiredParameters = nil;
             NSDate *date = [[[self class] dateOfBirthDateFormatter] dateFromString:dateOfBirth];
             [self setSafeValue:date forKey:NSStringFromSelector(@selector(dateOfBirth))];
         }
-
-        if (jsonObject[@"social"] != [NSNull null] && [jsonObject[@"social"] length]) {
-            [self setSafeValue:@([[self class] socialTypeFromString:jsonObject[@"social"]]) forKey:NSStringFromSelector(@selector(socialType))];
-        }
-        if (jsonObject[@"gender"] != [NSNull null] && [jsonObject[@"gender"] length]) {
-            [self setSafeValue:@([[self class] genderTypeFromString:jsonObject[@"gender"]]) forKey:NSStringFromSelector(@selector(genderType))];
-        }
-        if (jsonObject[@"contactPreference"] != [NSNull null] && [jsonObject[@"contactPreference"] length]) {
-            [self setSafeValue:@([[self class] contactPreferenceTypeFromString:jsonObject[@"contactPreference"]]) forKey:NSStringFromSelector(@selector(contactPreferenceType))];
-        }
-
-//        self.socialType = [MLCUser socialTypeFromString:jsonObject[@"social"]];
-//        self.genderType = [MLCUser genderTypeFromString:jsonObject[@"gender"]];
-//        self.contactPreferenceType = [MLCUser contactPreferenceTypeFromString:jsonObject[@"contactPreference"]];
-
     }
 
     return self;
@@ -211,35 +131,19 @@ static NSArray<NSString *> *_requiredParameters = nil;
 + (NSDictionary *)serialize:(MLCUser *)user {
     NSMutableDictionary *serializedObject = [[super serialize:user] mutableCopy];
 
-    NSString *social = [self stringForSocialType:user.socialType];
-    if (social) {
-        serializedObject[@"social"] = social;
+    if ([user.gender isEqual:MLCUserGenderUndeclared]) {
+        serializedObject[@"gender"] = nil;
     }
 
-    if (user.genderType != MLCUserGenderTypeUndeclared) {
-        serializedObject[@"gender"] = [self stringForGenderType:user.genderType];
-    }
-
-
-    id value = [user valueForKey:NSStringFromSelector(@selector(contactPreferenceType))];
-
-    if (value && value != [NSNull null]) {
-        NSString *contactPreference = [self stringForContactPreferenceType:user.contactPreferenceType];
-        serializedObject[@"contactPreference"] = contactPreference;
+    if (user.social.length == 0) {
+        serializedObject[@"social"] = nil;
+        serializedObject[@"socialToken"] = nil;
     } else {
-        [serializedObject removeObjectForKey:@"contactPreference"];
-    }
-
-    if (user.socialType == MLCUserSocialTypeNone) {
-        [serializedObject removeObjectForKey:@"social"];
-        [serializedObject removeObjectForKey:@"socialToken"];
-    } else {
-        [serializedObject removeObjectForKey:@"password"];
+        serializedObject[@"password"] = nil;
     }
 
     id password = serializedObject[@"password"];
     if (password && (password == [NSNull null] || [@"" isEqualToString:password])) {
-//        NSLog(@"Password is empty!");
         [serializedObject removeObjectForKey:@"password"];
     }
 
@@ -264,53 +168,45 @@ static NSArray<NSString *> *_requiredParameters = nil;
     if (validations.count) {
         return validations;
     }
-
-    validations[@"username"] = [self validatePresenceOfRequiredKey:@"username" withMessage:@"Your username is required."];
-    validations[@"username"] = [MLCValidate validateFormat:@"^[A-Z0-9._%+-@ ]{3,200}$" caseSensitive:NO message:@"Please enter a valid username."];
-
-    validations[@"email"] = [self validatePresenceOfRequiredKey:@"email" withMessage:@"Your email address is required."];
-    validations[@"email"] = [MLCValidate validateFormat:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$" caseSensitive:NO
-                                                message:@"Please enter a valid email address."];
-
-    validations[@"postalCode"] = [self validatePresenceOfRequiredKey:@"postalCode" withMessage:@"Your zip code is required."];
-    validations[@"postalCode"] = [MLCValidate validateFormat:@"^\\d{5}(?:[-\\s]\\d{4})?$"
-                                                     message:@"Please enter a valid zip code."];
-
-    validations[@"firstName"] = [self validatePresenceOfRequiredKey:@"firstName" withMessage:@"Your first name is required."];
-    validations[@"firstName"] = [MLCValidate validateFormat:@"^[A-Z -']{1,}$" caseSensitive:NO
-                                                    message:@"Please enter a valid first name."];
-
-    validations[@"lastName"] = [self validatePresenceOfRequiredKey:@"lastName" withMessage:@"Your last name is required."];
-    validations[@"lastName"] = [MLCValidate validateFormat:@"^[A-Z -']{1,}$" caseSensitive:NO
-                                                   message:@"Please enter a valid last name."];
-
-    validations[@"phone"] = [self validatePresenceOfRequiredKey:@"phone" withMessage:@"Your phone number is required."];
-    validations[@"phone"] = [MLCValidate validateFormat:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$"
-                                                message:@"Please enter a valid phone number."];
-
-    validations[@"stateOrProvince"] = [self validatePresenceOfRequiredKey:@"stateOrProvince" withMessage:@"Your state is required."];
-    validations[@"stateOrProvince"] = [MLCValidate validateFormat:@"^[A-Z]{2}$"
-                                                          message:@"Please enter a valid state."];
-
-    validations[@"gender"] = [self validatePresenceOfRequiredKey:@"gender" withMessage:@"Your gender is required."];
-
-    validations[@"optinEmail"] = [[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
-                                                       validationTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
-                                                           BOOL selected = value.boolValue;
-                                                           NSString *email = user.email;
-                                                           BOOL valid = email.length && [user validateValue:&email forKey:NSStringFromSelector(@selector(email)) error:nil];
-                                                           return !selected || valid;
-                                                       }];
-
-    validations[@"optinPhone"] = [[MLCValidate alloc] initWithMessage:@"A valid mobile phone number is required for Phone Alerts."
-                                                       validationTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
-                                                           BOOL selected = value.boolValue;
-                                                           NSString *phone = user.phone;
-                                                           BOOL valid = phone.length && [user validateValue:&phone forKey:NSStringFromSelector(@selector(phone)) error:nil];
-                                                           return !selected || valid;
-                                                       }];
-
-//    _validations = validations;
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"username" withMessage:@"Your username is required."],
+                               [MLCValidate validateFormat:@"^[A-Z0-9._%+-@ ]{3,200}$" message:@"Please enter a valid username."]] forKey:@"username"];
+    
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"email" withMessage:@"Your email address is required."],
+                               [MLCValidate validateFormat:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$" caseSensitive:NO message:@"Please enter a valid email address."]] forKey:@"email"];
+    
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"postalCode" withMessage:@"Your zip code is required."],
+                               [MLCValidate validateFormat:@"^\\d{5}(?:[-\\s]\\d{4})?$" message:@"Please enter a valid zip code."]] forKey:@"postalCode"];
+    
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"firstName" withMessage:@"Your first name is required."],
+                               [MLCValidate validateFormat:@"^[A-Z -']{1,}$" message:@"Please enter a valid first name."]] forKey:@"firstName"];
+    
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"lastName" withMessage:@"Your last name is required."],
+                               [MLCValidate validateFormat:@"^[A-Z -']{1,}$" message:@"Please enter a valid last name."]] forKey:@"lastName"];
+    
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"phone" withMessage:@"Your phone number is required."],
+                               [MLCValidate validateFormat:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$" message:@"Please enter a valid phone number."]] forKey:@"phone"];
+    
+    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"stateOrProvince" withMessage:@"Your state is required."],
+                               [MLCValidate validateFormat:@"^[A-Z]{2}$" caseSensitive:YES message:@"Please enter a valid state."]] forKey:@"stateOrProvince"];
+    
+    [validations appendRule:[self validatePresenceOfRequiredKey:@"gender" withMessage:@"Your gender is required."] forKey:@"gender"];
+    
+    [validations appendRule:[[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
+                                                    validateTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
+                                                        BOOL selected = value.boolValue;
+                                                        NSString *email = user.email;
+                                                        BOOL valid = email.length && [user validateValue:&email forKey:NSStringFromSelector(@selector(email)) error:nil];
+                                                        return !selected || valid;
+                                                    }] forKey:@"optinEmail"];
+    
+    [validations appendRule:[[MLCValidate alloc] initWithMessage:@"A valid mobile phone number is required for Phone Alerts."
+                                                    validateTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
+                                                        BOOL selected = value.boolValue;
+                                                        NSString *phone = user.phone;
+                                                        BOOL valid = phone.length && [user validateValue:&phone forKey:NSStringFromSelector(@selector(phone)) error:nil];
+                                                        return !selected || valid;
+                                                    }] forKey:@"optinPhone"];
+    
     return validations;
 }
 

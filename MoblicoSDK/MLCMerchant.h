@@ -14,12 +14,13 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCEntity.h>
 @import CoreLocation;
 
+NS_SWIFT_NAME(Merchant)
 @interface MLCMerchant : MLCEntity
 
-@property (nonatomic) NSUInteger merchantId;
+@property (nonatomic) NSUInteger merchantId NS_SWIFT_NAME(id);
 @property (copy, nonatomic) NSString *externalId;
 @property (nonatomic) NSUInteger ownerUserId;
 @property (copy, nonatomic) NSString *name;

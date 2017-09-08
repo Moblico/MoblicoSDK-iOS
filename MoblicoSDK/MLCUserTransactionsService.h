@@ -15,10 +15,19 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
-@class MLCUser;
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class MLCUser;
+@class MLCUserTransaction;
+
+MLCServiceCreateCollectionCompletionHandler(MLCUserTransactionsService, MLCUserTransaction);
+
+NS_SWIFT_NAME(UserTransactionsService)
 @interface MLCUserTransactionsService : MLCService
 
-+ (instancetype)findTransactionsForUser:(MLCUser *)user before:(NSUInteger)userTransactionId count:(NSInteger)count handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)findUserTransactionsForUser:(MLCUser *)user before:(NSUInteger)userTransactionId count:(NSInteger)count handler:(MLCUserTransactionsServiceCollectionCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

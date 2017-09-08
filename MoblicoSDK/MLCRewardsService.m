@@ -17,34 +17,36 @@
 #import "MLCRewardsService.h"
 #import "MLCReward.h"
 #import "MLCService_Private.h"
+#import "MLCUser.h"
+#import "MLCLocation.h"
 
 @implementation MLCRewardsService
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCUser", @"MLCLocation"];
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCUser class], [MLCLocation class]];
 }
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCReward class];
 }
 
-+ (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCRewardsServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(rewardId) handler:handler];
 }
 
-+ (instancetype)listRewards:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listRewards:(MLCRewardsServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
-+ (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listRewardsForResource:(id<MLCEntityProtocol>)user handler:handler];
++ (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCRewardsServiceCollectionCompletionHandler)handler {
+    return [self listRewardsForResource:user handler:handler];
 }
 
-+ (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listRewardsForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCRewardsServiceCollectionCompletionHandler)handler {
+    return [self listRewardsForResource:location handler:handler];
 }
 
-+ (instancetype)listRewardsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listRewardsForResource:(MLCEntity *)resource handler:(MLCRewardsServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 

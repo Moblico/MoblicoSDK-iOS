@@ -14,7 +14,6 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCEntity.h>
 
 @class MLCImage;
@@ -29,12 +28,13 @@
  A MLCDeal object encapsulates the data of a deal stored in
  the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(Deal)
 @interface MLCDeal : MLCEntity
 
 /**
  A unique identifier for this deal.
  */
-@property (nonatomic) NSUInteger dealId;
+@property (nonatomic) NSUInteger dealId NS_SWIFT_NAME(id);
 
 /**
  The name for this deal.

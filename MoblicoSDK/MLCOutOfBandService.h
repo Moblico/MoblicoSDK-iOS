@@ -14,10 +14,15 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MoblicoSDK.h>
+#import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(OutOfBandService)
 @interface MLCOutOfBandService : MLCService
 
-+ (instancetype)outOfBandServiceWithEndPoint:(NSString *)endPoint parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)outOfBandServiceWithEndPoint:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

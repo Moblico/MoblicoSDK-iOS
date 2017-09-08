@@ -16,8 +16,13 @@
 
 #import <MoblicoSDK/MLCService.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(ScanService)
 @interface MLCScanService : MLCService
 
 + (instancetype)processScanWithQRCodeId:(NSString *)qrCodeId handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

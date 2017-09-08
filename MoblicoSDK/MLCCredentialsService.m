@@ -20,11 +20,11 @@
 
 @implementation MLCCredentialsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCCredential class];
 }
 
-+ (instancetype)listCredentials:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listCredentials:(MLCCredentialsServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 

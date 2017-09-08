@@ -19,6 +19,7 @@
 /**
  A MLCPoints object represents points earned through affinity.
  */
+NS_SWIFT_NAME(Points)
 @interface MLCPoints : MLCEntity
 
 /**

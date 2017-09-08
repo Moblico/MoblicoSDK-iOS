@@ -14,10 +14,9 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCAvailability.h>
 #import <MoblicoSDK/MLCEntity.h>
 
-FOUNDATION_EXPORT NSString *const MLCStatusErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const MLCStatusErrorDomain NS_SWIFT_NAME(MLCStatus.ErrorDomain);
 
 /**
  The type for the status.
@@ -451,12 +450,13 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
 
     /// No groups found..
     MLCStatusTypeNoGroupsFound = 141
-};
+} NS_SWIFT_NAME(MLCStatus.Type);
 
 /**
  MLCStatus objects are created by services that do not retrieve data,
  but otherwise signify resuts when they are run.
  */
+NS_SWIFT_NAME(Status)
 @interface MLCStatus : MLCEntity
 
 /**

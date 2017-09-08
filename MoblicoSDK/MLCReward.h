@@ -28,12 +28,13 @@
  
  MLCReward is a subclass of MLCDeal and represents a deal with associated affinity.
  */
+NS_SWIFT_NAME(Reward)
 @interface MLCReward : MLCDeal
 
 /**
  A unique identifier for this reward.
  */
-@property (nonatomic) NSUInteger rewardId;
+@property (nonatomic) NSUInteger rewardId NS_SWIFT_NAME(id);
 
 /**
  The amount of points this reward is worth.

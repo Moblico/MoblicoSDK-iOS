@@ -16,6 +16,7 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_SWIFT_NAME(UserTransactionsSummary)
 @interface MLCUserTransactionsSummary : MLCEntity
 
 @property (nonatomic) double pointsEarned;

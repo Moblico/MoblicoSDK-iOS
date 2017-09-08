@@ -16,9 +16,10 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_SWIFT_NAME(Notification)
 @interface MLCNotification : MLCEntity
 
-@property (nonatomic) NSUInteger notificationId;
+@property (nonatomic) NSUInteger notificationId NS_SWIFT_NAME(id);
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, copy) NSString *type;
 @property (nonatomic, copy) NSString *title;

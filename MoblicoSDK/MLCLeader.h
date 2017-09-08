@@ -17,6 +17,7 @@
 #import <MoblicoSDK/MLCEntity.h>
 
 /// MLCLeader represents a user who has earned points.
+NS_SWIFT_NAME(Leader)
 @interface MLCLeader : MLCEntity
 
 /// The username of the user.

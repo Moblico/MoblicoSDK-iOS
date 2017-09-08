@@ -19,17 +19,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings *_Nullable MLCSettings, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response);
+typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings *_Nullable MLCSettings, NSError *_Nullable error) NS_SWIFT_NAME(MLCSettingsService.CompletionHandler);
 
+NS_SWIFT_NAME(SettingsService)
 @interface MLCSettingsService : MLCService
+
 @property (class, nonatomic, strong, readonly) MLCSettings *settings;
 
 + (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler;
-+ (void)overrideSettings:(nullable NSDictionary *)settings;
++ (void)overrideSettings:(nullable NSDictionary<NSString *, NSString *> *)settings;
++ (void)defaultSettings:(nullable NSDictionary<NSString *, NSString *> *)settings;
 
 @end
 
-
+NS_SWIFT_NAME(Settings)
 @interface MLCSettings : NSObject
 
 - (nullable NSString *)objectForKey:(NSString *)key;
@@ -38,12 +41,13 @@ typedef void(^MLCSettingsServiceCompletionHandler)(MLCSettings *_Nullable MLCSet
 - (nullable NSDictionary<NSString *, NSString *> *)dictionaryForKey:(NSString *)key;
 - (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key;
 - (nullable NSURL *)URLForKey:(NSString *)key;
-- (NSInteger)integerForKey:(NSString *)key;
-- (NSInteger)integerForKey:(NSString *)key defaultValue:(NSInteger)defaultValue;
-- (double)doubleForKey:(NSString *)key;
-- (double)doubleForKey:(NSString *)key defaultValue:(double)defaultValue;
-- (BOOL)boolForKey:(NSString *)key;
-- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue;
+- (nullable NSNumber *)numberForKey:(NSString *)key;
+- (NSInteger)integerForKey:(NSString *)key NS_SWIFT_UNAVAILABLE("use `number(forKey:)` instead.");
+- (NSInteger)integerForKey:(NSString *)key defaultValue:(NSInteger)defaultValue NS_SWIFT_UNAVAILABLE("use `number(forKey:)` instead.");
+- (double)doubleForKey:(NSString *)key NS_SWIFT_UNAVAILABLE("use `number(forKey:)` instead.");
+- (double)doubleForKey:(NSString *)key defaultValue:(double)defaultValue NS_SWIFT_UNAVAILABLE("use `number(forKey:)` instead.");
+- (BOOL)boolForKey:(NSString *)key NS_SWIFT_UNAVAILABLE("use `number(forKey:)` instead.");
+- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue NS_SWIFT_UNAVAILABLE("use `number(forKey:)` instead.");
 
 @end
 

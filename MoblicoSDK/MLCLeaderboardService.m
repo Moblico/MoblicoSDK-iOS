@@ -19,35 +19,27 @@
 #import "MLCLeaderboardService.h"
 #import "MLCLeader.h"
 
-static NSString *const MLCLeaderboardTypeOverallPointsString = @"overallPoints";
+MLCLeaderboardServiceType const MLCLeaderboardServiceTypeOverallPoints = @"overallPoints";
 
 @interface MLCLeaderboardService ()
-
-+ (NSString *)stringFromMLCLeaderboardType:(MLCLeaderboardType)type;
 
 @end
 
 @implementation MLCLeaderboardService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCLeader class];
 }
 
-+ (instancetype)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)findLeaderboardWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCLeaderboardServiceCollectionCompletionHandler)handler {
     return [self findResourcesWithSearchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)findLeaderboardWithType:(MLCLeaderboardType)type limit:(NSInteger)limit handler:(MLCServiceCollectionCompletionHandler)handler {
-    NSMutableDictionary *searchParameters = [@{@"type": [self stringFromMLCLeaderboardType:type]} mutableCopy];
++ (instancetype)findLeaderboardWithType:(MLCLeaderboardServiceType)type limit:(NSInteger)limit handler:(MLCLeaderboardServiceCollectionCompletionHandler)handler {
+    NSMutableDictionary *searchParameters = [@{@"type": type} mutableCopy];
     if (limit) searchParameters[@"leaderboardLimit"] = @(limit);
 
     return [self findLeaderboardWithSearchParameters:searchParameters handler:handler];
-}
-
-+ (NSString *)stringFromMLCLeaderboardType:(MLCLeaderboardType)type {
-    if (type == MLCLeaderboardTypeOverallPoints) return MLCLeaderboardTypeOverallPointsString;
-
-    return nil;
 }
 
 @end

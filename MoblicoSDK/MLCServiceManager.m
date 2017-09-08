@@ -18,7 +18,6 @@
 #import "MLCAuthenticationService.h"
 #import "MLCAuthenticationToken.h"
 #import "MLCUser.h"
-#import "version.h"
 #import "MLCStatus.h"
 
 NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
@@ -122,20 +121,6 @@ static NSString *_testingAPIKey = nil;
     }
 }
 
-//- (void)processUser:(MLCUser *)user {
-//    NSLog(@"processUser: %@", user);
-//    if (user) {
-//        [[MLCUsersService readUser:user handler:^(id<MLCEntityProtocol> resource, __unused NSError *error, __unused NSHTTPURLResponse *response) {
-//            if (resource) {
-//                NSLog(@"resource: %@", resource);
-////                self.currentUser = resource;
-//            } else {
-////                [self setCurrentUser:nil remember:YES];
-//            }
-//        }] start];
-//    }
-//}
-
 + (BOOL)automaticallyNotifiesObserversOfCurrentToken {
     return NO;
 }
@@ -191,7 +176,7 @@ static NSString *_testingAPIKey = nil;
         NSMutableDictionary *credentials = [@{} mutableCopy];
         NSString *password = user.password;
 
-        if (user.socialType != MLCUserSocialTypeNone || !rememberCredentials) {
+        if (user.social || !rememberCredentials) {
             username = nil;
             password = nil;
         } else {
@@ -225,16 +210,16 @@ static NSString *_testingAPIKey = nil;
     }
 }
 
-+ (void)setLoggingEnabled:(BOOL)logging {
++ (void)setLogging:(MLCServiceManagerLogging)logging {
     @synchronized (self) {
-        [NSUserDefaults.standardUserDefaults setBool:logging forKey:MLCServiceManagerLoggingEnabledKey];
+        [NSUserDefaults.standardUserDefaults setInteger:logging forKey:MLCServiceManagerLoggingEnabledKey];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
 
-+ (BOOL)isLoggingEnabled {
++ (MLCServiceManagerLogging)logging {
     @synchronized (self) {
-        return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerLoggingEnabledKey];
+        return [NSUserDefaults.standardUserDefaults integerForKey:MLCServiceManagerLoggingEnabledKey];
     }
 }
 
@@ -246,10 +231,10 @@ static NSString *_testingAPIKey = nil;
     if (currentToken.valid) {
         NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", currentToken.token];
         [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
-        handler(authenticatedRequest, nil, nil);
+        handler(authenticatedRequest, nil);
     } else {
         MLCUser *user = self.currentUser;
-        MLCAuthenticationService *service = [MLCAuthenticationService authenticateWithAPIKey:apiKey user:user childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *newToken, NSError *error, NSHTTPURLResponse *response) {
+        MLCAuthenticationService *service = [MLCAuthenticationService authenticateAPIKey:apiKey user:user childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *newToken, NSError *error) {
             if (error) {
                 MLCStatus *status = error.userInfo[@"status"];
                 BOOL correctClass = [status isKindOfClass:[MLCStatus class]];
@@ -257,25 +242,25 @@ static NSString *_testingAPIKey = nil;
                 BOOL currentUserIsSet = user != nil;
                 if (correctClass && correctStatusType && currentUserIsSet) {
                     [self setCurrentUser:nil childKeyword:self.childKeyword remember:YES];
-                    MLCAuthenticationService *retryService = [MLCAuthenticationService authenticateWithAPIKey:apiKey user:nil childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *retryNewToken, NSError *retryError, NSHTTPURLResponse *retryResponse) {
+                    MLCAuthenticationService *retryService = [MLCAuthenticationService authenticateAPIKey:apiKey user:nil childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *retryNewToken, NSError *retryError) {
                         if (retryError) {
-                            handler(nil, retryError, retryResponse);
+                            handler(nil, retryError);
                         } else {
                             self.authenticationToken = retryNewToken;
                             NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", retryNewToken.token];
                             [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
-                            handler(authenticatedRequest, retryError, retryResponse);
+                            handler(authenticatedRequest, retryError);
                         }
                     }];
                     [retryService start];
                 } else {
-                    handler(nil, error, response);
+                    handler(nil, error);
                 }
             } else {
                 self.authenticationToken = newToken;
                 NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", self.authenticationToken.token];
                 [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
-                handler(authenticatedRequest, error, response);
+                handler(authenticatedRequest, error);
 //                if (self.currentUser) {
 //                    [self performSelectorInBackground:@selector(processUser:) withObject:self.currentUser];
 //                }
@@ -336,8 +321,11 @@ static BOOL _persistentTokenEnabled = NO;
     return @"v4";
 }
 
+FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
+
 + (NSString *)sdkVersion {
-    return @(MoblicoSDKVersionNumber).stringValue;
+    NSBundle *bundle = [NSBundle bundleForClass:[MLCServiceManager class]];
+    return [bundle objectForInfoDictionaryKey:@"CFBundleVersion"] ?: @(MoblicoSDKVersionNumber).stringValue;
 }
 
 - (NSDictionary *)genericPasswordQuery {

@@ -16,7 +16,7 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
-typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL fromCache);
+typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.CompletionHandler);
 
 /**
  The media facility provides the means to reference and provide dynamic meta data
@@ -26,12 +26,13 @@ typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL from
  
  A MLCMedia object encapsulates the data of a media stored in the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(Media)
 @interface MLCMedia : MLCEntity
 
 /**
  A unique identifier for this media.
  */
-@property (nonatomic) NSUInteger mediaId;
+@property (nonatomic) NSUInteger mediaId NS_SWIFT_NAME(id);
 
 /**
  The date this media was created.

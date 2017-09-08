@@ -26,12 +26,13 @@
  
  A MLCAffinity object encapsulates the data of an affinity stored in the Moblico Admin Portal.
  */
+NS_SWIFT_NAME(Affinity)
 @interface MLCAffinity : MLCEntity
 
 /**
  A unique identifier for this affinity.
  */
-@property (nonatomic) NSUInteger affinityId;
+@property (nonatomic) NSUInteger affinityId NS_SWIFT_NAME(id);
 
 /**
  The date this affinity was created.

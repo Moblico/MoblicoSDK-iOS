@@ -17,37 +17,38 @@
 #import "MLCDealsService.h"
 #import "MLCDeal.h"
 #import "MLCService_Private.h"
+#import "MLCLocation.h"
 
 @implementation MLCDealsService
 
-+ (Class<MLCEntityProtocol>)classForResource {
++ (Class)classForResource {
     return [MLCDeal class];
 }
 
-+ (NSArray *)scopeableResources {
-    return @[@"MLCLocation"];
++ (NSArray<Class> *)scopeableResources {
+    return @[[MLCLocation class]];
 }
 
-+ (instancetype)readDealWithDealId:(NSUInteger)dealId handler:(MLCServiceResourceCompletionHandler)handler {
++ (instancetype)readDealWithDealId:(NSUInteger)dealId handler:(MLCDealsServiceResourceCompletionHandler)handler {
     return [self readResourceWithUniqueIdentifier:@(dealId) handler:handler];
 }
 
-+ (instancetype)listDeals:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listDeals:(MLCDealsServiceCollectionCompletionHandler)handler {
     return [self listResources:handler];
 }
 
-+ (instancetype)listDealsForResource:(id<MLCEntityProtocol>)resource handler:(MLCServiceCollectionCompletionHandler)handler {
++ (instancetype)listDealsForResource:(MLCEntity *)resource handler:(MLCDealsServiceCollectionCompletionHandler)handler {
     return [self listScopedResourcesForResource:resource handler:handler];
 }
 
-+ (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCServiceCollectionCompletionHandler)handler {
-    return [self listDealsForResource:(id<MLCEntityProtocol>)location handler:handler];
++ (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCDealsServiceCollectionCompletionHandler)handler {
+    return [self listDealsForResource:location handler:handler];
 }
 
-+ (instancetype)redeemDeal:(MLCDeal *)deal withOfferCode:(NSString *)offerCode handler:(MLCServiceSuccessCompletionHandler)handler {
++ (instancetype)redeemDeal:(MLCDeal *)deal handler:(MLCServiceSuccessCompletionHandler)handler {
     NSString *resource = [NSString pathWithComponents:@[[[deal class] collectionName], deal.uniqueIdentifier, @"redeem"]];
 
-    return [self update:resource parameters:@{@"offerCode": offerCode} handler:handler];
+    return [self update:resource parameters:@{@"offerCode": deal.offerCode} handler:handler];
 }
 
 @end

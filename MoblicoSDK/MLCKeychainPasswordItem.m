@@ -8,14 +8,16 @@
 
 #import "MLCKeychainPasswordItem.h"
 
-NSString *const MLCKeychainPasswordItemErrorDomain = @"MLCKeychainPasswordItemErrorDomain";
-NSString *const MLCKeychainPasswordItemErrorKeyOSStatus = @"OSStatus";
+NSErrorDomain const MLCKeychainPasswordItemErrorDomain = @"MLCKeychainPasswordItemErrorDomain";
+NSString *const MLCKeychainPasswordItemOSStatusErrorKey = @"OSStatus";
 
 @interface MLCKeychainPasswordItemError : NSObject
+
 + (NSError *)noData;
 + (NSError *)invalidData;
 + (NSError *)invalidItem;
 + (NSError *)invalidStatus:(OSStatus)status;
+
 @end
 
 typedef NSString *MLCKeychainPasswordItemMatchLimit NS_STRING_ENUM;
@@ -24,6 +26,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitOne = @
 MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @"MLCKeychainPasswordItemMatchLimitAll";
 
 @interface MLCKeychainPasswordItem ()
+
 @property (nonatomic, copy, readwrite) NSString *service;
 @property (nonatomic, copy, readwrite, nullable) NSString *accessGroup;
 @property (nonatomic, copy, readwrite) NSString *account;
@@ -251,7 +254,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
     if (status == noErr) return nil;
     return [NSError errorWithDomain:MLCKeychainPasswordItemErrorDomain
                                code:MLCKeychainPasswordItemErrorCodeInvalidStatus
-                           userInfo:@{MLCKeychainPasswordItemErrorKeyOSStatus: @(status)}];
+                           userInfo:@{MLCKeychainPasswordItemOSStatusErrorKey: @(status)}];
 }
 
 @end

@@ -14,13 +14,24 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "MLCAvailability.h"
-#import "MLCServiceManager.h"
+@import Foundation;
 
-FOUNDATION_EXPORT void _mlc_info_log(void) MLC_DEPRECATED("Remove this log.");
+#define MLCLog(frmt, ...) \
+    do { [MLCLogger log:frmt, ##__VA_ARGS__]; } while(0)
+
 #define MLCDebugLog(frmt, ...) \
-    do { if ([MLCServiceManager isLoggingEnabled]) NSLog(frmt, ##__VA_ARGS__); } while(0)
+    do { [MLCLogger debugLog:frmt, ##__VA_ARGS__]; } while(0)
 
-#define MLCInfoLog(frmt, ...) \
-do { if ([MLCServiceManager isLoggingEnabled]) {NSLog(frmt, ##__VA_ARGS__);}_mlc_info_log(); } while(0)
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(Logger)
+@interface MLCLogger : NSObject
+
++ (void)log:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) NS_SWIFT_UNAVAILABLE("Use `log(_:)` instead.");
++ (void)debugLog:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) NS_SWIFT_UNAVAILABLE("Use `debugLog(_:)` instead.");
++ (void)logMessage:(NSString *)message NS_SWIFT_NAME(log(_:));
++ (void)debugLogMessage:(NSString *)message NS_SWIFT_NAME(debugLog(_:));
+@end
+
+NS_ASSUME_NONNULL_END

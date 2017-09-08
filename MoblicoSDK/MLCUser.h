@@ -16,53 +16,37 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
-/**
- The prefered method of contact for the user.
- */
-typedef NS_OPTIONS(NSUInteger, MLCUserContactPreferenceType) {
-    /// Specifies that the user does not wish to be contacted.
-    MLCUserContactPreferenceTypeNone = 0,
+/// The prefered method of contact for the user.
+typedef NSString *MLCUserContactPreference NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.ContactPreference);
 
-    /// Specifies that the user wishes to be contacted by SMS (phone text message) only.
-    MLCUserContactPreferenceTypeSMS NS_SWIFT_NAME(sms) = (1 << 0),
+/// Specifies that the user does not wish to be contacted.
+FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceNone;
+/// Specifies that the user wishes to be contacted by SMS (phone text message) only.
+FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceSMS NS_SWIFT_NAME(sms);
+/// Specifies that the user wishes to be contacted by email only.
+FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceEmail;
+/// Specifies that the user wishes to be contacted by either SMS or email.
+FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceBoth;
 
-    /// Specifies that the user wishes to be contacted by email only.
-    MLCUserContactPreferenceTypeEmail = (1 << 1),
+/// The gender for the user.
+typedef NSString *MLCUserGender NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.Gender);
+/// Specifies that the user does not provide gender information.
+FOUNDATION_EXPORT MLCUserGender const MLCUserGenderUndeclared;
+/// Specifies that the user is male.
+FOUNDATION_EXPORT MLCUserGender const MLCUserGenderMale;
+/// Specifies that the user is female.
+FOUNDATION_EXPORT MLCUserGender const MLCUserGenderFemale;
 
-    /// Specifies that the user wishes to be contacted by either SMS or email.
-    MLCUserContactPreferenceTypeBoth = (MLCUserContactPreferenceTypeSMS |
-                                        MLCUserContactPreferenceTypeEmail)
-};
-
-/**
- The gender for the user.
- */
-typedef NS_ENUM(NSUInteger, MLCUserGenderType) {
-    /// Specifies that the user does not provide gender information.
-    MLCUserGenderTypeUndeclared,
-
-    /// Specifies that the user is male.
-    MLCUserGenderTypeMale,
-
-    /// Specifies that the user is female.
-    MLCUserGenderTypeFemale
-};
-
-/**
- The social media provider for the user.
- */
-typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
-    /// No social media provider.
-    MLCUserSocialTypeNone,
-
-    /// Facebook.
-    MLCUserSocialTypeFacebook
-};
+/// The social media provider for the user.
+typedef NSString *MLCUserSocial NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.Social);
+/// Facebook.
+FOUNDATION_EXPORT MLCUserSocial const MLCUserSocialFacebook;
 
 /**
  A MLCUser object encapsulates the data of a contact stored in the Moblico
  Admin Portal.
  */
+NS_SWIFT_NAME(User)
 @interface MLCUser : MLCEntity
 
 /**
@@ -72,15 +56,13 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 
 /**
  The password for the user.
- 
- @since Available in MoblicoSDK 1.1 and later.
  */
 @property (copy, nonatomic) NSString *password;
 
 /**
  The social type for this user (Optional).
  */
-@property (nonatomic) MLCUserSocialType socialType;
+@property (copy, nonatomic) MLCUserSocial social;
 
 /**
  The social token for this user (Optional).
@@ -152,7 +134,7 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
  
  @see MLCUserContactPreferenceType
  */
-@property (nonatomic) MLCUserContactPreferenceType contactPreferenceType;
+@property (copy, nonatomic) MLCUserContactPreference contactPreference;
 
 /**
  The postal (zip) code for the user.
@@ -174,7 +156,7 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
  
  @see MLCUserGenderType
  */
-@property (nonatomic) MLCUserGenderType genderType;
+@property (copy, nonatomic) MLCUserGender gender;
 
 /**
  The state or province for the user.
@@ -208,7 +190,6 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
  username.
 
  @param username The username for the user
-
  @return A MLCUser object.
  */
 + (instancetype)userWithUsername:(NSString *)username;
@@ -227,16 +208,14 @@ typedef NS_ENUM(NSUInteger, MLCUserSocialType) {
 /**
  Convenience class method to create a MLCUser object from a social network.
 
- @param socialType     The social network being used.
+ @param social     The social network being used.
  @param socialId       The unique identifier of the user on the social network.
  @param socialUsername The username of the user on the social network.
  @param socialToken    The access token provided by the social network after
  authentication.
 
  @return A MLCUser object.
-
- @since Available in MoblicoSDK 1.5 and later.
  */
-+ (instancetype)userWithSocialType:(MLCUserSocialType)socialType socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken;
++ (instancetype)userWithSocial:(MLCUserSocial)social socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken;
 
 @end
