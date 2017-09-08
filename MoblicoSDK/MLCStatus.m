@@ -17,6 +17,7 @@
 #import "MLCStatus.h"
 
 NSErrorDomain const MLCStatusErrorDomain = @"MLCStatusErrorDomain";
+NSString *const MLCStatusStatusErrorKey = @"status";
 
 @implementation MLCStatus
 

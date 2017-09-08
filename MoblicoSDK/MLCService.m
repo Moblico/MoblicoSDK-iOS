@@ -593,7 +593,9 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
                 if (!message) {
                     message = @"Unknown Error";
                 }
-                NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:@{NSLocalizedDescriptionKey: message, @"status": status}];
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: message,
+                                           MLCStatusStatusErrorKey: status};
+                NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:userInfo];
                 self.jsonCompletionHandler(self, nil, statusError, self.httpResponse);
                 self.receivedData = nil;
                 return;

@@ -17,6 +17,7 @@
 #import <MoblicoSDK/MLCEntity.h>
 
 FOUNDATION_EXPORT NSErrorDomain const MLCStatusErrorDomain NS_SWIFT_NAME(MLCStatus.ErrorDomain);
+FOUNDATION_EXPORT NSString *const MLCStatusStatusErrorKey NS_SWIFT_NAME(MLCStatus.StatusErrorKey);
 
 /**
  The type for the status.
