@@ -40,5 +40,22 @@ NSString *const MLCStatusStatusErrorKey = @"status";
     return self;
 }
 
++ (instancetype)statusFromError:(NSError *)error {
+    if (error && [error.domain isEqualToString:MLCStatusErrorDomain]) {
+        return error.userInfo[MLCStatusStatusErrorKey];
+    }
+
+    return nil;
+}
+
++ (MLCStatusType)typeFromError:(NSError *)error {
+    MLCStatus *status = [self statusFromError:error];
+    if (status) {
+        NSAssert(status.type == error.code, @"status.type does not match error.code: (%@ %@) (%@ %@)", status, @(status.type), error, @(error.code));
+        return status.type;
+    }
+
+    return MLCStatusTypeMissing;
+}
 
 @end

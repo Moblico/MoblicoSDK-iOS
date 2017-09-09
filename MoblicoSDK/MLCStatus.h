@@ -19,9 +19,7 @@
 FOUNDATION_EXPORT NSErrorDomain const MLCStatusErrorDomain NS_SWIFT_NAME(MLCStatus.ErrorDomain);
 FOUNDATION_EXPORT NSString *const MLCStatusStatusErrorKey NS_SWIFT_NAME(MLCStatus.StatusErrorKey);
 
-/**
- The type for the status.
- */
+/// The type for the status.
 typedef NS_ENUM(NSInteger, MLCStatusType) {
     /// Status type was not returned from service.
     MLCStatusTypeMissing = -1,
@@ -449,7 +447,7 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
     /// Internal status code.
     MLCStatusTypeInternal140 = 140,
 
-    /// No groups found..
+    /// No groups found.
     MLCStatusTypeNoGroupsFound = 141
 } NS_SWIFT_NAME(MLCStatus.Type);
 
@@ -486,5 +484,23 @@ NS_SWIFT_NAME(Status)
  The verbose message for the status.
  */
 @property (copy, nonatomic) NSString *verboseMessage;
+
+
+/**
+ Extract status from an error
+
+ @param error An error in the Status ErrorDomain.
+ @return The status contained in the error.
+ */
++ (instancetype)statusFromError:(NSError *)error;
+
+
+/**
+ Extract status type from an error
+
+ @param error An error in the Status ErrorDomain.
+ @return The status type contained in the error.
+ */
++ (MLCStatusType)typeFromError:(NSError *)error;
 
 @end
