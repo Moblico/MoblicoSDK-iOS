@@ -109,8 +109,8 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
     return service;
 }
 
-+ (instancetype)fetch:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
-    return [self serviceForMethod:MLCServiceRequestMethodGET
++ (instancetype)service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
+    return [self serviceForMethod:method
                              path:path
                        parameters:parameters
                           handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
@@ -137,6 +137,31 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
                                           service.dispatchGroup = nil;
                                       });
                                   });
+                              } else {
+                                  service.dispatchGroup = nil;
+                              }
+                          }];
+}
+
++ (instancetype)createSuccessResource:(MLCEntity *)resource handler:(MLCServiceSuccessCompletionHandler)handler {
+    return [self createSuccess:[[resource class] collectionName] parameters:[[resource class] serialize:resource] handler:handler];
+}
+
++ (instancetype)createSuccess:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
+    return [self serviceForMethod:MLCServiceRequestMethodPOST
+                             path:path
+                       parameters:parameters
+                          handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
+                              if (handler) {
+                                  BOOL success;
+                                  MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
+                                  if (status) {
+                                      success = status.type == MLCStatusTypeSuccess;
+                                  } else {
+                                      success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
+                                  }
+                                  handler(success, error);
+                                  service.dispatchGroup = nil;
                               } else {
                                   service.dispatchGroup = nil;
                               }
@@ -225,6 +250,23 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
                                       service.dispatchGroup = nil;
                                   });
                               });
+                          }];
+}
+
++ (instancetype)readSuccess:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
+    return [self serviceForMethod:MLCServiceRequestMethodGET
+                             path:path
+                       parameters:parameters
+                          handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
+                              BOOL success;
+                              MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
+                              if (status) {
+                                  success = status.type == MLCStatusTypeSuccess;
+                              } else {
+                                  success = (response.statusCode >= 200 && response.statusCode < 300 && error == nil);
+                              }
+                              handler(success, error);
+                              service.dispatchGroup = nil;
                           }];
 }
 

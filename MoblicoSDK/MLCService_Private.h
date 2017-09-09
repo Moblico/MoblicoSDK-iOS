@@ -41,10 +41,13 @@ typedef void(^MLCServiceInternalCollectionCompletionHandler)(NSArray<__kindof ML
 + (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion;
 + (NSError *)errorWithErrors:(NSArray<NSError *> *)errors;
 
-+ (instancetype)fetch:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
 + (instancetype)create:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalResourceCompletionHandler)handler;
 + (instancetype)createResource:(MLCEntity *)resource handler:(MLCServiceInternalResourceCompletionHandler)handler;
+
++ (instancetype)createSuccess:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)createSuccessResource:(MLCEntity *)resource handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)update:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)updateResource:(MLCEntity *)resource handler:(MLCServiceSuccessCompletionHandler)handler;
@@ -54,6 +57,7 @@ typedef void(^MLCServiceInternalCollectionCompletionHandler)(NSArray<__kindof ML
 
 + (instancetype)read:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalResourceCompletionHandler)handler;
 + (instancetype)readResourceWithUniqueIdentifier:(id)uniqueIdentifier handler:(MLCServiceInternalResourceCompletionHandler)handler;
++ (instancetype)readSuccess:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)list:(NSString *)path handler:(MLCServiceInternalCollectionCompletionHandler)handler;
 + (instancetype)listResources:(MLCServiceInternalCollectionCompletionHandler)handler;

@@ -78,9 +78,7 @@ MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier = @"
 + (instancetype)checkInWithLocation:(MLCLocation *)location parameters:(nonnull MLCCheckInServiceParameters)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
     NSMutableDictionary *params = [self sanitizeParameters:parameters];
     params[@"locationId"] = @(location.locationId);
-    return [self create:@"checkIn" parameters:params handler:^(__unused MLCEntity *resource, NSError *error) {
-        handler(error == nil, error);
-    }];
+    return [self createSuccess:@"checkIn" parameters:params handler:handler];
 }
 
 @end

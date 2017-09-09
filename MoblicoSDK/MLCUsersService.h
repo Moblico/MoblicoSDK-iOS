@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 MLCServiceCreateResourceCompletionHandler(MLCUsersService, MLCUser);
 
-typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(BOOL found, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
+typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(NSNumber *_Nullable found, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
+typedef void(^MLCUsersServiceResetPasswordCompletionHandler)(NSURL *url, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.ResetPasswordCompletionHandler);
 
 NS_SWIFT_NAME(UsersService)
 @interface MLCUsersService : MLCService
@@ -41,7 +42,7 @@ NS_SWIFT_NAME(UsersService)
 + (instancetype)createAnonymousUserWithDeviceToken:(NSData *)deviceToken handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
-+ (instancetype)createResetPasswordForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)resetPasswordForUser:(MLCUser *)user handler:(MLCUsersServiceResetPasswordCompletionHandler)handler;
 
 @end
 

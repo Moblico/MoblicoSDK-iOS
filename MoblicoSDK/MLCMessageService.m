@@ -35,9 +35,7 @@ MLCMessageServiceStatus const MLCMessageServiceStatusDelivered = @"DELIVERED";
 }
 
 + (instancetype)sendMessage:(MLCMessage *)message handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [self createResource:message handler:^(__unused MLCEntity *resource, NSError *error) {
-        handler(error == nil, error);
-    }];
+    return [self createSuccessResource:message handler:handler];
 }
 
 + (instancetype)sendMessageWithText:(NSString *)text toDeviceIds:(NSArray *)deviceIds phoneNumbers:(NSArray *)phoneNumbers emailAddresses:(NSArray *)emailAddresses handler:(MLCServiceSuccessCompletionHandler)handler {

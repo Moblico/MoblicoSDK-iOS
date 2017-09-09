@@ -19,9 +19,18 @@
 
 @implementation MLCOutOfBandService
 
-+ (instancetype)outOfBandServiceWithEndPoint:(NSString *)endPoint parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)read:(NSString *)endPoint parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
+    return [self outOfBandMethod:MLCServiceRequestMethodGET endPoint:endPoint parameters:parameters handler:handler];
+}
+
++ (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
+    return [self outOfBandMethod:MLCServiceRequestMethodPOST endPoint:endPoint parameters:parameters handler:handler];
+}
+
++ (instancetype)outOfBandMethod:(MLCServiceRequestMethod)method endPoint:(NSString *)endPoint parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     NSString *path = [@"outofband" stringByAppendingPathComponent:endPoint];
-    return [self fetch:path parameters:parameters handler:handler];
+    return [self service:method path:path parameters:parameters handler:handler];
+
 }
 
 @end

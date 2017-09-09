@@ -19,8 +19,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MLCStatus;
-
 FOUNDATION_EXPORT NSErrorDomain const MLCServiceErrorDomain NS_SWIFT_NAME(MLCService.ErrorDomain);
 FOUNDATION_EXPORT NSString *const MLCServiceDetailedErrorsKey NS_SWIFT_NAME(MLCService.DetailedErrorsKey);
 
@@ -72,7 +70,6 @@ typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject, NSError 
  @param success Boolean indicating if the action was successful.
  @param error An error identifier.
  */
-
 typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.SuccessCompletionHandler);
 
 #define MLCServiceCreateResourceCompletionHandler(Name, Type) typedef void(^Name ## ResourceCompletionHandler)(Type *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)

@@ -21,7 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(OutOfBandService)
 @interface MLCOutOfBandService : MLCService
 
-+ (instancetype)outOfBandServiceWithEndPoint:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)read:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
+
++ (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
 @end
 

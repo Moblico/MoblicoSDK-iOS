@@ -48,7 +48,7 @@ NS_SWIFT_NAME(GenericService)
 
 + (instancetype)find:(NSString *)path searchParameters:(NSDictionary<NSString *,id> *)searchParameters handler:(MLCGenericServiceCollectionCompletionHandler)handler;
 
-+ (instancetype)fetch:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
 + (Class)classForResource;
 
