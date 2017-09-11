@@ -17,6 +17,7 @@
 #import <MoblicoSDK/MLCEntity.h>
 @class MLCLocation;
 
+NS_ASSUME_NONNULL_BEGIN
 /// Indicates the type of metric.
 typedef NSString *MLCMetricType NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(MLCMetric.Type);
 
@@ -108,18 +109,18 @@ NS_SWIFT_NAME(Metric)
  
  Specify additional information about the metric i.e. screen name.
  */
-@property (copy, nonatomic) NSString *text;
+@property (copy, nonatomic, nullable) NSString *text;
 
 /**
  The username for this metric. (optional)
  */
-@property (copy, nonatomic) NSString *username;
+@property (copy, nonatomic, nullable) NSString *username;
 
 
 /**
  The MLCLocation for this metric. (optional)
  */
-@property (strong, nonatomic) MLCLocation *location;
+@property (strong, nonatomic, nullable) MLCLocation *location;
 /**
  The latitude for this metric. (optional)
  */
@@ -152,6 +153,8 @@ NS_SWIFT_NAME(Metric)
 
  @see +[MLCMetricsService sendMetric:]
  */
-+ (instancetype)metricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username;
++ (nullable instancetype)metricWithType:(MLCMetricType)type text:(nullable NSString *)text location:(nullable MLCLocation *)location username:(nullable NSString *)username;
 
 @end
+
+NS_ASSUME_NONNULL_END

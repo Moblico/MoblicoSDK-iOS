@@ -22,6 +22,9 @@
     self = [super initWithJSONObject:jsonObject];
     if (self) {
         _timeZone = [NSTimeZone timeZoneWithName:jsonObject[@"timeZone"]];
+        if (_attributes == nil) {
+            _attributes = @{};
+        }
     }
     return self;
 }

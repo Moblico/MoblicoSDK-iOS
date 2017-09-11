@@ -20,8 +20,8 @@ NS_SWIFT_NAME(ListItem)
 @interface MLCListItem : MLCEntity
 
 @property (nonatomic) NSUInteger listItemId NS_SWIFT_NAME(id);
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *details;
+@property (nonatomic, copy, nonnull) NSString *name;
+@property (nonatomic, copy, nullable) NSString *details;
 @property (nonatomic) NSUInteger count;
 @property (nonatomic, getter=isChecked) BOOL checked;
 @property (nonatomic, getter=isFavorite) BOOL favorite;

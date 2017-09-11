@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCImage;
 
 /// A MLCAd object encapsulates the data for an ad stored in the Moblico Marketing Portal.
@@ -31,11 +33,13 @@ NS_SWIFT_NAME(Ad)
 /// Name of the ad.
 @property (copy, nonatomic) NSString *name;
 /// Name of the advertiser.
-@property (copy, nonatomic) NSString *advertiserName;
+@property (copy, nonatomic, nullable) NSString *advertiserName;
 /// URL of type `tel:`.
-@property (strong, nonatomic) NSURL *clickToCall;
+@property (strong, nonatomic, nullable) NSURL *clickToCall;
 /// URL of type `http:|https:`.
-@property (strong, nonatomic) NSURL *clickToUrl;
+@property (strong, nonatomic, nullable) NSURL *clickToUrl;
 /// Image of the ad.
-@property (strong, nonatomic) MLCImage *image;
+@property (strong, nonatomic, nullable) MLCImage *image;
 @end
+
+NS_ASSUME_NONNULL_END

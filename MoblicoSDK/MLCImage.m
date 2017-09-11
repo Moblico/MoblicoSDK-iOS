@@ -18,6 +18,9 @@
 #import "MLCEntity_Private.h"
 #import <CommonCrypto/CommonDigest.h>
 
+typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.DataCompletionHandler);
+
+
 @interface MLCImage ()
 
 @end
@@ -53,7 +56,7 @@
     return @[@"data", @"path", @"dataTask"];
 }
 
-+ (instancetype)deserializeFromString:(NSString *)string {
+- (instancetype)initWithStringComponents:(NSString *)string {
     NSArray *components = [string componentsSeparatedByString:@";"];
     if (components.count != 3) {
         return nil;
@@ -65,17 +68,39 @@
     NSDictionary *jsonObject = @{@"id": imageId,
                                  @"url": url,
                                  @"lastUpdateDate": lastUpdateDate};
-    return [[[self class] alloc] initWithJSONObject:jsonObject];
+    self = [self initWithJSONObject:jsonObject];
+    return self;
 }
 
-- (void)loadImageData:(MLCImageCompletionHandler)handler {
+- (void)loadImage:(MLCImageCompletionHandler)handler {
+#if TARGET_OS_IOS
+    CGFloat scale = self.scaleFactor;
+    return [self _mlc_loadImageDataFromURL:self.url handler:^(NSData *data, NSError *error, BOOL fromCache) {
+        UIImage *image = [[UIImage alloc] initWithData:data scale:scale];
+        handler(image, error, fromCache);
+    }];
+#else
     return [self _mlc_loadImageDataFromURL:self.url handler:handler];
+#endif
 }
 
-- (NSData *)cachedImageData {
+- (NSData *)_mlc_cachedImageData {
     NSString *key = [self.url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
     NSCache *cache = [[self class] _mlc_sharedCache];
     return [cache objectForKey:key] ?: [NSData dataWithContentsOfFile:[self cachedPath:key]];
+}
+
+- (UIImage *)cachedImage {
+    NSData *data = [self _mlc_cachedImageData];
+    if (!data) {
+        return nil;
+    }
+
+#if TARGET_OS_IOS
+    return [[UIImage alloc] initWithData:data scale:self.scaleFactor];
+#else
+    return data;
+#endif
 }
 
 + (NSCache *)_mlc_sharedCache {
@@ -124,15 +149,14 @@
     return [[[self class] _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
 }
 
-- (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCImageCompletionHandler)handler {
+- (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCImageDataCompletionHandler)handler {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
     NSCache *cache = [[self class] _mlc_sharedCache];
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
 
-    CGFloat scale = self.scaleFactor;
     if (cachedData) {
-        handler(cachedData, nil, YES, scale);
+        handler(cachedData, nil, YES);
         return;
     }
 
@@ -146,14 +170,14 @@
         if (data) {
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];
-            handler(data, error, NO, scale);
+            handler(data, error, NO);
         } else if (httpResponse.statusCode == 404 || httpResponse.statusCode == 200) {
             [cache removeObjectForKey:key];
             [NSFileManager.defaultManager removeItemAtPath:cachedPath error:nil];
-            handler(data, error, NO, scale);
+            handler(data, error, NO);
         } else {
             NSData *fallbackData = [NSData dataWithContentsOfFile:cachedPath];
-            handler(fallbackData, error, NO, scale);
+            handler(fallbackData, error, NO);
         }
     }];
 }

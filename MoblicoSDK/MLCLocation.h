@@ -17,6 +17,8 @@
 #import <MoblicoSDK/MLCEntity.h>
 @import CoreLocation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, MLCLocationCompareOrder) {
     MLCLocationCompareOrderDistance,
     MLCLocationCompareOrderName
@@ -68,52 +70,52 @@ NS_SWIFT_NAME(Location)
 /**
  The details for this location.
  */
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 
 /**
  The first line of the address for this location.
  */
-@property (copy, nonatomic) NSString *address1;
+@property (copy, nonatomic, nullable) NSString *address1;
 
 /**
  The second line of the address for this location.
  */
-@property (copy, nonatomic) NSString *address2;
+@property (copy, nonatomic, nullable) NSString *address2;
 
 /**
  The city for this location.
  */
-@property (copy, nonatomic) NSString *city;
+@property (copy, nonatomic, nullable) NSString *city;
 
 /**
  The county for this location.
  */
-@property (copy, nonatomic) NSString *county;
+@property (copy, nonatomic, nullable) NSString *county;
 
 /**
  The state or province for this location.
  */
-@property (copy, nonatomic) NSString *stateOrProvince;
+@property (copy, nonatomic, nullable) NSString *stateOrProvince;
 
 /**
  The phone number for this location.
  */
-@property (copy, nonatomic) NSString *phone;
+@property (copy, nonatomic, nullable) NSString *phone;
 
 /**
  The email address for this location.
  */
-@property (copy, nonatomic) NSString *email;
+@property (copy, nonatomic, nullable) NSString *email;
 
 /**
  The postal (zip) code for this location.
  */
-@property (copy, nonatomic) NSString *postalCode;
+@property (copy, nonatomic, nullable) NSString *postalCode;
 
 /**
  The country for this location.
  */
-@property (copy, nonatomic) NSString *country;
+@property (copy, nonatomic, nullable) NSString *country;
 
 /**
  The latitude for this location.
@@ -136,24 +138,24 @@ NS_SWIFT_NAME(Location)
 /**
  The URL for this location.
  */
-@property (strong, nonatomic) NSURL *url;
+@property (strong, nonatomic, nullable) NSURL *url;
 
 /**
  The contact name for this location.
  */
-@property (copy, nonatomic) NSString *contactName;
+@property (copy, nonatomic, nullable) NSString *contactName;
 
 /**
  The external unique identifier for this location.
  
  The externalId will be set when the location originates from an external system to Moblico.
  */
-@property (copy, nonatomic) NSString *externalId;
+@property (copy, nonatomic, nullable) NSString *externalId;
 
 /**
  The locale for this location.
  */
-@property (copy, nonatomic) NSString *locale;
+@property (copy, nonatomic, nullable) NSString *locale;
 
 /**
  The attributes for this location.
@@ -166,12 +168,12 @@ NS_SWIFT_NAME(Location)
 @property (nonatomic) NSUInteger merchantId;
 
 
-@property (nonatomic, strong) CLCircularRegion *geoFenceRegion;
-@property (nonatomic, copy) NSString *geoEnterNotificationText;
+@property (nonatomic, strong, nullable) CLCircularRegion *geoFenceRegion;
+@property (nonatomic, copy, nullable) NSString *geoEnterNotificationText;
 @property (nonatomic) CLLocationDistance geoFenceRadius;
 
-@property (nonatomic, copy) NSString *beaconEnterNotificationText;
-@property (nonatomic, strong) CLBeaconRegion *beaconRegion;
+@property (nonatomic, strong, nullable) CLBeaconRegion *beaconRegion;
+@property (nonatomic, copy, nullable) NSString *beaconEnterNotificationText;
 @property (nonatomic) CLProximity beaconDesiredProximity;
 @property (nonatomic) CLProximity beaconLastProximity;
 @property (nonatomic) CLProximity beaconMinimumCheckInProximity;
@@ -183,3 +185,5 @@ NS_SWIFT_NAME(Location)
 - (NSComparisonResult)compare:(MLCLocation *)location;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -29,22 +29,22 @@ NS_SWIFT_NAME(Message)
 /**
  The text for this message.
  */
-@property (copy, nonatomic) NSString *text;
+@property (copy, nonatomic, nullable) NSString *text;
 
 /**
  The device IDs for the recipients of this message.
  */
-@property (copy, nonatomic) NSArray<NSString *> *deviceIds;
+@property (copy, nonatomic, nullable) NSArray<NSString *> *deviceIds;
 
 /**
  The phone numbers for the recipients of this message.
  */
-@property (copy, nonatomic) NSArray<NSString *> *phoneNumbers;
+@property (copy, nonatomic, nullable) NSArray<NSString *> *phoneNumbers;
 
 /**
  The email addresses for the recipients of this message.
  */
-@property (copy, nonatomic) NSArray<NSString *> *emailAddresses;
+@property (copy, nonatomic, nullable) NSArray<NSString *> *emailAddresses;
 
 /**
  Convenience class method to create a MLCMessage object with the provided parameters.
@@ -56,6 +56,6 @@ NS_SWIFT_NAME(Message)
 
  @return A MLCMessage object to use with +[MLCMessageService sendMessage:].
  */
-+ (instancetype)messageWithText:(NSString *)text deviceIds:(NSArray<NSString *> *)deviceIds phoneNumbers:(NSArray<NSString *> *)phoneNumbers emailAddresses:(NSArray<NSString *> *)emailAddresses;
++ (nonnull instancetype)messageWithText:(nullable NSString *)text deviceIds:(nullable NSArray<NSString *> *)deviceIds phoneNumbers:(nullable NSArray<NSString *> *)phoneNumbers emailAddresses:(nullable NSArray<NSString *> *)emailAddresses;
 
 @end

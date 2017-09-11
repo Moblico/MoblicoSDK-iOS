@@ -20,8 +20,8 @@ NS_SWIFT_NAME(Group)
 @interface MLCGroup : MLCEntity
 
 @property (assign, nonatomic) NSUInteger groupId NS_SWIFT_NAME(id);
-@property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *name;
+@property (copy, nonatomic, nullable) NSString *details;
 @property (assign, nonatomic, getter = isRegisterable) BOOL registerable;
 @property (assign, nonatomic) BOOL belongs;
 

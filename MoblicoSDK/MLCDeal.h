@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCImage;
 
 /**
@@ -44,32 +46,32 @@ NS_SWIFT_NAME(Deal)
 /**
  The details for this deal.
  */
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 
 /**
  The offer code for this deal.
  */
-@property (copy, nonatomic) NSString *offerCode;
+@property (copy, nonatomic, nullable) NSString *offerCode;
 
 /**
  The legalese for this deal.
  */
-@property (copy, nonatomic) NSString *legalese;
+@property (copy, nonatomic, nullable) NSString *legalese;
 
 /**
  The promo text for this deal.
  */
-@property (copy, nonatomic) NSString *promoText;
+@property (copy, nonatomic, nullable) NSString *promoText;
 
 /**
  The name of the URL for this deal.
  */
-@property (copy, nonatomic) NSString *urlName;
+@property (copy, nonatomic, nullable) NSString *urlName;
 
 /**
  The URL for this deal.
  */
-@property (strong, nonatomic) NSURL *url;
+@property (strong, nonatomic, nullable) NSURL *url;
 
 /**
  The date this deal was created.
@@ -84,12 +86,12 @@ NS_SWIFT_NAME(Deal)
 /**
  The date this deal will become active.
  */
-@property (strong, nonatomic) NSDate *startDate;
+@property (strong, nonatomic, nullable) NSDate *startDate;
 
 /**
  The date this deal will no longer be active.
  */
-@property (strong, nonatomic) NSDate *endDate;
+@property (strong, nonatomic, nullable) NSDate *endDate;
 
 /**
  The number of times this deal has been redeemed.
@@ -114,7 +116,7 @@ NS_SWIFT_NAME(Deal)
  
  @see MLCImage
  */
-@property (strong, nonatomic) MLCImage *image;
+@property (strong, nonatomic, nullable) MLCImage *image;
 
 @property (assign, nonatomic, getter=isGoalEnabled) BOOL goalEnabled;
 @property (assign, nonatomic, getter=isWellnessEnabled) BOOL wellnessEnabled;
@@ -132,3 +134,5 @@ NS_SWIFT_NAME(Deal)
 - (NSComparisonResult)compare:(MLCDeal *)other;
 
 @end
+
+NS_ASSUME_NONNULL_END

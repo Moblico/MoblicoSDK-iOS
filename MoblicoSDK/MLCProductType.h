@@ -20,6 +20,6 @@ NS_SWIFT_NAME(ProductType)
 @interface MLCProductType : MLCEntity
 
 @property (nonatomic) NSUInteger productTypeId NS_SWIFT_NAME(id);
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy, nonnull) NSString *name;
 
 @end

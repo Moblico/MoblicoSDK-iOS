@@ -17,6 +17,8 @@
 #import <MoblicoSDK/MLCEntity.h>
 @class MLCMedia;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, MLCProductCompareOrder) {
     MLCProductCompareOrderTitle,
     MLCProductCompareOrderRevDate
@@ -27,30 +29,32 @@ NS_SWIFT_NAME(Product)
 
 @property (nonatomic) NSUInteger productId NS_SWIFT_NAME(id);
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *price;
-@property (nonatomic, copy) NSString *legalese;
-@property (nonatomic, copy) NSString *details;
-@property (nonatomic, copy) NSString *sku;
-@property (nonatomic, copy) NSURL *url;
-@property (nonatomic, copy) NSString *productType;
-@property (nonatomic, copy) NSString *specifications;
-@property (nonatomic, copy) NSString *salesRepEmail;
-@property (nonatomic, copy) NSString *salesRepName;
-@property (nonatomic, copy) NSString *distribution;
-@property (nonatomic, copy) NSString *externalId;
+@property (nonatomic, copy, nullable) NSString *price;
+@property (nonatomic, copy, nullable) NSString *legalese;
+@property (nonatomic, copy, nullable) NSString *details;
+@property (nonatomic, copy, nullable) NSString *sku;
+@property (nonatomic, copy, nullable) NSURL *url;
+@property (nonatomic, copy, nullable) NSString *productType;
+@property (nonatomic, copy, nullable) NSString *specifications;
+@property (nonatomic, copy, nullable) NSString *salesRepEmail;
+@property (nonatomic, copy, nullable) NSString *salesRepName;
+@property (nonatomic, copy, nullable) NSString *distribution;
+@property (nonatomic, copy, nullable) NSString *externalId;
 @property (nonatomic, getter=isActive) BOOL active;
 @property (nonatomic, getter=isDiscontinued) BOOL discontinued;
 @property (nonatomic, getter=isInstock) BOOL instock;
 @property (nonatomic, getter=isRevised) BOOL revised;
 @property (nonatomic, getter=isEmailable) BOOL emailable;
 @property (nonatomic) BOOL mustContactSalesRep;
-@property (nonatomic, strong) NSDate *introDate;
+@property (nonatomic, strong, nullable) NSDate *introDate;
 @property (nonatomic, strong) NSDate *lastUpdateDate;
-@property (nonatomic, strong) NSDate *revDate;
-@property (nonatomic, strong) NSDate *expirationDate;
-@property (nonatomic, strong) MLCMedia *media;
+@property (nonatomic, strong, nullable) NSDate *revDate;
+@property (nonatomic, strong, nullable) NSDate *expirationDate;
+@property (nonatomic, strong, nullable) MLCMedia *media;
 
 - (NSComparisonResult)compare:(MLCProduct *)product order:(MLCProductCompareOrder)order;
 - (NSComparisonResult)compare:(MLCProduct *)product;
 
 @end
+
+NS_ASSUME_NONNULL_END

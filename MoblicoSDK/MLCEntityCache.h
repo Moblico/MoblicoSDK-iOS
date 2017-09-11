@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 NS_SWIFT_NAME(EntityCache)
 @interface MLCEntityCache : NSObject

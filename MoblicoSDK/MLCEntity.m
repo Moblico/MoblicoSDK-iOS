@@ -257,6 +257,10 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 }
 
 + (NSDate *)dateFromTimeStampValue:(id)value {
+    if ([value isKindOfClass:[NSDate class]]) {
+        return value;
+    }
+    
     double timestamp = [self doubleFromValue:value];
 
     if ((BOOL)timestamp) {

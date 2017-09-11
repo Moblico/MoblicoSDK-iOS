@@ -17,15 +17,17 @@
 @import Foundation;
 @class MLCValidations;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Base class for all Moblico model objects.
  */
 NS_SWIFT_NAME(Entity)
 @interface MLCEntity : NSObject <NSCoding, NSCopying>
-@property (nonatomic, readonly, strong) id uniqueIdentifier;
+@property (nonatomic, readonly, strong, nullable) NSString *uniqueIdentifier;
 
-- (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject;
-+ (NSDictionary<NSString *, id> *)serialize:(MLCEntity *)entity;
+- (nullable instancetype)initWithJSONObject:(nullable NSDictionary<NSString *, id> *)jsonObject;
++ (nullable NSDictionary<NSString *, id> *)serialize:(nullable MLCEntity *)entity;
 
 + (NSString *)collectionName;
 + (NSString *)resourceName;
@@ -33,6 +35,8 @@ NS_SWIFT_NAME(Entity)
 + (NSString *)uniqueIdentifierKey;
 
 @property (nonatomic, readonly, class, strong) MLCValidations *validations;
-- (BOOL)validate:(out NSError *__autoreleasing *)error;
+- (BOOL)validate:(out NSError *_Nullable __autoreleasing *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

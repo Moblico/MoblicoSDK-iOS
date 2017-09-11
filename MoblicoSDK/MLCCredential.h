@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(Account)
 @interface MLCAccount: MLCEntity
 
@@ -34,3 +36,4 @@ NS_SWIFT_NAME(Credential)
 
 @end
 
+NS_ASSUME_NONNULL_END

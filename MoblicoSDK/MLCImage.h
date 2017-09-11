@@ -17,8 +17,14 @@
 #import <MoblicoSDK/MLCEntity.h>
 @import CoreGraphics;
 
-typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache, CGFloat scale) NS_SWIFT_NAME(MLCImage.CompletionHandler);
+NS_ASSUME_NONNULL_BEGIN
 
+#if TARGET_OS_IOS
+@import UIKit;
+typedef void(^MLCImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.CompletionHandler);
+#else
+typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.CompletionHandler);
+#endif
 /**
  A MLCImage object encapsulates the image data for a deal stored in 
  the Moblico Admin Portal.
@@ -41,10 +47,16 @@ NS_SWIFT_NAME(Image)
  */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
 
-- (void)loadImageData:(MLCImageCompletionHandler)handler;
-@property (strong, nonatomic, readonly) NSData *cachedImageData;
+- (void)loadImage:(MLCImageCompletionHandler)handler;
+#if TARGET_OS_IOS
+@property (strong, nonatomic, readonly, nullable) UIImage *cachedImage;
+#else
+@property (strong, nonatomic, readonly, nullable) NSData *cachedImage;
+#endif
 
-- (instancetype)initWithURLString:(NSString *)URLString;
-+ (instancetype)deserializeFromString:(NSString *)string;
+- (nullable instancetype)initWithURLString:(NSString *)URLString;
+- (nullable instancetype)initWithStringComponents:(NSString *)components;
 
 @end
+
+NS_ASSUME_NONNULL_END

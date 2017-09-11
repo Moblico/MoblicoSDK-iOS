@@ -54,12 +54,12 @@ NS_SWIFT_NAME(Reward)
 /**
  The date this deal will become available for purchase.
  */
-@property (strong, nonatomic) NSDate *startPurchaseDate;
+@property (strong, nonatomic, nullable) NSDate *startPurchaseDate;
 
 /**
  The date this deal will no longer be available for purchase.
  */
-@property (strong, nonatomic) NSDate *endPurchaseDate;
+@property (strong, nonatomic, nullable) NSDate *endPurchaseDate;
 
 /**
  Specifies whether this reward will be redeemed automatically.
@@ -80,6 +80,6 @@ NS_SWIFT_NAME(Reward)
 @property (nonatomic, readonly) NSInteger availableRedemptions;
 @property (nonatomic, readonly, getter=isRedeemable) BOOL redeemable;
 
-- (NSComparisonResult)compare:(MLCReward *)other;
+- (NSComparisonResult)compare:(nonnull MLCReward *)other;
 
 @end

@@ -15,8 +15,21 @@
  */
 
 #import "MLCAuthenticationToken.h"
+#import "MLCEntity_Private.h"
 
 @implementation MLCAuthenticationToken
+
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+    NSString *token = [MLCEntity nilIfEmptyStringFromValue:jsonObject[@"token"]];
+    NSDate *tokenExpiry = [MLCEntity dateFromTimeStampValue:jsonObject[@"tokenExpiry"]];
+
+    if (!token || !tokenExpiry) {
+        return nil;
+    }
+
+    self = [super initWithJSONObject:jsonObject];
+    return self;
+}
 
 + (NSString *)collectionName {
     return @"authenticate";

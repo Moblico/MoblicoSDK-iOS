@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Moblico affinity facilitates a points plus rewards system.
  The Moblico admin portal provides the means to define actions
@@ -47,12 +49,12 @@ NS_SWIFT_NAME(Affinity)
 /**
  The date this affinity will become active.
  */
-@property (strong, nonatomic) NSDate *startDate;
+@property (strong, nonatomic, nullable) NSDate *startDate;
 
 /**
  The date this affinity will no longer be active.
  */
-@property (strong, nonatomic) NSDate *endDate;
+@property (strong, nonatomic, nullable) NSDate *endDate;
 
 /**
  The name for this affinity.
@@ -62,12 +64,12 @@ NS_SWIFT_NAME(Affinity)
 /**
  The details for this affinity.
  */
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 
 /**
  Optional data about this affinity.
  */
-@property (copy, nonatomic) NSString *optional;
+@property (copy, nonatomic, nullable) NSString *optional;
 
 /**
  The amount of points this affinity is worth.
@@ -119,3 +121,5 @@ NS_SWIFT_NAME(Affinity)
 @property (copy, nonatomic) NSString *affinityActionName;
 
 @end
+
+NS_ASSUME_NONNULL_END

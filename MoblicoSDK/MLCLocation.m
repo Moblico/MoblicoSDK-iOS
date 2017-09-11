@@ -44,7 +44,11 @@
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
-        NSString *identifier = [NSString stringWithFormat:@"%@-NOTIFICATION", @(_locationId)];
+        if (_attributes == nil) {
+            _attributes = @{};
+        }
+        
+        NSString *identifier = [NSString stringWithFormat:@"%@-LOCATION", @(_locationId)];
 
         if ([jsonObject[@"geoNotificationEnabled"] boolValue]) {
             CLLocationCoordinate2D center = CLLocationCoordinate2DMake(_latitude, _longitude);

@@ -25,12 +25,12 @@ NS_SWIFT_NAME(Points)
 /**
  The type for these points.
  */
-@property (copy, nonatomic) NSString *type;
+@property (copy, nonatomic, nonnull) NSString *type;
 
 /**
  The details for these points.
  */
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 
 /**
  The total amount for these points.

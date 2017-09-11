@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Events are used within Moblico for informational purposes as well as targeting communications,
  ad campaigns and deals by time and location.
@@ -42,12 +44,12 @@ NS_SWIFT_NAME(Event)
  
  The externalId will be set when the event originates from an external system to Moblico.
  */
-@property (copy, nonatomic) NSString *externalId;
+@property (copy, nonatomic, nullable) NSString *externalId;
 
 /**
  The type for this event.
  */
-@property (copy, nonatomic) NSString *type;
+@property (copy, nonatomic, nullable) NSString *type;
 
 /**
  The name for this event.
@@ -57,7 +59,7 @@ NS_SWIFT_NAME(Event)
 /**
  The details for this event.
  */
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 
 /**
  The time zone for this event.
@@ -67,12 +69,12 @@ NS_SWIFT_NAME(Event)
 /**
  The phone number for this event.
  */
-@property (copy, nonatomic) NSString *phone;
+@property (copy, nonatomic, nullable) NSString *phone;
 
 /**
  The email address for this event.
  */
-@property (copy, nonatomic) NSString *email;
+@property (copy, nonatomic, nullable) NSString *email;
 
 /**
  A string representation of the startDate for this event.
@@ -87,22 +89,22 @@ NS_SWIFT_NAME(Event)
 /**
  The RSVP name for this event.
  */
-@property (copy, nonatomic) NSString *rsvpName;
+@property (copy, nonatomic, nullable) NSString *rsvpName;
 
 /**
  The RSVP phone number for this event.
  */
-@property (copy, nonatomic) NSString *rsvpPhone;
+@property (copy, nonatomic, nullable) NSString *rsvpPhone;
 
 /**
  The RSVP email address for this event.
  */
-@property (copy, nonatomic) NSString *rsvpEmail;
+@property (copy, nonatomic, nullable) NSString *rsvpEmail;
 
 /**
  The RSVP URL for this event.
  */
-@property (copy, nonatomic) NSURL *rsvpUrl;
+@property (copy, nonatomic, nullable) NSURL *rsvpUrl;
 
 /**
  The attributes for this event.
@@ -112,7 +114,7 @@ NS_SWIFT_NAME(Event)
 /**
  The URL for this event.
  */
-@property (strong, nonatomic) NSURL *url;
+@property (strong, nonatomic, nullable) NSURL *url;
 
 /**
  The date this event was created.
@@ -135,3 +137,5 @@ NS_SWIFT_NAME(Event)
 @property (strong, nonatomic) NSDate *endDate;
 
 @end
+
+NS_ASSUME_NONNULL_END

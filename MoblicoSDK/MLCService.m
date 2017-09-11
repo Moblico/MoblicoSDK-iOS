@@ -321,7 +321,7 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
 }
 
 + (MLCEntity *)deserializeResource:(NSDictionary *)resource {
-    if ((id)resource == [NSNull null]) {
+    if (![resource isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
 

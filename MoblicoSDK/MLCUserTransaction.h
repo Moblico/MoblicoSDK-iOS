@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, MLCUserTransactionType) {
     MLCUserTransactionTypeUnknown = -1,
     MLCUserTransactionTypePointsEarned,
@@ -31,7 +33,9 @@ NS_SWIFT_NAME(UserTransaction)
 @property (nonatomic) double amount;
 @property (nonatomic) MLCUserTransactionType type;
 @property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 @property (strong, nonatomic) NSDate *createDate;
 
 @end
+
+NS_ASSUME_NONNULL_END

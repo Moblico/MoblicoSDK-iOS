@@ -17,20 +17,24 @@
 #import <MoblicoSDK/MLCEntity.h>
 @import CoreLocation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(Merchant)
 @interface MLCMerchant : MLCEntity
 
 @property (nonatomic) NSUInteger merchantId NS_SWIFT_NAME(id);
-@property (copy, nonatomic) NSString *externalId;
+@property (copy, nonatomic, nullable) NSString *externalId;
 @property (nonatomic) NSUInteger ownerUserId;
 @property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *redemptionType;
+@property (copy, nonatomic, nullable) NSString *redemptionType;
 @property (copy, nonatomic) NSString *status;
 @property (strong, nonatomic) NSDate *lastUpdateDate;
 @property (nonatomic) BOOL beaconRegionEnabled;
-@property (copy, nonatomic) NSString *beaconIdentifier;
-@property (copy, nonatomic) NSString *beaconEnterNotificationText;
-@property (nonatomic, strong) CLBeaconRegion *beaconRegion;
+@property (copy, nonatomic, nullable) NSString *beaconIdentifier;
+@property (copy, nonatomic, nullable) NSString *beaconEnterNotificationText;
+@property (nonatomic, strong, nullable) CLBeaconRegion *beaconRegion;
 @property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 @end
+
+NS_ASSUME_NONNULL_END

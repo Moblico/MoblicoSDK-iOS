@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(List)
 @interface MLCList : MLCEntity
 
@@ -24,3 +26,5 @@ NS_SWIFT_NAME(List)
 @property (nonatomic, strong) NSDate *lastUpdateDate;
 
 @end
+
+NS_ASSUME_NONNULL_END

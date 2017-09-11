@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 FOUNDATION_EXPORT NSErrorDomain const MLCStatusErrorDomain NS_SWIFT_NAME(MLCStatus.ErrorDomain);
 FOUNDATION_EXPORT NSString *const MLCStatusStatusErrorKey NS_SWIFT_NAME(MLCStatus.StatusErrorKey);
 
@@ -473,7 +475,7 @@ NS_SWIFT_NAME(Status)
 /**
  The help URL for the status.
  */
-@property (strong, nonatomic) NSURL *helpUrl;
+@property (strong, nonatomic, nullable) NSURL *helpUrl;
 
 /**
  The HTTP status code for the status.
@@ -483,7 +485,7 @@ NS_SWIFT_NAME(Status)
 /**
  The verbose message for the status.
  */
-@property (copy, nonatomic) NSString *verboseMessage;
+@property (copy, nonatomic, nullable) NSString *verboseMessage;
 
 
 /**
@@ -492,7 +494,7 @@ NS_SWIFT_NAME(Status)
  @param error An error in the Status ErrorDomain.
  @return The status contained in the error.
  */
-+ (instancetype)statusFromError:(NSError *)error;
++ (nullable instancetype)statusFromError:(NSError *)error;
 
 
 /**
@@ -504,3 +506,5 @@ NS_SWIFT_NAME(Status)
 + (MLCStatusType)typeFromError:(NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

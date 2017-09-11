@@ -18,4 +18,38 @@
 
 @implementation MLCMerchant
 
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+    self = [super initWithJSONObject:jsonObject];
+    if (self) {
+        if (_attributes == nil) {
+            _attributes = @{};
+        }
+        if ([jsonObject[@"beaconRegionEnabled"] boolValue]) {
+            NSString *identifier = [NSString stringWithFormat:@"%@-MERCHANT", @(_merchantId)];
+            NSArray<NSString *> *beacon = [jsonObject[@"beaconIdentifier"] componentsSeparatedByString:@","];
+
+            if (beacon.count > 0) {
+                CLBeaconRegion *region;
+                NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:beacon[0]];
+                if (beacon.count > 1) {
+                    CLBeaconMajorValue majorValue = (CLBeaconMajorValue)beacon[1].integerValue;
+                    if (beacon.count > 2) {
+                        CLBeaconMajorValue minorValue = (CLBeaconMajorValue)beacon[2].integerValue;
+                        region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID major:majorValue minor:minorValue identifier:identifier];
+                    } else {
+                        region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID major:majorValue identifier:identifier];
+                    }
+                } else {
+                    region = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID identifier:identifier];
+                }
+                region.notifyEntryStateOnDisplay = YES;
+                region.notifyOnEntry = YES;
+                region.notifyOnExit = YES;
+                _beaconRegion = region;
+            }
+        }
+    }
+    return self;
+}
+
 @end

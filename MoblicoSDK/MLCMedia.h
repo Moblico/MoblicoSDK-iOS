@@ -16,7 +16,16 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
-typedef void(^MLCMediaCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.CompletionHandler);
+NS_ASSUME_NONNULL_BEGIN
+
+#if TARGET_OS_IOS
+@import UIKit;
+typedef void(^MLCMediaImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
+#else
+typedef void(^MLCMediaImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
+#endif
+
+typedef void(^MLCMediaDataCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.DataCompletionHandler);
 
 /**
  The media facility provides the means to reference and provide dynamic meta data
@@ -52,7 +61,7 @@ NS_SWIFT_NAME(Media)
 /**
  The type for this media.
  */
-@property (copy, nonatomic) NSString *type;
+@property (copy, nonatomic, nullable) NSString *type;
 
 /**
  The name for this media.
@@ -62,7 +71,7 @@ NS_SWIFT_NAME(Media)
 /**
  The details for this media.
  */
-@property (copy, nonatomic) NSString *details;
+@property (copy, nonatomic, nullable) NSString *details;
 
 /**
  The URL for this media.
@@ -72,12 +81,12 @@ NS_SWIFT_NAME(Media)
 /**
  The image URL for this media.
  */
-@property (strong, nonatomic) NSURL *imageUrl;
+@property (strong, nonatomic, nullable) NSURL *imageUrl;
 
 /**
  The attributes for this media.
  */
-@property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
+@property (copy, nonatomic, nullable) NSDictionary<NSString *, NSString *> *attributes;
 
 /**
  The sorting priority for this media.
@@ -92,20 +101,30 @@ NS_SWIFT_NAME(Media)
 /**
  The thumbnail image URL for this media.
  */
-@property (copy, nonatomic) NSURL *thumbUrl;
+@property (copy, nonatomic, nullable) NSURL *thumbUrl;
 
 /**
  The external unique identifier for this media.
  
  The externalId will be set when the media originates from an external system to Moblico.
  */
-@property (copy, nonatomic) NSString *externalId;
+@property (copy, nonatomic, nullable) NSString *externalId;
 
-- (void)loadImageData:(MLCMediaCompletionHandler)handler;
-@property (strong, nonatomic, readonly) NSData *cachedImageData;
-- (void)loadThumbData:(MLCMediaCompletionHandler)handler;
-@property (strong, nonatomic, readonly) NSData *cachedThumbData;
-- (void)loadData:(MLCMediaCompletionHandler)handler;
-@property (strong, nonatomic, readonly) NSData *cachedData;
+#if TARGET_OS_IOS
+- (void)loadImage:(MLCMediaImageCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) UIImage *cachedImage;
+- (void)loadThumb:(MLCMediaImageCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) UIImage *cachedThumb;
+#else
+- (void)loadImage:(MLCMediaDataCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) NSData *cachedImage;
+- (void)loadThumb:(MLCMediaDataCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) NSData *cachedThumb;
+#endif
+
+- (void)loadData:(MLCMediaDataCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) NSData *cachedData;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MLCProductType;
 
 NS_SWIFT_NAME(ProductCategory)
@@ -26,3 +28,5 @@ NS_SWIFT_NAME(ProductCategory)
 @property (nonatomic, copy) NSArray<MLCProductType *> *productTypes;
 
 @end
+
+NS_ASSUME_NONNULL_END

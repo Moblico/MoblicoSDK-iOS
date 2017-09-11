@@ -16,6 +16,8 @@
 
 #import <MoblicoSDK/MLCEntity.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// The preferred method of contact for the user.
 typedef NSString *MLCUserContactPreference NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.ContactPreference);
 
@@ -52,22 +54,22 @@ NS_SWIFT_NAME(User)
 /**
  The username for the user.
  */
-@property (copy, nonatomic) NSString *username;
+@property (copy, nonatomic, nullable) NSString *username;
 
 /**
  The password for the user.
  */
-@property (copy, nonatomic) NSString *password;
+@property (copy, nonatomic, nullable) NSString *password;
 
 /**
  The social type for this user (Optional).
  */
-@property (copy, nonatomic) MLCUserSocial social;
+@property (copy, nonatomic, nullable) MLCUserSocial social;
 
 /**
  The social token for this user (Optional).
  */
-@property (copy, nonatomic) NSString *socialToken;
+@property (copy, nonatomic, nullable) NSString *socialToken;
 
 /**
  Specifies whether the user has opted in to receiving emails.
@@ -82,69 +84,69 @@ NS_SWIFT_NAME(User)
 /**
  The date of birth of the user.
  */
-@property (copy, nonatomic) NSDate *dateOfBirth;
+@property (copy, nonatomic, nullable) NSDate *dateOfBirth;
 
 /**
  The phone number for the user.
  */
-@property (copy, nonatomic) NSString *phone;
+@property (copy, nonatomic, nullable) NSString *phone;
 
 /**
  The nick name of the user.
  */
-@property (copy, nonatomic) NSString *nickName;
+@property (copy, nonatomic, nullable) NSString *nickName;
 
 /**
  The locale for the user.
  */
-@property (copy, nonatomic) NSString *locale;
+@property (copy, nonatomic, nullable) NSString *locale;
 
 /**
  The fist line of the address for the user.
  */
-@property (copy, nonatomic) NSString *address1;
+@property (copy, nonatomic, nullable) NSString *address1;
 
 /**
  The second line of the address for the user.
  */
-@property (copy, nonatomic) NSString *address2;
+@property (copy, nonatomic, nullable) NSString *address2;
 
 /**
  The last name of the user.
  */
-@property (copy, nonatomic) NSString *lastName;
+@property (copy, nonatomic, nullable) NSString *lastName;
 
 /**
  The first name of the user.
  */
-@property (copy, nonatomic) NSString *firstName;
+@property (copy, nonatomic, nullable) NSString *firstName;
 
 /**
  The country for the user.
  */
-@property (copy, nonatomic) NSString *country;
+@property (copy, nonatomic, nullable) NSString *country;
 
 /**
  The city for the user.
  */
-@property (copy, nonatomic) NSString *city;
+@property (copy, nonatomic, nullable) NSString *city;
 
 /**
  The contact preference type for the user.
  
  @see MLCUserContactPreferenceType
  */
-@property (copy, nonatomic) MLCUserContactPreference contactPreference;
+@property (copy, nonatomic, nullable) MLCUserContactPreference contactPreference;
 
 /**
  The postal (zip) code for the user.
  */
-@property (copy, nonatomic) NSString *postalCode;
+@property (copy, nonatomic, nullable) NSString *postalCode;
 
 /**
  The email address for the user.
  */
-@property (copy, nonatomic) NSString *email;
+@property (copy, nonatomic, nullable) NSString *email;
 
 /**
  The age of the user.
@@ -156,12 +158,12 @@ NS_SWIFT_NAME(User)
  
  @see MLCUserGenderType
  */
-@property (copy, nonatomic) MLCUserGender gender;
+@property (copy, nonatomic, nullable) MLCUserGender gender;
 
 /**
  The state or province for the user.
  */
-@property (copy, nonatomic) NSString *stateOrProvince;
+@property (copy, nonatomic, nullable) NSString *stateOrProvince;
 
 /**
  The date the user was created.
@@ -173,13 +175,13 @@ NS_SWIFT_NAME(User)
  */
 @property (strong, nonatomic) NSDate *lastUpdateDate;
 
-@property (copy, nonatomic) NSString *attr1;
-@property (copy, nonatomic) NSString *attr2;
-@property (copy, nonatomic) NSString *attr3;
-@property (copy, nonatomic) NSString *attr4;
-@property (copy, nonatomic) NSString *attr5;
+@property (copy, nonatomic, nullable) NSString *attr1;
+@property (copy, nonatomic, nullable) NSString *attr2;
+@property (copy, nonatomic, nullable) NSString *attr3;
+@property (copy, nonatomic, nullable) NSString *attr4;
+@property (copy, nonatomic, nullable) NSString *attr5;
 
-@property (copy, nonatomic) NSString *externalId;
+@property (copy, nonatomic, nullable) NSString *externalId;
 @property (nonatomic) NSUInteger locationId;
 @property (nonatomic) NSUInteger merchantId;
 
@@ -219,3 +221,5 @@ NS_SWIFT_NAME(User)
 + (instancetype)userWithSocial:(MLCUserSocial)social socialId:(NSString *)socialId socialUsername:(NSString *)socialUsername socialToken:(NSString *)socialToken;
 
 @end
+
+NS_ASSUME_NONNULL_END
