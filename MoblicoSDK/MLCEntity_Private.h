@@ -23,6 +23,7 @@
 @property (nonatomic, readwrite, copy) NSDictionary<NSString *, NSString *> *_properties;
 
 + (NSString *)stringFromValue:(id)value;
++ (NSString *)nilIfEmptyStringFromValue:(id)value;
 + (NSDate *)dateFromTimeStampValue:(id)value;
 
 + (BOOL)boolFromValue:(id)value;

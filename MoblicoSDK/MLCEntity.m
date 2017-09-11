@@ -225,6 +225,14 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return value;
 }
 
++ (NSString *)nilIfEmptyStringFromValue:(id)value {
+    NSString *string = [self stringFromValue:value];
+    if (string.length == 0) {
+        return nil;
+    }
+    return string;
+}
+
 + (NSString *)stringFromValue:(id)value {
     if ([value isKindOfClass:[NSNumber class]]
             && (

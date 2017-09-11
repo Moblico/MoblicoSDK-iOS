@@ -158,6 +158,36 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
 @implementation MLCUser (Validation)
 
+
++ (void)addValidations:(MLCValidations *)validations key:(NSString *)key {
+    [self addValidations:validations format:nil caseSensitive:NO key:key named:key];
+}
+
++ (void)addValidations:(MLCValidations *)validations format:(NSString *)format key:(NSString *)key {
+    [self addValidations:validations format:format caseSensitive:NO key:key named:key];
+}
+
++ (void)addValidations:(MLCValidations *)validations format:(NSString *)format key:(NSString *)key named:(NSString *)keyName {
+    [self addValidations:validations format:format caseSensitive:NO key:key named:keyName];
+}
+
++ (void)addValidations:(MLCValidations *)validations format:(NSString *)format caseSensitive:(BOOL)caseSensitive key:(NSString *)key named:(NSString *)keyName {
+    NSMutableArray *rules = [NSMutableArray array];
+    MLCValidate *validPresence = [self validatePresenceOfRequiredKey:key withMessage:[NSString stringWithFormat:@"Your %@ is required.", keyName]];
+    if (validPresence) {
+        [rules addObject:validPresence];
+    }
+    if (format.length > 0) {
+        NSString *message = [NSString stringWithFormat:@"Please enter a valid %@.", keyName];
+        MLCValidate *validFormat = [MLCValidate validateFormat:format caseSensitive:caseSensitive message:message];
+        if (validFormat) {
+            [rules addObject:validFormat];
+        }
+    }
+
+    [validations appendRules:rules forKey:key];
+}
+
 + (MLCValidate *)validatePresenceOfRequiredKey:(NSString *)key withMessage:(NSString *)message {
     if (![self.requiredParameters containsObject:key]) return nil;
     return [MLCValidate validatePresenceWithMessage:message];
@@ -168,28 +198,19 @@ static NSArray<NSString *> *_requiredParameters = nil;
     if (validations.count) {
         return validations;
     }
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"username" withMessage:@"Your username is required."],
-                               [MLCValidate validateFormat:@"^[A-Z0-9._%+-@ ]{3,200}$" message:@"Please enter a valid username."]] forKey:@"username"];
-    
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"email" withMessage:@"Your email address is required."],
-                               [MLCValidate validateFormat:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$" message:@"Please enter a valid email address."]] forKey:@"email"];
-    
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"postalCode" withMessage:@"Your zip code is required."],
-                               [MLCValidate validateFormat:@"^\\d{5}(?:[-\\s]\\d{4})?$" message:@"Please enter a valid zip code."]] forKey:@"postalCode"];
-    
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"firstName" withMessage:@"Your first name is required."],
-                               [MLCValidate validateFormat:@"^[A-Z -']{1,}$" message:@"Please enter a valid first name."]] forKey:@"firstName"];
-    
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"lastName" withMessage:@"Your last name is required."],
-                               [MLCValidate validateFormat:@"^[A-Z -']{1,}$" message:@"Please enter a valid last name."]] forKey:@"lastName"];
-    
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"phone" withMessage:@"Your phone number is required."],
-                               [MLCValidate validateFormat:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$" message:@"Please enter a valid phone number."]] forKey:@"phone"];
-    
-    [validations appendRules:@[[self validatePresenceOfRequiredKey:@"stateOrProvince" withMessage:@"Your state is required."],
-                               [MLCValidate validateCaseSensitiveFormat:@"^[A-Z]{2}$" message:@"Please enter a valid state."]] forKey:@"stateOrProvince"];
-    
-    [validations appendRule:[self validatePresenceOfRequiredKey:@"gender" withMessage:@"Your gender is required."] forKey:@"gender"];
+
+    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
+    [self addValidations:validations format:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$" key:@"email" named:@"email address"];
+    [self addValidations:validations format:@"^\\d{5}(?:[-\\s]\\d{4})?$" key:@"postalCode" named:@"zip code"];
+    [self addValidations:validations format:@"^[A-Z -']{1,}$" key:@"firstName" named:@"first name"];
+    [self addValidations:validations format:@"^[A-Z -']{1,}$" key:@"lastName" named:@"last name"];
+    [self addValidations:validations format:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$" key:@"phone" named:@"phone number"];
+    [self addValidations:validations format:@"^[A-Z]{2}$" caseSensitive:YES key:@"stateOrProvince" named:@"state"];
+
+    [self addValidations:validations key:@"gender"];
+    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
+    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
+    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
     
     [validations appendRule:[[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
                                                     validateTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {

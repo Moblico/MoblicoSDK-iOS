@@ -16,6 +16,7 @@
 
 #import "MLCSettingsService.h"
 #import "MLCService_Private.h"
+#import "MLCEntity_Private.h"
 
 static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 
@@ -81,7 +82,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 }
 
 - (nullable NSString *)objectForKey:(NSString *)key {
-    return self.dictionary[key];
+    return [MLCEntity nilIfEmptyStringFromValue:self.dictionary[key]];
 }
 
 - (nullable NSString *)objectForKeyedSubscript:(NSString *)key {
@@ -90,8 +91,8 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 
 
 - (nullable NSDictionary *)dictionaryForKey:(NSString *)key {
-    NSString *value = self.dictionary[key];
-    if (value == nil) {
+    NSString *value = [self objectForKey:key];
+    if (!value) {
         return nil;
     }
 
@@ -114,14 +115,14 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
     return map;
 }
 
-- (nullable NSArray *)arrayForKey:(NSString *)key {
-    NSString *value = self.dictionary[key];
+- (NSArray *)arrayForKey:(NSString *)key {
+    NSString *value = [self objectForKey:key];
     return [value componentsSeparatedByString:@","];
 }
 
-- (nullable NSURL *)URLForKey:(NSString *)key {
-    NSString *url = self.dictionary[key];
-    return url.length > 0 ? [NSURL URLWithString:url] : nil;
+- (NSURL *)URLForKey:(NSString *)key {
+    NSString *value = [self objectForKey:key];
+    return value ? [NSURL URLWithString:value] : nil;
 }
 
 + (NSNumberFormatter *)numberFormatter {
@@ -136,7 +137,11 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 }
 
 - (NSNumber *)numberForKey:(NSString *)key {
-    return [MLCSettings.numberFormatter numberFromString:self.dictionary[key]] ?: [self boolNumberForKey:key];
+    NSString *value = [self objectForKey:key];
+    if (!value) {
+        return nil;
+    }
+    return [MLCSettings.numberFormatter numberFromString:value] ?: [self boolNumberForKey:key];
 }
 
 - (NSInteger)integerForKey:(NSString *)key {
@@ -144,7 +149,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 }
 
 - (NSInteger)integerForKey:(NSString *)key defaultValue:(NSInteger)defaultValue {
-    NSNumber *number = [MLCSettings.numberFormatter numberFromString:self.dictionary[key]];
+    NSNumber *number = [self numberForKey:key];
     return number ? number.integerValue : defaultValue;
 }
 
@@ -153,7 +158,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 }
 
 - (double)doubleForKey:(NSString *)key defaultValue:(double)defaultValue {
-    NSNumber *number = [MLCSettings.numberFormatter numberFromString:self.dictionary[key]];
+    NSNumber *number = [self numberForKey:key];
     return number ? number.doubleValue : defaultValue;
 }
 
@@ -161,8 +166,18 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
     return [self boolForKey:key defaultValue:NO];
 }
 
-- (NSNumber *)boolNumberFromUnichar:(unichar)c {
-    switch (c) {
+- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
+    NSNumber *number = [self numberForKey:key];
+    return number ? number.boolValue : defaultValue;
+}
+
+- (NSNumber *)boolNumberForKey:(NSString *)key {
+    NSString *value = [[self objectForKey:key] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
+    if (value.length == 0) {
+        return nil;
+    }
+
+    switch ([value characterAtIndex:0]) {
         case 't':
         case 'T':
         case 'y':
@@ -180,24 +195,5 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
     }
 }
 
-- (NSNumber *)boolNumberForKey:(NSString *)key {
-    NSString *value = self.dictionary[key];
-    value = [value stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
-    if (!value || value.length == 0) {
-        return nil;
-    }
-
-    return [self boolNumberFromUnichar:[value characterAtIndex:0]];
-}
-
-- (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
-    NSNumber *number = [self boolNumberForKey:key];
-    if (number) {
-        return number.boolValue;
-    }
-    NSString *value = self.dictionary[key];
-    number = [MLCSettings.numberFormatter numberFromString:value];
-    return number ? number.boolValue : defaultValue;
-}
 
 @end

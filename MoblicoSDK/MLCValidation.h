@@ -63,6 +63,7 @@ NS_SWIFT_NAME(Validate)
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)validatePresenceWithMessage:(NSString *)message NS_SWIFT_NAME(init(presence:));
++ (instancetype)validateFormat:(NSString *)format caseSensitive:(BOOL)caseSensitive message:(NSString *)message;
 + (instancetype)validateFormat:(NSString *)format message:(NSString *)message; // Case insensitive by default
 + (instancetype)validateCaseSensitiveFormat:(NSString *)format message:(NSString *)message;
 + (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message;
