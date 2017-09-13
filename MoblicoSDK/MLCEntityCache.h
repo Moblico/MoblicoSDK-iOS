@@ -16,13 +16,17 @@
 
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(EntityCache)
 @interface MLCEntityCache : NSObject
 
-+ (id)retrieveEntityWithKey:(NSString *)key;
-+ (BOOL)persistEntity:(id<NSCoding>)object key:(NSString *)key error:(NSError **)error;
-+ (BOOL)clearEntityWithKey:(NSString *)key error:(NSError **)error;
-+ (BOOL)clearCache:(NSError **)error;
++ (nullable id)retrieveEntityWithKey:(NSString *)key;
++ (BOOL)persistEntity:(id<NSCoding>)object key:(NSString *)key error:(out NSError *__autoreleasing*)error;
++ (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError * __autoreleasing *)error;
++ (BOOL)clearCache:(out NSError * __autoreleasing *)error;
 + (BOOL)entityExistsWithKey:(NSString *)key;
 
 @end
+
+NS_ASSUME_NONNULL_END

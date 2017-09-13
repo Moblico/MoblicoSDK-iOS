@@ -26,6 +26,9 @@
 @import UIKit;
 #endif
 
+MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsFound = @"MLCUsersServiceVerifyResultsFound";
+MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsNotFound = @"MLCUsersServiceVerifyResultsNotFound";
+
 
 NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     if ([deviceToken isKindOfClass:[NSString class]]) {
@@ -71,9 +74,9 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
     return [self readSuccess:path parameters:@{key: value} handler:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            handler(@YES, nil);
+            handler(MLCUsersServiceVerifyResultsFound, nil);
         } else if ([MLCStatus typeFromError:error] == MLCStatusTypeUserNotFound) {
-            handler(@NO, nil);
+            handler(MLCUsersServiceVerifyResultsNotFound, nil);
         } else {
             handler(nil, error);
         }

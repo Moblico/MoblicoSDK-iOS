@@ -51,7 +51,7 @@
     return [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:error];
 }
 
-+ (BOOL)clearCache:(NSError **)error {
++ (BOOL)clearCache:(NSError * __autoreleasing *)error {
     __block BOOL hadError = YES;
     NSArray *contents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:[self documentsURL]
                                                     includingPropertiesForKeys:nil

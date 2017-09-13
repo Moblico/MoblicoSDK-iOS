@@ -23,7 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 MLCServiceCreateResourceCompletionHandler(MLCUsersService, MLCUser);
 
-typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(NSNumber *_Nullable results, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
+typedef NSString *MLCUsersServiceVerifyResults NS_STRING_ENUM NS_SWIFT_NAME(MLCUsersService.VerifyResults);
+FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsFound;
+FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsNotFound;
+
+typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(MLCUsersServiceVerifyResults _Nullable results, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
 typedef void(^MLCUsersServiceResetPasswordCompletionHandler)(NSURL *url, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.ResetPasswordCompletionHandler);
 
 NS_SWIFT_NAME(UsersService)

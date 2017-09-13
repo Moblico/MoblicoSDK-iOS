@@ -18,20 +18,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, MLCUserTransactionType) {
-    MLCUserTransactionTypeUnknown = -1,
-    MLCUserTransactionTypePointsEarned,
-    MLCUserTransactionTypePointsSpent,
-    MLCUserTransactionTypeCurrencySaved,
-    MLCUserTransactionTypeCurrencySpent
-} NS_SWIFT_NAME(MLCUserTransaction.Type);
+typedef NSString *MLCUserTransactionType NS_STRING_ENUM NS_SWIFT_NAME(MLCUserTransaction.Type);
+FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypeUnknown;
+FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypePointsEarned;
+FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypePointsSpent;
+FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypeCurrencySaved;
+FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypeCurrencySpent;
 
 NS_SWIFT_NAME(UserTransaction)
 @interface MLCUserTransaction : MLCEntity
 
 @property (nonatomic) NSUInteger userTransactionId NS_SWIFT_NAME(id);
 @property (nonatomic) double amount;
-@property (nonatomic) MLCUserTransactionType type;
+@property (nonatomic, copy) MLCUserTransactionType type;
 @property (copy, nonatomic) NSString *name;
 @property (copy, nonatomic, nullable) NSString *details;
 @property (strong, nonatomic) NSDate *createDate;
