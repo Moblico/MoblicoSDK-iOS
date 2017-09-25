@@ -55,7 +55,7 @@ MLCMessageServiceStatus const MLCMessageServiceStatusDelivered = @"DELIVERED";
 + (instancetype)readMessageForResource:(MLCEntity *)resource type:(MLCMessageServiceType)type handler:(MLCMessageServiceResourceCompletionHandler)handler {
     if ([self canScopeResource:resource] == NO) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
-        MLCServiceError *error = [MLCServiceError errorWithCode:MLCServiceErrorCodeInvalidParameter description:description];
+        MLCServiceError *error = [MLCServiceError invalidParameterErrorWithDescription:description];
         return [self invalidServiceWithError:error handler:handler];
     }
 

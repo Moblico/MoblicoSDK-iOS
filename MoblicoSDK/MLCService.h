@@ -80,11 +80,12 @@ NS_SWIFT_NAME(MLCService.Error)
 @interface MLCServiceError : NSError
 @property (nonatomic, copy, readonly, nullable) NSArray<MLCServiceError *> *errors;
 
-- (instancetype)initWithCode:(MLCServiceErrorCode)code description:(nullable NSString *)description recoverySuggestion:(nullable NSString *)recoverySuggestion errors:(nullable NSArray<MLCServiceError *> *)errors NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCode:(MLCServiceErrorCode)code description:(nullable NSString *)description errors:(nullable NSArray<MLCServiceError *> *)errors NS_DESIGNATED_INITIALIZER;
 
-+ (instancetype)errorWithCode:(MLCServiceErrorCode)code;
-+ (instancetype)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description;
-+ (instancetype)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion;
++ (instancetype)missingParameterErrorWithDescription:(NSString *)description NS_SWIFT_NAME(missingParameter(_:));
++ (instancetype)invalidParameterErrorWithDescription:(NSString *)description NS_SWIFT_NAME(invalidParameter(_:));
++ (instancetype)multipleErrorsErrorWithErrors:(NSArray<MLCServiceError *> *)description NS_SWIFT_NAME(multipleErrors(_:));
+
 + (nullable instancetype)errorWithErrors:(NSArray<MLCServiceError *> *)errors;
 
 - (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;

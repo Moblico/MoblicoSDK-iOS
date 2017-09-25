@@ -9,7 +9,7 @@
 #import "MLCKeychainPasswordItem.h"
 
 NSErrorDomain const MLCKeychainPasswordItemErrorDomain = @"MLCKeychainPasswordItemErrorDomain";
-NSString *const MLCKeychainPasswordItemOSStatusErrorKey = @"OSStatus";
+NSErrorUserInfoKey const MLCKeychainPasswordItemOSStatusErrorKey = @"OSStatus";
 
 @interface MLCKeychainPasswordItemError ()
 
@@ -20,7 +20,7 @@ NSString *const MLCKeychainPasswordItemOSStatusErrorKey = @"OSStatus";
 
 @end
 
-typedef NSString *MLCKeychainPasswordItemMatchLimit NS_STRING_ENUM;
+typedef NSString *MLCKeychainPasswordItemMatchLimit NS_TYPED_ENUM;
 
 MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitOne = @"MLCKeychainPasswordItemMatchLimitOne";
 MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @"MLCKeychainPasswordItemMatchLimitAll";

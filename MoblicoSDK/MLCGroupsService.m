@@ -20,6 +20,10 @@
 #import "MLCUser.h"
 #import "MLCServiceManager.h"
 
+@interface MLCGroupsService ()
++ (nonnull NSString *)pathForUser:(nonnull MLCUser *)user group:(nullable MLCGroup *)group;
+@end
+
 @implementation MLCGroupsService
 
 + (NSString *)pathForUser:(MLCUser *)user group:(MLCGroup *)group {
@@ -63,14 +67,14 @@
 + (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
     NSMutableArray *errors = [NSMutableArray array];
     if (!user) {
-        [errors addObject:[MLCServiceError errorWithCode:MLCServiceErrorCodeMissingParameter description:@"User is nil."]];
+        [errors addObject:[MLCServiceError missingParameterErrorWithDescription:@"User is nil."]];
     }
     if (groupName.length == 0) {
-        [errors addObject:[MLCServiceError errorWithCode:MLCServiceErrorCodeInvalidParameter description:@"Invalid group name."]];
+        [errors addObject:[MLCServiceError invalidParameterErrorWithDescription:@"Invalid group name."]];
     }
 
-    MLCServiceError *error = [MLCServiceError errorWithErrors:errors];
-    if (error) {
+    if (errors.count > 0) {
+        MLCServiceError *error = [MLCServiceError errorWithErrors:errors];
         return [self invalidServiceFailedWithError:error handler:handler];
     }
 
