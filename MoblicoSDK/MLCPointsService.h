@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString *MLCPointsServiceTotalType NS_STRING_ENUM NS_SWIFT_NAME(MLCPointsService.TotalType);
+typedef NSString *MLCPointsServiceTotalType NS_TYPED_ENUM NS_SWIFT_NAME(MLCPointsService.TotalType);
 FOUNDATION_EXPORT MLCPointsServiceTotalType const MLCPointsServiceTotalTypePoints;
 FOUNDATION_EXPORT MLCPointsServiceTotalType const MLCPointsServiceTotalTypeAccumulated;
 FOUNDATION_EXPORT MLCPointsServiceTotalType const MLCPointsServiceTotalTypeBoth;

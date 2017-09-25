@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString *MLCMediaServiceParameter NS_STRING_ENUM NS_SWIFT_NAME(MLCMediaService.Parameter);
+typedef NSString *MLCMediaServiceParameter NS_TYPED_ENUM NS_SWIFT_NAME(MLCMediaService.Parameter);
 FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterMediaType;
 FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterMediaTypeCategory;
 FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterCategory;

@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString *MLCLocationsServiceParameter NS_STRING_ENUM NS_SWIFT_NAME(MLCLocationsService.Parameter);
+typedef NSString *MLCLocationsServiceParameter NS_TYPED_ENUM NS_SWIFT_NAME(MLCLocationsService.Parameter);
 FOUNDATION_EXPORT MLCLocationsServiceParameter const MLCLocationsServiceParameterMerchantId;
 FOUNDATION_EXPORT MLCLocationsServiceParameter const MLCLocationsServiceParameterCLLocation;
 FOUNDATION_EXPORT MLCLocationsServiceParameter const MLCLocationsServiceParameterLatitude;

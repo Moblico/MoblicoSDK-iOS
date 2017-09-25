@@ -19,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// The preferred method of contact for the user.
-typedef NSString *MLCUserContactPreference NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.ContactPreference);
+typedef NSString *MLCUserContactPreference NS_TYPED_ENUM NS_SWIFT_NAME(MLCUser.ContactPreference);
 
 /// Specifies that the user does not wish to be contacted.
 FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceNone;
@@ -31,7 +31,7 @@ FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceEmail;
 FOUNDATION_EXPORT MLCUserContactPreference const MLCUserContactPreferenceBoth;
 
 /// The gender for the user.
-typedef NSString *MLCUserGender NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.Gender);
+typedef NSString *MLCUserGender NS_TYPED_ENUM NS_SWIFT_NAME(MLCUser.Gender);
 /// Specifies that the user does not provide gender information.
 FOUNDATION_EXPORT MLCUserGender const MLCUserGenderUndeclared;
 /// Specifies that the user is male.
@@ -40,7 +40,7 @@ FOUNDATION_EXPORT MLCUserGender const MLCUserGenderMale;
 FOUNDATION_EXPORT MLCUserGender const MLCUserGenderFemale;
 
 /// The social media provider for the user.
-typedef NSString *MLCUserSocial NS_STRING_ENUM NS_SWIFT_NAME(MLCUser.Social);
+typedef NSString *MLCUserSocial NS_TYPED_ENUM NS_SWIFT_NAME(MLCUser.Social);
 /// Facebook.
 FOUNDATION_EXPORT MLCUserSocial const MLCUserSocialFacebook;
 

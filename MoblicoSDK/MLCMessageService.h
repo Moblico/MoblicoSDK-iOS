@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 MLCServiceCreateResourceCompletionHandler(MLCMessageService, MLCMessage);
 
-typedef NSString *MLCMessageServiceStatus NS_STRING_ENUM NS_SWIFT_NAME(MLCMessageService.Status);
+typedef NSString *MLCMessageServiceStatus NS_TYPED_ENUM NS_SWIFT_NAME(MLCMessageService.Status);
 FOUNDATION_EXPORT MLCMessageServiceStatus const MLCMessageServiceStatusOpened;
 FOUNDATION_EXPORT MLCMessageServiceStatus const MLCMessageServiceStatusDelivered;
 

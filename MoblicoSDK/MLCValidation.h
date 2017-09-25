@@ -21,24 +21,16 @@ NS_ASSUME_NONNULL_BEGIN
 @class MLCEntity;
 
 FOUNDATION_EXPORT NSErrorDomain const MLCValidationErrorDomain NS_SWIFT_NAME(MLCValidation.ErrorDomain);
-FOUNDATION_EXPORT NSString *const MLCValidationDetailedErrorsKey NS_SWIFT_NAME(MLCValidation.DetailedErrorsKey);
+FOUNDATION_EXPORT NSErrorUserInfoKey const MLCValidationDetailedErrorsKey NS_SWIFT_NAME(MLCValidation.DetailedErrorsKey);
 
 typedef BOOL(^MLCValidateTest)(__kindof MLCEntity *entity, NSString *key, NSString *_Nullable value) NS_SWIFT_NAME(MLCValidate.Test);
 
-
-#ifdef NS_ERROR_ENUM
 typedef NS_ERROR_ENUM(MLCValidationErrorDomain, MLCValidationErrorCode) {
     MLCValidationErrorUnknown NS_SWIFT_NAME(unknown) = -1,
     MLCValidationErrorFailure NS_SWIFT_NAME(failure) = 0,
     MLCValidationErrorMultipleFailures NS_SWIFT_NAME(multiple) = 1
 } NS_SWIFT_NAME(MLCValidation.Error);
-#else
-typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
-    MLCValidationErrorUnknown NS_SWIFT_NAME(unknown) = -1,
-    MLCValidationErrorFailure NS_SWIFT_NAME(error) = 0,
-    MLCValidationErrorMultipleFailures NS_SWIFT_NAME(multiple) = 1
-} NS_SWIFT_NAME(MLCValidation.ErrorCode);
-#endif
+
 
 @class MLCValidate, MLCValidation, MLCValidationError;
 

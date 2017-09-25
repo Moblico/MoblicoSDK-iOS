@@ -19,7 +19,7 @@
 #import "MLCEntity_Private.h"
 
 NSErrorDomain const MLCValidationErrorDomain = @"MLCValidationErrorDomain";
-NSString *const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKey";
+NSErrorUserInfoKey const MLCValidationDetailedErrorsKey = @"MLCValidationDetailedErrorsKey";
 
 @interface MLCValidations ()
 

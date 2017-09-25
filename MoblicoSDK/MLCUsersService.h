@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 MLCServiceCreateResourceCompletionHandler(MLCUsersService, MLCUser);
 
-typedef NSString *MLCUsersServiceVerifyResults NS_STRING_ENUM NS_SWIFT_NAME(MLCUsersService.VerifyResults);
+typedef NSString *MLCUsersServiceVerifyResults NS_TYPED_ENUM NS_SWIFT_NAME(MLCUsersService.VerifyResults);
 FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsFound;
 FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsNotFound;
 

@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString *MLCUserTransactionType NS_STRING_ENUM NS_SWIFT_NAME(MLCUserTransaction.Type);
+typedef NSString *MLCUserTransactionType NS_TYPED_ENUM NS_SWIFT_NAME(MLCUserTransaction.Type);
 FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypeUnknown;
 FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypePointsEarned;
 FOUNDATION_EXPORT MLCUserTransactionType const MLCUserTransactionTypePointsSpent;

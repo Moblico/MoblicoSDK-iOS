@@ -17,7 +17,7 @@
 #import "MLCStatus.h"
 
 NSErrorDomain const MLCStatusErrorDomain = @"MLCStatusErrorDomain";
-NSString *const MLCStatusStatusErrorKey = @"status";
+NSErrorUserInfoKey const MLCStatusStatusErrorKey = @"status";
 
 @implementation MLCStatus
 
@@ -71,7 +71,7 @@ NSString *const MLCStatusStatusErrorKey = @"status";
     if (!message) {
         message = @"Unknown Error";
     }
-    NSDictionary<NSString *, id> *userInfo = @{NSLocalizedDescriptionKey: message,
+    NSDictionary<NSErrorUserInfoKey, id> *userInfo = @{NSLocalizedDescriptionKey: message,
                                MLCStatusStatusErrorKey: status};
     self = [super initWithDomain:MLCStatusErrorDomain code:status.type userInfo:userInfo];
     return self;

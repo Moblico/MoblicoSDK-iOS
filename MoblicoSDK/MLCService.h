@@ -21,24 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
 @class MLCServiceError;
 
 FOUNDATION_EXPORT NSErrorDomain const MLCServiceErrorDomain NS_SWIFT_NAME(MLCService.ErrorDomain);
-FOUNDATION_EXPORT NSString *const MLCServiceDetailedErrorsKey NS_SWIFT_NAME(MLCService.DetailedErrorsKey);
+FOUNDATION_EXPORT NSErrorUserInfoKey const MLCServiceDetailedErrorsKey NS_SWIFT_NAME(MLCService.DetailedErrorsKey);
 
-#ifdef NS_ERROR_ENUM
 typedef NS_ERROR_ENUM(MLCServiceErrorDomain, MLCServiceErrorCode) {
     MLCServiceErrorCodeMissingParameter = 1000,
     MLCServiceErrorCodeInvalidParameter,
     MLCServiceErrorCodeInternalError,
     MLCServiceErrorCodeMultipleErrors
 } NS_SWIFT_NAME(MLCService.Error);
-#else
-typedef NS_ENUM(NSInteger, MLCServiceErrorCode) {
-    MLCServiceErrorCodeMissingParameter = 1000,
-    MLCServiceErrorCodeInvalidParameter,
-    MLCServiceErrorCodeInternalError,
-    MLCServiceErrorCodeMultipleErrors
-} NS_SWIFT_NAME(MLCService.ErrorCode);
-#endif
-
 
 /**
  Indicates the method used in the request

@@ -19,7 +19,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString *MLCCheckInServiceParameter NS_STRING_ENUM NS_SWIFT_NAME(MLCCheckInService.Parameter);
+typedef NSString *MLCCheckInServiceParameter NS_TYPED_ENUM NS_SWIFT_NAME(MLCCheckInService.Parameter);
 FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterCLLocation;
 FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterLatitude;
 FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterLongitude;

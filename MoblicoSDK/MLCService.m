@@ -29,7 +29,7 @@
 #endif
 
 NSErrorDomain const MLCServiceErrorDomain = @"MLCServiceErrorDomain";
-NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsKey";
+NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsKey";
 
 @implementation MLCService
 
