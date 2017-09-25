@@ -59,4 +59,8 @@ NS_SWIFT_NAME(KeychainPasswordItem)
 + (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service accessGroup:(NSString *)accessGroup error:(NSError **)error;
 @end
 
+@interface MLCKeychainPasswordItemError : NSError
+@property (nonatomic, assign) OSStatus status;
+@end
+
 NS_ASSUME_NONNULL_END

@@ -11,12 +11,12 @@
 NSErrorDomain const MLCKeychainPasswordItemErrorDomain = @"MLCKeychainPasswordItemErrorDomain";
 NSString *const MLCKeychainPasswordItemOSStatusErrorKey = @"OSStatus";
 
-@interface MLCKeychainPasswordItemError : NSObject
+@interface MLCKeychainPasswordItemError ()
 
-+ (NSError *)noData;
-+ (NSError *)invalidData;
-+ (NSError *)invalidItem;
-+ (NSError *)invalidStatus:(OSStatus)status;
++ (instancetype)noData;
++ (instancetype)invalidData;
++ (instancetype)invalidItem;
++ (instancetype)invalidStatus:(OSStatus)status;
 
 @end
 
@@ -232,27 +232,27 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 
 @implementation MLCKeychainPasswordItemError
 
-+ (NSError *)noData {
-    return [NSError errorWithDomain:MLCKeychainPasswordItemErrorDomain
++ (instancetype)noData {
+    return [self errorWithDomain:MLCKeychainPasswordItemErrorDomain
                                code:MLCKeychainPasswordItemErrorCodeNoData
                            userInfo:nil];
 }
 
-+ (NSError *)invalidData {
-    return [NSError errorWithDomain:MLCKeychainPasswordItemErrorDomain
++ (instancetype)invalidData {
+    return [self errorWithDomain:MLCKeychainPasswordItemErrorDomain
                                code:MLCKeychainPasswordItemErrorCodeInvalidData
                            userInfo:nil];
 }
 
-+ (NSError *)invalidItem {
-    return [NSError errorWithDomain:MLCKeychainPasswordItemErrorDomain
++ (instancetype)invalidItem {
+    return [self errorWithDomain:MLCKeychainPasswordItemErrorDomain
                                code:MLCKeychainPasswordItemErrorCodeInvalidItem
                            userInfo:nil];
 }
 
-+ (NSError *)invalidStatus:(OSStatus)status {
++ (instancetype)invalidStatus:(OSStatus)status {
     if (status == noErr) return nil;
-    return [NSError errorWithDomain:MLCKeychainPasswordItemErrorDomain
+    return [self errorWithDomain:MLCKeychainPasswordItemErrorDomain
                                code:MLCKeychainPasswordItemErrorCodeInvalidStatus
                            userInfo:@{MLCKeychainPasswordItemOSStatusErrorKey: @(status)}];
 }

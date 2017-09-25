@@ -18,6 +18,7 @@
 @import Foundation;
 
 NS_ASSUME_NONNULL_BEGIN
+@class MLCServiceError;
 
 FOUNDATION_EXPORT NSErrorDomain const MLCServiceErrorDomain NS_SWIFT_NAME(MLCService.ErrorDomain);
 FOUNDATION_EXPORT NSString *const MLCServiceDetailedErrorsKey NS_SWIFT_NAME(MLCService.DetailedErrorsKey);
@@ -83,6 +84,22 @@ NS_SWIFT_NAME(Service)
 @interface MLCService : NSObject
 - (void)start;
 - (void)cancel;
+@end
+
+NS_SWIFT_NAME(MLCService.Error)
+@interface MLCServiceError : NSError
+@property (nonatomic, copy, readonly, nullable) NSArray<MLCServiceError *> *errors;
+
+- (instancetype)initWithCode:(MLCServiceErrorCode)code description:(nullable NSString *)description recoverySuggestion:(nullable NSString *)recoverySuggestion errors:(nullable NSArray<MLCServiceError *> *)errors NS_DESIGNATED_INITIALIZER;
+
++ (instancetype)errorWithCode:(MLCServiceErrorCode)code;
++ (instancetype)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description;
++ (instancetype)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion;
++ (nullable instancetype)errorWithErrors:(NSArray<MLCServiceError *> *)errors;
+
+- (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;
++ (instancetype)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;
+
 @end
 
 NS_ASSUME_NONNULL_END

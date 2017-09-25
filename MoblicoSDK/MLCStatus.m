@@ -59,3 +59,22 @@ NSString *const MLCStatusStatusErrorKey = @"status";
 }
 
 @end
+
+@implementation MLCStatusError
+
+- (MLCStatus *)status {
+    return self.userInfo[MLCStatusStatusErrorKey];
+}
+
+- (instancetype)initWithStatus:(MLCStatus *)status {
+    NSString *message = status.message;
+    if (!message) {
+        message = @"Unknown Error";
+    }
+    NSDictionary<NSString *, id> *userInfo = @{NSLocalizedDescriptionKey: message,
+                               MLCStatusStatusErrorKey: status};
+    self = [super initWithDomain:MLCStatusErrorDomain code:status.type userInfo:userInfo];
+    return self;
+}
+
+@end

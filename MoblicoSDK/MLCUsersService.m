@@ -66,7 +66,8 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
 + (instancetype)verifyExistingUserWithValue:(NSString *)value forKey:(NSString *)key handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler {
     if (value.length == 0) {
-        NSError *error =[self errorWithCode:MLCServiceErrorCodeMissingParameter];
+        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing value for %@.", nil), key];
+        MLCServiceError *error = [MLCServiceError errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
         return [self invalidServiceWithError:error handler:handler];
     }
 
@@ -143,7 +144,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
     if (!deviceId.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing device for user: %@", nil), user];
-        NSError *error = [self errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
+        MLCServiceError *error = [MLCServiceError errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
         return [self invalidServiceFailedWithError:error handler:handler];
     }
 
@@ -162,7 +163,7 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
 
     if (!uniqueIdentifier.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
-        NSError *error = [self errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
+        MLCServiceError *error = [MLCServiceError errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
         return [self invalidServiceWithError:error handler:handler];
     }
 

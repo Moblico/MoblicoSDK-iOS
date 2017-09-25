@@ -42,12 +42,17 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 
     for (id key in properties) {
         id value = [self valueForKey:key];
-        NSError *error = nil;
+        MLCValidationError *error = nil;
         if (![self validateValue:&value forKey:key error:&error]) {
             if (!error) {
-                error = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationUnknownError userInfo:@{NSLocalizedDescriptionKey: @"Unknown error"}];
+                error = MLCValidationError.unknownError;
             }
-            [errors addObject:error];
+
+            if ([error isKindOfClass:[MLCValidationError class]] && error.errors.count > 0) {
+                [errors addObjectsFromArray:error.errors];
+            } else {
+                [errors addObject:error];
+            }
         }
     }
 
@@ -59,7 +64,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         if (errors.count == 1) {
             *outError = errors.firstObject;
         } else {
-            *outError = [NSError errorWithDomain:MLCValidationErrorDomain code:MLCValidationMultipleErrorsError userInfo:@{MLCValidationDetailedErrorsKey: errors}];
+            *outError = [MLCValidationError errorWithErrors:errors];
         }
     }
 
@@ -77,7 +82,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 
     MLCValidation *results = [[self class].validations validate:self key:inKey value:ioValue];
     if (outError) {
-        *outError = results.firstError;
+        *outError = results.error;
     }
     return results.isValid;
 }
@@ -797,3 +802,4 @@ value = [NSNumber numberWith ## selectorpart:val];}
 }
 
 @end
+

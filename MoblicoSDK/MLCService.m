@@ -230,7 +230,7 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
 
     if (!uniqueIdentifier.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
-        NSError *error = [self errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
+        MLCServiceError *error = [MLCServiceError errorWithCode:MLCServiceErrorCodeMissingParameter description:description];
         return [self invalidServiceWithError:error handler:handler];
     }
     NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
@@ -285,7 +285,7 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
 + (instancetype)findScopedResourcesForResource:(MLCEntity *)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceInternalCollectionCompletionHandler)handler {
     if ([self canScopeResource:resource] == NO) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
-        NSError *error = [self errorWithCode:MLCServiceErrorCodeInvalidParameter description:description];
+        MLCServiceError *error = [MLCServiceError errorWithCode:MLCServiceErrorCodeInvalidParameter description:description];
         return [self invalidServiceWithError:error handler:handler];
     }
 
@@ -631,13 +631,7 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
         if ([statusJSON isKindOfClass:[NSDictionary class]]) {
             MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:statusJSON];
             if (status.type != MLCStatusTypeSuccess) {
-                NSString *message = status.message;
-                if (!message) {
-                    message = @"Unknown Error";
-                }
-                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: message,
-                                           MLCStatusStatusErrorKey: status};
-                NSError *statusError = [NSError errorWithDomain:MLCStatusErrorDomain code:status.type userInfo:userInfo];
+                MLCStatusError *statusError = [[MLCStatusError alloc] initWithStatus:status];
                 self.jsonCompletionHandler(self, nil, statusError, self.httpResponse);
                 self.receivedData = nil;
                 return;
@@ -657,45 +651,66 @@ NSString *const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsK
     [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
 }
 
-+ (NSError *)errorWithCode:(MLCServiceErrorCode)code {
-    return [self errorWithCode:code description:nil recoverySuggestion:nil];
-}
-
-+ (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description {
-    return [self errorWithCode:code description:description recoverySuggestion:nil];
-}
-
-+ (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion {
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:2];
-
-    if (description.length) {
-        userInfo[NSLocalizedDescriptionKey] = description;
-    }
-
-    if (recoverySuggestion.length) {
-        userInfo[NSLocalizedRecoverySuggestionErrorKey] = recoverySuggestion;
-    }
-
-    return [NSError errorWithDomain:MLCServiceErrorDomain code:code userInfo:userInfo];
-}
-
-+ (NSError *)errorWithErrors:(NSArray<NSError *> *)errors {
-    return [NSError errorWithDomain:MLCServiceErrorDomain code:MLCServiceErrorCodeMultipleErrors userInfo:@{MLCServiceDetailedErrorsKey: errors}];
-}
-
-+ (instancetype)invalidServiceFailedWithError:(NSError *)error handler:(MLCServiceSuccessCompletionHandler)handler {
++ (instancetype)invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler {
     MLCService *service = [[self alloc] init];
     service.invalidServiceError = error;
     service.invalidServiceSuccessCompletionHandler = handler;
     return service;
 }
 
-+ (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler {
     MLCService *service = [[self alloc] init];
     service.invalidServiceError = error;
     service.invalidServiceJsonCompletionHandler = handler;
     return service;
 }
 
+
+@end
+
+@implementation MLCServiceError
+
+- (NSArray<MLCServiceError *> *)errors {
+    return self.userInfo[MLCServiceDetailedErrorsKey];
+}
+
+- (instancetype)initWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion errors:(nullable NSArray<MLCServiceError *> *)errors {
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    if (description.length > 0) {
+        userInfo[NSLocalizedDescriptionKey] = description;
+    }
+    if (recoverySuggestion.length > 0) {
+        userInfo[NSLocalizedRecoverySuggestionErrorKey] = recoverySuggestion;
+    }
+    if (errors.count > 0) {
+        userInfo[MLCServiceDetailedErrorsKey] = errors;
+    }
+    self = [super initWithDomain:MLCServiceErrorDomain code:code userInfo:userInfo];
+    return self;
+}
+
++ (instancetype)errorWithCode:(MLCServiceErrorCode)code {
+    return [[self alloc] initWithCode:code description:nil recoverySuggestion:nil errors:nil];
+}
+
++ (instancetype)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description {
+    return [[self alloc] initWithCode:code description:description recoverySuggestion:nil errors:nil];
+}
+
++ (instancetype)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion {
+    return [[self alloc] initWithCode:code description:description recoverySuggestion:recoverySuggestion errors:nil];
+}
+
++ (instancetype)errorWithErrors:(NSArray<MLCServiceError *> *)errors {
+    if (errors.count == 0) {
+        return nil;
+    }
+
+    if (errors.count == 1) {
+        return errors.firstObject;
+    }
+    
+    return [[self alloc] initWithCode:MLCServiceErrorCodeMultipleErrors description:nil recoverySuggestion:nil errors:errors];
+}
 
 @end

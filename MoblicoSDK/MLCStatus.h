@@ -507,4 +507,15 @@ NS_SWIFT_NAME(Status)
 
 @end
 
+NS_SWIFT_NAME(MLCStatus.Error)
+@interface MLCStatusError : NSError
+
+@property (nonatomic, strong, readonly) MLCStatus *status;
+
+- (instancetype)initWithStatus:(MLCStatus *)status NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;
+
+@end
+
 NS_ASSUME_NONNULL_END

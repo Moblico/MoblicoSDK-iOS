@@ -28,19 +28,19 @@ typedef BOOL(^MLCValidateTest)(__kindof MLCEntity *entity, NSString *key, NSStri
 
 #ifdef NS_ERROR_ENUM
 typedef NS_ERROR_ENUM(MLCValidationErrorDomain, MLCValidationErrorCode) {
-    MLCValidationUnknownError NS_SWIFT_NAME(unknown) = -1,
-    MLCValidationError NS_SWIFT_NAME(error) = 0,
-    MLCValidationMultipleErrorsError NS_SWIFT_NAME(multiple) = 1
+    MLCValidationErrorUnknown NS_SWIFT_NAME(unknown) = -1,
+    MLCValidationErrorFailure NS_SWIFT_NAME(failure) = 0,
+    MLCValidationErrorMultipleFailures NS_SWIFT_NAME(multiple) = 1
 } NS_SWIFT_NAME(MLCValidation.Error);
 #else
 typedef NS_ENUM(NSInteger, MLCValidationErrorCode) {
-    MLCValidationUnknownError NS_SWIFT_NAME(unknown) = -1,
-    MLCValidationError NS_SWIFT_NAME(error) = 0,
-    MLCValidationMultipleErrorsError NS_SWIFT_NAME(multiple) = 1
+    MLCValidationErrorUnknown NS_SWIFT_NAME(unknown) = -1,
+    MLCValidationErrorFailure NS_SWIFT_NAME(error) = 0,
+    MLCValidationErrorMultipleFailures NS_SWIFT_NAME(multiple) = 1
 } NS_SWIFT_NAME(MLCValidation.ErrorCode);
 #endif
 
-@class MLCValidate, MLCValidation;
+@class MLCValidate, MLCValidation, MLCValidationError;
 
 NS_SWIFT_NAME(Validations)
 @interface MLCValidations : NSObject
@@ -72,23 +72,19 @@ NS_SWIFT_NAME(Validate)
 
 NS_SWIFT_NAME(Validation)
 @interface MLCValidation : NSObject
-@property (nonatomic, readonly, copy, nullable) NSError *firstError;
-@property (nonatomic, readonly, copy, nullable) NSError *multipleErrorsError;
+@property (nonatomic, readonly, strong, nullable) MLCValidationError *error;
 @property (nonatomic, getter=isValid, readonly) BOOL valid;
+@end
+
+NS_SWIFT_NAME(MLCValidation.Error)
+@interface MLCValidationError : NSError
+
+@property (nonatomic, readonly, copy, nullable) NSArray<MLCValidationError *> *errors;
++ (instancetype)errorWithMessage:(NSString *)message;
++ (instancetype)errorWithErrors:(NSArray<MLCValidationError *> *)errors;
+@property (nonatomic, readonly, strong, class) MLCValidationError *unknownError;
+
 @end
 
 NS_ASSUME_NONNULL_END
 
-// MLCValidations *validations = [[MLCValidations alloc] init];
-// validations[@"phoneNumber"] = [MLCValidate validatePresenceWitMessage:@"Your phone number is required."];
-// validations[@"phoneNumber"] = [MLCValidate validateFormat:@"[0-9]{10,11}" message:@"Invalid phone number."];
-
-// MLCUser.validations[@"attr3"] = [MLCValidate validatePresenceWitMessage:@"Your card number is required."];
-// MLCUser.validations[@"attr3"] = [MLCValidate validateFormat:@"4[0-9]{11}" message:@"Invalid card number."];
-
-// [validations validate:@"phoneNumber" value:@"8008675309"];
-
-// let validations = MLCValidations()
-// validations["phoneNumber"] = MLCValidate(presence: "Your phone number is required.")
-// validations["phoneNumber"] = MLCValidate(format:"[0-9]{10,11}", message: "Your phone number is required.")
-// validations.validate("phoneNumber", value: "8008675309")

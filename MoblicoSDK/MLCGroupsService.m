@@ -63,17 +63,13 @@
 + (instancetype)addUser:(MLCUser *)user toGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
     NSMutableArray *errors = [NSMutableArray array];
     if (!user) {
-        [errors addObject:[self errorWithCode:MLCServiceErrorCodeMissingParameter description:@"User is nil." recoverySuggestion:nil]];
+        [errors addObject:[MLCServiceError errorWithCode:MLCServiceErrorCodeMissingParameter description:@"User is nil."]];
     }
     if (groupName.length == 0) {
-        [errors addObject:[self errorWithCode:MLCServiceErrorCodeInvalidParameter description:@"Invalid group name." recoverySuggestion:nil]];
+        [errors addObject:[MLCServiceError errorWithCode:MLCServiceErrorCodeInvalidParameter description:@"Invalid group name."]];
     }
 
-    NSError *error = errors.firstObject;
-    if (errors.count > 1) {
-        error = [self errorWithErrors:errors];
-    }
-
+    MLCServiceError *error = [MLCServiceError errorWithErrors:errors];
     if (error) {
         return [self invalidServiceFailedWithError:error handler:handler];
     }

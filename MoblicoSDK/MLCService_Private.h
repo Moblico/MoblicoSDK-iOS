@@ -33,13 +33,8 @@ typedef void(^MLCServiceInternalCollectionCompletionHandler)(NSArray<__kindof ML
 @property (copy, nonatomic) MLCServiceJSONCompletionHandler invalidServiceJsonCompletionHandler;
 @property (copy, nonatomic) MLCServiceSuccessCompletionHandler invalidServiceSuccessCompletionHandler;
 
-+ (instancetype)invalidServiceWithError:(NSError *)error handler:(MLCServiceJSONCompletionHandler)handler;
-+ (instancetype)invalidServiceFailedWithError:(NSError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
-
-+ (NSError *)errorWithCode:(MLCServiceErrorCode)code;
-+ (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description;
-+ (NSError *)errorWithCode:(MLCServiceErrorCode)code description:(NSString *)description recoverySuggestion:(NSString *)recoverySuggestion;
-+ (NSError *)errorWithErrors:(NSArray<NSError *> *)errors;
++ (instancetype)invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 

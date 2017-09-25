@@ -43,6 +43,14 @@
     return [super service:method path:path parameters:parameters handler:handler];
 }
 
++ (instancetype)invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler {
+    return [super invalidServiceWithError:error handler:handler];
+}
+
++ (instancetype)invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler {
+    return [super invalidServiceFailedWithError:error handler:handler];
+}
+
 + (Class)classForResource {
     return [super classForResource];
 }
