@@ -23,6 +23,8 @@
 		5B7BF4A61D00937900F5388B /* MLCListsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7BF4A21D00937900F5388B /* MLCListsService.m */; };
 		5BAB4AE21DECD9CB00441CE3 /* MLCScanService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BAB4AE01DECD9CB00441CE3 /* MLCScanService.m */; };
 		5BAB4AE31DECD9CB00441CE3 /* MLCScanService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BAB4AE11DECD9CB00441CE3 /* MLCScanService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BBC7A861F68E0AA0042D398 /* MLCServiceRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BBC7A841F68E0AA0042D398 /* MLCServiceRequest.h */; };
+		5BBC7A871F68E0AA0042D398 /* MLCServiceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BBC7A851F68E0AA0042D398 /* MLCServiceRequest.m */; };
 		5BC7ABAE1C6BE0BE003E4C9B /* MLCProductsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2ABCD919633EC3006246CC /* MLCProductsService.m */; };
 		5BC7ABAF1C6BE0BE003E4C9B /* MLCLeaderboardService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC1AB3116BBABD500E91D79 /* MLCLeaderboardService.m */; };
 		5BC7ABB01C6BE0BE003E4C9B /* MLCSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4270B116B71E9A00DE981C /* MLCSettingsService.m */; };
@@ -247,6 +249,8 @@
 		5BAB4AE11DECD9CB00441CE3 /* MLCScanService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCScanService.h; sourceTree = "<group>"; };
 		5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCCheckInService.h; sourceTree = "<group>"; };
 		5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCCheckInService.m; sourceTree = "<group>"; };
+		5BBC7A841F68E0AA0042D398 /* MLCServiceRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLCServiceRequest.h; sourceTree = "<group>"; };
+		5BBC7A851F68E0AA0042D398 /* MLCServiceRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLCServiceRequest.m; sourceTree = "<group>"; };
 		5BC1AB3016BBABD500E91D79 /* MLCLeaderboardService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCLeaderboardService.h; sourceTree = "<group>"; };
 		5BC1AB3116BBABD500E91D79 /* MLCLeaderboardService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCLeaderboardService.m; sourceTree = "<group>"; };
 		5BC1AB3416BBBE0700E91D79 /* MLCPointsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCPointsService.h; sourceTree = "<group>"; };
@@ -417,8 +421,6 @@
 		5BDD6B261F1D332A00EACCA1 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
-				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
 				5B81470D1B669FA400A36D4A /* MLCEntityCache.h */,
 				5B81470E1B669FA400A36D4A /* MLCEntityCache.m */,
 				5BEED7FA1E9D79020021125E /* MLCKeychainPasswordItem.h */,
@@ -427,6 +429,10 @@
 				5B70638A1CDBA04100AE86A0 /* MLCLogger.m */,
 				5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */,
 				5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */,
+				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
+				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
+				5BBC7A841F68E0AA0042D398 /* MLCServiceRequest.h */,
+				5BBC7A851F68E0AA0042D398 /* MLCServiceRequest.m */,
 				5B96EBB118AE86DF004991BC /* MLCValidation.h */,
 				5B96EBB218AE86DF004991BC /* MLCValidation.m */,
 			);
@@ -491,6 +497,7 @@
 				5BC7ABED1C6BE0BE003E4C9B /* MLCAuthenticationService.h in Headers */,
 				5BC7ABEE1C6BE0BE003E4C9B /* MLCMediaService.h in Headers */,
 				5BC7ABEF1C6BE0BE003E4C9B /* MLCMessageService.h in Headers */,
+				5BBC7A861F68E0AA0042D398 /* MLCServiceRequest.h in Headers */,
 				5BC7ABF01C6BE0BE003E4C9B /* MLCMedia.h in Headers */,
 				5BC7ABF11C6BE0BE003E4C9B /* MLCMessage.h in Headers */,
 				5BC7ABF21C6BE0BE003E4C9B /* MLCLeader.h in Headers */,
@@ -580,7 +587,7 @@
 				CLASSPREFIX = MLC;
 				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Moblico Solutions LLC";
 			};
 			buildConfigurationList = 5BECA8DC16A850DF00F0E4B5 /* Build configuration list for PBXProject "MoblicoSDK" */;
@@ -636,6 +643,7 @@
 				5BD938471E8B1EEB00B1FDC9 /* MLCConcurrentService.m in Sources */,
 				5BC7ABAE1C6BE0BE003E4C9B /* MLCProductsService.m in Sources */,
 				5BC7ABAF1C6BE0BE003E4C9B /* MLCLeaderboardService.m in Sources */,
+				5BBC7A871F68E0AA0042D398 /* MLCServiceRequest.m in Sources */,
 				5BC7ABB01C6BE0BE003E4C9B /* MLCSettingsService.m in Sources */,
 				5BC7ABB11C6BE0BE003E4C9B /* MLCAd.m in Sources */,
 				5BEED7FD1E9D79020021125E /* MLCKeychainPasswordItem.m in Sources */,
@@ -802,13 +810,19 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -859,13 +873,19 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

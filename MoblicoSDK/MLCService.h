@@ -31,23 +31,6 @@ typedef NS_ERROR_ENUM(MLCServiceErrorDomain, MLCServiceErrorCode) {
 } NS_SWIFT_NAME(MLCService.Error);
 
 /**
- Indicates the method used in the request
- */
-typedef NS_ENUM(NSUInteger, MLCServiceRequestMethod) {
-    /// Requests a representation of the specified resource.
-    MLCServiceRequestMethodGET NS_SWIFT_NAME(get),
-
-    /// Creates a resource.
-    MLCServiceRequestMethodPOST NS_SWIFT_NAME(post),
-
-    /// Updates the specified resource.
-    MLCServiceRequestMethodPUT NS_SWIFT_NAME(put),
-
-    /// Deletes the specified resource.
-    MLCServiceRequestMethodDELETE NS_SWIFT_NAME(delete)
-} NS_SWIFT_NAME(MLCService.RequestMethod);
-
-/**
  The callback handler for JSON MLCService requests
  
  @param jsonObject The JSON data returned by the service request.

@@ -16,6 +16,7 @@
 
 #import "MLCService.h"
 #import "MLCEntity.h"
+#import "MLCServiceRequest.h"
 
 typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) NS_SWIFT_NAME(MLCService.InternalJSONCompletionHandler);
 typedef void(^MLCServiceInternalResourceCompletionHandler)(__kindof MLCEntity *resource, NSError *error) NS_SWIFT_NAME(MLCService.InternalResourceCompletionHandler);
@@ -64,10 +65,6 @@ typedef void(^MLCServiceInternalCollectionCompletionHandler)(NSArray<__kindof ML
 
 + (NSArray<Class> *)scopeableResources;
 + (BOOL)canScopeResource:(MLCEntity *)resource;
-
-+ (NSURLRequest *)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters;
-+ (NSString *)stringFromMLCServiceRequestMethod:(MLCServiceRequestMethod)method;
-+ (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string;
 
 + (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler;
 

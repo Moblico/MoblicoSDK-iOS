@@ -39,7 +39,7 @@
     return [super find:path searchParameters:searchParameters handler:handler];
 }
 
-+ (instancetype)service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)service:(NSString *)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     return [super service:method path:path parameters:parameters handler:handler];
 }
 
