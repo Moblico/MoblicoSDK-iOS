@@ -17,6 +17,7 @@
 #import "MLCSettingsService.h"
 #import "MLCService_Private.h"
 #import "MLCEntity_Private.h"
+#import "MLCStatus.h"
 
 static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 
@@ -40,6 +41,11 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
             [NSUserDefaults.standardUserDefaults setObject:jsonObject forKey:@"MLCSettings"];
             [NSUserDefaults.standardUserDefaults synchronize];
             settings = self.settings;
+        } else if ([MLCStatus typeFromError:error] == MLCStatusTypeNoApplicationSettingsFound) {
+            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MLCSettings"];
+            [NSUserDefaults.standardUserDefaults synchronize];
+            settings = self.settings;
+            error = nil;
         }
         handler(settings, error);
     }];
