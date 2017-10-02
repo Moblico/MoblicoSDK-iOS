@@ -429,9 +429,9 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
         [curlArguments appendFormat:@" -H '%@: %@'", key, obj];
     }];
 
-
+    NSString *bodyString;
     if (self.request.HTTPBody) {
-        NSString *bodyString = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
+        bodyString = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
         if (!bodyString) {
             bodyString = [self.request.HTTPBody base64EncodedStringWithOptions:0];
         }
@@ -451,7 +451,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
                            @"response": responseObject ?: [NSNull null],
                            @"url": self.request.URL ?: [NSNull null],
                            @"method": self.request.HTTPMethod ?: [NSNull null],
-                           @"body": self.request.HTTPBody ?: [NSNull null],
+                           @"body": bodyString ?: [NSNull null],
                            @"requestHeader": self.request.allHTTPHeaderFields ?: [NSNull null],
                            @"responseHeaders": self.httpResponse.allHeaderFields ?: [NSNull null],
                            @"statusCode": @(self.httpResponse.statusCode).stringValue,
