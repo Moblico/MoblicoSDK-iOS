@@ -179,7 +179,8 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     }
 
     request.URL = components.URL;
-
+    request.headers = headers;
+    
     return request;
 }
 
