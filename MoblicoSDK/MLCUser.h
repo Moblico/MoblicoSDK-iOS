@@ -102,6 +102,11 @@ NS_SWIFT_NAME(User)
 @property (copy, nonatomic, nullable) NSString *locale;
 
 /**
+ The name of the company for the user.
+ */
+@property (copy, nonatomic, nullable) NSString *companyName;
+
+/**
  The fist line of the address for the user.
  */
 @property (copy, nonatomic, nullable) NSString *address1;
