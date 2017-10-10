@@ -585,7 +585,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 
         if ([value isKindOfClass:ClassType]) {
             obj = value;
-        } else if (ClassType == [MLCEntity class]) {
+        } else if ([ClassType isSubclassOfClass:[MLCEntity class]]) {
             obj = [[ClassType alloc] initWithJSONObject:value];
         } else {
             if ([ClassType isSubclassOfClass:[NSString class]]) obj = [[self class] stringFromValue:value];
