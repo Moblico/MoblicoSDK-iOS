@@ -128,6 +128,12 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
     return cacheDirectory;
 }
 
++ (BOOL)clearCache:(NSError **)error {
+    NSString *cacheDirectory = [self _mlc_cacheDirectory];
+    return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
+}
+
+
 - (NSString *)sha1Hash:(NSString *)string {
     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];

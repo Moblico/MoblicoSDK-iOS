@@ -54,6 +54,8 @@ NS_SWIFT_NAME(Image)
 @property (strong, nonatomic, readonly, nullable) NSData *cachedImage;
 #endif
 
++ (BOOL)clearCache:(out NSError *_Nullable __autoreleasing *)error;
+
 - (nullable instancetype)initWithURLString:(NSString *)URLString;
 - (nullable instancetype)initWithStringComponents:(NSString *)components;
 

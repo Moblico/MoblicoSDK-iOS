@@ -70,6 +70,11 @@
     return cacheDirectory;
 }
 
++ (BOOL)clearCache:(NSError **)error {
+    NSString *cacheDirectory = [self _mlc_cacheDirectory];
+    return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
+}
+
 - (void)loadImage:(MLCMediaImageCompletionHandler)handler {
     return [self _mlc_loadImageFromURL:self.imageUrl handler:handler];
 }
