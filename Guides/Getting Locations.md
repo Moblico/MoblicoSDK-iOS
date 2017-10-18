@@ -24,77 +24,75 @@ Before you can begin:
 	_For more information see the [Getting Started Guide](http://developer.moblico.com/sdks/ios/docs/)_
 3. Configure the MLCServiceManager during `-application:didFinishLaunchingWithOptions:`
 
-		- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-			// Enter your Moblico API key here
-			[MLCServiceManager setAPIKey:@"YOUR_API_KEY_HERE"];
-			return YES;
-		}
-
+	```objc
+	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+		// Enter your Moblico API key here
+		[MLCServiceManager setAPIKey:@"<#YOUR_API_KEY#>"];
+		return YES;
+	}
+	```
 
 4. Create a new UITableViewController subclass.
 5. Add properties for the Locations, and the Service
 
-		@interface LocationsViewController ()
-		@property (strong, nonatomic) NSArray *locations; // Array of MLCLocation
-		@property (strong, nonatomic) MLCLocationsService *service;
-		@end
+	```objc
+	@interface LocationsViewController ()
+	@property (strong, nonatomic) NSArray *locations; // Array of MLCLocation
+	@property (strong, nonatomic) MLCLocationsService *service;
+	@end
+	```
 		
 6. Use lazy loading to initialize `self.service`.
 
-		- (MLCLocationsService *)service {
-			if (!_service) {
-				self.service = [MLCLocationsService findLocationsWithSearchParameters:nil
-																			  handler:^(NSArray *locations,
-																						NSError *error,
-																						NSHTTPURLResponse *response) {
-					if (error) {
-						UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
-																			message:[error localizedDescription]
-																		   delegate:nil
-																  cancelButtonTitle:NSLocalizedString(@"OK", nil)
-																  otherButtonTitles:nil];
-						// Only show the alert if this view is still on screen
-						if (self.view.window != nil) {
-							[alertView show];
-						}
-					}
-					else {
-						self.locations = locations;
-						[self.tableView reloadData];
-					}
-				}];
-			}
-			return _service;
+	```objc
+	- (MLCLocationsService *)service {
+		if (!_service) {
+			__weak __typeof__(self) weakSelf = self;
+			self.service = [MLCLocationsService listLocations:^(NSArray<MLCLocation *> *locations, NSError *error) {
+				if (locations) {
+					weakSelf.locations = locations;
+					[weakSelf.tableView reloadData];
+				} else {
+					[weakSelf showAlertForError:error];
+				}
+			}];
 		}
+		return _service;
+	}
+		```
 
 7. Start the service when the view appears; cancel the service when the view disappears.
 
-		- (void)viewWillAppear:(BOOL)animated {
-			[super viewWillAppear:animated];
-			[self.service start];
-		}
-		
-		- (void)viewWillDisappear:(BOOL)animated {
-			[super viewWillDisappear:animated];
-			[self.service cancel];
-		}
+	```objc
+	- (void)viewWillAppear:(BOOL)animated {
+		[super viewWillAppear:animated];
+		[self.service start];
+	}
+	
+	- (void)viewWillDisappear:(BOOL)animated {
+		[super viewWillDisappear:animated];
+		[self.service cancel];
+	}
+	```
 
 8. Configure the tableView delegate methods using `self.locations`.
 
-		- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-			return 1;
-		}
+	```objc
+	- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+		return 1;
+	}
 
-		- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-			return self.locations.count;
-		}
+	- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+		return self.locations.count;
+	}
 
-		- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-		    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-			MLCLocation *location = self.locations[indexPath.row];
-			cell.textLabel.text = [location name];
-		    return cell;
-		}
+	- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+		MLCLocation *location = self.locations[indexPath.row];
+		cell.textLabel.text = [location name];
+	    return cell;
+	}
+	```
 
 
 ## Download

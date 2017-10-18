@@ -42,15 +42,15 @@ Follow these steps to register your device with Moblico:
 	- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
 
 		// Send the device token to Moblico
-		MLCUsersService *createAnonymousDeviceService = [MLCUsersService createAnonymousDeviceWithDeviceToken:deviceToken handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
-			if (response.statusCode == 200) {
-				NSLog(@"Registered Device Token: %@", deviceToken);
+		MLCUsersService *service = [MLCUsersService createAnonymousUserWithDeviceToken:deviceToken handler:^(MLCUser *user, NSError *error) {
+			if (user) {
+				NSLog(@"Registered device token: %@ for user: %@", deviceToken, user);
 			}
 			else {
-				NSLog(@"Unable to register Device.\nstatus: %@ error: %@ response: %@", status, error, response);
+				NSLog(@"Unable to register device: %@", error);
 			}
 		}];
-		[createAnonymousDeviceService start];
+		[service start];
 	}
 	```
 

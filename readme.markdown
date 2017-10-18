@@ -18,7 +18,7 @@ The MoblicoSDK has been designed to be easy to use with a simple block based int
 ```
 
     ```swift
-MLCServiceManager.apiKey = "<#YOUR_API_KEY#>"
+ServiceManager.apiKey = "<#YOUR_API_KEY#>"
 ```
 
     *Please see the `MLCServiceManager` class reference for more information and configuration options.*
@@ -31,8 +31,7 @@ Once you have configured `MLCServiceManager` you can begin making service calls.
 // Create an instance and define the callback handler
 MLCSettingsService *settingsService = 
 	[MLCSettingsService readSettings:^(NSDictionary *settings,
-                                       NSError *error,
-                                       NNSHTTPURLResponse *response) {
+                                       NSError *error) {
 	if (error) {
 		NSLog(@"An error occurred: %@", [error localizedDescription]);
 	}
@@ -47,7 +46,7 @@ MLCSettingsService *settingsService =
 
 ```swift
 // Create an instance and define the callback handler
-let settingsService = MLCSettingsService.readSettings { (settings, error, response) in
+let settingsService = SettingsService.readSettings { (settings, error) in
 	if let settings = settings {
 		print("Settings: \(settings)")
 	} else if let error = error {
