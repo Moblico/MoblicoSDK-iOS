@@ -40,6 +40,22 @@ typedef NS_ENUM(NSInteger, MLCServiceManagerLogging) {
     MLCServiceManagerLoggingEnabledVerbose NS_SWIFT_NAME(verbose)
 } NS_SWIFT_NAME(MLCServiceManager.Logging);
 
+
+NS_SWIFT_NAME(MLCServiceManager.Configuration)
+@interface MLCServiceManagerConfiguration : NSObject
+
+@property (nonatomic, copy, readonly) NSString *host;
+@property (nonatomic, copy, readonly, nullable) NSNumber *port;
+@property (nonatomic, copy, readonly) NSString *apiKey;
+@property (nonatomic, assign, readonly) BOOL secure;
+
++ (instancetype)configurationWithAPIKey:(NSString *)apiKey NS_SWIFT_NAME(apiKey(_:));
+
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithHost:(NSString *)host port:(nullable NSNumber *)port apiKey:(NSString *)apiKey secure:(BOOL)secure NS_DESIGNATED_INITIALIZER;
+
+@end
+
 /**
  `MLCServiceManager` keeps track of your Moblico API Key, and authenticates
  all service calls.
@@ -52,6 +68,8 @@ typedef NS_ENUM(NSInteger, MLCServiceManagerLogging) {
  */
 NS_SWIFT_NAME(ServiceManager)
 @interface MLCServiceManager : NSObject
+
+@property (atomic, class, strong, nullable) MLCServiceManagerConfiguration *configuration;
 
 #pragma mark Shared Instance
 ///----------------------

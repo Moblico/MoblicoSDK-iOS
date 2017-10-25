@@ -105,6 +105,19 @@ static NSString *_testingAPIKey = nil;
     }
 }
 
+static MLCServiceManagerConfiguration *_configuration = nil;
++ (void)setConfiguration:(MLCServiceManagerConfiguration *)configuration {
+    @synchronized (self) {
+        _configuration = configuration;
+    }
+}
+
++ (MLCServiceManagerConfiguration *)configuration {
+    @synchronized (self) {
+        return _configuration;
+    }
+}
+
 + (NSString *)testingAPIKey {
     @synchronized (self) {
         return [_testingAPIKey copy];
@@ -113,6 +126,9 @@ static NSString *_testingAPIKey = nil;
 
 + (NSString *)currentAPIKey {
     @synchronized (self) {
+        if (self.configuration) {
+            return [self.configuration.apiKey copy];
+        }
         if ([self isTestingEnabled]) {
             return [_testingAPIKey copy] ?: @"";
         }
@@ -280,6 +296,10 @@ static NSString *_testingAPIKey = nil;
 
 + (BOOL)isSSLDisabled {
     @synchronized (self) {
+        if (self.configuration) {
+            return !self.configuration.secure;
+        }
+
         return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerSSLDisabledKey];
     }
 }
@@ -295,6 +315,9 @@ static BOOL _persistentTokenEnabled = NO;
 }
 
 + (NSString *)host {
+    if (self.configuration) {
+        return [self.configuration.host copy];
+    }
     if ([self isTestingEnabled]) {
         return @"moblicosandbox.com";
     }
@@ -452,6 +475,29 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
     if (attributes) CFRelease(attributes);
 
     return result == noErr;
+}
+
+@end
+
+@implementation MLCServiceManagerConfiguration
+
++ (instancetype)configurationWithAPIKey:(NSString *)apiKey {
+    return [[self alloc] initWithHost:@"moblico.net" port:nil apiKey:apiKey secure:YES];
+}
+
+- (instancetype)init {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Use `- initWithHost:port:apiKey:secure:` instead" userInfo:nil];
+}
+
+- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port apiKey:(NSString *)apiKey secure:(BOOL)secure {
+    self = [super init];
+    if (self) {
+        _host = host;
+        _port = port;
+        _apiKey = apiKey;
+        _secure = secure;
+    }
+    return self;
 }
 
 @end

@@ -169,6 +169,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     NSURLComponents *components = [[NSURLComponents alloc] init];
     components.scheme = MLCServiceManager.isSSLDisabled ? @"http" : @"https";
     components.host = MLCServiceManager.host;
+    components.port = MLCServiceManager.configuration.port;
     components.path = path;
     components.queryItems = [self queryItemsFromParameters:parameters];
 
