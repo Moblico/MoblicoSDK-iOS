@@ -20,6 +20,13 @@
 #error "iOS 9 is the minimum required Target Deployment for MoblicoSDK."
 #endif
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 110000
+#warning "Please migrate to Xcode 9 when possible."
+#define NS_TYPED_ENUM NS_STRING_ENUM
+#define NS_TYPED_EXTENSIBLE_ENUM NS_EXTENSIBLE_STRING_ENUM
+#define NS_ERROR_ENUM(_domain, _name) enum _name : NSInteger _name; enum __attribute__((ns_error_domain(_domain))) _name : NSInteger
+typedef NSString * NSErrorUserInfoKey NS_TYPED_EXTENSIBLE_ENUM;
+#endif
 
 //! Project version number for MoblicoSDK.
 FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
