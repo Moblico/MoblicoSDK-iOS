@@ -25,7 +25,6 @@ static NSString *const MLCServiceManagerTestingEnabledKey = @"MLCServiceManagerT
 static NSString *const MLCServiceManagerLocalhostEnabledKey = @"MLCServiceManagerLocalhostEnabled";
 static NSString *const MLCServiceManagerLoggingEnabledKey = @"MLCServiceManagerLoggingEnabled";
 static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLDisabled";
-static NSString *const MLCServiceManagerForceQueryParametersEnabledKey = @"MLCServiceManagerForceQueryParametersEnabled";
 static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManagerPersistentToken";
 
 @interface MLCServiceManager ()
@@ -282,20 +281,6 @@ static NSString *_testingAPIKey = nil;
 + (BOOL)isSSLDisabled {
     @synchronized (self) {
         return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerSSLDisabledKey];
-    }
-}
-
-+ (void)setForceQueryParametersEnabled:(BOOL)disabled {
-    @synchronized (self) {
-        [NSUserDefaults.standardUserDefaults setBool:disabled forKey:MLCServiceManagerForceQueryParametersEnabledKey];
-        [NSUserDefaults.standardUserDefaults synchronize];
-    }
-}
-
-+ (BOOL)isForceQueryParametersEnabled {
-    @synchronized (self) {
-        NSNumber *force = [NSUserDefaults.standardUserDefaults objectForKey:MLCServiceManagerForceQueryParametersEnabledKey];
-        return !force || force.boolValue;
     }
 }
 
