@@ -450,7 +450,46 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
     MLCStatusTypeInternal140 = 140,
 
     /// No groups found.
-    MLCStatusTypeNoGroupsFound = 141
+    MLCStatusTypeNoGroupsFound = 141,
+
+    /// Invalid amount.
+    MLCStatusTypeInvalidAmount = 142,
+
+    /// No merchants found.
+    MLCStatusTypeNoMerchantFound = 143,
+
+    /// This phone number is already taken.
+    MLCStatusTypePhoneAlreadyUsed = 144,
+
+    /// This email address is already taken.
+    MLCStatusTypeEmailAlreadyUsed = 145,
+
+    /// Invalid list id.
+    MLCStatusTypeInvalidListId = 146,
+
+    /// This item is already in your list.
+    MLCStatusTypeListItemAlreadyExists = 147,
+
+    /// Invalid Code.
+    MLCStatusTypeInvalidCode = 148,
+
+    /// Code Already Used.
+    MLCStatusTypeCodeAlreadyUsed = 149,
+
+    /// Invalid Keyword.
+    MLCStatusTypeInvalidKeyword = 150,
+
+    /// Location already exists.
+    MLCStatusTypeLocationAlreadyExists = 151,
+
+    /// Invalid location.
+    MLCStatusTypeInvalidLocationName = 152,
+
+    /// Insufficient Funds
+    MLCStatusTypeInsufficientFunds = 153,
+
+    /// Cart has not been initiated.
+    MLCStatusTypeCartNotInitialized = 154,
 } NS_SWIFT_NAME(MLCStatus.Type);
 
 /**
