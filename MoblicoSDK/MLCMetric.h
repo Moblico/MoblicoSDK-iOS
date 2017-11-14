@@ -86,6 +86,9 @@ FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeShareProduct;
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeOpenProduct;
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExternalOpenProduct;
 
+/// Specifies that the user has seen a promo.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeViewPromo;
+
 /**
  Moblico metrics provide a means for mobile applications to track and report
  usage by functional area. The Moblico platform has an in-depth reporting facility

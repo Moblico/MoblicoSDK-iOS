@@ -48,6 +48,7 @@ MLCMetricType const MLCMetricTypeViewProduct = @"View_Product";
 MLCMetricType const MLCMetricTypeShareProduct = @"Share_Product";
 MLCMetricType const MLCMetricTypeOpenProduct = @"Open_Product";
 MLCMetricType const MLCMetricTypeExternalOpenProduct = @"External_Open_Product";
+MLCMetricType const MLCMetricTypeViewPromo = @"View_Promo";
 
 @interface MLCMetric ()
 
