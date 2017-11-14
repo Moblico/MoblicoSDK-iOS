@@ -28,7 +28,7 @@ FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResult
 FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsNotFound;
 
 typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(MLCUsersServiceVerifyResults _Nullable results, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
-typedef void(^MLCUsersServiceResetPasswordCompletionHandler)(NSURL *url, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.ResetPasswordCompletionHandler);
+typedef void(^MLCUsersServiceResetPasswordCompletionHandler)(NSURL *_Nullable url, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.ResetPasswordCompletionHandler);
 
 NS_SWIFT_NAME(UsersService)
 @interface MLCUsersService : MLCService
