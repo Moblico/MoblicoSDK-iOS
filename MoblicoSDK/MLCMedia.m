@@ -20,8 +20,8 @@
 
 @interface MLCMedia ()
 
-- (void)_mlc_loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler;
-+ (NSCache *)_mlc_sharedCache;
+- (void)loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler;
++ (NSCache *)sharedCache;
 
 @end
 
@@ -45,7 +45,7 @@
     return self;
 }
 
-+ (NSCache *)_mlc_sharedCache {
++ (NSCache *)sharedCache {
     static NSCache *sharedCache;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -55,7 +55,7 @@
     return sharedCache;
 }
 
-+ (NSString *)_mlc_cacheDirectory {
++ (NSString *)cacheDirectory {
     static NSString *cacheDirectory;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -71,16 +71,16 @@
 }
 
 + (BOOL)clearCache:(NSError **)error {
-    NSString *cacheDirectory = [self _mlc_cacheDirectory];
+    NSString *cacheDirectory = [self cacheDirectory];
     return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
 }
 
 - (void)loadImage:(MLCMediaImageCompletionHandler)handler {
-    return [self _mlc_loadImageFromURL:self.imageUrl handler:handler];
+    return [self loadImageFromURL:self.imageUrl handler:handler];
 }
 
 - (id)cachedImage {
-    NSData *data = [self _mlc_cachedDataFromURL:self.imageUrl];
+    NSData *data = [self cachedDataFromURL:self.imageUrl];
     if (!data) {
         return nil;
     }
@@ -93,19 +93,19 @@
 }
 
 - (void)loadThumb:(MLCMediaImageCompletionHandler)handler {
-    [self _mlc_loadImageFromURL:self.thumbUrl handler:handler];
+    [self loadImageFromURL:self.thumbUrl handler:handler];
 }
 
 - (NSData *)cachedThumb {
-    return [self _mlc_cachedImageFromURL:self.thumbUrl];
+    return [self cachedImageFromURL:self.thumbUrl];
 }
 
 - (void)loadData:(MLCMediaDataCompletionHandler)handler {
-    [self _mlc_loadDataFromURL:self.url handler:handler];
+    [self loadDataFromURL:self.url handler:handler];
 }
 
 - (NSData *)cachedData {
-    return [self _mlc_cachedDataFromURL:self.url];
+    return [self cachedDataFromURL:self.url];
 }
 
 - (NSString *)sha1Hash:(NSString *)string {
@@ -126,10 +126,10 @@
 - (NSString *)cachedPath:(NSString *)key {
     NSString *fileName = [self sha1Hash:key];
 
-    return [[[self class] _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
+    return [[[self class] cacheDirectory] stringByAppendingPathComponent:fileName];
 }
 
-- (NSString *)_mlc_typeForURL:(NSURL *)url {
+- (NSString *)typeForURL:(NSURL *)url {
     if (url == self.url) return @"url";
     if (url == self.thumbUrl) return @"thumbUrl";
     if (url == self.imageUrl) return @"imageUrl";
@@ -137,16 +137,16 @@
     return @"";
 }
 
-- (NSString *)_mlc_keyForURL:(NSURL *)url {
-    NSString *type = [self _mlc_typeForURL:url];
+- (NSString *)keyForURL:(NSURL *)url {
+    NSString *type = [self typeForURL:url];
     return [type stringByAppendingFormat:@"-%@", @(self.mediaId)];
 //    return [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
 //    return url.absoluteString;
 }
 
-- (void)_mlc_loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler {
-    NSString *key = [self _mlc_keyForURL:url];
-    NSCache *cache = [[self class] _mlc_sharedCache];
+- (void)loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler {
+    NSString *key = [self keyForURL:url];
+    NSCache *cache = [[self class] sharedCache];
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
 
@@ -168,23 +168,23 @@
     }];
 }
 
-- (void)_mlc_loadImageFromURL:(NSURL *)url handler:(MLCMediaImageCompletionHandler)handler {
+- (void)loadImageFromURL:(NSURL *)url handler:(MLCMediaImageCompletionHandler)handler {
 #if TARGET_OS_IOS
-    return [self _mlc_loadDataFromURL:url handler:^(NSData *data, NSError *error, BOOL fromCache) {
+    return [self loadDataFromURL:url handler:^(NSData *data, NSError *error, BOOL fromCache) {
         UIImage *image = [[UIImage alloc] initWithData:data scale:2.0];
         handler(image, error, fromCache);
     }];
 #else
-    return [self _mlc_loadDataFromURL:url handler:handler];
+    return [self loadDataFromURL:url handler:handler];
 #endif
 }
 
-- (NSData *)_mlc_cachedDataFromURL:(NSURL *)url {
-    return [NSData dataWithContentsOfFile:[self cachedPath:[self _mlc_keyForURL:url]]];
+- (NSData *)cachedDataFromURL:(NSURL *)url {
+    return [NSData dataWithContentsOfFile:[self cachedPath:[self keyForURL:url]]];
 }
 
-- (id)_mlc_cachedImageFromURL:(NSURL *)url {
-    NSData *data = [self _mlc_cachedDataFromURL:url];
+- (id)cachedImageFromURL:(NSURL *)url {
+    NSData *data = [self cachedDataFromURL:url];
     if (!data) {
         return nil;
     }

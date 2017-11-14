@@ -75,23 +75,23 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 - (void)loadImage:(MLCImageCompletionHandler)handler {
 #if TARGET_OS_IOS
     CGFloat scale = self.scaleFactor;
-    return [self _mlc_loadImageDataFromURL:self.url handler:^(NSData *data, NSError *error, BOOL fromCache) {
+    return [self loadImageDataFromURL:self.url handler:^(NSData *data, NSError *error, BOOL fromCache) {
         UIImage *image = [[UIImage alloc] initWithData:data scale:scale];
         handler(image, error, fromCache);
     }];
 #else
-    return [self _mlc_loadImageDataFromURL:self.url handler:handler];
+    return [self loadImageDataFromURL:self.url handler:handler];
 #endif
 }
 
-- (NSData *)_mlc_cachedImageData {
+- (NSData *)cachedImageData {
     NSString *key = [self.url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [[self class] _mlc_sharedCache];
+    NSCache *cache = [[self class] sharedCache];
     return [cache objectForKey:key] ?: [NSData dataWithContentsOfFile:[self cachedPath:key]];
 }
 
 - (UIImage *)cachedImage {
-    NSData *data = [self _mlc_cachedImageData];
+    NSData *data = [self cachedImageData];
     if (!data) {
         return nil;
     }
@@ -103,7 +103,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 #endif
 }
 
-+ (NSCache *)_mlc_sharedCache {
++ (NSCache *)sharedCache {
     static NSCache *sharedCache;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -113,7 +113,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
     return sharedCache;
 }
 
-+ (NSString *)_mlc_cacheDirectory {
++ (NSString *)cacheDirectory {
     static NSString *cacheDirectory;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -129,7 +129,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 }
 
 + (BOOL)clearCache:(NSError **)error {
-    NSString *cacheDirectory = [self _mlc_cacheDirectory];
+    NSString *cacheDirectory = [self cacheDirectory];
     return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
 }
 
@@ -152,12 +152,12 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 - (NSString *)cachedPath:(NSString *)key {
     NSString *fileName = [self sha1Hash:key];
 
-    return [[[self class] _mlc_cacheDirectory] stringByAppendingPathComponent:fileName];
+    return [[[self class] cacheDirectory] stringByAppendingPathComponent:fileName];
 }
 
-- (void)_mlc_loadImageDataFromURL:(NSURL *)url handler:(MLCImageDataCompletionHandler)handler {
+- (void)loadImageDataFromURL:(NSURL *)url handler:(MLCImageDataCompletionHandler)handler {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [[self class] _mlc_sharedCache];
+    NSCache *cache = [[self class] sharedCache];
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
 
