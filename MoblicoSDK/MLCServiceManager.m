@@ -244,12 +244,14 @@ static MLCServiceManagerConfiguration *_configuration = nil;
 
     NSString *apiKey = [[self class] currentAPIKey];
     if (currentToken.valid) {
+        NSLog(@"currentToken: %@", currentToken);
         NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", currentToken.token];
         [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
         handler(authenticatedRequest, nil);
     } else {
         MLCUser *user = self.currentUser;
         MLCAuthenticationService *service = [MLCAuthenticationService authenticateAPIKey:apiKey user:user childKeyword:self.childKeyword handler:^(MLCAuthenticationToken *newToken, NSError *error) {
+            NSLog(@"newToken: %@ error: %@", newToken, error);
             if (error) {
                 MLCStatus *status = error.userInfo[@"status"];
                 BOOL correctClass = [status isKindOfClass:[MLCStatus class]];

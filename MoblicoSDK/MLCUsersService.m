@@ -21,6 +21,7 @@
 #import "MLCStatus.h"
 #import "MLCCredential.h"
 #import "MLCEntity_Private.h"
+#import "MLCResetPassword.h"
 
 #if TARGET_OS_IOS
 @import UIKit;
@@ -170,13 +171,9 @@ NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
     NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
     path = [path stringByAppendingPathComponent:@"resetPassword"];
 
-    return [self service:MLCServiceRequestMethodPUT path:path parameters:nil handler:^(id jsonObject, NSError *error) {
-        NSURL *url = nil;
-        if ([jsonObject isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dictionary = (NSDictionary *)jsonObject;
-            url = [MLCEntity URLFromValue:dictionary[@"url"]];
-        }
-        handler(url, error);
+    return [self service:MLCServiceRequestMethodPOST path:path parameters:nil handler:^(id jsonObject, NSError *error) {
+        MLCResetPassword *resetPassword = [[MLCResetPassword alloc] initWithJSONObject:jsonObject];
+        handler(resetPassword, error);
     }];
 }
 
