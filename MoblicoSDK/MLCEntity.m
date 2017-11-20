@@ -265,11 +265,12 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     if ([value isKindOfClass:[NSDate class]]) {
         return value;
     }
-    
-    double timestamp = [self doubleFromValue:value];
 
-    if ((BOOL)timestamp) {
-        return [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
+    NSDecimalNumber *milliseconds = [NSDecimalNumber decimalNumberWithString:[self stringFromValue:value]];
+    NSDecimalNumber *timestamp = [milliseconds decimalNumberByMultiplyingByPowerOf10:-3];
+
+    if (timestamp.boolValue) {
+        return [NSDate dateWithTimeIntervalSince1970:timestamp.doubleValue];
     }
 
     return nil;
@@ -277,10 +278,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 
 + (NSNumber *)timeStampFromDate:(NSDate *)date {
     if (!date) return nil;
-    NSTimeInterval timeInterval = date.timeIntervalSince1970;
-    NSNumber *timeStamp = @(timeInterval * 1000.0);
-
-    return @(timeStamp.longLongValue);
+    return [[NSDecimalNumber decimalNumberWithDecimal:@(date.timeIntervalSince1970).decimalValue] decimalNumberByMultiplyingByPowerOf10:3];
 }
 
 + (BOOL)boolFromValue:(id)value {
