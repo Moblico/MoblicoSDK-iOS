@@ -261,7 +261,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return value;
 }
 
-+ (NSDate *)dateFromTimeStampValue:(id)value {
++ (NSDate *)dateFromTimestampValue:(id)value {
     if ([value isKindOfClass:[NSDate class]]) {
         return value;
     }
@@ -279,7 +279,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return nil;
 }
 
-+ (NSNumber *)timeStampFromDate:(NSDate *)date {
++ (NSNumber *)timestampFromDate:(NSDate *)date {
     if (!date) return nil;
     return [[NSDecimalNumber decimalNumberWithDecimal:@(date.timeIntervalSince1970).decimalValue] decimalNumberByMultiplyingByPowerOf10:3];
 }
@@ -473,7 +473,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         if ([ValueClass isSubclassOfClass:[MLCEntity class]]) {
             value = [ValueClass serialize:value];
         } else if ([ValueClass isSubclassOfClass:[NSDate class]]) {
-            value = [self timeStampFromDate:value];
+            value = [self timestampFromDate:value];
         } else if ([ValueClass isSubclassOfClass:[NSURL class]]) {
             NSURL *url = value;
             value = url.absoluteString;
@@ -590,7 +590,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
             obj = [[ClassType alloc] initWithJSONObject:value];
         } else {
             if ([ClassType isSubclassOfClass:[NSString class]]) obj = [[self class] stringFromValue:value];
-            if ([ClassType isSubclassOfClass:[NSDate class]]) obj = [[self class] dateFromTimeStampValue:value];
+            if ([ClassType isSubclassOfClass:[NSDate class]]) obj = [[self class] dateFromTimestampValue:value];
             if ([ClassType isSubclassOfClass:[NSNumber class]]) obj = [[self class] numberFromDoubleValue:value];
             if ([ClassType isSubclassOfClass:[NSURL class]]) obj = [[self class] URLFromValue:value];
             if ([ClassType isSubclassOfClass:[NSArray class]]) obj = [[self class] arrayFromValue:value];

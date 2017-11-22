@@ -21,7 +21,7 @@
 
 - (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
     NSString *token = [MLCEntity nilIfEmptyStringFromValue:jsonObject[@"token"]];
-    NSDate *tokenExpiry = [MLCEntity dateFromTimeStampValue:jsonObject[@"tokenExpiry"]];
+    NSDate *tokenExpiry = [MLCEntity dateFromTimestampValue:jsonObject[@"tokenExpiry"]];
 
     if (!token || !tokenExpiry) {
         return nil;
