@@ -200,7 +200,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
     }
 
     [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
-    [self addValidations:validations format:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$" key:@"email" named:@"email address"];
+    [self addValidations:validations format:@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$" key:@"email" named:@"email address"];
     [self addValidations:validations format:@"^\\d{5}(?:[-\\s]\\d{4})?$" key:@"postalCode" named:@"zip code"];
     [self addValidations:validations format:@"^[A-Z -']{1,}$" key:@"firstName" named:@"first name"];
     [self addValidations:validations format:@"^[A-Z -']{1,}$" key:@"lastName" named:@"last name"];
@@ -208,10 +208,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
     [self addValidations:validations format:@"^[A-Z]{2}$" caseSensitive:YES key:@"stateOrProvince" named:@"state"];
 
     [self addValidations:validations key:@"gender"];
-    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
-    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
-    [self addValidations:validations format:@"^[A-Z0-9._%+-@ ]{3,200}$" key:@"username"];
-    
+
     [validations appendRule:[[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
                                                     validateTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
                                                         BOOL selected = value.boolValue;
