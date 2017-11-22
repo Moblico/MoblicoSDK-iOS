@@ -267,6 +267,9 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     }
 
     NSDecimalNumber *milliseconds = [NSDecimalNumber decimalNumberWithString:[self stringFromValue:value]];
+    if ([milliseconds isEqualToNumber:[NSDecimalNumber notANumber]]) {
+        return nil;
+    }
     NSDecimalNumber *timestamp = [milliseconds decimalNumberByMultiplyingByPowerOf10:-3];
 
     if (timestamp.boolValue) {
