@@ -53,7 +53,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 }
 
 + (NSArray *)ignoredPropertiesDuringSerialization {
-    return @[@"data", @"path", @"dataTask"];
+    return @[@"data", @"path", @"dataTask", @"cachedImage"];
 }
 
 - (instancetype)initWithStringComponents:(NSString *)string {

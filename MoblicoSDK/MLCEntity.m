@@ -460,7 +460,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     [properties enumerateKeysAndObjectsUsingBlock:^(id name, id type, __unused BOOL *stop) {
         id key = name;
         MLCEntityLog(@"Key: %@ Type: %@", key, type);
-        if ([key isEqualToString:@"properties"] || [key isEqualToString:@"_properties"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"description"]) {
+        if ([key isEqualToString:@"properties"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"description"] || [key hasPrefix:@"mlc_"] || [key hasPrefix:@"_"]) {
             return;
         }
         if ([ignore containsObject:key]) {

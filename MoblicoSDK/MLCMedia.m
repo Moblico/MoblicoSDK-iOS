@@ -32,7 +32,7 @@
 }
 
 + (NSArray *)ignoredPropertiesDuringSerialization {
-    return @[@"data", @"dataTask"];
+    return @[@"data", @"dataTask", @"cachedImage", @"cachedThumb", @"cachedData"];
 }
 
 - (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
