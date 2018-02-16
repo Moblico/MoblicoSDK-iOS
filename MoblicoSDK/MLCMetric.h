@@ -39,7 +39,7 @@ FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeEnterPage;
 /// Specifies that the application has dismissed a view.
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExitPage;
 
-/// Specifies that the user has interacted an ad.
+/// Specifies that the user has interacted with an ad.
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeAdClick;
 
 /// Specifies a generic tracking metric.
