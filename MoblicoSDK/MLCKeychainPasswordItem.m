@@ -151,7 +151,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
     NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:data];
 
     NSError *readError;
-    if (![self readData:&readError]) {
+    if (![self readData:&readError] && readError) {
         if (readError.code != MLCKeychainPasswordItemErrorCodeNoData) {
             if (error) *error = readError;
             return NO;
