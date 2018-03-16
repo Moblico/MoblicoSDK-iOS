@@ -266,7 +266,11 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         return value;
     }
 
-    NSDecimalNumber *milliseconds = [NSDecimalNumber decimalNumberWithString:[self stringFromValue:value]];
+    NSString *stringValue = [self stringFromValue:value];
+    if (stringValue.length == 0) {
+        return nil;
+    }
+    NSDecimalNumber *milliseconds = [NSDecimalNumber decimalNumberWithString:stringValue];
     if ([milliseconds isEqualToNumber:[NSDecimalNumber notANumber]]) {
         return nil;
     }
