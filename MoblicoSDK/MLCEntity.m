@@ -604,7 +604,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         return;
     }
 
-#define CASE_SEL(ctype, selectorpart) \
+#define CASE_SEL(ctype, selectorPart) \
 if(typeChar == @encode(ctype)[0]) { \
 if ([value isKindOfClass:[NSString class]]) { \
 if (((NSString *)value).length == 0) return; \
@@ -613,7 +613,7 @@ f.numberStyle = NSNumberFormatterDecimalStyle; \
 NSNumber *number = [f numberFromString:value]; \
 if(number)value=number;\
 }\
-NSNumber *number = @([[self class] selectorpart ## FromValue: value ]); \
+NSNumber *number = @([[self class] selectorPart ## FromValue: value ]); \
 [self setValue:number forKey:key]; \
 return; \
 }
@@ -755,12 +755,12 @@ return; \
                 const char *argumentType = [invocation.methodSignature getArgumentTypeAtIndex:2];
                 NSNumber *value = nil;
 
-#define CASE(ctype, selectorpart) \
+#define CASE(ctype, selectorPart) \
 if(argumentType[0] == @encode(ctype)[0]) {\
 MLCEntityLog(@"Type: %s", @encode(ctype)); \
 ctype val = 0; \
 [invocation getArgument:&val atIndex:2]; \
-value = [NSNumber numberWith ## selectorpart:val];}
+value = [NSNumber numberWith ## selectorPart:val];}
 
                 CASE(char, Char);
                 CASE(unsigned char, UnsignedChar);
