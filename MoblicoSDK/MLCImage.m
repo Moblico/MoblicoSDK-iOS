@@ -128,7 +128,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
     return cacheDirectory;
 }
 
-+ (BOOL)clearCache:(NSError **)error {
++ (BOOL)clearCache:(out NSError **)error {
     NSString *cacheDirectory = self.cacheDirectory;
     return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
 }

@@ -46,7 +46,6 @@
 + (NSArray *)arrayFromValue:(id)value;
 + (NSDictionary *)dictionaryFromValue:(id)value;
 
-//- (BOOL)validate:(NSError**)error;
 - (void)setSafeValue:(id)value forKey:(NSString *)key;
 
 + (NSArray<NSString *> *)ignoredPropertiesDuringSerialization;

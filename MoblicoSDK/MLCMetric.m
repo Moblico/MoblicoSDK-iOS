@@ -19,8 +19,6 @@
 #import "MLCEntity_Private.h"
 #import "MLCMetricsManager.h"
 
-#import <CoreLocation/CoreLocation.h>
-
 MLCMetricType const MLCMetricTypeApplicationStart = @"Application_Start";
 MLCMetricType const MLCMetricTypeApplicationStop = @"Application_Stop";
 MLCMetricType const MLCMetricTypeInBackground = @"In_Background";

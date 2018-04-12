@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 #import "MLCStatus.h"
 
 static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
+static NSString *const MLCSettingsOverrideKey = @"MLCSettingsOverride";
 
 @interface MLCSettings ()
 
@@ -54,8 +55,8 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 + (MLCSettings *)settings {
     NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
     NSDictionary *settings = [defaults dictionaryForKey:@"MLCSettings"] ?: @{};
-    NSDictionary *settingsDefault = [defaults dictionaryForKey:@"MLCSettingsDefault"] ?: @{};
-    NSDictionary *settingsOverride = [defaults dictionaryForKey:@"MLCSettingsOverride"] ?: @{};
+    NSDictionary *settingsDefault = [defaults dictionaryForKey:MLCSettingsDefaultKey] ?: @{};
+    NSDictionary *settingsOverride = [defaults dictionaryForKey:MLCSettingsOverrideKey] ?: @{};
 
     NSMutableDictionary *dictionary = [settingsDefault mutableCopy];
     [dictionary addEntriesFromDictionary:settings];
@@ -65,12 +66,12 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 }
 
 + (void)overrideSettings:(NSDictionary *)overrideSettings {
-    [NSUserDefaults.standardUserDefaults setObject:overrideSettings forKey:@"MLCSettingsOverride"];
+    [NSUserDefaults.standardUserDefaults setObject:overrideSettings forKey:MLCSettingsOverrideKey];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 + (void)defaultSettings:(NSDictionary *)defaultSettings {
-    [NSUserDefaults.standardUserDefaults setObject:defaultSettings forKey:@"MLCSettingsDefault"];
+    [NSUserDefaults.standardUserDefaults setObject:defaultSettings forKey:MLCSettingsDefaultKey];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 

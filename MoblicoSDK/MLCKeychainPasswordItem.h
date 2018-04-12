@@ -39,15 +39,15 @@ NS_SWIFT_NAME(KeychainPasswordItem)
 - (instancetype)initWithService:(NSString *)service account:(NSString *)account;
 - (instancetype)initWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup;
 
-- (BOOL)renameAccount:(NSString *)account error:(NSError **)error;
-- (BOOL)saveData:(id<NSCoding>)data error:(NSError **)error;
-- (nullable id<NSCoding>)readData:(NSError **)error;
+- (BOOL)renameAccount:(NSString *)account error:(out NSError **)error;
+- (BOOL)saveData:(id<NSCoding>)data error:(out NSError **)error;
+- (nullable id<NSCoding>)readData:(out NSError **)error;
 
 
-+ (BOOL)destroyItem:(MLCKeychainPasswordItem *)item error:(NSError **)error;
++ (BOOL)destroyItem:(MLCKeychainPasswordItem *)item error:(out NSError **)error;
 
-+ (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service error:(NSError **)error;
-+ (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service accessGroup:(NSString *)accessGroup error:(NSError **)error;
++ (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service error:(out NSError **)error;
++ (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service accessGroup:(NSString *)accessGroup error:(out NSError **)error;
 @end
 
 @interface MLCKeychainPasswordItemError : NSError

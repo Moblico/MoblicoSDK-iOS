@@ -22,9 +22,9 @@ NS_SWIFT_NAME(EntityCache)
 @interface MLCEntityCache : NSObject
 
 + (nullable id)retrieveEntityWithKey:(NSString *)key;
-+ (BOOL)persistEntity:(id<NSCoding>)object key:(NSString *)key error:(out NSError *__autoreleasing*)error;
-+ (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError * __autoreleasing *)error;
-+ (BOOL)clearCache:(out NSError * __autoreleasing *)error;
++ (BOOL)persistEntity:(id<NSCoding>)object key:(NSString *)key error:(out NSError **)error;
++ (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError **)error;
++ (BOOL)clearCache:(out NSError **)error;
 + (BOOL)entityExistsWithKey:(NSString *)key;
 
 @end

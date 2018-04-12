@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,12 +37,13 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 @property (atomic, readonly, strong) NSString *serviceName;
 @end
 
-@implementation MLCServiceManager
-@synthesize authenticationToken = _authenticationToken;
-@synthesize serviceName = _serviceName;
-@synthesize genericPasswordQuery = _genericPasswordQuery;
-@synthesize keychainItemData = _keychainItemData;
-@synthesize currentUser = _currentUser;
+@implementation MLCServiceManager {
+    MLCAuthenticationToken *_authenticationToken;
+    NSString *_serviceName;
+    NSDictionary *_genericPasswordQuery;
+    NSMutableDictionary *_keychainItemData;
+    MLCUser *_currentUser;
+}
 
 - (NSString *)serviceName {
     @synchronized (self) {
@@ -56,7 +57,6 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 
 + (MLCServiceManager *)sharedServiceManager {
     if (MLCServiceManager.currentAPIKey == nil) {
-//        return nil;
         [[NSException exceptionWithName:MLCInvalidAPIKeyException reason:@"You must set your API key before getting an instance of the ServiceManager." userInfo:nil] raise];
     }
     static MLCServiceManager *sharedInstance = nil;
@@ -64,7 +64,6 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
         NSString *username = sharedInstance.keychainItemData[(__bridge id)kSecAttrAccount];
-//        NSString *password = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
         NSDictionary *credentials = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
 
         if (username.length) {
@@ -185,28 +184,23 @@ static MLCServiceManagerConfiguration *_configuration = nil;
 - (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword remember:(BOOL)rememberCredentials {
     @synchronized (self) {
         self.currentUser = user;
-        self.childKeyword = childKeyword;
+        self.childKeyword = childKeyword ?: @"";
         self.authenticationToken = nil;
-        NSString *username = user.username;
-        NSMutableDictionary *credentials = [@{} mutableCopy];
-        NSString *password = user.password;
+        NSString *username = user.username ?: @"";
+        NSDictionary *credentials = @{@"password": user.password ?: @"",
+                                      @"childKeyword": self.childKeyword};
 
         if (user.social || !rememberCredentials) {
-            username = nil;
-            password = nil;
-        } else {
-            credentials[@"password"] = password ?: @"";
-            credentials[@"childKeyword"] = childKeyword ?: @"";
+            username = @"";
+            credentials = @{};
         }
 
-        self.keychainItemData[(__bridge id)kSecAttrAccount] = username ?: @"";
+        self.keychainItemData[(__bridge id)kSecAttrAccount] = username;
         self.keychainItemData[(__bridge id)kSecValueData] = credentials;
 
         [self writeToKeychain];
     }
 }
-
-//static BOOL _testing = nil;
 
 + (void)setTestingEnabled:(BOOL)testing {
     @synchronized (self) {
@@ -234,7 +228,8 @@ static MLCServiceManagerConfiguration *_configuration = nil;
 
 + (MLCServiceManagerLogging)logging {
     @synchronized (self) {
-        return [NSUserDefaults.standardUserDefaults integerForKey:MLCServiceManagerLoggingEnabledKey];
+        NSInteger logging = [NSUserDefaults.standardUserDefaults integerForKey:MLCServiceManagerLoggingEnabledKey];
+        return (MLCServiceManagerLogging)logging;
     }
 }
 
@@ -278,16 +273,11 @@ static MLCServiceManagerConfiguration *_configuration = nil;
                 NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", self.authenticationToken.token];
                 [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
                 handler(authenticatedRequest, error);
-//                if (self.currentUser) {
-//                    [self performSelectorInBackground:@selector(processUser:) withObject:self.currentUser];
-//                }
             }
         }];
         [service start];
     }
 }
-
-//static BOOL _sslDisabled = nil;
 
 + (void)setSSLDisabled:(BOOL)disabled {
     @synchronized (self) {
@@ -398,9 +388,7 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
     // Convert the NSString to NSData to meet the requirements for the value type kSecValueData.
     // This is where to store sensitive data that should be encrypted.
     NSDictionary *credentials = dictionaryToConvert[(__bridge id)kSecValueData];
-//    NSString *passwordString = dictionaryToConvert[(__bridge id)kSecValueData];
     returnDictionary[(__bridge id)kSecValueData] = [NSKeyedArchiver archivedDataWithRootObject:credentials];
-//    returnDictionary[(__bridge id)kSecValueData] = [passwordString dataUsingEncoding:NSUTF8StringEncoding];
 
     return returnDictionary;
 }
@@ -425,20 +413,14 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
 
         // Add the password to the dictionary, converting from NSData to NSString.
         NSData *data = (__bridge NSData *)passwordData;
-        NSDictionary *credentials = @{};
-        if (data != nil) {
+                if (data != nil) {
             @try {
-                credentials = (NSDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
-                returnDictionary[(__bridge id)kSecValueData] = credentials;
+                returnDictionary[(__bridge id)kSecValueData] = (NSDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
             }
             @catch (NSException *exception) {
-                credentials = @{};
+                @throw exception;
             }
         }
-
-
-//        NSString *password = [[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
-//        returnDictionary[(__bridge id)kSecValueData] = password;
     } else {
         // Don't do anything if nothing is found.
         NSAssert(NO, @"Serious error, no matching item found in the keychain.\n");

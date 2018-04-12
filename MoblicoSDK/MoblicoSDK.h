@@ -16,8 +16,10 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef __APPCODE_IDE__
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 90000
 #error "iOS 9 is the minimum required Target Deployment for MoblicoSDK."
+#endif
 #endif
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 110000

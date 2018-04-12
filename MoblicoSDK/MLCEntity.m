@@ -18,7 +18,6 @@
 #import <objc/runtime.h>
 #import "MLCEntity_Private.h"
 #import "MLCValidation.h"
-#import "MLCLogger.h"
 
 static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 //#define MLCEntityLog(fmt, ...) MLCInfoLog(fmt, ##__VA_ARGS__);
@@ -36,7 +35,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return validations;
 }
 
-- (BOOL)validate:(out NSError *__autoreleasing *)outError {
+- (BOOL)validate:(out NSError **)outError {
     NSDictionary *properties = self._properties;
     NSMutableArray *errors = [NSMutableArray arrayWithCapacity:properties.count];
 
@@ -71,7 +70,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return NO;
 }
 
-- (BOOL)validateValue:(inout id _Nullable __autoreleasing *)ioValue forKey:(NSString *)inKey error:(out NSError *_Nullable __autoreleasing *)outError {
+- (BOOL)validateValue:(inout id _Nullable * _Nonnull)ioValue forKey:(NSString *)inKey error:(out NSError **)outError {
 
     if (![super validateValue:ioValue forKey:inKey error:outError]) {
         return NO;
@@ -591,7 +590,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         if ([value isKindOfClass:ClassType]) {
             obj = value;
         } else if ([ClassType isSubclassOfClass:[MLCEntity class]]) {
-            obj = [[ClassType alloc] initWithJSONObject:value];
+            obj = [(__kindof MLCEntity *)[ClassType alloc] initWithJSONObject:value];
         } else {
             if ([ClassType isSubclassOfClass:[NSString class]]) obj = [[self class] stringFromValue:value];
             if ([ClassType isSubclassOfClass:[NSDate class]]) obj = [[self class] dateFromTimestampValue:value];

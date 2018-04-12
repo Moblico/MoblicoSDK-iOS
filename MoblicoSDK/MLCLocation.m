@@ -103,6 +103,7 @@
         return distance ?: name;
     }
 
+    // order == MLCLocationCompareOrderName
     return name ?: distance;
 }
 

@@ -16,7 +16,6 @@
 
 #import "MLCMetricsService.h"
 #import "MLCService_Private.h"
-#import "MLCMetric.h"
 
 static NSString *const MLCMetricsServiceParameterType = @"type";
 static NSString *const MLCMetricsServiceParameterText = @"text";

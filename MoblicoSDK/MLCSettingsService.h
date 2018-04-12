@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,12 @@ NS_SWIFT_NAME(SettingsService)
 NS_SWIFT_NAME(Settings)
 @interface MLCSettings : NSObject
 
+/**
+ Returns the setting associated with the specified key.
+
+ @param key A key in the settings.
+ @return The string associated with the specified key, or nil if the setting was not found or is empty.
+ */
 - (nullable NSString *)objectForKey:(NSString *)key;
 - (nullable NSString *)objectForKeyedSubscript:(NSString *)key;
 

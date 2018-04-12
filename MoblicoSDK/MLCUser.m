@@ -90,7 +90,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
     if (properties.count == 0) return nil;
 
-    return [[[self class] alloc] initWithJSONObject:properties];
+    return [[MLCUser alloc] initWithJSONObject:properties];
 }
 
 + (NSDateFormatter *)dateOfBirthDateFormatter {

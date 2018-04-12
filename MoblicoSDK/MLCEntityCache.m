@@ -34,7 +34,7 @@
     return [NSKeyedUnarchiver unarchiveObjectWithFile:[self URL:key].path];
 }
 
-+ (BOOL)persistEntity:(id)object key:(NSString *)key error:(NSError **)error {
++ (BOOL)persistEntity:(id)object key:(NSString *)key error:(out NSError **)error {
     NSString *path = [self URL:key].path;
 
     BOOL archived = [NSKeyedArchiver archiveRootObject:object toFile:path];
@@ -47,11 +47,11 @@
     return archived;
 }
 
-+ (BOOL)clearEntityWithKey:(NSString *)key error:(NSError **)error {
++ (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError **)error {
     return [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:error];
 }
 
-+ (BOOL)clearCache:(NSError * __autoreleasing *)error {
++ (BOOL)clearCache:(out NSError **)error {
     __block BOOL hadError = YES;
     NSArray *contents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:[self documentsURL]
                                                     includingPropertiesForKeys:nil
@@ -61,15 +61,18 @@
         return NO;
     }
 
+    __block NSError *blockError;
     [contents enumerateObjectsWithOptions:NSEnumerationConcurrent
                                usingBlock:^(NSURL *fileURL, __unused NSUInteger idx, BOOL *stop) {
                                    if (![NSFileManager.defaultManager removeItemAtURL:fileURL
-                                                                                error:error]) {
+                                                                                error:&blockError]) {
                                        *stop = YES;
                                        hadError = YES;
                                    }
                                }];
-
+    if (error) {
+        *error = [blockError copy];
+    }
     return !hadError;
 }
 

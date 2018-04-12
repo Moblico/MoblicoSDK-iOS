@@ -35,7 +35,7 @@ NS_SWIFT_NAME(Entity)
 + (NSString *)uniqueIdentifierKey;
 
 @property (nonatomic, readonly, class, strong) MLCValidations *validations;
-- (BOOL)validate:(out NSError *_Nullable __autoreleasing *)error;
+- (BOOL)validate:(out NSError **)error;
 
 @end
 

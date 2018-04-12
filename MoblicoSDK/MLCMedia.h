@@ -127,7 +127,7 @@ NS_SWIFT_NAME(Media)
 - (void)loadData:(MLCMediaDataCompletionHandler)handler;
 @property (strong, nonatomic, readonly, nullable) NSData *cachedData;
 
-+ (BOOL)clearCache:(out NSError *_Nullable __autoreleasing *)error;
++ (BOOL)clearCache:(out NSError **)error;
 
 @end
 
