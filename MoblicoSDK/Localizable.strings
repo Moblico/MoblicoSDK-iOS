@@ -1,0 +1,8 @@
+/****************************************************************************/
+/* Localization file */
+
+
+"Invalid scope for %@" = "Invalid scope for %@";
+"Missing %@" = "Missing %@";
+"Missing device for user: %@" = "Missing device for user: %@";
+"Missing value for %@." = "Missing value for %@.";
