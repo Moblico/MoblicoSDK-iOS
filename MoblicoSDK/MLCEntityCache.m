@@ -37,14 +37,14 @@
 + (BOOL)persistEntity:(id)object key:(NSString *)key error:(NSError **)error {
     NSString *path = [self URL:key].path;
 
-    return [NSKeyedArchiver archiveRootObject:object
-                                       toFile:path]
-    && [NSFileManager.defaultManager setAttributes:@{
-                                                     NSFileProtectionKey:
-                                                         NSFileProtectionNone
-                                                     }
-                                      ofItemAtPath:path
-                                             error:error];
+    BOOL archived = [NSKeyedArchiver archiveRootObject:object toFile:path];
+
+#if TARGET_OS_IOS
+    NSDictionary *attributes = @{NSFileProtectionKey: NSFileProtectionNone};
+    return archived && [NSFileManager.defaultManager setAttributes:attributes ofItemAtPath:path error:error];
+#endif
+
+    return archived;
 }
 
 + (BOOL)clearEntityWithKey:(NSString *)key error:(NSError **)error {

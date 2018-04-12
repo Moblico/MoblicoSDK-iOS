@@ -172,11 +172,13 @@ NS_SWIFT_NAME(Location)
 @property (nonatomic, copy, nullable) NSString *geoEnterNotificationText;
 @property (nonatomic) CLLocationDistance geoFenceRadius;
 
+#if TARGET_OS_IOS
 @property (nonatomic, strong, nullable) CLBeaconRegion *beaconRegion;
 @property (nonatomic, copy, nullable) NSString *beaconEnterNotificationText;
 @property (nonatomic) CLProximity beaconDesiredProximity;
 @property (nonatomic) CLProximity beaconLastProximity;
 @property (nonatomic) CLProximity beaconMinimumCheckInProximity;
+#endif
 
 @property (nonatomic) BOOL checkinEnabled;
 @property (nonatomic) CLLocationDistance checkinRadius;

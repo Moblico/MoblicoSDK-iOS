@@ -24,6 +24,8 @@
         if (_attributes == nil) {
             _attributes = @{};
         }
+
+#if TARGET_OS_IOS
         if ([jsonObject[@"beaconRegionEnabled"] boolValue]) {
             NSString *identifier = [NSString stringWithFormat:@"%@-MERCHANT", @(_merchantId)];
             NSArray<NSString *> *beacon = [jsonObject[@"beaconIdentifier"] componentsSeparatedByString:@","];
@@ -48,6 +50,8 @@
                 _beaconRegion = region;
             }
         }
+#endif
+
     }
     return self;
 }

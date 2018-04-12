@@ -29,10 +29,14 @@ NS_SWIFT_NAME(Merchant)
 @property (copy, nonatomic, nullable) NSString *redemptionType;
 @property (copy, nonatomic) NSString *status;
 @property (strong, nonatomic) NSDate *lastUpdateDate;
+
+#if TARGET_OS_IOS
 @property (nonatomic) BOOL beaconRegionEnabled;
 @property (copy, nonatomic, nullable) NSString *beaconIdentifier;
 @property (copy, nonatomic, nullable) NSString *beaconEnterNotificationText;
 @property (nonatomic, strong, nullable) CLBeaconRegion *beaconRegion;
+#endif
+
 @property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 @end

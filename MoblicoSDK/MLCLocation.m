@@ -30,6 +30,7 @@
 //@property (nonatomic) CLProximity beaconLastProximity;
 //@property (nonatomic) CLProximity beaconMinimumCheckInProximity;
 
+#if TARGET_OS_IOS
 + (CLProximity)proximityFromString:(NSString *)string {
     if (![string isKindOfClass:[NSString class]]) return CLProximityUnknown;
 
@@ -40,6 +41,7 @@
 
     return CLProximityUnknown;
 }
+#endif
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
@@ -58,6 +60,8 @@
             _geoFenceRegion.notifyOnEntry = YES;
             _geoFenceRegion.notifyOnExit = YES;
         }
+
+#if TARGET_OS_IOS
         if ([jsonObject[@"beaconNotificationEnabled"] boolValue]) {
             NSArray<NSString *> *beacon = [jsonObject[@"beaconIdentifier"] componentsSeparatedByString:@","];
 
@@ -85,6 +89,7 @@
             _beaconMinimumCheckInProximity = [[self class] proximityFromString:jsonObject[@"checkinRange"]];
             _beaconLastProximity = CLProximityUnknown;
         }
+#endif
 
     }
     return self;
