@@ -55,7 +55,7 @@ MLCMediaServiceParameter const MLCMediaServiceParameterCategory = @"category";
 }
 
 + (instancetype)listMedia:(MLCMediaServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:@{} handler:handler];
 }
 
 + (instancetype)listMediaForLocation:(MLCLocation *)location handler:(MLCMediaServiceCollectionCompletionHandler)handler {
@@ -71,7 +71,7 @@ MLCMediaServiceParameter const MLCMediaServiceParameterCategory = @"category";
 }
 
 + (instancetype)listMediaForResource:resource handler:(MLCMediaServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 + (instancetype)findMediaForMedia:(MLCMedia *)media parameters:(MLCMediaServiceParameters)parameters handler:(MLCMediaServiceCollectionCompletionHandler)handler {

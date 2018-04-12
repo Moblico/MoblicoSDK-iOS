@@ -34,7 +34,7 @@ MLCAdsServiceType const MLCAdsServiceTypeSponsor = @"AD_SPONSOR";
     if (context) {
         parameters[@"context"] = context;
     }
-    return [self find:@"promos" searchParameters:parameters handler:handler];
+    return [self _find:@"promos" searchParameters:parameters handler:handler];
 }
 
 + (instancetype)readAdWithType:(MLCAdsServiceType)type context:(NSString *)context handler:(MLCAdsServiceResourceCompletionHandler)handler {
@@ -43,7 +43,7 @@ MLCAdsServiceType const MLCAdsServiceTypeSponsor = @"AD_SPONSOR";
     if (context) {
         parameters[@"context"] = context;
     }
-    return [self read:@"ad" parameters:parameters handler:handler];
+    return [self _read:@"ad" parameters:parameters handler:handler];
 }
 
 @end

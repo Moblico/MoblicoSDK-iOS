@@ -34,11 +34,11 @@
 }
 
 + (instancetype)listDeals:(MLCDealsServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:@{} handler:handler];
 }
 
 + (instancetype)listDealsForResource:(MLCEntity *)resource handler:(MLCDealsServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 + (instancetype)listDealsForLocation:(MLCLocation *)location handler:(MLCDealsServiceCollectionCompletionHandler)handler {
@@ -46,9 +46,8 @@
 }
 
 + (instancetype)redeemDeal:(MLCDeal *)deal handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[[deal class] collectionName], deal.uniqueIdentifier, @"redeem"]];
-
-    return [self update:resource parameters:@{@"offerCode": deal.offerCode} handler:handler];
+    NSString *path = [NSString pathWithComponents:@[[[deal class] collectionName], deal.uniqueIdentifier, @"redeem"]];
+    return [self _update:path parameters:@{@"offerCode": deal.offerCode} handler:handler];
 }
 
 @end

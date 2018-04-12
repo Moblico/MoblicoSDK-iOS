@@ -28,7 +28,7 @@
                                                     MLCServiceManager.sharedServiceManager.currentUser.username,
                                                     @"points",
                                                     @"scan"]];
-    return [self update:path parameters:@{@"qrCodeId": qrCodeId} handler:handler];
+    return [self _update:path parameters:@{@"qrCodeId": qrCodeId} handler:handler];
 }
 
 + (Class)classForResource {

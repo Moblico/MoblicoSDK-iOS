@@ -31,7 +31,7 @@
 }
 
 + (instancetype)listAffinities:(MLCAffinitiesServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:@{} handler:handler];
 }
 
 + (instancetype)listAffinitiesForLocation:(MLCLocation *)location handler:(MLCAffinitiesServiceCollectionCompletionHandler)handler {
@@ -39,7 +39,7 @@
 }
 
 + (instancetype)listAffinitiesForResource:(MLCEntity *)resource handler:(MLCAffinitiesServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 @end

@@ -56,7 +56,7 @@
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
     NSString * path = [self pathForUser:user group:group];
-    return [self update:path parameters:nil handler:handler];
+    return [self _update:path parameters:nil handler:handler];
 }
 
 + (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -75,11 +75,11 @@
 
     if (errors.count > 0) {
         MLCServiceError *error = [MLCServiceError errorWithErrors:errors];
-        return [self invalidServiceFailedWithError:error handler:handler];
+        return [self _invalidServiceFailedWithError:error handler:handler];
     }
 
     NSString *path = [self pathForUser:user group:nil];
-    return [self update:path parameters:@{@"name": groupName} handler:handler];
+    return [self _update:path parameters:@{@"name": groupName} handler:handler];
 }
 
 + (instancetype)addCurrentUserToGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -89,7 +89,7 @@
 
 + (instancetype)removeUser:(MLCUser *)user fromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
 	NSString * path = [self pathForUser:user group:group];
-	return [self destroy:path parameters:nil handler:handler];
+	return [self _destroy:path parameters:nil handler:handler];
 }
 
 + (instancetype)removeCurrentUserFromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -99,7 +99,7 @@
 
 + (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
 	NSString * path = [self pathForUser:user group:nil];
-	return [self destroy:path parameters:@{@"name": groupName} handler:handler];
+	return [self _destroy:path parameters:@{@"name": groupName} handler:handler];
 }
 
 + (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {

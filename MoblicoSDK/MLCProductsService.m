@@ -25,7 +25,7 @@
 }
 
 + (instancetype)listProducts:(MLCProductsServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findProductsWithFilters:@"" productTypes:@[] handler:handler];
 }
 
 + (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCProductsServiceCollectionCompletionHandler)handler {

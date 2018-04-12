@@ -31,7 +31,7 @@
                            [[self classForResource] collectionName]];
     NSString *path = [NSString pathWithComponents:components];
 
-    return [self read:path parameters:nil handler:handler];
+    return [self _read:path parameters:nil handler:handler];
 }
 
 @end

@@ -29,7 +29,7 @@
 
 + (instancetype)outOfBandMethod:(MLCServiceRequestMethod)method endPoint:(NSString *)endPoint parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     NSString *path = [@"outofband" stringByAppendingPathComponent:endPoint];
-    return [self service:method path:path parameters:parameters handler:handler];
+    return [self _service:method path:path parameters:parameters handler:handler];
 
 }
 

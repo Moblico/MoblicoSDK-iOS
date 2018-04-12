@@ -19,6 +19,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class MLCServiceError;
+@class MLCEntity;
 
 FOUNDATION_EXPORT NSErrorDomain const MLCServiceErrorDomain NS_SWIFT_NAME(MLCService.ErrorDomain);
 FOUNDATION_EXPORT NSErrorUserInfoKey const MLCServiceDetailedErrorsKey NS_SWIFT_NAME(MLCService.DetailedErrorsKey);
@@ -46,9 +47,25 @@ typedef void(^MLCServiceJSONCompletionHandler)(id _Nullable jsonObject, NSError 
  */
 typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.SuccessCompletionHandler);
 
-#define MLCServiceCreateResourceCompletionHandler(Name, Type) typedef void(^Name ## ResourceCompletionHandler)(Type *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)
+/**
+ The callback handler for collection MLCService requests
+
+ @param collection The array of resources returned by the service request.
+ @param error An error identifier.
+ */
+typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<__kindof MLCEntity *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.CollectionCompletionHandler);
 
 #define MLCServiceCreateCollectionCompletionHandler(Name, Type) typedef void(^Name ## CollectionCompletionHandler)(NSArray<Type *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(Name.CollectionCompletionHandler)
+
+/**
+ The callback handler for resource MLCService requests
+
+ @param resource The object returned by the service request.
+ @param error An error identifier.
+ */
+typedef void(^MLCServiceResourceCompletionHandler)(__kindof MLCEntity * _Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.ResourceCompletionHandler);
+
+#define MLCServiceCreateResourceCompletionHandler(Name, Type) typedef void(^Name ## ResourceCompletionHandler)(Type *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)
 
 /**
  Base class for all Moblico service objects.

@@ -76,7 +76,7 @@ MLCLocationsServiceParameter const MLCLocationsServiceParameterCLLocation = @"cl
 }
 
 + (instancetype)listLocations:(MLCLocationsServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:@{} handler:handler];
 }
 
 + (instancetype)findLocationsWithParameters:(MLCLocationsServiceParameters)parameters handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
@@ -106,7 +106,7 @@ MLCLocationsServiceParameter const MLCLocationsServiceParameterCLLocation = @"cl
 }
 
 + (instancetype)listLocationsForResource:resource handler:(MLCLocationsServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 @end

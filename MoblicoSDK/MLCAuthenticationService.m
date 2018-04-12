@@ -58,7 +58,7 @@
     }
 #endif
 
-    return [self read:[MLCAuthenticationToken collectionName] parameters:parameters handler:handler];
+    return [self _read:[MLCAuthenticationToken collectionName] parameters:parameters handler:handler];
 }
 
 - (void)start {

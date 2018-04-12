@@ -30,12 +30,12 @@
 }
 
 + (instancetype)listListItemsForList:(MLCList *)resource handler:(MLCListItemsServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 + (instancetype)createListItem:(MLCListItem *)listItem forList:(MLCList *)list handler:(MLCListItemsServiceResourceCompletionHandler)handler {
     NSString *path = [NSString pathWithComponents:@[[[list class] collectionName], list.uniqueIdentifier, [[listItem class] collectionName]]];
-    return [self create:path parameters:[[listItem class] serialize:listItem] handler:handler];
+    return [self _create:path parameters:[[listItem class] serialize:listItem] handler:handler];
 }
 
 + (instancetype)updateListItem:(MLCListItem *)resource handler:(MLCServiceSuccessCompletionHandler)handler {

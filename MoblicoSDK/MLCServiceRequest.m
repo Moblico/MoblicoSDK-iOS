@@ -39,7 +39,6 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
 @property (nonatomic, copy, readwrite) NSDictionary<NSString *, NSString *> *headers;
 @property (nonatomic, copy, readwrite) NSData *body;
 @property (nonatomic, copy, readwrite) NSURLRequest *URLRequest;
-@property (nonatomic, copy, readonly, class) NSString *userAgent;
 @end
 
 @implementation MLCServiceRequest

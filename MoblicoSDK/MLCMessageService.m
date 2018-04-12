@@ -56,7 +56,7 @@ MLCMessageServiceStatus const MLCMessageServiceStatusDelivered = @"DELIVERED";
     if (![self canScopeResource:resource]) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
         MLCServiceError *error = [MLCServiceError invalidParameterErrorWithDescription:description];
-        return [self invalidServiceWithError:error handler:handler];
+        return [self _invalidServiceWithError:error handler:handler];
     }
 
     NSString *messageType = @"SHARE";
@@ -65,13 +65,13 @@ MLCMessageServiceStatus const MLCMessageServiceStatusDelivered = @"DELIVERED";
     }
     NSString *path = [NSString pathWithComponents:@[[[resource class] collectionName], resource.uniqueIdentifier, [[self classForResource] resourceName]]];
 
-    return [self read:path parameters:@{@"type": messageType} handler:handler];
+    return [self _read:path parameters:@{@"type": messageType} handler:handler];
 }
 
 + (instancetype)updateMessageWithMessageId:(NSUInteger)messageId status:(MLCMessageServiceStatus)status handler:(MLCServiceSuccessCompletionHandler)handler {
     NSString *path = [@"message" stringByAppendingPathComponent:@(messageId).stringValue];
 
-    return [self update:path parameters:@{@"status": status} handler:handler];
+    return [self _update:path parameters:@{@"status": status} handler:handler];
 }
 
 @end

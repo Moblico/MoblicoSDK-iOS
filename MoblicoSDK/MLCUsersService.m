@@ -20,7 +20,6 @@
 #import "MLCUser.h"
 #import "MLCStatus.h"
 #import "MLCCredential.h"
-#import "MLCEntity_Private.h"
 #import "MLCResetPassword.h"
 
 #if TARGET_OS_IOS
@@ -74,7 +73,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     if (value.length == 0) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing value for %@.", nil), key];
         MLCServiceError *error = [MLCServiceError missingParameterErrorWithDescription:description];
-        return [self invalidServiceWithError:error handler:handler];
+        return [self _invalidServiceWithError:error handler:handler];
     }
 
     NSString *path = [NSString pathWithComponents:@[[MLCUser collectionName], @"exists"]];
@@ -123,7 +122,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     if (!username) {
         username = device;
     }
-    NSDictionary *parameters = parameters = @{@"username": username};
+    NSDictionary *parameters = @{@"username": username};
     NSString *path = [@"device" stringByAppendingPathComponent:device];
 
     return [self createSuccess:path parameters:parameters handler:^(BOOL success, NSError *error) {
@@ -142,7 +141,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
 
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"device"]];
 
-    return [self update:path parameters:@{@"deviceId": deviceId} handler:handler];
+    return [self _update:path parameters:@{@"deviceId": deviceId} handler:handler];
 }
 
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -151,12 +150,12 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     if (!deviceId.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing device for user: %@", nil), user];
         MLCServiceError *error = [MLCServiceError missingParameterErrorWithDescription:description];
-        return [self invalidServiceFailedWithError:error handler:handler];
+        return [self _invalidServiceFailedWithError:error handler:handler];
     }
 
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"device"]];
 
-    return [self destroy:path parameters:@{@"deviceId": deviceId} handler:^(BOOL success, NSError *error) {
+    return [self _destroy:path parameters:@{@"deviceId": deviceId} handler:^(BOOL success, NSError *error) {
         if (success) {
             [NSUserDefaults.standardUserDefaults setObject:nil forKey:@"MLCDeviceId"];
         }
@@ -170,13 +169,13 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     if (!uniqueIdentifier.length) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
         MLCServiceError *error = [MLCServiceError missingParameterErrorWithDescription:description];
-        return [self invalidServiceWithError:error handler:handler];
+        return [self _invalidServiceWithError:error handler:handler];
     }
 
     NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
     path = [path stringByAppendingPathComponent:@"resetPassword"];
 
-    return [self service:MLCServiceRequestMethodPOST path:path parameters:nil handler:^(id jsonObject, NSError *error) {
+    return [self _service:MLCServiceRequestMethodPOST path:path parameters:nil handler:^(id jsonObject, NSError *error) {
         MLCResetPassword *resetPassword = [[MLCResetPassword alloc] initWithJSONObject:jsonObject];
         handler(resetPassword, error);
     }];
@@ -186,7 +185,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, @"account"]];
     NSDictionary *parameters = @{@"accountId": @(account.accountId).stringValue};
 
-    return [self update:path parameters:parameters handler:handler];
+    return [self _update:path parameters:parameters handler:handler];
 }
 
 @end

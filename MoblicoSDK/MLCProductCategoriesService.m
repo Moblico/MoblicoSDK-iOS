@@ -25,7 +25,7 @@
 }
 
 + (instancetype)listProductCategories:(MLCProductCategoriesServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:@{} handler:handler];
 }
 
 @end

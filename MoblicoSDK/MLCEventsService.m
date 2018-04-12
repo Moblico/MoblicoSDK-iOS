@@ -36,7 +36,7 @@
 }
 
 + (instancetype)listEvents:(MLCEventsServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findEventsWithSearchParameters:@{} handler:handler];
 }
 
 + (instancetype)findEventsWithSearchParameters:(NSDictionary *)searchParameters handler:(MLCEventsServiceCollectionCompletionHandler)handler {
@@ -73,7 +73,7 @@
 }
 
 + (instancetype)listEventsForResource:(MLCEntity *)resource handler:(MLCEventsServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 @end

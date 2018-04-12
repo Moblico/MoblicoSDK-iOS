@@ -19,34 +19,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- The callback handler for collection MLCService requests
-
- @param collection The array of resources returned by the service request.
- @param error An error identifier.
- */
-typedef void(^MLCGenericServiceCollectionCompletionHandler)(NSArray<__kindof MLCEntity *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(MLCGenericService.CollectionCompletionHandler);
-
-/**
- The callback handler for resource MLCService requests
-
- @param resource The object returned by the service request.
- @param error An error identifier.
- */
-typedef void(^MLCGenericServiceResourceCompletionHandler)(id _Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(MLCGenericService.ResourceCompletionHandler);
-
 NS_SWIFT_NAME(GenericService)
 @interface MLCGenericService : MLCService
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCGenericServiceResourceCompletionHandler)handler;
++ (instancetype)create:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
 
 + (instancetype)update:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)destroy:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)read:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCGenericServiceResourceCompletionHandler)handler;
++ (instancetype)read:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
 
-+ (instancetype)find:(NSString *)path searchParameters:(NSDictionary<NSString *,id> *)searchParameters handler:(MLCGenericServiceCollectionCompletionHandler)handler;
++ (instancetype)find:(NSString *)path searchParameters:(NSDictionary<NSString *,id> *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
 + (instancetype)service:(NSString *)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 

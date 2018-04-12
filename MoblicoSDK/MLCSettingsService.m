@@ -35,7 +35,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 }
 
 + (instancetype)readSettings:(MLCSettingsServiceCompletionHandler)handler {
-    return [self service:MLCServiceRequestMethodGET path:@"settings" parameters:nil handler:^(id jsonObject, NSError *error) {
+    return [self _service:MLCServiceRequestMethodGET path:@"settings" parameters:nil handler:^(id jsonObject, NSError *error) {
         MLCSettings *settings = nil;
         if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
             [NSUserDefaults.standardUserDefaults setObject:jsonObject forKey:@"MLCSettings"];

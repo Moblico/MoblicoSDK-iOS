@@ -35,7 +35,7 @@
 }
 
 + (instancetype)listRewards:(MLCRewardsServiceCollectionCompletionHandler)handler {
-    return [self listResources:handler];
+    return [self findResourcesWithSearchParameters:@{} handler:handler];
 }
 
 + (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCRewardsServiceCollectionCompletionHandler)handler {
@@ -47,7 +47,7 @@
 }
 
 + (instancetype)listRewardsForResource:(MLCEntity *)resource handler:(MLCRewardsServiceCollectionCompletionHandler)handler {
-    return [self listScopedResourcesForResource:resource handler:handler];
+    return [self findScopedResourcesForResource:resource searchParameters:@{} handler:handler];
 }
 
 + (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler {
@@ -55,20 +55,19 @@
 }
 
 + (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName],
-                                                        reward.uniqueIdentifier,
-                                                        @"redeem"]];
+    NSString *path = [NSString pathWithComponents:@[[[reward class] collectionName],
+                                                    reward.uniqueIdentifier, @"redeem"]];
 
     NSDictionary *parameters = @{@"offerCode": reward.offerCode,
                                  @"autoPurchase": autoPurchase ? @"true" : @"false"};
 
-    return [self update:resource parameters:parameters handler:handler];
+    return [self _update:path parameters:parameters handler:handler];
 }
 
 + (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *resource = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"purchase"]];
+    NSString *path = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"purchase"]];
 
-    return [self update:resource parameters:nil handler:handler];
+    return [self _update:path parameters:nil handler:handler];
 }
 
 @end

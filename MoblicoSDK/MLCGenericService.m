@@ -19,36 +19,36 @@
 
 @implementation MLCGenericService
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCGenericServiceResourceCompletionHandler)handler {
-    return [super create:path parameters:parameters handler:handler];
++ (instancetype)create:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
+    return [self _create:path parameters:parameters handler:handler];
 }
 
 + (instancetype)update:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [super update:path parameters:parameters handler:handler];
+    return [self _update:path parameters:parameters handler:handler];
 }
 
 + (instancetype)destroy:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [super destroy:path parameters:parameters handler:handler];
+    return [self _destroy:path parameters:parameters handler:handler];
 }
 
-+ (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCGenericServiceResourceCompletionHandler)handler {
-    return [super read:path parameters:parameters handler:handler];
++ (instancetype)read:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceResourceCompletionHandler)handler {
+    return [self _read:path parameters:parameters handler:handler];
 }
 
-+ (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCGenericServiceCollectionCompletionHandler)handler {
-    return [super find:path searchParameters:searchParameters handler:handler];
++ (instancetype)find:(NSString *)path searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
+    return [self _find:path searchParameters:searchParameters handler:handler];
 }
 
 + (instancetype)service:(NSString *)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
-    return [super service:method path:path parameters:parameters handler:handler];
+    return [self _service:method path:path parameters:parameters handler:handler];
 }
 
 + (instancetype)invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler {
-    return [super invalidServiceWithError:error handler:handler];
+    return [self _invalidServiceWithError:error handler:handler];
 }
 
 + (instancetype)invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler {
-    return [super invalidServiceFailedWithError:error handler:handler];
+    return [self _invalidServiceFailedWithError:error handler:handler];
 }
 
 + (Class)classForResource {

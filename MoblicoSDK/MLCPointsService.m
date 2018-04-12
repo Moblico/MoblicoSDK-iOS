@@ -54,7 +54,7 @@ static NSString *const MLCPointsServicePointTypeInteractive = @"Interactive";
                                          MLCPointsServiceParameterPoints: @(points)} mutableCopy];
     if (totalType.length) parameters[MLCPointsServiceParameterTotalTypeName] = totalType;
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCPoints collectionName]]];
-    return [self update:path parameters:parameters handler:handler];
+    return [self _update:path parameters:parameters handler:handler];
 }
 
 
