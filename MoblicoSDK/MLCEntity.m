@@ -15,7 +15,7 @@
  */
 
 #import "MLCEntity.h"
-@import ObjectiveC.runtime;
+#import <objc/runtime.h>
 #import "MLCEntity_Private.h"
 #import "MLCValidation.h"
 #import "MLCLogger.h"

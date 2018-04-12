@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 90000
 #error "iOS 9 is the minimum required Target Deployment for MoblicoSDK."

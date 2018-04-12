@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
-@import Foundation;
-@import CoreLocation;
+#import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 NS_SWIFT_NAME(MLCMetricsManager.LocationDelegate)
 @protocol MLCMetricsManagerLocationDelegate <NSObject>

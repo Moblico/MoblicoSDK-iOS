@@ -24,7 +24,7 @@
 #import "MLCResetPassword.h"
 
 #if TARGET_OS_IOS
-@import UIKit;
+#import <UIKit/UIKit.h>
 #endif
 
 MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsFound = @"MLCUsersServiceVerifyResultsFound";

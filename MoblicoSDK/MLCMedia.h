@@ -19,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #if TARGET_OS_IOS
-@import UIKit;
+#import <UIKit/UIKit.h>
 typedef void(^MLCMediaImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
 #else
 typedef void(^MLCMediaImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);

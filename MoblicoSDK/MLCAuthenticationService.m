@@ -20,7 +20,7 @@
 #import "MLCUser.h"
 
 #if TARGET_OS_IPHONE
-@import UIKit;
+#import <UIKit/UIKit.h>
 #endif
 
 @interface MLCAuthenticationService ()

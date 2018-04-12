@@ -15,12 +15,12 @@
  */
 
 #import <MoblicoSDK/MLCEntity.h>
-@import CoreGraphics;
+#import <CoreGraphics/CoreGraphics.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 #if TARGET_OS_IOS
-@import UIKit;
+#import <UIKit/UIKit.h>
 typedef void(^MLCImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 #else
 typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.CompletionHandler);

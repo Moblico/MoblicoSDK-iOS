@@ -19,7 +19,7 @@
 #import "MLCEntity_Private.h"
 
 #if TARGET_OS_IPHONE
-@import UIKit;
+#import <UIKit/UIKit.h>
 #endif
 
 MLCServiceRequestHeaderKey const MLCServiceRequestHeaderKeyAccept = @"Accept";

@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 #define MLCLog(frmt, ...) \
     do { [MLCLogger log:frmt, ##__VA_ARGS__]; } while(0)

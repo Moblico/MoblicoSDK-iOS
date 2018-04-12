@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 @class MLCUser;
 
 NS_ASSUME_NONNULL_BEGIN
