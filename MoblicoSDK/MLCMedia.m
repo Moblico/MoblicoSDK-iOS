@@ -150,7 +150,9 @@
     NSString *cachedPath = [self cachedPath:key];
 
     if (cachedData) {
-        handler(cachedData, nil, YES);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(cachedData, nil);
+        });
         return;
     }
 
@@ -159,19 +161,19 @@
         if (data) {
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];
-            handler(data, error, NO);
+            handler(data, error);
         } else {
             NSData *fallbackData = [NSData dataWithContentsOfFile:cachedPath];
-            handler(fallbackData, error, NO);
+            handler(fallbackData, error);
         }
     }];
 }
 
 - (void)loadImageFromURL:(NSURL *)url handler:(MLCMediaImageCompletionHandler)handler {
 #if TARGET_OS_IOS
-    return [self loadDataFromURL:url handler:^(NSData *data, NSError *error, BOOL fromCache) {
+    return [self loadDataFromURL:url handler:^(NSData *data, NSError *error) {
         UIImage *image = [[UIImage alloc] initWithData:data scale:2.0];
-        handler(image, error, fromCache);
+        handler(image, error);
     }];
 #else
     return [self loadDataFromURL:url handler:handler];

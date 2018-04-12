@@ -18,7 +18,7 @@
 #import "MLCEntity_Private.h"
 #import <CommonCrypto/CommonDigest.h>
 
-typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.DataCompletionHandler);
+typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error) NS_SWIFT_NAME(MLCImage.DataCompletionHandler);
 
 
 @interface MLCImage ()
@@ -76,9 +76,9 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 - (void)loadImage:(MLCImageCompletionHandler)handler {
 #if TARGET_OS_IOS
     CGFloat scale = self.scaleFactor;
-    return [self loadImageDataFromURL:self.url handler:^(NSData *data, NSError *error, BOOL fromCache) {
+    return [self loadImageDataFromURL:self.url handler:^(NSData *data, NSError *error) {
         UIImage *image = [[UIImage alloc] initWithData:data scale:scale];
-        handler(image, error, fromCache);
+        handler(image, error);
     }];
 #else
     return [self loadImageDataFromURL:self.url handler:handler];
@@ -162,7 +162,9 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
     NSString *cachedPath = [self cachedPath:key];
 
     if (cachedData) {
-        handler(cachedData, nil, YES);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(cachedData, nil);
+        });
         return;
     }
 
@@ -176,14 +178,14 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
         if (data) {
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];
-            handler(data, error, NO);
+            handler(data, error);
         } else if (httpResponse.statusCode == 404 || httpResponse.statusCode == 200) {
             [cache removeObjectForKey:key];
             [NSFileManager.defaultManager removeItemAtPath:cachedPath error:nil];
-            handler(data, error, NO);
+            handler(data, error);
         } else {
             NSData *fallbackData = [NSData dataWithContentsOfFile:cachedPath];
-            handler(fallbackData, error, NO);
+            handler(fallbackData, error);
         }
     }];
 }

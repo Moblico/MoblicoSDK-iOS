@@ -23,9 +23,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #if TARGET_OS_IOS
-typedef void(^MLCImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.CompletionHandler);
+typedef void(^MLCImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 #else
-typedef void(^MLCImageCompletionHandler)(NSData *data, NSError *error, BOOL fromCache) NS_SWIFT_NAME(MLCImage.CompletionHandler);
+typedef void(^MLCImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 #endif
 /**
  A MLCImage object encapsulates the image data for a deal stored in 

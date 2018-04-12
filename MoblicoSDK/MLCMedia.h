@@ -22,12 +22,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #if TARGET_OS_IOS
-typedef void(^MLCMediaImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
+typedef void(^MLCMediaImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
 #else
-typedef void(^MLCMediaImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
+typedef void(^MLCMediaImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
 #endif
 
-typedef void(^MLCMediaDataCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error, BOOL fromCache) NS_SWIFT_NAME(MLCMedia.DataCompletionHandler);
+typedef void(^MLCMediaDataCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error) NS_SWIFT_NAME(MLCMedia.DataCompletionHandler);
 
 /**
  The media facility provides the means to reference and provide dynamic meta data
