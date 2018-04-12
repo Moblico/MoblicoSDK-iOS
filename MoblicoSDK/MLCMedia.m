@@ -19,10 +19,9 @@
 #import <CommonCrypto/CommonDigest.h>
 
 @interface MLCMedia ()
-
+@property (class, nonatomic, readonly) NSCache *sharedCache;
+@property (class, nonatomic, readonly) NSString *cacheDirectory;
 - (void)loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler;
-+ (NSCache *)sharedCache;
-
 @end
 
 @implementation MLCMedia
@@ -71,7 +70,7 @@
 }
 
 + (BOOL)clearCache:(NSError **)error {
-    NSString *cacheDirectory = [self cacheDirectory];
+    NSString *cacheDirectory = self.cacheDirectory;
     return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
 }
 
@@ -96,7 +95,7 @@
     [self loadImageFromURL:self.thumbUrl handler:handler];
 }
 
-- (NSData *)cachedThumb {
+- (id)cachedThumb {
     return [self cachedImageFromURL:self.thumbUrl];
 }
 
@@ -126,7 +125,7 @@
 - (NSString *)cachedPath:(NSString *)key {
     NSString *fileName = [self sha1Hash:key];
 
-    return [[[self class] cacheDirectory] stringByAppendingPathComponent:fileName];
+    return [MLCMedia.cacheDirectory stringByAppendingPathComponent:fileName];
 }
 
 - (NSString *)typeForURL:(NSURL *)url {
@@ -146,7 +145,7 @@
 
 - (void)loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler {
     NSString *key = [self keyForURL:url];
-    NSCache *cache = [[self class] sharedCache];
+    NSCache *cache = MLCMedia.sharedCache;
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
 

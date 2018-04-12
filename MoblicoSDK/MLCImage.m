@@ -22,7 +22,8 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 
 
 @interface MLCImage ()
-
+@property (class, nonatomic, readonly) NSCache *sharedCache;
+@property (class, nonatomic, readonly) NSString *cacheDirectory;
 @end
 
 @implementation MLCImage
@@ -86,11 +87,10 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 
 - (NSData *)cachedImageData {
     NSString *key = [self.url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [[self class] sharedCache];
-    return [cache objectForKey:key] ?: [NSData dataWithContentsOfFile:[self cachedPath:key]];
+    return [MLCImage.sharedCache objectForKey:key] ?: [NSData dataWithContentsOfFile:[self cachedPath:key]];
 }
 
-- (UIImage *)cachedImage {
+- (id)cachedImage {
     NSData *data = [self cachedImageData];
     if (!data) {
         return nil;
@@ -129,7 +129,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 }
 
 + (BOOL)clearCache:(NSError **)error {
-    NSString *cacheDirectory = [self cacheDirectory];
+    NSString *cacheDirectory = self.cacheDirectory;
     return [NSFileManager.defaultManager removeItemAtPath:cacheDirectory error:error] && [NSFileManager.defaultManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:error];
 }
 
@@ -152,12 +152,12 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSError *error, BOOL 
 - (NSString *)cachedPath:(NSString *)key {
     NSString *fileName = [self sha1Hash:key];
 
-    return [[[self class] cacheDirectory] stringByAppendingPathComponent:fileName];
+    return [MLCImage.cacheDirectory stringByAppendingPathComponent:fileName];
 }
 
 - (void)loadImageDataFromURL:(NSURL *)url handler:(MLCImageDataCompletionHandler)handler {
     NSString *key = [url.absoluteString stringByAppendingFormat:@"|%@", self.lastUpdateDate];
-    NSCache *cache = [[self class] sharedCache];
+    NSCache *cache = MLCImage.sharedCache;
     NSData *cachedData = [cache objectForKey:key];
     NSString *cachedPath = [self cachedPath:key];
 
