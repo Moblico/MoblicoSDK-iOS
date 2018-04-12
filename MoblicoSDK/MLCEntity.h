@@ -27,7 +27,7 @@ NS_SWIFT_NAME(Entity)
 @property (nonatomic, readonly, strong, nullable) NSString *uniqueIdentifier;
 
 - (nullable instancetype)initWithJSONObject:(nullable NSDictionary<NSString *, id> *)jsonObject;
-+ (nullable NSDictionary<NSString *, id> *)serialize:(nullable MLCEntity *)entity;
++ (nullable NSDictionary<NSString *, id> *)serialize:(nullable __kindof MLCEntity *)entity;
 
 + (NSString *)collectionName;
 + (NSString *)resourceName;

@@ -131,7 +131,7 @@ NS_SWIFT_NAME(Deal)
 
 @property (nonatomic, assign, readonly) NSInteger remainingMetGoals;
 
-- (NSComparisonResult)compare:(MLCDeal *)other;
+- (NSComparisonResult)compare:(__kindof MLCDeal *)other;
 
 @end
 
