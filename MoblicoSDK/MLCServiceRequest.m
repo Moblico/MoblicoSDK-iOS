@@ -148,11 +148,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
 }
 
 + (BOOL)methodUsesBody:(MLCServiceRequestMethod)method {
-    if ([method isEqualToString:MLCServiceRequestMethodGET] || [method isEqualToString:MLCServiceRequestMethodDELETE]) {
-        return NO;
-    }
-
-    return YES;
+    return ![method isEqualToString:MLCServiceRequestMethodGET] && ![method isEqualToString:MLCServiceRequestMethodDELETE];
 }
 
 + (instancetype)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)servicePath parameters:(NSDictionary *)parameters {

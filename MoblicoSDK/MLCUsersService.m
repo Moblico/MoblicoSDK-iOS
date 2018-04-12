@@ -31,11 +31,16 @@ MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsFound = @"MLCUser
 MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResultsNotFound = @"MLCUsersServiceVerifyResultsNotFound";
 
 
-NSString *MLCDeviceIdFromDeviceToken(NSData *deviceToken) {
-    if ([deviceToken isKindOfClass:[NSString class]]) {
-        return (NSString *)deviceToken;
+NSString *MLCDeviceIdFromDeviceToken(id token) {
+    if ([token isKindOfClass:[NSString class]]) {
+        return (NSString *)token;
     }
 
+    if (![token isKindOfClass:[NSData class]]) {
+        return nil;
+    }
+
+    NSData *deviceToken = (NSData *)token;
     const unsigned char *bytes = deviceToken.bytes;
     const NSUInteger length = deviceToken.length;
 

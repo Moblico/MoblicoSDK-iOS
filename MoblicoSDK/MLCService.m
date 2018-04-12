@@ -283,7 +283,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
 }
 
 + (instancetype)findScopedResourcesForResource:(MLCEntity *)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceInternalCollectionCompletionHandler)handler {
-    if ([self canScopeResource:resource] == NO) {
+    if (![self canScopeResource:resource]) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
         MLCServiceError *error = [MLCServiceError invalidParameterErrorWithDescription:description];
         return [self invalidServiceWithError:error handler:handler];

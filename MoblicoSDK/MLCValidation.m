@@ -142,8 +142,7 @@ NSErrorUserInfoKey const MLCValidationDetailedErrorsKey = @"MLCValidationDetaile
 
 + (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message {
     return [[self alloc] initWithMessage:message validateTest:^BOOL(__unused MLCEntity *entity, __unused NSString *key, NSString *value) {
-        if (value == nil || value.length == 0) return YES;
-        return [predicate evaluateWithObject:value];
+        return value.length == 0 || [predicate evaluateWithObject:value];
     }];
 }
 
