@@ -611,7 +611,7 @@ if (((NSString *)value).length == 0) return; \
 NSNumberFormatter *f = [[NSNumberFormatter alloc] init]; \
 f.numberStyle = NSNumberFormatterDecimalStyle; \
 NSNumber *number = [f numberFromString:value]; \
-if(number)value=number;\
+if(number != nil)value=number;\
 }\
 NSNumber *number = @([[self class] selectorPart ## FromValue: value ]); \
 [self setValue:number forKey:key]; \

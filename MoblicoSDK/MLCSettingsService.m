@@ -156,7 +156,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 
 - (NSInteger)integerForKey:(NSString *)key defaultValue:(NSInteger)defaultValue {
     NSNumber *number = [self numberForKey:key];
-    return number ? number.integerValue : defaultValue;
+    return number != nil ? number.integerValue : defaultValue;
 }
 
 - (double)doubleForKey:(NSString *)key {
@@ -165,7 +165,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 
 - (double)doubleForKey:(NSString *)key defaultValue:(double)defaultValue {
     NSNumber *number = [self numberForKey:key];
-    return number ? number.doubleValue : defaultValue;
+    return number != nil ? number.doubleValue : defaultValue;
 }
 
 - (BOOL)boolForKey:(NSString *)key {
@@ -174,7 +174,7 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 
 - (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
     NSNumber *number = [self numberForKey:key];
-    return number ? number.boolValue : defaultValue;
+    return number != nil ? number.boolValue : defaultValue;
 }
 
 - (NSNumber *)boolNumberForKey:(NSString *)key {

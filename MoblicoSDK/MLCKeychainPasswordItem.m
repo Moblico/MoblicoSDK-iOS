@@ -209,11 +209,11 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         query[(__bridge id)kSecMatchLimit] = matchLimit;
     }
 
-    if (returnAttributes) {
+    if (returnAttributes != nil) {
         query[(__bridge id)kSecReturnAttributes] = (__bridge id)(returnAttributes.boolValue ? kCFBooleanTrue : kCFBooleanFalse);
     }
 
-    if (returnData) {
+    if (returnData != nil) {
         query[(__bridge id)kSecReturnData] = (__bridge id)(returnData.boolValue ? kCFBooleanTrue : kCFBooleanFalse);
 
     }
