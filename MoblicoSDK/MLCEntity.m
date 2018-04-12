@@ -755,26 +755,26 @@ return; \
                 const char *argumentType = [invocation.methodSignature getArgumentTypeAtIndex:2];
                 NSNumber *value = nil;
 
-#define CASE(ctype, selectorPart) \
+#define CASE_SEL(ctype, selectorPart) \
 if(argumentType[0] == @encode(ctype)[0]) {\
 MLCEntityLog(@"Type: %s", @encode(ctype)); \
 ctype val = 0; \
 [invocation getArgument:&val atIndex:2]; \
 value = [NSNumber numberWith ## selectorPart:val];}
 
-                CASE(char, Char);
-                CASE(unsigned char, UnsignedChar);
-                CASE(short, Short);
-                CASE(unsigned short, UnsignedShort);
-                CASE(int, Int);
-                CASE(unsigned int, UnsignedInt);
-                CASE(long, Long);
-                CASE(unsigned long, UnsignedLong);
-                CASE(long long, LongLong);
-                CASE(unsigned long long, UnsignedLongLong);
-                CASE(float, Float);
-                CASE(double, Double);
-#undef CASE
+                CASE_SEL(char, Char);
+                CASE_SEL(unsigned char, UnsignedChar);
+                CASE_SEL(short, Short);
+                CASE_SEL(unsigned short, UnsignedShort);
+                CASE_SEL(int, Int);
+                CASE_SEL(unsigned int, UnsignedInt);
+                CASE_SEL(long, Long);
+                CASE_SEL(unsigned long, UnsignedLong);
+                CASE_SEL(long long, LongLong);
+                CASE_SEL(unsigned long long, UnsignedLongLong);
+                CASE_SEL(float, Float);
+                CASE_SEL(double, Double);
+#undef CASE_SEL
                 [self setValue:value forKey:setter type:type];
             }
             return;
