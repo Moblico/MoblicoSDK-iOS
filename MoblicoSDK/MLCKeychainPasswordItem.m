@@ -31,8 +31,6 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 @property (nonatomic, copy, readwrite, nullable) NSString *accessGroup;
 @property (nonatomic, copy, readwrite) NSString *account;
 
-- (instancetype)_initWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup;
-
 + (NSArray<MLCKeychainPasswordItem *> *)_itemsWithService:(NSString *)service accessGroup:(nullable NSString *)accessGroup error:(out NSError **)error;
 + (NSDictionary<NSString *, id> *)queryWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup;
 + (NSDictionary<NSString *, id> *)queryWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup limit:(MLCKeychainPasswordItemMatchLimit)limit returnAttributes:(NSNumber *)returnAttributes returnData:(NSNumber *)returnData;
@@ -41,15 +39,15 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 
 @implementation MLCKeychainPasswordItem
 
-- (instancetype)initWithService:(NSString *)service account:(NSString *)account {
-    return [self _initWithService:service account:account accessGroup:nil];
++ (instancetype)itemWithService:(NSString *)service account:(NSString *)account {
+    return [[self alloc] initWithService:service account:account accessGroup:nil];
+}
+
++ (instancetype)itemWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup {
+    return [[self alloc] initWithService:service account:account accessGroup:accessGroup];
 }
 
 - (instancetype)initWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup {
-    return [self _initWithService:service account:account accessGroup:accessGroup];
-}
-
-- (instancetype)_initWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup {
     self = [super init];
     if (self) {
         _service = service;

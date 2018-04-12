@@ -36,8 +36,9 @@ NS_SWIFT_NAME(KeychainPasswordItem)
 @property (nonatomic, copy, readonly, nullable) NSString *accessGroup;
 @property (nonatomic, copy, readonly) NSString *account;
 
-- (instancetype)initWithService:(NSString *)service account:(NSString *)account;
-- (instancetype)initWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup;
+- (instancetype)initWithService:(NSString *)service account:(NSString *)account accessGroup:(nullable NSString *)accessGroup NS_DESIGNATED_INITIALIZER;
++ (instancetype)itemWithService:(NSString *)service account:(NSString *)account;
++ (instancetype)itemWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup;
 
 - (BOOL)renameAccount:(NSString *)account error:(out NSError **)error;
 - (BOOL)saveData:(id<NSCoding>)data error:(out NSError **)error;
@@ -48,6 +49,8 @@ NS_SWIFT_NAME(KeychainPasswordItem)
 
 + (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service error:(out NSError **)error;
 + (NSArray<MLCKeychainPasswordItem *> *)itemsWithService:(NSString *)service accessGroup:(NSString *)accessGroup error:(out NSError **)error;
+
+- (instancetype)init NS_UNAVAILABLE;
 @end
 
 @interface MLCKeychainPasswordItemError : NSError
