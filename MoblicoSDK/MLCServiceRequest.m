@@ -22,6 +22,13 @@
 #import <UIKit/UIKit.h>
 #endif
 
+NSString *sanitize(NSString * string) {
+    NSData *data = [string dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSString *ascii = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+    return [ascii stringByReplacingOccurrencesOfString:@"?" withString:@""];
+}
+
+
 MLCServiceRequestHeaderKey const MLCServiceRequestHeaderKeyAccept = @"Accept";
 MLCServiceRequestHeaderKey const MLCServiceRequestHeaderKeyContentType = @"Content-Type";
 MLCServiceRequestHeaderKey const MLCServiceRequestHeaderKeyAuthorization = @"Authorization";
@@ -47,30 +54,27 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     static NSString *userAgent = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *model;
-        NSString *systemName;
-        NSString *systemVersion;
         NSString *locale = NSLocale.currentLocale.localeIdentifier;
 
 #if TARGET_OS_IPHONE
-        model = UIDevice.currentDevice.model;
-        systemName = UIDevice.currentDevice.systemName;
-        systemVersion = UIDevice.currentDevice.systemVersion;
+        NSString *model = sanitize(UIDevice.currentDevice.model);
+        NSString *systemName = sanitize(UIDevice.currentDevice.systemName);
+        NSString *systemVersion = sanitize(UIDevice.currentDevice.systemVersion);
 #else
-        model = @"Macintosh";
-        systemName = @"Mac OS X";
-        systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"][@"ProductVersion"];
+        NSString *model = @"Macintosh";
+        NSString *systemName = @"Mac OS X";
+        NSString *systemVersion = sanitize([NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"][@"ProductVersion"]);
 #endif
 
         NSString *displayName = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         NSString *bundleName = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];
         NSString *processName = NSProcessInfo.processInfo.processName;
-        NSString *name = displayName ?: bundleName ?: processName;
+        NSString *name = sanitize(displayName ?: bundleName ?: processName);
 
-        NSString *build = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
-        NSString *version = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        NSString *build = sanitize([NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"]);
+        NSString *version = sanitize([NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 
-        NSString *sdkVersion = MLCServiceManager.sdkVersion;
+        NSString *sdkVersion = sanitize(MLCServiceManager.sdkVersion);
         userAgent = [NSString stringWithFormat:@"%@/%@-%@ (%@; %@/%@; %@) SDK/%@", name, version, build, model, systemName, systemVersion, locale, sdkVersion];
     });
 
