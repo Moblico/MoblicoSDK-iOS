@@ -105,12 +105,6 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     return [self updateResource:user handler:handler];
 }
 
-+ (instancetype)destroyUser:(__unused MLCUser *)user handler:(__unused MLCServiceSuccessCompletionHandler)handler {
-    // TODO: Add support to backend
-    NSString *reason = [NSString stringWithFormat:@"'%@' is not available in this version of the MoblicoSDK.", NSStringFromSelector(_cmd)];
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:reason userInfo:nil];
-}
-
 + (instancetype)createAnonymousUserWithDeviceToken:(NSData *)deviceToken handler:(MLCUsersServiceResourceCompletionHandler)handler {
     NSString *device = MLCDeviceIdFromDeviceToken(deviceToken);
     NSString *username = nil;

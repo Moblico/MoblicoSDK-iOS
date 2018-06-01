@@ -45,13 +45,4 @@ NS_SWIFT_NAME(GroupsService)
 
 @end
 
-@interface MLCGroupsService (Unavailable)
-
-/**
- @since Unavailable in this version of the MoblicoSDK.
- */
-+ (instancetype)readGroupWithGroupId:(NSUInteger)groupId handler:(MLCGroupsServiceResourceCompletionHandler)handler __attribute__((unavailable("'readGroupWithGroupId:handler:' is not available with this version of the Moblico SDK.")));
-
-@end
-
 NS_ASSUME_NONNULL_END

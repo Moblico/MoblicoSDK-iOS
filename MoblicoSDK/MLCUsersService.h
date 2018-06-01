@@ -51,13 +51,4 @@ NS_SWIFT_NAME(UsersService)
 
 @end
 
-@interface MLCUsersService (Unavailable)
-
-/**
- @since Unavailable in this version of the MoblicoSDK.
- */
-+ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler __attribute__((unavailable("'destroyUser:handler:' is not available with this version of the Moblico SDK.")));
-
-@end
-
 NS_ASSUME_NONNULL_END

@@ -107,9 +107,4 @@
     return [self removeUser:user fromGroupNamed:groupName handler:handler];
 }
 
-+ (instancetype)readGroupWithGroupId:(__unused NSUInteger)groupId handler:(__unused MLCGroupsServiceResourceCompletionHandler)handler {
-    // TODO: Add support to backend
-    NSString *reason = [NSString stringWithFormat:@"'%@' is not available in this version of the MoblicoSDK.", NSStringFromSelector(_cmd)];
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:reason userInfo:nil];
-}
 @end
