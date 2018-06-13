@@ -92,9 +92,11 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
             value = [self serializeArray:obj];
         } else if ([obj isKindOfClass:[NSDictionary class]]) {
             value = [self serializeDictionary:obj];
+        } else if ([obj isKindOfClass:[NSString class]]) {
+            value = [self stringWithPercentEscapesAddedToString:obj];
         }
 
-        value = [MLCEntity stringFromValue:value];
+       value = [MLCEntity stringFromValue:value];
         NSString *name = [MLCEntity stringFromValue:key];
         NSURLQueryItem *item = [[NSURLQueryItem alloc] initWithName:name value:value];
 
@@ -145,8 +147,9 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
 }
 
 + (NSString *)stringWithPercentEscapesAddedToString:(NSString *)string {
-    NSMutableCharacterSet *set = [NSCharacterSet.illegalCharacterSet.invertedSet mutableCopy];
-    [set removeCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>{}|\\^~`"];
+    NSMutableCharacterSet *set = [NSCharacterSet.URLQueryAllowedCharacterSet mutableCopy];
+    [set removeCharactersInString:@"?&=+;,"];
+    // Allowed Characters: !$'()*-./0123456789;@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~
     return [string stringByAddingPercentEncodingWithAllowedCharacters:set];
 }
 
@@ -170,7 +173,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     components.host = MLCServiceManager.host;
     components.port = MLCServiceManager.configuration.port;
     components.path = path;
-    components.queryItems = [self queryItemsFromParameters:parameters];
+    components.percentEncodedQueryItems = [self queryItemsFromParameters:parameters];
 
     if (components.query.length && [self methodUsesBody:method]) {
         headers[MLCServiceRequestHeaderKeyContentType] = @"application/x-www-form-urlencoded";
