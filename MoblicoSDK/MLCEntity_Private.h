@@ -25,6 +25,7 @@
 + (NSString *)stringFromValue:(id)value;
 + (NSString *)nilIfEmptyStringFromValue:(id)value;
 + (NSDate *)dateFromTimestampValue:(id)value;
++ (NSNumber *)timestampFromDate:(NSDate *)date;
 
 + (BOOL)boolFromValue:(id)value;
 + (float)floatFromValue:(id)value;

@@ -27,6 +27,8 @@ typedef void(^MLCImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nul
 #else
 typedef void(^MLCImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 #endif
+typedef void(^MLCImageDownloadCompletionHandler)(NSURL *_Nullable location, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.DownloadCompletionHandler);
+
 /**
  A MLCImage object encapsulates the image data for a deal stored in 
  the Moblico Admin Portal.
@@ -50,6 +52,7 @@ NS_SWIFT_NAME(Image)
 @property (strong, nonatomic) NSDate *lastUpdateDate;
 
 - (void)loadImage:(MLCImageCompletionHandler)handler;
+- (void)downloadImage:(MLCImageDownloadCompletionHandler)handler NS_SWIFT_NAME(download(_:));
 #if TARGET_OS_IOS
 @property (strong, nonatomic, readonly, nullable) UIImage *cachedImage;
 #else

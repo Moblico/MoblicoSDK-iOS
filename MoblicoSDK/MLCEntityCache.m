@@ -35,16 +35,12 @@
 }
 
 + (BOOL)persistEntity:(id)object key:(NSString *)key error:(out NSError **)error {
-    NSString *path = [self URL:key].path;
-
-    BOOL archived = [NSKeyedArchiver archiveRootObject:object toFile:path];
-
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object];
+    NSDataWritingOptions options = NSDataWritingAtomic;
 #if TARGET_OS_IOS
-    NSDictionary *attributes = @{NSFileProtectionKey: NSFileProtectionNone};
-    return archived && [NSFileManager.defaultManager setAttributes:attributes ofItemAtPath:path error:error];
+    options |= NSDataWritingFileProtectionNone;
 #endif
-
-    return archived;
+    return [data writeToURL:[self URL:key] options:options error:error];
 }
 
 + (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError **)error {
