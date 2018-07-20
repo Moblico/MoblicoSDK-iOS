@@ -81,10 +81,10 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     return userAgent;
 }
 
-+ (NSArray *)queryItemsFromParameters:(NSDictionary *)parameters {
++ (NSArray<NSURLQueryItem *> *)queryItemsFromParameters:(NSDictionary *)parameters {
     if (parameters.count == 0) return nil;
 
-    NSMutableArray *queryItems = [NSMutableArray arrayWithCapacity:parameters.count];
+    NSMutableArray<NSURLQueryItem *> *queryItems = [NSMutableArray arrayWithCapacity:parameters.count];
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         NSString *value = obj;
 
@@ -173,7 +173,21 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     components.host = MLCServiceManager.host;
     components.port = MLCServiceManager.configuration.port;
     components.path = path;
-    components.percentEncodedQueryItems = [self queryItemsFromParameters:parameters];
+    NSArray<NSURLQueryItem *> *percentEncodedQueryItems = [self queryItemsFromParameters:parameters];
+    if (@available(iOS 11.0, *)) {
+        components.percentEncodedQueryItems = percentEncodedQueryItems;
+    } else {
+        NSMutableString *percentEncodedQuery = [NSMutableString string];
+        NSMutableArray<NSString *> *items = [[NSMutableArray<NSString *> alloc] init];
+        for (NSURLQueryItem *item in percentEncodedQueryItems) {
+            if (!item.value) {
+                [items addObject:item.name];
+            } else {
+                [items addObject:[NSString stringWithFormat:@"%@=%@", item.name, item.value]];
+            }
+        }
+        components.percentEncodedQuery = [items componentsJoinedByString:@"&"];
+    }
 
     if (components.query.length && [self methodUsesBody:method]) {
         headers[MLCServiceRequestHeaderKeyContentType] = @"application/x-www-form-urlencoded";
