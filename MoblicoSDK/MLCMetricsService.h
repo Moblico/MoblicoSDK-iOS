@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(MetricsService)
 @interface MLCMetricsService : MLCService
 
+@property (nonatomic, class, getter=isEnabled) BOOL enabled;
+
 #pragma mark Send a Metric
 ///--------------------
 /// @name Send a Metric

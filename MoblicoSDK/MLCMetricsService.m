@@ -24,12 +24,24 @@ static NSString *const MLCMetricsServiceParameterUsername = @"username";
 
 @implementation MLCMetricsService
 
+static BOOL _enabled = YES;
+
++ (BOOL)isEnabled {
+    return _enabled;
+}
+
++ (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+}
+
 + (Class)classForResource {
     return Nil;
 }
 
 + (void)sendMetric:(MLCMetric *)metric {
-    [[self createResource:metric handler:nil] start];
+    if (self.isEnabled) {
+        [[self createResource:metric handler:nil] start];
+    }
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type {
