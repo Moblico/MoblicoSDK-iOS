@@ -177,7 +177,6 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     if (@available(iOS 11.0, *)) {
         components.percentEncodedQueryItems = percentEncodedQueryItems;
     } else {
-        NSMutableString *percentEncodedQuery = [NSMutableString string];
         NSMutableArray<NSString *> *items = [[NSMutableArray<NSString *> alloc] init];
         for (NSURLQueryItem *item in percentEncodedQueryItems) {
             if (!item.value) {

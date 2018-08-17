@@ -79,7 +79,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
 #if TARGET_OS_IOS
 + (UIImage *)imageFromData:(NSData *)data scale:(CGFloat)scale {
     if (!data) {
-        return data;
+        return nil;
     }
     return [[UIImage alloc] initWithData:data scale:scale];
 }
