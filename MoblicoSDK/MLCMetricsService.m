@@ -40,7 +40,8 @@ static BOOL _enabled = YES;
 
 + (void)sendMetric:(MLCMetric *)metric {
     if (self.isEnabled) {
-        [[self createResource:metric handler:nil] start];
+        MLCMetricsService *service = [self createResource:metric handler:nil];
+        [service start];
     }
 }
 
