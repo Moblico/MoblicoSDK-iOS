@@ -14,12 +14,12 @@ The MoblicoSDK has been designed to be easy to use with a simple block based int
 4. Configure `MLCServiceManager` with your Moblico API Key.
 
     ```objc
-[MLCServiceManager setAPIKey:@"<#YOUR_API_KEY#>"];
-```
+    [MLCServiceManager setAPIKey:@"<#YOUR_API_KEY#>"];
+    ```
 
     ```swift
-ServiceManager.apiKey = "<#YOUR_API_KEY#>"
-```
+    ServiceManager.apiKey = "<#YOUR_API_KEY#>"
+    ```
 
     *Please see the `MLCServiceManager` class reference for more information and configuration options.*
 
@@ -30,14 +30,14 @@ Once you have configured `MLCServiceManager` you can begin making service calls.
 ```objc
 // Create an instance and define the callback handler
 MLCSettingsService *settingsService = 
-	[MLCSettingsService readSettings:^(NSDictionary *settings,
+    [MLCSettingsService readSettings:^(NSDictionary *settings,
                                        NSError *error) {
-	if (error) {
-		NSLog(@"An error occurred: %@", [error localizedDescription]);
-	}
-	else {
-		NSLog(@"Settings: %@", settings);
-	}
+    if (error) {
+        NSLog(@"An error occurred: %@", [error localizedDescription]);
+    }
+    else {
+        NSLog(@"Settings: %@", settings);
+    }
 }];
 
 // Start the service asynchronously
@@ -47,11 +47,11 @@ MLCSettingsService *settingsService =
 ```swift
 // Create an instance and define the callback handler
 let settingsService = SettingsService.readSettings { (settings, error) in
-	if let settings = settings {
-		print("Settings: \(settings)")
-	} else if let error = error {
-		print("An error occurred: \(error)")
-	}
+    if let settings = settings {
+        print("Settings: \(settings)")
+    } else if let error = error {
+        print("An error occurred: \(error)")
+    }
 }
 
 // Start the service asynchronously
