@@ -416,7 +416,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 #endif
 
-    MLCDebugLog(@"connection:didFailWithError:%@", error);
     [self logDictionaryWithResponse:nil error:error];
 
     self.jsonCompletionHandler(self, nil, error, self.httpResponse);
@@ -434,7 +433,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
         jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:NSJSONReadingAllowFragments error:&error];
     }
 
-    MLCDebugLog(@"connectionDidFinishLoading: %@", connection);
     [self logDictionaryWithResponse:jsonObject error:error];
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
@@ -457,8 +455,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
 }
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    MLCDebugLog(@"connection: %@ willSendRequestForAuthenticationChallenge: %@", connection, challenge);
-    MLCDebugLog(@"challenge.protectionSpace: %@ challenge.proposedCredential: %@ challenge.previousFailureCount: %@ challenge.failureResponse: %@ challenge.error: %@ challenge.sender: %@", challenge.protectionSpace, challenge.proposedCredential, @(challenge.previousFailureCount), challenge.failureResponse, challenge.error, challenge.sender);
     [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
 }
 
