@@ -15,6 +15,7 @@
  */
 
 #import "MLCMedia.h"
+#import "MLCSessionManager.h"
 #import "MLCLogger.h"
 #import <CommonCrypto/CommonDigest.h>
 
@@ -157,16 +158,25 @@
     }
 
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(__unused NSURLResponse *response, NSData *data, NSError *error) {
+    [[MLCSessionManager.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSHTTPURLResponse *httpResponse;
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            httpResponse = (NSHTTPURLResponse *)response;
+        }
+
         if (data) {
             [cache setObject:data forKey:key];
             [data writeToFile:cachedPath atomically:YES];
             handler(data, error);
+        } else if (httpResponse.statusCode == 404 || httpResponse.statusCode == 200) {
+            [cache removeObjectForKey:key];
+            [NSFileManager.defaultManager removeItemAtPath:cachedPath error:nil];
+            handler(nil, error);
         } else {
             NSData *fallbackData = [NSData dataWithContentsOfFile:cachedPath];
             handler(fallbackData, error);
         }
-    }];
+    }] resume];
 }
 
 - (void)loadImageFromURL:(NSURL *)url handler:(MLCMediaImageCompletionHandler)handler {

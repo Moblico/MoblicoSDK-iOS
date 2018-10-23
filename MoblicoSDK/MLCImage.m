@@ -15,6 +15,7 @@
  */
 
 #import "MLCImage.h"
+#import "MLCSessionManager.h"
 #import "MLCEntity_Private.h"
 #import <CommonCrypto/CommonDigest.h>
 
@@ -178,7 +179,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
     NSURL *cacheFileURL = self.cacheFileURL;
 
     NSURLRequest *request = [NSURLRequest requestWithURL:self.url];
-    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [[MLCSessionManager.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSHTTPURLResponse *httpResponse;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             httpResponse = (NSHTTPURLResponse *)response;
@@ -196,7 +197,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
             NSData *fallbackData = [NSData dataWithContentsOfURL:cacheFileURL];
             handler(fallbackData, cacheFileURL, error);
         }
-    }];
+    }] resume];
 }
 
 @end
