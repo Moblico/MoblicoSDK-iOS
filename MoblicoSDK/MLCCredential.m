@@ -24,7 +24,8 @@
         NSMutableDictionary *accountDictionary = [NSMutableDictionary dictionary];
         accountDictionary[@"id"] = jsonObject[@"accountId"];
         accountDictionary[@"name"] = jsonObject[@"accountName"];
-        accountDictionary[@"parentAccountId"] = jsonObject[@"parentAccountId"];
+        accountDictionary[@"parentId"] = jsonObject[@"parentAccountId"];
+        accountDictionary[@"companyName"] = jsonObject[@"companyName"];
         _account = [[MLCAccount alloc] initWithJSONObject:accountDictionary];
     }
     return self;

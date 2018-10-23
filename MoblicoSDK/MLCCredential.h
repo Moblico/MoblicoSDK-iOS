@@ -24,6 +24,7 @@ NS_SWIFT_NAME(Account)
 @property (nonatomic) NSUInteger accountId NS_SWIFT_NAME(id);
 @property (nonatomic) NSUInteger parentId;
 @property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *companyName;
 
 @end
 
