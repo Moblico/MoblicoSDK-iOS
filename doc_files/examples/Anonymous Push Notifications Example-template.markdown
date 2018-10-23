@@ -12,12 +12,14 @@ This article outlines how to develop an iOS app to receive push notifications wi
 	_For more information see the [Getting Started Guide](http://developer.moblico.com/sdks/ios/docs/)_
 3. Configure the MLCServiceManager during `-application:didFinishLaunchingWithOptions:`
 
-		- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-			// Enter your Moblico API key here
-			[MLCServiceManager setAPIKey:@"YOUR_API_KEY_HERE"];
-			…
-			return YES;
-		}
+	```objc
+	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+		// Enter your Moblico API key here
+		[MLCServiceManager setAPIKey:@"YOUR_API_KEY_HERE"];
+		// …
+		return YES;
+	}
+	```
 
 ## Register Device
 
@@ -27,26 +29,30 @@ Follow these steps to register your device with Moblico:
 
 1. Register with Apple to receive push notifications
 
-		// Register with Apple for notifications
-		UIRemoteNotificationType types = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert;
-		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+	```objc
+	// Register with Apple for notifications
+	UIRemoteNotificationType types = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert;
+	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+	 ```
 
 2. Handle receiving the device token from Apple.
 
-		// Got deviceToken from Apple's Push Notification service.
-		- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
-		
-			// Send the device token to Moblico
-			MLCUsersService *createAnonymousDeviceService = [MLCUsersService createAnonymousDeviceWithDeviceToken:deviceToken handler:^(MLCStatus *status, NSError *error, NSHTTPURLResponse *response) {
-				if (response.statusCode == 200) {
-					NSLog(@"Registered Device Token: %@", deviceToken);
-				}
-				else {
-					NSLog(@"Unable to register Device.\nstatus: %@ error: %@ response: %@", status, error, response);
-				}
-			}];
-			[createAnonymousDeviceService start];
-		}
+	```objc
+	// Got deviceToken from Apple's Push Notification service.
+	- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
+
+		// Send the device token to Moblico
+		MLCUsersService *service = [MLCUsersService createAnonymousUserWithDeviceToken:deviceToken handler:^(MLCUser *user, NSError *error) {
+			if (user) {
+				NSLog(@"Registered device token: %@ for user: %@", deviceToken, user);
+			}
+			else {
+				NSLog(@"Unable to register device: %@", error);
+			}
+		}];
+		[service start];
+	}
+	```
 
 3. You should now see your user in the Moblico Admin portal.
 
@@ -57,20 +63,24 @@ Follow these steps to register your device with Moblico:
 
 Push notifications can enter your app in one of two ways.
 
-1. Your app is launched by the push notification. ``- application:didFinishLaunchingWithOptions:`` will be called with the push notification in the launchOptions dictionary. 
+1. Your app is launched by the push notification. `- application:didFinishLaunchingWithOptions:` will be called with the push notification in the launchOptions dictionary. 
 
-		- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-			NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-			…
-			return YES;
-		}
+	```objc
+	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+		NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+		// …
+		return YES;
+	}
+	```
 
-2. Your app is already running when the push notification is running. ``- application:didReceiveRemoteNotification:`` will be called with the push notification as the userInfo dictionary. 
+2. Your app is already running when the push notification is running. `- application:didReceiveRemoteNotification:` will be called with the push notification as the userInfo dictionary. 
 
-		- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo {
-			NSDictionary *pushNotification = userInfo;
-			…
-		}
+	```objc
+	- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo {
+		NSDictionary *pushNotification = userInfo;
+		// …
+	}
+	```
 
 *For more information on sending Push Notifications see step 3 of the [Moblico Push Notifications Guide][PushGuide].*
 
