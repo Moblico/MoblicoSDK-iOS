@@ -739,8 +739,8 @@ return; \
     MLCEntityLog(@"forwardInvocation: %@", invocation);
     NSString *key = NSStringFromSelector(invocation.selector);
     MLCEntityLog(@"forwardInvocation: %@ selector: %@", invocation, key);
-    NSString *setter = [self setterToGetter:key];
-    NSString *type = self._properties[setter ?: key];
+    NSString *setter = [self setterToGetter:key] ?: key;
+    NSString *type = self._properties[setter];
 
     if (type) {
         MLCEntityLog(@"getting %@ (%@)", key, type);
