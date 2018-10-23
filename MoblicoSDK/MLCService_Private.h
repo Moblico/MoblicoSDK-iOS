@@ -20,10 +20,10 @@
 
 typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) NS_SWIFT_NAME(MLCService.InternalJSONCompletionHandler);
 
-@interface MLCService () <NSURLConnectionDataDelegate>
+@interface MLCService ()
 
 @property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionHandler;
-@property (strong, nonatomic) NSURLConnection *connection;
+@property (strong, nonatomic) NSURLSessionDataTask *connection;
 @property (copy, nonatomic) NSURLRequest *request;
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
@@ -36,6 +36,7 @@ typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id j
 @property (copy, nonatomic) MLCServiceJSONCompletionHandler invalidServiceJsonCompletionHandler;
 @property (copy, nonatomic) MLCServiceSuccessCompletionHandler invalidServiceSuccessCompletionHandler;
 
+- (void)handleData:(NSData * _Nullable)data response:(NSURLResponse * _Nullable) response error:(NSError * _Nullable)error;
 + (instancetype)_invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler;
 + (instancetype)_invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
 

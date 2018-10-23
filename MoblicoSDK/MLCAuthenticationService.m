@@ -14,6 +14,7 @@
  limitations under the License.
  */
 
+#import "MLCSessionManager.h"
 #import "MLCService_Private.h"
 #import "MLCAuthenticationService.h"
 #import "MLCAuthenticationToken.h"
@@ -63,11 +64,13 @@
 
 - (void)start {
     [self cancel];
-    self.connection = [NSURLConnection connectionWithRequest:self.request delegate:self];
+    self.connection = [MLCSessionManager.session dataTaskWithRequest:self.request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [self handleData:data response:response error:error];
+    }];
 #if TARGET_OS_IPHONE
     UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
 #endif
-    [self.connection start];
+    [self.connection resume];
 }
 
 @end

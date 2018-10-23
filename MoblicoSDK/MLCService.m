@@ -17,6 +17,7 @@
 #import "MLCService.h"
 #import "MLCService_Private.h"
 #import "MLCServiceManager.h"
+#import "MLCSessionManager.h"
 
 #import "MLCEntity_Private.h"
 #import "MLCStatus.h"
@@ -86,11 +87,13 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
             self.jsonCompletionHandler(self, nil, error, nil);
         } else {
             self.request = authenticatedRequest;
-            self.connection = [NSURLConnection connectionWithRequest:authenticatedRequest delegate:self];
+            self.connection = [MLCSessionManager.session dataTaskWithRequest:authenticatedRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable taskError) {
+                [self handleData:data response:response error:taskError];
+            }];
 #if TARGET_OS_IPHONE
             UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
 #endif
-            [self.connection start];
+            [self.connection resume];
         }
     }];
 }
@@ -400,40 +403,34 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     MLCDebugLog(@"\n=====\n%@\n=====", data);
 }
 
-#pragma mark - NSURLConnectionDataDelegate
-
-- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)handleData:(NSData * _Nullable)data response:(NSURLResponse * _Nullable) response error:(NSError * _Nullable)error {
     self.httpResponse = (NSHTTPURLResponse *)response;
     self.receivedData.length = 0;
-}
-
-- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
     [self.receivedData appendData:data];
-}
 
-- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
+    if (error) {
+#if TARGET_OS_IPHONE
+        UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
+#endif
+
+        [self logDictionaryWithResponse:nil error:error];
+
+        self.jsonCompletionHandler(self, nil, error, self.httpResponse);
+        return;
+    }
+
 #if TARGET_OS_IPHONE
     UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
 #endif
 
-    [self logDictionaryWithResponse:nil error:error];
-
-    self.jsonCompletionHandler(self, nil, error, self.httpResponse);
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-#if TARGET_OS_IPHONE
-    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
-#endif
-
-    NSError *error;
+    NSError *jsonError;
     id jsonObject = nil;
 
     if (self.receivedData.length) {
-        jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:NSJSONReadingAllowFragments error:&error];
+        jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:NSJSONReadingAllowFragments error:&jsonError];
     }
 
-    [self logDictionaryWithResponse:jsonObject error:error];
+    [self logDictionaryWithResponse:jsonObject error:jsonError];
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *statusJSON = jsonObject[@"status"];
@@ -454,9 +451,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     self.receivedData = nil;
 }
 
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
-}
 
 + (instancetype)_invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler {
     MLCService *service = [[self alloc] init];

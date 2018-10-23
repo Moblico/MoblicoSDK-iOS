@@ -26,3 +26,21 @@ Cartfile.resolved
 # Custom
 MoblicoSDK.framework
 docs
+
+
+# FauxPas
+
+## Temporary files
+*.swp
+
+## The Xcode build folder
+build/
+DerivedData/
+
+## Xcode private settings files
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+## Xcode moved-aside files
+*.moved-aside
