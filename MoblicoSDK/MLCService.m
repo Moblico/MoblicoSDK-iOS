@@ -345,17 +345,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return _receivedData;
 }
 
-#pragma mark - NSURLConnectionDataDelegate
-
-- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    self.httpResponse = (NSHTTPURLResponse *)response;
-    self.receivedData.length = 0;
-}
-
-- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [self.receivedData appendData:data];
-}
-
 - (void)logDictionaryWithResponse:(id)response error:(NSError *)error {
     NSString *className = NSStringFromClass([self class]);
 
@@ -409,6 +398,17 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
                            @"error": error.localizedDescription ?: @"(nil)"};
 
     MLCDebugLog(@"\n=====\n%@\n=====", data);
+}
+
+#pragma mark - NSURLConnectionDataDelegate
+
+- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    self.httpResponse = (NSHTTPURLResponse *)response;
+    self.receivedData.length = 0;
+}
+
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [self.receivedData appendData:data];
 }
 
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
