@@ -126,14 +126,6 @@ NS_SWIFT_NAME(ServiceManager)
  Set the current user for authentication and optionally store the credentials in the keychain.
 
  @param user                The MLCUser to use as the current user.
- @param rememberCredentials Store the credentials in the keystore?
- */
-- (void)setCurrentUser:(nullable MLCUser *)user remember:(BOOL)rememberCredentials;
-
-/**
- Set the current user for authentication and optionally store the credentials in the keychain.
-
- @param user                The MLCUser to use as the current user.
  @param childKeyword        Account keyword used during authentication.
  @param rememberCredentials Store the credentials in the keystore?
  */

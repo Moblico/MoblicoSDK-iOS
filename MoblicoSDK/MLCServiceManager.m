@@ -170,14 +170,11 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     }
 }
 
-- (void)setCurrentUser:(MLCUser *)user remember:(BOOL)rememberCredentials {
-    [self setCurrentUser:user childKeyword:nil remember:rememberCredentials];
-}
-
 - (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword {
     @synchronized (self) {
         self.currentUser = user;
-        self.childKeyword = childKeyword;
+        self.childKeyword = childKeyword ?: @"";
+        self.authenticationToken = nil;
     }
 }
 

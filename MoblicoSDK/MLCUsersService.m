@@ -119,11 +119,12 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     NSDictionary *parameters = @{@"username": username};
     NSString *path = [@"device" stringByAppendingPathComponent:device];
 
+    NSString *childKeyword = MLCServiceManager.sharedServiceManager.childKeyword;
     return [self createSuccess:path parameters:parameters handler:^(BOOL success, NSError *error) {
         MLCUser *user = nil;
         if (success) {
             user = [MLCUser userWithUsername:username];
-            [MLCServiceManager.sharedServiceManager setCurrentUser:user remember:NO];
+            [MLCServiceManager.sharedServiceManager setCurrentUser:user childKeyword:childKeyword remember:NO];
         }
         handler(user, error);
     }];
