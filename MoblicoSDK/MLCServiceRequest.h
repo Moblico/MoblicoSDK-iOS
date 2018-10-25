@@ -42,11 +42,12 @@ FOUNDATION_EXPORT MLCServiceRequestMethod const MLCServiceRequestMethodDELETE;
 
 @interface MLCServiceRequest : NSObject
 @property (nonatomic, copy, readonly, class) NSString *userAgent;
-@property (nonatomic, strong, readonly, nullable) NSURL *URL;
+@property (nonatomic, strong, readonly, nullable) NSURLComponents *components;
 @property (nonatomic, copy, readonly) MLCServiceRequestMethod method;
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *headers;
 @property (nonatomic, copy, readonly, nullable) NSData *body;
 @property (nonatomic, copy, readonly, nullable) NSURLRequest *URLRequest;
+@property (nonatomic, copy, nullable) NSURLRequest *authenticatedURLRequest;
 
 + (instancetype)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)servicePath parameters:(nullable NSDictionary *)parameters;
 

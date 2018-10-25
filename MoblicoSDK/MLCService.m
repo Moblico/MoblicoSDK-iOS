@@ -86,7 +86,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
         if (error) {
             self.jsonCompletionHandler(self, nil, error, nil);
         } else {
-            self.request = authenticatedRequest;
+            self.request.authenticatedURLRequest = authenticatedRequest;
             self.connection = [MLCSessionManager.session dataTaskWithRequest:authenticatedRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable taskError) {
                 [self handleData:data response:response error:taskError];
             }];
@@ -106,7 +106,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
 + (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler {
     MLCService *service = [[self alloc] init];
     service.jsonCompletionHandler = handler;
-    service.request = [MLCServiceRequest requestWithMethod:method path:path parameters:parameters].URLRequest;
+    service.request = [MLCServiceRequest requestWithMethod:method path:path parameters:parameters];
     return service;
 }
 
@@ -342,14 +342,14 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
 
 - (void)logDictionaryWithData:(NSData *)data jsonObject:(id)jsonObject jsonError:(NSError *)jsonError httpResponse:(NSHTTPURLResponse *)httpResponse error:(NSError *)error {
     NSString *className = NSStringFromClass([self class]);
-    NSString *method = self.request.HTTPMethod;
-    NSURLComponents *components = [NSURLComponents componentsWithURL:self.request.URL resolvingAgainstBaseURL:NO];
+    NSString *method = self.request.method;
+    NSURLComponents *components = self.request.components;
 
     if (MLCServiceManager.logging < MLCServiceManagerLoggingEnabledVerbose) {
         MLCLog(@"%@ (%@): %@ %@", @(httpResponse.statusCode).stringValue, className, method, components.path ?: @"/");
     }
 
-    NSMutableDictionary *headerFields = [self.request.allHTTPHeaderFields mutableCopy];
+    NSMutableDictionary *headerFields = [(self.request.authenticatedURLRequest.allHTTPHeaderFields ?: self.request.headers ?: @{}) mutableCopy];
     if (!headerFields[@"User-Agent"]) {
         headerFields[@"User-Agent"] = [MLCServiceRequest userAgent];
     }
@@ -360,10 +360,10 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     }];
 
     NSString *bodyString;
-    if (self.request.HTTPBody) {
-        bodyString = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
+    if (self.request.body) {
+        bodyString = [[NSString alloc] initWithData:self.request.body encoding:NSUTF8StringEncoding];
         if (!bodyString) {
-            bodyString = [self.request.HTTPBody base64EncodedStringWithOptions:0];
+            bodyString = [self.request.body base64EncodedStringWithOptions:0];
         }
         if (bodyString) {
             [curlArguments appendFormat:@" -d '%@'", bodyString];

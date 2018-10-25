@@ -41,7 +41,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
 
 @interface MLCServiceRequest ()
 
-@property (nonatomic, strong, readwrite) NSURL *URL;
+@property (nonatomic, strong, readwrite) NSURLComponents *components;
 @property (nonatomic, copy, readwrite) MLCServiceRequestMethod method;
 @property (nonatomic, copy, readwrite) NSDictionary<NSString *, NSString *> *headers;
 @property (nonatomic, copy, readwrite) NSData *body;
@@ -194,19 +194,20 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
         components.query = nil;
     }
 
-    request.URL = components.URL;
+    request.components = components;
     request.headers = headers;
     
     return request;
 }
 
 - (NSURLRequest *)URLRequest {
-    if (!self.URL) {
+    NSURL *url = self.components.URL;
+    if (!url) {
         return nil;
     }
     
     if (!_URLRequest) {
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.URL];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         request.HTTPMethod = self.method;
         request.HTTPBody = self.body;
         [self.headers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, __unused BOOL * _Nonnull stop) {
