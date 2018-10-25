@@ -340,33 +340,21 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [deserializedArray copy];
 }
 
-- (NSMutableData *)receivedData {
-    if (!_receivedData) {
-        self.receivedData = [[NSMutableData alloc] init];
-    }
-
-    return _receivedData;
-}
-
-- (void)logDictionaryWithResponse:(id)response error:(NSError *)error {
+- (void)logDictionaryWithData:(NSData *)data jsonObject:(id)jsonObject jsonError:(NSError *)jsonError httpResponse:(NSHTTPURLResponse *)httpResponse error:(NSError *)error {
     NSString *className = NSStringFromClass([self class]);
-
+    NSString *method = self.request.HTTPMethod;
     NSURLComponents *components = [NSURLComponents componentsWithURL:self.request.URL resolvingAgainstBaseURL:NO];
-    MLCLog(@"%@ (%@): %@ %@", @(self.httpResponse.statusCode).stringValue, className, self.request.HTTPMethod ?: @"(nil)", components.path ?: @"(nil)");
 
-    NSString *responseObject;
-    if (response) {
-        responseObject = response;
-    } else if (self.receivedData.length > 0) {
-        responseObject = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+    if (MLCServiceManager.logging < MLCServiceManagerLoggingEnabledVerbose) {
+        MLCLog(@"%@ (%@): %@ %@", @(httpResponse.statusCode).stringValue, className, method, components.path ?: @"/");
     }
 
     NSMutableDictionary *headerFields = [self.request.allHTTPHeaderFields mutableCopy];
     if (!headerFields[@"User-Agent"]) {
-        headerFields[@"User-Agent"] = [[self class] userAgent];
+        headerFields[@"User-Agent"] = [MLCServiceRequest userAgent];
     }
-    NSMutableString *curlArguments = [NSMutableString string];
 
+    NSMutableString *curlArguments = [NSMutableString string];
     [headerFields enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
         [curlArguments appendFormat:@" -H '%@: %@'", key, obj];
     }];
@@ -382,41 +370,29 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
         }
     }
 
-    NSMutableString *responseMessage = [NSMutableString stringWithFormat:@"HTTP/1.1 %@ %@\n", @(self.httpResponse.statusCode).stringValue, [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode]];
-    [self.httpResponse.allHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+    MLCDebugLog(@"curl -X %@ \"%@\"%@", method, components.URL.absoluteString, curlArguments);
+
+    if (error) {
+        MLCLog(@"Error: (%@ - %@) %@", error.domain, @(error.code), error.localizedDescription);
+    }
+
+    if (jsonError) {
+        MLCLog(@"Parse Error: (%@ - %@) %@", jsonError.domain, @(jsonError.code), jsonError.localizedDescription);
+    }
+
+    NSMutableString *responseMessage = [NSMutableString stringWithFormat:@"HTTP/1.1 %@ %@\n", @(httpResponse.statusCode).stringValue, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]];
+    [httpResponse.allHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         [responseMessage appendFormat:@"%@: %@\n", key, obj];
     }];
-    [responseMessage appendFormat:@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]];
-    MLCDebugLog(@"curl -X %@ \"%@\"%@\n%@%%\n\n", self.request.HTTPMethod, [self.request.URL absoluteString], curlArguments, responseMessage);
-
-    NSDictionary *data = @{@"class": className ?: @"(nil)",
-                           @"response": responseObject ?: @"(nil)",
-                           @"url": self.request.URL.absoluteString ?: @"(nil)",
-                           @"method": self.request.HTTPMethod ?: @"(nil)",
-                           @"body": bodyString ?: @"(nil)",
-                           @"requestHeader": self.request.allHTTPHeaderFields ?: @{},
-                           @"responseHeaders": self.httpResponse.allHeaderFields ?: @{},
-                           @"statusCode": @(self.httpResponse.statusCode).stringValue,
-                           @"statusCodeString": [NSHTTPURLResponse localizedStringForStatusCode:self.httpResponse.statusCode],
-                           @"error": error.localizedDescription ?: @"(nil)"};
-
-    MLCDebugLog(@"\n=====\n%@\n=====", data);
+//    [responseMessage appendFormat:@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+    MLCDebugLog(@"Response String: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    MLCDebugLog(@"Response Object: %@", jsonObject);
 }
 
 - (void)handleData:(NSData * _Nullable)data response:(NSURLResponse * _Nullable) response error:(NSError * _Nullable)error {
-    self.httpResponse = (NSHTTPURLResponse *)response;
-    self.receivedData.length = 0;
-    [self.receivedData appendData:data];
-
-    if (error) {
-#if TARGET_OS_IPHONE
-        UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
-#endif
-
-        [self logDictionaryWithResponse:nil error:error];
-
-        self.jsonCompletionHandler(self, nil, error, self.httpResponse);
-        return;
+    NSHTTPURLResponse *httpResponse;
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        httpResponse = (NSHTTPURLResponse *)response;
     }
 
 #if TARGET_OS_IPHONE
@@ -426,11 +402,16 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     NSError *jsonError;
     id jsonObject = nil;
 
-    if (self.receivedData.length) {
-        jsonObject = [NSJSONSerialization JSONObjectWithData:self.receivedData options:NSJSONReadingAllowFragments error:&jsonError];
+    if (data.length) {
+        jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
     }
 
-    [self logDictionaryWithResponse:jsonObject error:jsonError];
+    [self logDictionaryWithData:data jsonObject:jsonObject jsonError:jsonError httpResponse:httpResponse error:jsonError];
+
+    if (error || jsonError) {
+        self.jsonCompletionHandler(self, nil, error ?: jsonError, httpResponse);
+        return;
+    }
 
     if ([jsonObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *statusJSON = jsonObject[@"status"];
@@ -438,8 +419,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
             MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:statusJSON];
             if (status.type != MLCStatusTypeSuccess) {
                 MLCStatusError *statusError = [[MLCStatusError alloc] initWithStatus:status];
-                self.jsonCompletionHandler(self, nil, statusError, self.httpResponse);
-                self.receivedData = nil;
+                self.jsonCompletionHandler(self, nil, statusError, httpResponse);
                 return;
             }
         }
@@ -447,8 +427,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
         jsonObject = nil;
     }
 
-    self.jsonCompletionHandler(self, jsonObject, nil, self.httpResponse);
-    self.receivedData = nil;
+    self.jsonCompletionHandler(self, jsonObject, nil, httpResponse);
 }
 
 

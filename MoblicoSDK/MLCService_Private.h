@@ -25,8 +25,6 @@ typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id j
 @property (copy, nonatomic) MLCServiceInternalJSONCompletionHandler jsonCompletionHandler;
 @property (strong, nonatomic) NSURLSessionDataTask *connection;
 @property (copy, nonatomic) NSURLRequest *request;
-@property (strong, nonatomic) NSMutableData *receivedData;
-@property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
 #if OS_OBJECT_USE_OBJC
 @property (strong, nonatomic) dispatch_group_t dispatchGroup;
 #else
