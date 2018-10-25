@@ -82,7 +82,8 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     if (self.connection) {
         [self cancel];
     }
-    [MLCServiceManager.sharedServiceManager authenticateRequest:self.request handler:^(NSURLRequest *authenticatedRequest, NSError *error) {
+
+    MLCServiceManagerAuthenticationCompletionHandler handler = ^(NSURLRequest *authenticatedRequest, NSError *error) {
         if (error) {
             self.jsonCompletionHandler(self, nil, error, nil);
         } else {
@@ -95,7 +96,13 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
 #endif
             [self.connection resume];
         }
-    }];
+    };
+
+    if (self.skipAuthentication) {
+        handler(self.request.URLRequest, nil);
+    } else {
+        [MLCServiceManager.sharedServiceManager authenticateRequest:self.request.URLRequest handler:handler];
+    }
 }
 
 - (void)cancel {
