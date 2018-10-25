@@ -62,15 +62,8 @@
     return [self _read:[MLCAuthenticationToken collectionName] parameters:parameters handler:handler];
 }
 
-- (void)start {
-    [self cancel];
-    self.connection = [MLCSessionManager.session dataTaskWithRequest:self.request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [self handleData:data response:response error:error];
-    }];
-#if TARGET_OS_IPHONE
-    UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
-#endif
-    [self.connection resume];
+- (BOOL)skipAuthentication {
+    return YES;
 }
 
 @end
