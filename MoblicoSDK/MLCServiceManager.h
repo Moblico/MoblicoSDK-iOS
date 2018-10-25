@@ -123,6 +123,14 @@ NS_SWIFT_NAME(ServiceManager)
 @property (readonly, nullable, copy) NSString *currentToken;
 
 /**
+ Set the current user for authentication and optionally store the credentials in the keychain. The current childKeyword (if any) will not be cleared.
+
+ @param user                The MLCUser to use as the current user.
+ @param rememberCredentials Store the credentials in the keystore?
+ */
+- (void)setCurrentUser:(nullable MLCUser *)user remember:(BOOL)rememberCredentials;
+
+/**
  Set the current user for authentication and optionally store the credentials in the keychain.
 
  @param user                The MLCUser to use as the current user.
