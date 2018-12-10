@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,7 @@ FOUNDATION_EXPORT MLCUsersServiceVerifyResults const MLCUsersServiceVerifyResult
 
 typedef void(^MLCUsersServiceVerifyExistingUserCompletionHandler)(MLCUsersServiceVerifyResults _Nullable results, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.VerifyExistingUserCompletionHandler);
 typedef void(^MLCUsersServiceResetPasswordCompletionHandler)(MLCResetPassword *_Nullable results, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.ResetPasswordCompletionHandler);
+typedef void(^MLCUsersServiceLookupUsernameCompletionHandler)(NSString *_Nullable username, NSError *_Nullable error) NS_SWIFT_NAME(MLCUsersService.LookupUsernameCompletionHandler);
 
 NS_SWIFT_NAME(UsersService)
 @interface MLCUsersService : MLCService
@@ -37,6 +38,11 @@ NS_SWIFT_NAME(UsersService)
 + (instancetype)verifyExistingUserWithUsername:(NSString *)username handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler;
 + (instancetype)verifyExistingUserWithPhone:(NSString *)phone handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler;
 + (instancetype)verifyExistingUserWithEmail:(NSString *)email handler:(MLCUsersServiceVerifyExistingUserCompletionHandler)handler;
+
++ (instancetype)lookupUsernameWithUsername:(NSString *)username handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler;
++ (instancetype)lookupUsernameWithPhone:(NSString *)phone handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler;
++ (instancetype)lookupUsernameWithEmail:(NSString *)email handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler;
+
 + (instancetype)createUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(create(_:handler:));
 + (instancetype)readUser:(MLCUser *)user handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCUsersServiceResourceCompletionHandler)handler;

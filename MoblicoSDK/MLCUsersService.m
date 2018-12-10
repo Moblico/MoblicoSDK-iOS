@@ -1,12 +1,12 @@
 /*
  Copyright 2012 Moblico Solutions LLC
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this work except in compliance with the License.
  You may obtain a copy of the License in the LICENSE file, or at:
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -181,6 +181,46 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     NSDictionary *parameters = @{@"accountId": @(account.accountId).stringValue};
 
     return [self _update:path parameters:parameters handler:handler];
+}
+
++ (instancetype)lookupUsernameWithUsername:(NSString *)username handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
+	NSDictionary *parameters = username ? @{@"username": username} : nil;
+	return [self lookupUsernameWithSearchParameters:parameters handler:handler];
+}
+
++ (instancetype)lookupUsernameWithPhone:(NSString *)phone handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
+	NSDictionary *parameters = phone ? @{@"phone": phone} : nil;
+	return [self lookupUsernameWithSearchParameters:parameters handler:handler];
+}
+
++ (instancetype)lookupUsernameWithEmail:(NSString *)email handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
+	NSDictionary *parameters = email ? @{@"email": email} : nil;
+	return [self lookupUsernameWithSearchParameters:parameters handler:handler];
+}
+
++ (instancetype)lookupUsernameWithSearchParameters:(NSDictionary<NSString *, NSString *> *)searchParameters handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
+    if (searchParameters.count == 0) {
+        MLCServiceError *error = [MLCServiceError missingParameterErrorWithDescription:NSLocalizedString(@"Missing search parameters.", nil)];
+        return [self _invalidServiceWithError:error handler:handler];
+    }
+    NSString *path = [NSString pathWithComponents:@[[MLCUser collectionName], @"exists"]];
+
+    NSMutableDictionary *parameters = [searchParameters mutableCopy];
+    parameters[@"lookup"] = @"true";
+    return [self serviceForMethod:MLCServiceRequestMethodGET
+                             path:path
+                       parameters:parameters
+                          handler:^(MLCService *service, id jsonObject, NSError *serviceError, __unused NSHTTPURLResponse *response) {
+                              dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                  NSString *username = jsonObject[@"username"];
+                                  MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject[@"status"]];
+                                  NSError *error = status ? [[MLCStatusError alloc] initWithStatus:status] : serviceError;
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      handler(username, error);
+                                      service.dispatchGroup = nil;
+                                  });
+                              });
+                          }];
 }
 
 @end
