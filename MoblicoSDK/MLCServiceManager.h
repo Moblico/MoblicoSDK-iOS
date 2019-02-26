@@ -67,7 +67,7 @@ NS_SWIFT_NAME(MLCServiceManager.Configuration)
  on the shared instance.
  */
 NS_SWIFT_NAME(ServiceManager)
-@interface MLCServiceManager : NSObject
+@interface MLCServiceManager : NSObject <NSCopying>
 
 @property (atomic, class, strong, nullable) MLCServiceManagerConfiguration *configuration;
 

@@ -45,6 +45,13 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
     MLCUser *_currentUser;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone {
+    MLCServiceManager *copy = [[MLCServiceManager allocWithZone:zone] init];
+    [copy setCurrentUser:[self.currentUser copy] childKeyword:[self.childKeyword copy]];
+    copy.authenticationToken = [self.authenticationToken copy];
+    return copy;
+}
+
 - (NSString *)serviceName {
     @synchronized (self) {
         if (!_serviceName) {
