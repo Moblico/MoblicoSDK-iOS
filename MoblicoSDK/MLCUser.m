@@ -228,4 +228,8 @@ static NSArray<NSString *> *_requiredParameters = nil;
     return validations;
 }
 
+- (BOOL)isAnonymous {
+    return [self.username hasPrefix:@"Anonymous."];
+}
+
 @end

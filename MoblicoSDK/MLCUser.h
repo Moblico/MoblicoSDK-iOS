@@ -190,6 +190,8 @@ NS_SWIFT_NAME(User)
 @property (nonatomic) NSUInteger locationId;
 @property (nonatomic) NSUInteger merchantId;
 
+@property (nonatomic, readonly, getter=isAnonymous) BOOL anonymous;
+
 @property (nonatomic, copy, class) NSArray<NSString *> *requiredParameters;
 
 /**
