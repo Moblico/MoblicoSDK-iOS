@@ -101,7 +101,8 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     if (self.skipAuthentication) {
         handler(self.request.URLRequest, nil);
     } else {
-        [MLCServiceManager.sharedServiceManager authenticateRequest:self.request.URLRequest handler:handler];
+        MLCServiceManager *manager = self.serviceManager ?: MLCServiceManager.sharedServiceManager;
+        [manager authenticateRequest:self.request.URLRequest handler:handler];
     }
 }
 

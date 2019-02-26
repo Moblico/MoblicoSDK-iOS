@@ -18,6 +18,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class MLCServiceManager;
 @class MLCServiceError;
 @class MLCEntity;
 
@@ -72,6 +73,7 @@ typedef void(^MLCServiceResourceCompletionHandler)(__kindof MLCEntity * _Nullabl
  */
 NS_SWIFT_NAME(Service)
 @interface MLCService : NSObject
+@property (nonatomic, copy, nullable) MLCServiceManager *serviceManager;
 - (void)start;
 - (void)cancel;
 @end
