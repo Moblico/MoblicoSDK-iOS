@@ -105,6 +105,10 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     return [self updateResource:user handler:handler];
 }
 
++ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
+    return [self destroyResource:user handler:handler];
+}
+
 + (instancetype)createAnonymousUserWithDeviceToken:(NSData *)deviceToken handler:(MLCUsersServiceResourceCompletionHandler)handler {
     NSString *device = MLCDeviceIdFromDeviceToken(deviceToken);
     NSString *username = nil;

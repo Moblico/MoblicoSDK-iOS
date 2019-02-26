@@ -47,6 +47,7 @@ NS_SWIFT_NAME(UsersService)
 + (instancetype)readUser:(MLCUser *)user handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)addUser:(MLCUser *)user toAccount:(MLCAccount *)account handler:(MLCServiceSuccessCompletionHandler)handler;
 
