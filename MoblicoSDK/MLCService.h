@@ -56,7 +56,7 @@ typedef void(^MLCServiceSuccessCompletionHandler)(BOOL success, NSError *_Nullab
  */
 typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<__kindof MLCEntity *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.CollectionCompletionHandler);
 
-#define MLCServiceCreateCollectionCompletionHandler(Name, Type) typedef void(^Name ## CollectionCompletionHandler)(NSArray<Type *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(Name.CollectionCompletionHandler)
+#define MLCServiceCreateCollectionCompletionHandler(Name, Entity) typedef void(^Name ## CollectionCompletionHandler)(NSArray<Entity *> *_Nullable collection, NSError *_Nullable error) NS_SWIFT_NAME(Name.CollectionCompletionHandler)
 
 /**
  The callback handler for resource MLCService requests
@@ -66,7 +66,7 @@ typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<__kindof MLCEntity 
  */
 typedef void(^MLCServiceResourceCompletionHandler)(__kindof MLCEntity *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.ResourceCompletionHandler);
 
-#define MLCServiceCreateResourceCompletionHandler(Name, Type) typedef void(^Name ## ResourceCompletionHandler)(Type *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)
+#define MLCServiceCreateResourceCompletionHandler(Name, Entity) typedef void(^Name ## ResourceCompletionHandler)(Entity *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)
 
 /**
  Base class for all Moblico service objects.

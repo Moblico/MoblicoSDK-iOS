@@ -490,7 +490,7 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
 
     /// Cart has not been initiated.
     MLCStatusTypeCartNotInitialized = 154,
-} NS_SWIFT_NAME(MLCStatus.Type);
+} NS_SWIFT_NAME(MLCStatus.StatusType);
 
 /**
  MLCStatus objects are created by services that do not retrieve data,

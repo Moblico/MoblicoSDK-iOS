@@ -30,7 +30,7 @@ FOUNDATION_EXPORT MLCMessageServiceStatus const MLCMessageServiceStatusDelivered
 
 typedef NS_ENUM(NSUInteger, MLCMessageServiceType) {
     MLCMessageServiceTypeShare
-} NS_SWIFT_NAME(MLCMessageService.Type);
+} NS_SWIFT_NAME(MLCMessageService.MessageServiceType);
 
 /**
  Messages can be sent from mobile applications to multiple devices, using the

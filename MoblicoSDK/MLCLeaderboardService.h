@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MLCLeader;
 
 /// Leaderboard types
-typedef NSString *MLCLeaderboardServiceType NS_TYPED_ENUM NS_SWIFT_NAME(MLCLeaderboardService.Type);
+typedef NSString *MLCLeaderboardServiceType NS_TYPED_ENUM NS_SWIFT_NAME(MLCLeaderboardService.LeaderboardServiceType);
 
 /// Overall Points
 FOUNDATION_EXPORT MLCLeaderboardServiceType const MLCLeaderboardServiceTypeOverallPoints;
