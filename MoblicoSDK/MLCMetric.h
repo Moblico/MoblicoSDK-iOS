@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 /// Indicates the type of metric.
-typedef NSString *MLCMetricType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(MLCMetric.MetricType);
+typedef NSString *MLCMetricType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(MetricType);
 
 /// Specifies that the application started.
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeApplicationStart;

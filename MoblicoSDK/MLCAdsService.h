@@ -19,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Type of Ads supported by Moblico.
-typedef NSString *MLCAdsServiceType NS_TYPED_ENUM NS_SWIFT_NAME(MLCAdsService.AdsServiceType);
+typedef NSString *MLCAdsServiceType NS_TYPED_ENUM NS_SWIFT_NAME(AdsServiceType);
 /// Specifies a Banner ad.
 FOUNDATION_EXPORT MLCAdsServiceType const MLCAdsServiceTypeBanner;
 /// Specifies a Promo ad.
