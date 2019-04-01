@@ -45,6 +45,10 @@ MLCUserContactPreference const MLCUserContactPreferenceBoth = @"BOTH";
 
 static NSArray<NSString *> *_requiredParameters = nil;
 
+- (BOOL)isAnonymous {
+    return [self.username hasPrefix:@"Anonymous."];
+}
+
 + (NSArray<NSString *> *)requiredParameters {
     if (!_requiredParameters) {
         _requiredParameters = @[];
@@ -226,10 +230,6 @@ static NSArray<NSString *> *_requiredParameters = nil;
                                                     }] forKey:@"optinPhone"];
     
     return validations;
-}
-
-- (BOOL)isAnonymous {
-    return [self.username hasPrefix:@"Anonymous."];
 }
 
 @end
