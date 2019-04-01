@@ -19,32 +19,8 @@
 
 @implementation MLCNotification
 
-//+ (id)deserialize:(id)object {
-//    Notification * notification = [[Notification alloc] init];
-//
-//    for (id temp in object) {
-//        id key = temp;
-//        id value = object[key];
-//        if ([key isEqualToString:@"id"]) key = @"notificationId";
-//        if ([key isEqualToString:@"notificationMessage"]) key = ;
-//        if ([key isEqualToString:@"notificationTitle"]) key = @"title";
-//        if ([key isEqualToString:@"notificationType"]) key = @"type";
-//        @try {
-//            [notification setValue:value forKey:key];
-//        }
-//        @catch (NSException *exception) {
-//            if ([[exception name] isEqualToString:NSUndefinedKeyException]) {
-//                MLCLogDebug(@"Notification does not recognize the property %@", key);
-//            } else MLCLogDebug(@"Notification had an exception: %@", exception);
-//        }
-//    }
-//    return notification;
-//}
-
 + (NSDictionary *)renamedPropertiesDuringDeserialization {
-    NSMutableDictionary *renamed = [@{@"notificationMessage": @"message",
-                                      @"notificationTitle": @"title",
-                                      @"notificationType": @"type"} mutableCopy];
+    NSMutableDictionary *renamed = [@{@"notificationMessage": @"message", @"notificationTitle": @"title", @"notificationType": @"type"} mutableCopy];
 
     [renamed addEntriesFromDictionary:[super renamedPropertiesDuringDeserialization]];
 

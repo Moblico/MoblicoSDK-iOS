@@ -49,7 +49,7 @@
         if (_attributes == nil) {
             _attributes = @{};
         }
-        
+
         NSString *identifier = [NSString stringWithFormat:@"%@-LOCATION", @(_locationId)];
 
         if ([jsonObject[@"geoNotificationEnabled"] boolValue]) {

@@ -78,7 +78,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
 
     NSString *path = [NSString pathWithComponents:@[[MLCUser collectionName], @"exists"]];
 
-    return [self readSuccess:path parameters:@{key: value} handler:^(BOOL success, NSError * _Nullable error) {
+    return [self readSuccess:path parameters:@{key: value} handler:^(BOOL success, NSError *_Nullable error) {
         if (success) {
             handler(MLCUsersServiceVerifyResultsFound, nil);
         } else if ([MLCStatus typeFromError:error] == MLCStatusTypeUserNotFound) {
@@ -188,18 +188,18 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
 }
 
 + (instancetype)lookupUsernameWithUsername:(NSString *)username handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
-	NSDictionary *parameters = username ? @{@"username": username} : nil;
-	return [self lookupUsernameWithSearchParameters:parameters handler:handler];
+    NSDictionary *parameters = username ? @{@"username": username} : nil;
+    return [self lookupUsernameWithSearchParameters:parameters handler:handler];
 }
 
 + (instancetype)lookupUsernameWithPhone:(NSString *)phone handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
-	NSDictionary *parameters = phone ? @{@"phone": phone} : nil;
-	return [self lookupUsernameWithSearchParameters:parameters handler:handler];
+    NSDictionary *parameters = phone ? @{@"phone": phone} : nil;
+    return [self lookupUsernameWithSearchParameters:parameters handler:handler];
 }
 
 + (instancetype)lookupUsernameWithEmail:(NSString *)email handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {
-	NSDictionary *parameters = email ? @{@"email": email} : nil;
-	return [self lookupUsernameWithSearchParameters:parameters handler:handler];
+    NSDictionary *parameters = email ? @{@"email": email} : nil;
+    return [self lookupUsernameWithSearchParameters:parameters handler:handler];
 }
 
 + (instancetype)lookupUsernameWithSearchParameters:(NSDictionary<NSString *, NSString *> *)searchParameters handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler {

@@ -52,6 +52,7 @@
 
     return [self findEventsWithSearchParameters:searchParameters handler:handler];
 }
+
 + (instancetype)findEventsWithType:(NSString *)type liveOnly:(BOOL)liveOnly handler:(MLCEventsServiceCollectionCompletionHandler)handler {
     NSMutableDictionary *searchParameters = [NSMutableDictionary dictionaryWithCapacity:2];
     if (type.length) searchParameters[@"type"] = type;

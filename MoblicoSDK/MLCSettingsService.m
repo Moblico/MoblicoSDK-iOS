@@ -23,10 +23,10 @@ static NSString *const MLCSettingsDefaultKey = @"MLCSettingsDefault";
 static NSString *const MLCSettingsOverrideKey = @"MLCSettingsOverride";
 
 @interface MLCSettings ()
-
-@property (nonatomic, copy) NSDictionary *dictionary;
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 @property (nonatomic, class, copy, readonly) NSNumberFormatter *numberFormatter;
+@property (nonatomic, copy) NSDictionary *dictionary;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 @end
 
 @implementation MLCSettingsService

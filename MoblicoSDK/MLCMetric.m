@@ -69,7 +69,8 @@ MLCMetricType const MLCMetricTypeViewPromo = @"View_Promo";
 
     return _timeStamp;
 }
-- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
         CLLocation *coreLocation = MLCMetricsManager.sharedMetricsManager.locationDelegate.location;

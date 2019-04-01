@@ -30,7 +30,7 @@ FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterEve
 FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterScanType;
 FOUNDATION_EXPORT MLCCheckInServiceParameter const MLCCheckInServiceParameterBeaconIdentifier;
 
-typedef NSDictionary<MLCCheckInServiceParameter, id> * MLCCheckInServiceParameters NS_SWIFT_NAME(MLCCheckInService.Parameters);
+typedef NSDictionary<MLCCheckInServiceParameter, id> *MLCCheckInServiceParameters NS_SWIFT_NAME(MLCCheckInService.Parameters);
 
 @class MLCLocation;
 @class MLCEvent;

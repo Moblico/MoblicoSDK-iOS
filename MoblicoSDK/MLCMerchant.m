@@ -18,7 +18,7 @@
 
 @implementation MLCMerchant
 
-- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
         if (_attributes == nil) {

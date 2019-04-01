@@ -18,7 +18,7 @@
 
 @implementation MLCCredential
 
-- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
         NSMutableDictionary *accountDictionary = [NSMutableDictionary dictionary];

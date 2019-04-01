@@ -50,12 +50,10 @@ static NSString *const MLCPointsServicePointTypeInteractive = @"Interactive";
 }
 
 + (instancetype)updateTotalType:(MLCPointsServiceTotalType)totalType toPoints:(NSInteger)points forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSMutableDictionary *parameters = [@{MLCPointsServiceParameterPointTypeName: MLCPointsServicePointTypeInteractive,
-                                         MLCPointsServiceParameterPoints: @(points)} mutableCopy];
+    NSMutableDictionary *parameters = [@{MLCPointsServiceParameterPointTypeName: MLCPointsServicePointTypeInteractive, MLCPointsServiceParameterPoints: @(points)} mutableCopy];
     if (totalType.length) parameters[MLCPointsServiceParameterTotalTypeName] = totalType;
     NSString *path = [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCPoints collectionName]]];
     return [self _update:path parameters:parameters handler:handler];
 }
-
 
 @end

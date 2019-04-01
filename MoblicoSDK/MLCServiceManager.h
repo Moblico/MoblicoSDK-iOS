@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+
 @class MLCUser;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -67,7 +68,7 @@ NS_SWIFT_NAME(MLCServiceManager.Configuration)
  on the shared instance.
  */
 NS_SWIFT_NAME(ServiceManager)
-@interface MLCServiceManager : NSObject <NSCopying>
+@interface MLCServiceManager : NSObject<NSCopying>
 
 @property (atomic, class, strong, nullable) MLCServiceManagerConfiguration *configuration;
 

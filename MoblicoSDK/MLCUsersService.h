@@ -44,16 +44,22 @@ NS_SWIFT_NAME(UsersService)
 + (instancetype)lookupUsernameWithEmail:(NSString *)email handler:(MLCUsersServiceLookupUsernameCompletionHandler)handler;
 
 + (instancetype)createUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(create(_:handler:));
+
 + (instancetype)readUser:(MLCUser *)user handler:(MLCUsersServiceResourceCompletionHandler)handler;
 + (instancetype)readUserWithUsername:(NSString *)username handler:(MLCUsersServiceResourceCompletionHandler)handler;
+
 + (instancetype)updateUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
+
 + (instancetype)destroyUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)addUser:(MLCUser *)user toAccount:(MLCAccount *)account handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (instancetype)createAnonymousUserWithDeviceToken:(NSData *)deviceToken handler:(MLCUsersServiceResourceCompletionHandler)handler;
+
 + (instancetype)addDeviceWithDeviceToken:(NSData *)deviceToken toUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
+
 + (instancetype)destroyDeviceForUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler;
+
 + (instancetype)resetPasswordForUser:(MLCUser *)user handler:(MLCUsersServiceResetPasswordCompletionHandler)handler;
 
 @end

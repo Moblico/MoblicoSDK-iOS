@@ -27,9 +27,13 @@ NS_SWIFT_NAME(ListsService)
 @interface MLCListsService : MLCService
 
 + (instancetype)listLists:(MLCListsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)readListWithListId:(NSUInteger)listId handler:(MLCListsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readList(withId:handler:));
+
 + (instancetype)createList:(MLCList *)list handler:(MLCListsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(create(_:handler:));
+
 + (instancetype)updateList:(MLCList *)list handler:(MLCServiceSuccessCompletionHandler)handler;
+
 + (instancetype)destroyList:(MLCList *)list handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end

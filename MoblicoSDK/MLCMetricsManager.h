@@ -18,7 +18,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 NS_SWIFT_NAME(MLCMetricsManager.LocationDelegate)
-@protocol MLCMetricsManagerLocationDelegate <NSObject>
+@protocol MLCMetricsManagerLocationDelegate<NSObject>
 @required
 @property (nonatomic, readonly, copy, nullable) CLLocation *location;
 

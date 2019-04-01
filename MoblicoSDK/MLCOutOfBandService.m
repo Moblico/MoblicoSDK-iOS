@@ -19,11 +19,11 @@
 
 @implementation MLCOutOfBandService
 
-+ (instancetype)read:(NSString *)endPoint parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)read:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     return [self outOfBandMethod:MLCServiceRequestMethodGET endPoint:endPoint parameters:parameters handler:handler];
 }
 
-+ (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
     return [self outOfBandMethod:MLCServiceRequestMethodPOST endPoint:endPoint parameters:parameters handler:handler];
 }
 

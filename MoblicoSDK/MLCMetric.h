@@ -15,6 +15,7 @@
  */
 
 #import <MoblicoSDK/MLCEntity.h>
+
 @class MLCLocation;
 
 NS_ASSUME_NONNULL_BEGIN

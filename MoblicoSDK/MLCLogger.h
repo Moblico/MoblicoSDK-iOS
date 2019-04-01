@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Logger)
 @interface MLCLogger : NSObject
 
-+ (void)log:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) NS_SWIFT_UNAVAILABLE("Use `log(_:)` instead.");
-+ (void)debugLog:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) NS_SWIFT_UNAVAILABLE("Use `debugLog(_:)` instead.");
++ (void)log:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2) NS_SWIFT_UNAVAILABLE("Use `log(_:)` instead.");
++ (void)debugLog:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2) NS_SWIFT_UNAVAILABLE("Use `debugLog(_:)` instead.");
 + (void)logMessage:(NSString *)message NS_SWIFT_NAME(log(_:));
 + (void)debugLogMessage:(NSString *)message NS_SWIFT_NAME(debugLog(_:));
 @end

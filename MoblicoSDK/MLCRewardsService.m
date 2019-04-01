@@ -55,11 +55,9 @@
 }
 
 + (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString *path = [NSString pathWithComponents:@[[[reward class] collectionName],
-                                                    reward.uniqueIdentifier, @"redeem"]];
+    NSString *path = [NSString pathWithComponents:@[[[reward class] collectionName], reward.uniqueIdentifier, @"redeem"]];
 
-    NSDictionary *parameters = @{@"offerCode": reward.offerCode,
-                                 @"autoPurchase": autoPurchase ? @"true" : @"false"};
+    NSDictionary *parameters = @{@"offerCode": reward.offerCode, @"autoPurchase": autoPurchase ? @"true" : @"false"};
 
     return [self _update:path parameters:parameters handler:handler];
 }

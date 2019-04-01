@@ -19,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Account)
-@interface MLCAccount: MLCEntity
+@interface MLCAccount : MLCEntity
 
 @property (nonatomic) NSUInteger accountId NS_SWIFT_NAME(id);
 @property (nonatomic) NSUInteger parentId;

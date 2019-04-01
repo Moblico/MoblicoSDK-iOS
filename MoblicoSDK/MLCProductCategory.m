@@ -37,10 +37,9 @@
                     [productTypes addObject:productType];
                 }
             }
-            
+
             _productTypes = [productTypes copy];
-        }
-        else {
+        } else {
             _productTypes = @[];
         }
     }

@@ -37,8 +37,8 @@ NSErrorUserInfoKey const MLCValidationDetailedErrorsKey = @"MLCValidationDetaile
 @interface MLCValidation ()
 
 @property (nonatomic, readwrite, strong, nullable) MLCValidationError *error;
-- (void)addMessage:(NSString *)message;
 
+- (void)addMessage:(NSString *)message;
 @end
 
 @implementation MLCValidations

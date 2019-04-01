@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MLCCredential;
 
 MLCServiceCreateCollectionCompletionHandler(MLCCredentialsService, MLCCredential);
+
 NS_SWIFT_NAME(CredentialsService)
 @interface MLCCredentialsService : MLCService
 

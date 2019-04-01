@@ -23,11 +23,8 @@
 @implementation MLCScanService
 
 + (instancetype)processScanWithQRCodeId:(NSString *)qrCodeId handler:(MLCServiceSuccessCompletionHandler)handler {
-
-    NSString *path = [NSString pathWithComponents:@[@"users",
-                                                    MLCServiceManager.sharedServiceManager.currentUser.username,
-                                                    @"points",
-                                                    @"scan"]];
+    NSString *username = MLCServiceManager.sharedServiceManager.currentUser.username;
+    NSString *path = [NSString pathWithComponents:@[@"users", username, @"points", @"scan"]];
     return [self _update:path parameters:@{@"qrCodeId": qrCodeId} handler:handler];
 }
 

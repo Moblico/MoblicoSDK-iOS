@@ -22,7 +22,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
-NSString *sanitize(NSString * string) {
+NSString *sanitize(NSString *string) {
     NSData *data = [string dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     NSString *ascii = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     return [ascii stringByReplacingOccurrencesOfString:@"?" withString:@""];
@@ -96,7 +96,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
             value = [self stringWithPercentEscapesAddedToString:obj];
         }
 
-       value = [MLCEntity stringFromValue:value];
+        value = [MLCEntity stringFromValue:value];
         NSString *name = [MLCEntity stringFromValue:key];
         NSURLQueryItem *item = [[NSURLQueryItem alloc] initWithName:name value:value];
 
@@ -196,7 +196,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
 
     request.components = components;
     request.headers = headers;
-    
+
     return request;
 }
 
@@ -205,12 +205,12 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     if (!url) {
         return nil;
     }
-    
+
     if (!_URLRequest) {
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         request.HTTPMethod = self.method;
         request.HTTPBody = self.body;
-        [self.headers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, __unused BOOL * _Nonnull stop) {
+        [self.headers enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull key, NSString *_Nonnull obj, __unused BOOL *_Nonnull stop) {
             [request setValue:obj forHTTPHeaderField:key];
         }];
         _URLRequest = [request copy];

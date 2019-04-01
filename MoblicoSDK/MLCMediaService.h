@@ -23,7 +23,7 @@ FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterMediaTy
 FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterMediaTypeCategory;
 FOUNDATION_EXPORT MLCMediaServiceParameter const MLCMediaServiceParameterCategory;
 
-typedef NSDictionary<MLCMediaServiceParameter, id> * MLCMediaServiceParameters NS_SWIFT_NAME(MLCMediaService.Parameters);
+typedef NSDictionary<MLCMediaServiceParameter, id> *MLCMediaServiceParameters NS_SWIFT_NAME(MLCMediaService.Parameters);
 
 @class MLCLocation;
 @class MLCEvent;

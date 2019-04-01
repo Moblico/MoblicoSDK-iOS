@@ -27,13 +27,6 @@
     return @"listItems";
 }
 
-- (NSString *)description {
-    NSMutableString *description = [super.description mutableCopy];
-    [description appendFormat:@"id: %@ name: %@ details: %@ count: %@ checked: %@ favorite: %@",
-     @(self.listItemId), self.name, self.details, @(self.count), self.checked ? @"YES" : @"NO", self.favorite ? @"YES" : @"NO"];
-    return description;
-}
-
 + (NSDictionary *)renamedPropertiesDuringDeserialization {
     NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithDictionary:[super renamedPropertiesDuringDeserialization]];
     properties[@"isChecked"] = @"checked";

@@ -32,6 +32,7 @@ NS_SWIFT_NAME(PointsService)
 @interface MLCPointsService : MLCService
 
 + (instancetype)listPointsForUser:(MLCUser *)user handler:(MLCPointsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)updateTotalType:(MLCPointsServiceTotalType)totalType toPoints:(NSInteger)points forUser:(MLCUser *)user handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(update(_:to:for:handler:));
 
 @end

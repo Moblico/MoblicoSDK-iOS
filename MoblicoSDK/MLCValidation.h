@@ -59,6 +59,7 @@ NS_SWIFT_NAME(Validate)
 + (instancetype)validateFormat:(NSString *)format message:(NSString *)message; // Case insensitive by default
 + (instancetype)validateCaseSensitiveFormat:(NSString *)format message:(NSString *)message;
 + (instancetype)validateWithPredicate:(NSPredicate *)predicate errorMessage:(NSString *)message;
+
 - (instancetype)initWithMessage:(NSString *)message validateTest:(MLCValidateTest)test;
 @end
 
@@ -70,13 +71,12 @@ NS_SWIFT_NAME(Validation)
 
 NS_SWIFT_NAME(MLCValidation.Error)
 @interface MLCValidationError : NSError
-
+@property (nonatomic, readonly, strong, class) MLCValidationError *unknownError;
 @property (nonatomic, readonly, copy, nullable) NSArray<MLCValidationError *> *errors;
+
 + (instancetype)errorWithMessage:(NSString *)message;
 + (instancetype)errorWithErrors:(NSArray<MLCValidationError *> *)errors;
-@property (nonatomic, readonly, strong, class) MLCValidationError *unknownError;
 
 @end
 
 NS_ASSUME_NONNULL_END
-

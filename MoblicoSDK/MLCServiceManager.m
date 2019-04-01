@@ -124,6 +124,7 @@ static NSString *_testingAPIKey = nil;
 }
 
 static MLCServiceManagerConfiguration *_configuration = nil;
+
 + (void)setConfiguration:(MLCServiceManagerConfiguration *)configuration {
     @synchronized (self) {
         _configuration = configuration;
@@ -207,8 +208,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
         self.childKeyword = childKeyword ?: @"";
         self.authenticationToken = nil;
         NSString *username = user.username ?: @"";
-        NSDictionary *credentials = @{@"password": user.password ?: @"",
-                                      @"childKeyword": self.childKeyword};
+        NSDictionary *credentials = @{@"password": user.password ?: @"", @"childKeyword": self.childKeyword};
 
         if (user.social || !rememberCredentials) {
             username = @"";
@@ -303,7 +303,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     [self.authenticationQueue addOperationWithBlock:^{
         dispatch_semaphore_t sema = dispatch_semaphore_create(0);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf _authenticateRequest:request handler:^(NSURLRequest * _Nullable authenticatedRequest, NSError * _Nullable error) {
+            [weakSelf _authenticateRequest:request handler:^(NSURLRequest *_Nullable authenticatedRequest, NSError *_Nullable error) {
                 handler(authenticatedRequest, error);
                 dispatch_semaphore_signal(sema);
             }];
@@ -446,7 +446,7 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
 
         // Add the password to the dictionary, converting from NSData to NSString.
         NSData *data = (__bridge NSData *)passwordData;
-                if (data != nil) {
+        if (data != nil) {
             @try {
                 returnDictionary[(__bridge id)kSecValueData] = (NSDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
             }

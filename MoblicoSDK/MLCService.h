@@ -64,7 +64,7 @@ typedef void(^MLCServiceCollectionCompletionHandler)(NSArray<__kindof MLCEntity 
  @param resource The object returned by the service request.
  @param error An error identifier.
  */
-typedef void(^MLCServiceResourceCompletionHandler)(__kindof MLCEntity * _Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.ResourceCompletionHandler);
+typedef void(^MLCServiceResourceCompletionHandler)(__kindof MLCEntity *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(MLCService.ResourceCompletionHandler);
 
 #define MLCServiceCreateResourceCompletionHandler(Name, Type) typedef void(^Name ## ResourceCompletionHandler)(Type *_Nullable resource, NSError *_Nullable error) NS_SWIFT_NAME(Name.ResourceCompletionHandler)
 
@@ -74,6 +74,7 @@ typedef void(^MLCServiceResourceCompletionHandler)(__kindof MLCEntity * _Nullabl
 NS_SWIFT_NAME(Service)
 @interface MLCService : NSObject
 @property (nonatomic, copy, nullable) MLCServiceManager *serviceManager;
+
 - (void)start;
 - (void)cancel;
 @end
@@ -90,8 +91,8 @@ NS_SWIFT_NAME(MLCService.Error)
 
 + (nullable instancetype)errorWithErrors:(NSArray<MLCServiceError *> *)errors;
 
-- (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;
-+ (instancetype)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;
+- (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)dict NS_UNAVAILABLE;
++ (instancetype)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)dict NS_UNAVAILABLE;
 
 @end
 

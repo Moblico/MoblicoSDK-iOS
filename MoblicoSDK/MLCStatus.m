@@ -71,8 +71,7 @@ NSErrorUserInfoKey const MLCStatusStatusErrorKey = @"status";
     if (!message) {
         message = @"Unknown Error";
     }
-    NSDictionary<NSErrorUserInfoKey, id> *userInfo = @{NSLocalizedDescriptionKey: message,
-                               MLCStatusStatusErrorKey: status};
+    NSDictionary<NSErrorUserInfoKey, id> *userInfo = @{NSLocalizedDescriptionKey: message, MLCStatusStatusErrorKey: status};
     self = [super initWithDomain:MLCStatusErrorDomain code:status.type userInfo:userInfo];
     return self;
 }

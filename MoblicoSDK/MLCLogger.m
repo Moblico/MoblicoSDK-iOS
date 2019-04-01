@@ -40,11 +40,11 @@
 }
 
 + (void)logMessage:(NSString *)message {
-	[self log:@"%@", message];
+    [self log:@"%@", message];
 }
 
 + (void)debugLogMessage:(NSString *)message {
-	[self debugLog:@"%@", message];
+    [self debugLog:@"%@", message];
 }
 
 @end

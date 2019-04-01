@@ -28,7 +28,7 @@
     if (!_session) {
         _session = [NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration delegate:self delegateQueue:NSOperationQueue.mainQueue];
     }
-    return  _session;
+    return _session;
 
 }
 

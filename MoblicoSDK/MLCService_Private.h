@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id _Nullable jsonObject, NSError * _Nullable error, NSHTTPURLResponse * _Nullable response) NS_SWIFT_NAME(MLCService.InternalJSONCompletionHandler);
+typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id _Nullable jsonObject, NSError *_Nullable error, NSHTTPURLResponse *_Nullable response) NS_SWIFT_NAME(MLCService.InternalJSONCompletionHandler);
 
 @interface MLCService ()
 
@@ -37,7 +37,8 @@ typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id _
 @property (copy, nonatomic) MLCServiceSuccessCompletionHandler invalidServiceSuccessCompletionHandler;
 @property (assign, nonatomic) BOOL skipAuthentication;
 
-- (void)handleData:(NSData * _Nullable)data response:(NSURLResponse * _Nullable) response error:(NSError * _Nullable)error;
+- (void)handleData:(NSData *_Nullable)data response:(NSURLResponse *_Nullable)response error:(NSError *_Nullable)error;
+
 + (instancetype)_invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler;
 + (instancetype)_invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
 

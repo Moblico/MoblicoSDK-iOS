@@ -70,7 +70,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return NO;
 }
 
-- (BOOL)validateValue:(inout id _Nullable * _Nonnull)ioValue forKey:(NSString *)inKey error:(out NSError **)outError {
+- (BOOL)validateValue:(inout id _Nullable *_Nonnull)ioValue forKey:(NSString *)inKey error:(out NSError **)outError {
 
     if (![super validateValue:ioValue forKey:inKey error:outError]) {
         return NO;

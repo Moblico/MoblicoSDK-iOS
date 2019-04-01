@@ -15,6 +15,7 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
 @class MLCEntity;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,19 +23,20 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GenericService)
 @interface MLCGenericService : MLCService
 
-+ (instancetype)create:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)create:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
 
-+ (instancetype)update:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)update:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)destroy:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
++ (instancetype)destroy:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)read:(NSString *)path parameters:(NSDictionary<NSString *,id> *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
++ (instancetype)read:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceResourceCompletionHandler)handler;
 
-+ (instancetype)find:(NSString *)path searchParameters:(NSDictionary<NSString *,id> *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
++ (instancetype)find:(NSString *)path searchParameters:(NSDictionary<NSString *, id> *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler;
 
 + (instancetype)service:(NSString *)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
 + (instancetype)invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler;
+
 + (instancetype)invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
 
 + (Class)classForResource;

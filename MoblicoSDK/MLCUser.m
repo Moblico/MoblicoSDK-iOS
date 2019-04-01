@@ -220,7 +220,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
                                                         BOOL valid = email.length && [user validateValue:&email forKey:NSStringFromSelector(@selector(email)) error:nil];
                                                         return !selected || valid;
                                                     }] forKey:@"optinEmail"];
-    
+
     [validations appendRule:[[MLCValidate alloc] initWithMessage:@"A valid mobile phone number is required for Phone Alerts."
                                                     validateTest:^BOOL(MLCUser *user, __unused NSString *key, NSString *value) {
                                                         BOOL selected = value.boolValue;
@@ -228,7 +228,7 @@ static NSArray<NSString *> *_requiredParameters = nil;
                                                         BOOL valid = phone.length && [user validateValue:&phone forKey:NSStringFromSelector(@selector(phone)) error:nil];
                                                         return !selected || valid;
                                                     }] forKey:@"optinPhone"];
-    
+
     return validations;
 }
 

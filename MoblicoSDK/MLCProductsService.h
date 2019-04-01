@@ -26,8 +26,11 @@ NS_SWIFT_NAME(ProductsService)
 @interface MLCProductsService : MLCService
 
 + (instancetype)listProducts:(MLCProductsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)findProductsWithFilters:(NSString *)filters handler:(MLCProductsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)findProductsWithProductTypes:(NSArray<NSString *> *)productTypes handler:(MLCProductsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)findProductsWithFilters:(NSString *)filters productTypes:(NSArray<NSString *> *)productTypes handler:(MLCProductsServiceCollectionCompletionHandler)handler;
 
 @end

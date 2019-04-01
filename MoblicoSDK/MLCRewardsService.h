@@ -29,11 +29,17 @@ NS_SWIFT_NAME(RewardsService)
 @interface MLCRewardsService : MLCService
 
 + (instancetype)readRewardWithRewardId:(NSUInteger)rewardId handler:(MLCRewardsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(readReward(withId:handler:));
+
 + (instancetype)listRewards:(MLCRewardsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)listRewardsForUser:(MLCUser *)user handler:(MLCRewardsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)listRewardsForLocation:(MLCLocation *)location handler:(MLCRewardsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)redeemReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(redeem(_:handler:));
+
 + (instancetype)redeemReward:(MLCReward *)reward autoPurchase:(BOOL)autoPurchase handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(redeem(_:autoPurchase:handler:));
+
 + (instancetype)purchaseReward:(MLCReward *)reward handler:(MLCServiceSuccessCompletionHandler)handler NS_SWIFT_NAME(purchase(_:handler:));
 
 @end

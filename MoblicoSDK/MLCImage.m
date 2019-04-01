@@ -51,9 +51,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
     NSString *url = components[1];
     NSString *lastUpdateDate = components[2];
 
-    NSDictionary *jsonObject = @{@"id": imageId,
-                                 @"url": url,
-                                 @"lastUpdateDate": lastUpdateDate};
+    NSDictionary *jsonObject = @{@"id": imageId, @"url": url, @"lastUpdateDate": lastUpdateDate};
     self = [self initWithJSONObject:jsonObject];
     return self;
 }
@@ -179,7 +177,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
     NSURL *cacheFileURL = self.cacheFileURL;
 
     NSURLRequest *request = [NSURLRequest requestWithURL:self.url];
-    [[MLCSessionManager.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    [[MLCSessionManager.session dataTaskWithRequest:request completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
         NSHTTPURLResponse *httpResponse;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             httpResponse = (NSHTTPURLResponse *)response;

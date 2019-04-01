@@ -30,7 +30,7 @@ FOUNDATION_EXPORT MLCLocationsServiceParameter const MLCLocationsServiceParamete
 FOUNDATION_EXPORT MLCLocationsServiceParameter const MLCLocationsServiceParameterPostalCode;
 FOUNDATION_EXPORT MLCLocationsServiceParameter const MLCLocationsServiceParameterPage;
 
-typedef NSDictionary<MLCLocationsServiceParameter, id> * MLCLocationsServiceParameters NS_SWIFT_NAME(MLCLocationsService.Parameters);
+typedef NSDictionary<MLCLocationsServiceParameter, id> *MLCLocationsServiceParameters NS_SWIFT_NAME(MLCLocationsService.Parameters);
 
 @class MLCEvent;
 @class MLCDeal;
@@ -56,7 +56,9 @@ NS_SWIFT_NAME(LocationsService)
 + (instancetype)findLocationsForMerchant:(MLCMerchant *)merchant parameters:(MLCLocationsServiceParameters)parameters handler:(MLCLocationsServiceCollectionCompletionHandler)handler;
 
 + (instancetype)listLocationsForEvent:(MLCEvent *)event handler:(MLCLocationsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)listLocationsForDeal:(MLCDeal *)deal handler:(MLCLocationsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)listLocationsForReward:(MLCReward *)reward handler:(MLCLocationsServiceCollectionCompletionHandler)handler;
 
 @end

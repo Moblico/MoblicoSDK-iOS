@@ -27,11 +27,11 @@
 @implementation MLCGroupsService
 
 + (NSString *)pathForUser:(MLCUser *)user group:(MLCGroup *)group {
-	if (group) {
-		return [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [[group class] collectionName], group.uniqueIdentifier]];
-	}
+    if (group) {
+        return [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [[group class] collectionName], group.uniqueIdentifier]];
+    }
 
-	return [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
+    return [NSString pathWithComponents:@[[[user class] collectionName], user.uniqueIdentifier, [MLCGroup collectionName]]];
 }
 
 + (NSArray<Class> *)scopeableResources {
@@ -55,7 +55,7 @@
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
-    NSString * path = [self pathForUser:user group:group];
+    NSString *path = [self pathForUser:user group:group];
     return [self _update:path parameters:nil handler:handler];
 }
 
@@ -88,18 +88,18 @@
 }
 
 + (instancetype)removeUser:(MLCUser *)user fromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
-	NSString * path = [self pathForUser:user group:group];
-	return [self _destroy:path parameters:nil handler:handler];
+    NSString *path = [self pathForUser:user group:group];
+    return [self _destroy:path parameters:nil handler:handler];
 }
 
 + (instancetype)removeCurrentUserFromGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {
-	MLCUser *user = MLCServiceManager.sharedServiceManager.currentUser;
-	return [self removeUser:user fromGroup:group handler:handler];
+    MLCUser *user = MLCServiceManager.sharedServiceManager.currentUser;
+    return [self removeUser:user fromGroup:group handler:handler];
 }
 
 + (instancetype)removeUser:(MLCUser *)user fromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {
-	NSString * path = [self pathForUser:user group:nil];
-	return [self _destroy:path parameters:@{@"name": groupName} handler:handler];
+    NSString *path = [self pathForUser:user group:nil];
+    return [self _destroy:path parameters:@{@"name": groupName} handler:handler];
 }
 
 + (instancetype)removeCurrentUserFromGroupNamed:(NSString *)groupName handler:(MLCServiceSuccessCompletionHandler)handler {

@@ -15,6 +15,7 @@
  */
 
 #import <MoblicoSDK/MLCEntity.h>
+
 @class MLCMedia;
 
 NS_ASSUME_NONNULL_BEGIN

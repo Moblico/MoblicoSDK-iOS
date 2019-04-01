@@ -553,7 +553,7 @@ NS_SWIFT_NAME(MLCStatus.Error)
 
 - (instancetype)initWithStatus:(MLCStatus *)status NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey,id> *)dict NS_UNAVAILABLE;
+- (instancetype)initWithDomain:(NSErrorDomain)domain code:(NSInteger)code userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)dict NS_UNAVAILABLE;
 
 @end
 

@@ -15,6 +15,7 @@
  */
 
 #import <MoblicoSDK/MLCService.h>
+
 @class MLCNotification;
 
 NS_ASSUME_NONNULL_BEGIN

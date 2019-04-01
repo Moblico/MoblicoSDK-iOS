@@ -22,6 +22,7 @@
 @interface MLCMedia ()
 @property (class, nonatomic, readonly) NSCache *sharedCache;
 @property (class, nonatomic, readonly) NSString *cacheDirectory;
+
 - (void)loadDataFromURL:(NSURL *)url handler:(MLCMediaDataCompletionHandler)handler;
 @end
 
@@ -35,7 +36,7 @@
     return @[@"data", @"dataTask", @"cachedImage", @"cachedThumb", @"cachedData"];
 }
 
-- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
+- (instancetype)initWithJSONObject:(NSDictionary<NSString *, id> *)jsonObject {
     self = [super initWithJSONObject:jsonObject];
     if (self) {
         if (_attributes == nil) {
@@ -158,7 +159,7 @@
     }
 
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [[MLCSessionManager.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    [[MLCSessionManager.session dataTaskWithRequest:request completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
         NSHTTPURLResponse *httpResponse;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             httpResponse = (NSHTTPURLResponse *)response;

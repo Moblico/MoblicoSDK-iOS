@@ -88,7 +88,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
             self.jsonCompletionHandler(self, nil, error, nil);
         } else {
             self.request.authenticatedURLRequest = authenticatedRequest;
-            self.connection = [MLCSessionManager.session dataTaskWithRequest:authenticatedRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable taskError) {
+            self.connection = [MLCSessionManager.session dataTaskWithRequest:authenticatedRequest completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable taskError) {
                 [self handleData:data response:response error:taskError];
             }];
 #if TARGET_OS_IPHONE
@@ -397,7 +397,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     MLCDebugLog(@"Response Object: %@", jsonObject);
 }
 
-- (void)handleData:(NSData * _Nullable)data response:(NSURLResponse * _Nullable) response error:(NSError * _Nullable)error {
+- (void)handleData:(NSData *_Nullable)data response:(NSURLResponse *_Nullable)response error:(NSError *_Nullable)error {
     NSHTTPURLResponse *httpResponse;
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         httpResponse = (NSHTTPURLResponse *)response;

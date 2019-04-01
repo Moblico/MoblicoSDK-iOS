@@ -50,27 +50,19 @@ static BOOL _enabled = YES;
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text {
-    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
-                                     MLCMetricsServiceParameterText: text}];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type, MLCMetricsServiceParameterText: text}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location {
-    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
-                                     MLCMetricsServiceParameterText: text,
-                                     MLCMetricsServiceParameterLocation: location}];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type, MLCMetricsServiceParameterText: text, MLCMetricsServiceParameterLocation: location}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text username:(NSString *)username {
-    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
-                                     MLCMetricsServiceParameterText: text,
-                                     MLCMetricsServiceParameterUsername: username}];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type, MLCMetricsServiceParameterText: text, MLCMetricsServiceParameterUsername: username}];
 }
 
 + (void)sendMetricWithType:(MLCMetricType)type text:(NSString *)text location:(MLCLocation *)location username:(NSString *)username {
-    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type,
-                                     MLCMetricsServiceParameterText: text,
-                                     MLCMetricsServiceParameterLocation: location,
-                                     MLCMetricsServiceParameterUsername: username}];
+    [self sendMetricWithParameters:@{MLCMetricsServiceParameterType: type, MLCMetricsServiceParameterText: text, MLCMetricsServiceParameterLocation: location, MLCMetricsServiceParameterUsername: username}];
 }
 
 + (void)sendMetricWithParameters:(NSDictionary *)parameters {

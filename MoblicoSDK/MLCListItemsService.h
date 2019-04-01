@@ -28,8 +28,11 @@ NS_SWIFT_NAME(ListItemsService)
 @interface MLCListItemsService : MLCService
 
 + (instancetype)listListItemsForList:(MLCList *)list handler:(MLCListItemsServiceCollectionCompletionHandler)handler;
+
 + (instancetype)createListItem:(MLCListItem *)listItem forList:(MLCList *)list handler:(MLCListItemsServiceResourceCompletionHandler)handler NS_SWIFT_NAME(create(_:for:handler:));
+
 + (instancetype)updateListItem:(MLCListItem *)listItem handler:(MLCServiceSuccessCompletionHandler)handler;
+
 + (instancetype)destroyListItem:(MLCListItem *)listItem handler:(MLCServiceSuccessCompletionHandler)handler;
 
 @end

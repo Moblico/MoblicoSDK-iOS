@@ -37,11 +37,14 @@ NS_SWIFT_NAME(KeychainPasswordItem)
 @property (nonatomic, copy, readonly) NSString *account;
 
 - (instancetype)initWithService:(NSString *)service account:(NSString *)account accessGroup:(nullable NSString *)accessGroup NS_DESIGNATED_INITIALIZER;
+
 + (instancetype)itemWithService:(NSString *)service account:(NSString *)account;
 + (instancetype)itemWithService:(NSString *)service account:(NSString *)account accessGroup:(NSString *)accessGroup;
 
 - (BOOL)renameAccount:(NSString *)account error:(out NSError **)error;
+
 - (BOOL)saveData:(id<NSCoding>)data error:(out NSError **)error;
+
 - (nullable id<NSCoding>)readData:(out NSError **)error;
 
 
