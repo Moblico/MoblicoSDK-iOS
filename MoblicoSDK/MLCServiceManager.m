@@ -35,6 +35,7 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 @property (atomic, readwrite, strong) MLCUser *currentUser;
 @property (atomic, readwrite, strong) NSString *childKeyword;
 @property (atomic, readonly, strong) NSString *serviceName;
+@property (atomic, readonly, strong) NSOperationQueue *authenticationQueue;
 @end
 
 @implementation MLCServiceManager {
@@ -43,6 +44,7 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
     NSDictionary *_genericPasswordQuery;
     NSMutableDictionary *_keychainItemData;
     MLCUser *_currentUser;
+    NSOperationQueue *_authenticationQueue;
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone {
@@ -59,6 +61,16 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
             _serviceName = [@"com.moblico.SDK.credentials." stringByAppendingString:appName];
         }
         return _serviceName;
+    }
+}
+
+- (NSOperationQueue *)authenticationQueue {
+    @synchronized (self) {
+        if (!_authenticationQueue) {
+            _authenticationQueue = [[NSOperationQueue alloc] init];
+            _authenticationQueue.maxConcurrentOperationCount = 1;
+        }
+        return _authenticationQueue;
     }
 }
 
@@ -241,7 +253,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     }
 }
 
-- (void)authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler {
+- (void)_authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler {
     NSMutableURLRequest *authenticatedRequest = [request mutableCopy];
     MLCAuthenticationToken *currentToken = self.authenticationToken;
 
@@ -284,6 +296,20 @@ static MLCServiceManagerConfiguration *_configuration = nil;
         }];
         [service start];
     }
+}
+
+- (void)authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler {
+    __weak __typeof__(self) weakSelf = self;
+    [self.authenticationQueue addOperationWithBlock:^{
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf _authenticateRequest:request handler:^(NSURLRequest * _Nullable authenticatedRequest, NSError * _Nullable error) {
+                handler(authenticatedRequest, error);
+                dispatch_semaphore_signal(sema);
+            }];
+        });
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+    }];
 }
 
 + (void)setSSLDisabled:(BOOL)disabled {
