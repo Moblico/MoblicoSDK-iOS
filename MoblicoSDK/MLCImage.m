@@ -18,6 +18,7 @@
 #import "MLCSessionManager.h"
 #import "MLCEntity_Private.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "MLCLogger.h"
 
 typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSError *error);
 
@@ -130,7 +131,7 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
         cacheDirectoryURL = [cachesDirectory URLByAppendingPathComponent:@"CachedImages" isDirectory:YES];
         NSError *error;
         if (![NSFileManager.defaultManager createDirectoryAtURL:cacheDirectoryURL withIntermediateDirectories:YES attributes:nil error:&error]) {
-            NSLog(@"Failed to create CachedImages directory: %@", error.localizedDescription);
+            MLCLog(@"Failed to create CachedImages directory: %@", error.localizedDescription);
         }
     });
 
