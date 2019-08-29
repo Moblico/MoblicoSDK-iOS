@@ -43,7 +43,6 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
     NSString *_serviceName;
     NSDictionary *_genericPasswordQuery;
     NSMutableDictionary *_keychainItemData;
-    MLCUser *_currentUser;
     NSOperationQueue *_authenticationQueue;
 }
 
@@ -194,11 +193,18 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     [self setCurrentUser:user childKeyword:self.childKeyword remember:rememberCredentials];
 }
 
+- (void)resetAuthenticationToken {
+    __weak __typeof__(self) weakSelf = self;
+    [self.authenticationQueue addOperationWithBlock:^{
+        weakSelf.authenticationToken = nil;
+    }];
+}
+
 - (void)setCurrentUser:(MLCUser *)user childKeyword:(NSString *)childKeyword {
     @synchronized (self) {
         self.currentUser = user;
         self.childKeyword = childKeyword ?: @"";
-        self.authenticationToken = nil;
+        [self resetAuthenticationToken];
     }
 }
 
@@ -206,7 +212,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     @synchronized (self) {
         self.currentUser = user;
         self.childKeyword = childKeyword ?: @"";
-        self.authenticationToken = nil;
+        [self resetAuthenticationToken];
         NSString *username = user.username ?: @"";
         NSDictionary *credentials = @{@"password": user.password ?: @"", @"childKeyword": self.childKeyword};
 
@@ -257,7 +263,6 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     NSMutableURLRequest *authenticatedRequest = [request mutableCopy];
     MLCAuthenticationToken *currentToken = self.authenticationToken;
 
-    NSString *apiKey = [[self class] currentAPIKey];
     if (currentToken.valid) {
         NSString *authToken = [NSString stringWithFormat:@"Token token=\"%@\"", currentToken.token];
         [authenticatedRequest setValue:authToken forHTTPHeaderField:@"Authorization"];
@@ -265,6 +270,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     } else {
         MLCUser *user = self.currentUser;
         NSString *childKeyword = self.childKeyword;
+        NSString *apiKey = [[self class] currentAPIKey];
         MLCAuthenticationService *service = [MLCAuthenticationService authenticateAPIKey:apiKey user:user childKeyword:childKeyword handler:^(MLCAuthenticationToken *newToken, NSError *error) {
             if (error) {
                 MLCStatus *status = error.userInfo[@"status"];
