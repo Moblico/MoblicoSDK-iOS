@@ -373,7 +373,7 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
             _genericPasswordQuery = [@{(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
                                        (__bridge id)kSecAttrService: self.serviceName,
                                        (__bridge id)kSecAttrGeneric: @"com.moblico.SDK.credentials",
-                                       (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlways,
+                                       (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlock,
                                        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
                                        (__bridge id)kSecReturnAttributes: (__bridge id)kCFBooleanTrue} mutableCopy];
         }
@@ -400,7 +400,7 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
                                    (__bridge id)kSecAttrLabel: @"",
                                    (__bridge id)kSecAttrDescription: @"",
                                    (__bridge id)kSecValueData: @{},
-                                   (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlways,
+                                   (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlock,
                                    (__bridge id)kSecAttrService: self.serviceName} mutableCopy];
             id attrGeneric = self.genericPasswordQuery[(__bridge id)kSecAttrGeneric];
             if (attrGeneric) {
@@ -427,7 +427,7 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
     // Convert the NSString to NSData to meet the requirements for the value type kSecValueData.
     // This is where to store sensitive data that should be encrypted.
     NSDictionary *credentials = dictionaryToConvert[(__bridge id)kSecValueData];
-    returnDictionary[(__bridge id)kSecValueData] = [NSKeyedArchiver archivedDataWithRootObject:credentials];
+    returnDictionary[(__bridge id)kSecValueData] = [NSKeyedArchiver archivedDataWithRootObject:credentials requiringSecureCoding:NO error:nil];
 
     return returnDictionary;
 }
@@ -454,7 +454,7 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
         NSData *data = (__bridge NSData *)passwordData;
         if (data != nil) {
             @try {
-                returnDictionary[(__bridge id)kSecValueData] = (NSDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+                returnDictionary[(__bridge id)kSecValueData] = (NSDictionary *)[NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:data error:nil];
             }
             @catch (NSException *exception) {
                 @throw exception;

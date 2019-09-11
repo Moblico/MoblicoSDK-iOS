@@ -117,7 +117,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
     return status == noErr;
 }
 
-- (id<NSCoding>)readData:(out NSError **)error {
+- (id<NSCoding>)readDataOfClass:(Class)class error:(out NSError **)error {
     NSDictionary<NSString *, id> *query = [[self class] queryWithService:self.service account:self.account accessGroup:self.accessGroup limit:MLCKeychainPasswordItemMatchLimitOne returnAttributes:@YES returnData:@YES];
 
     CFDictionaryRef queryResult = NULL;
@@ -146,14 +146,14 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         return nil;
     }
 
-    return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    return [NSKeyedUnarchiver unarchivedObjectOfClass:class fromData:data error:nil];
 }
 
-- (BOOL)saveData:(id<NSCoding>)data error:(out NSError **)error {
-    NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:data];
+- (BOOL)saveData:(id<NSCoding>)data ofClass:(Class)class error:(out NSError **)error {
+    NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:data requiringSecureCoding:NO error:nil];
 
     NSError *readError;
-    if (![self readData:&readError] && readError) {
+    if (![self readDataOfClass:class error:&readError] && readError) {
         if (readError.code != MLCKeychainPasswordItemErrorCodeNoData) {
             if (error) *error = readError;
             return NO;

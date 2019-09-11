@@ -43,9 +43,9 @@ NS_SWIFT_NAME(KeychainPasswordItem)
 
 - (BOOL)renameAccount:(NSString *)account error:(out NSError **)error;
 
-- (BOOL)saveData:(id<NSCoding>)data error:(out NSError **)error;
+- (BOOL)saveData:(id<NSCoding>)data ofClass:(Class)class error:(out NSError **)error;
 
-- (nullable id<NSCoding>)readData:(out NSError **)error;
+- (nullable id<NSCoding>)readDataOfClass:(Class)class error:(out NSError **)error;
 
 
 + (BOOL)destroyItem:(MLCKeychainPasswordItem *)item error:(out NSError **)error;

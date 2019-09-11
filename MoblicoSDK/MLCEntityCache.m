@@ -30,12 +30,12 @@
     return [NSFileManager.defaultManager fileExistsAtPath:[self URL:key].path];
 }
 
-+ (id)retrieveEntityWithKey:(NSString *)key {
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:[self URL:key].path];
++ (id)retrieveEntityOfClass:(Class)class withKey:(NSString *)key error:(out NSError **)error {
+    return [NSKeyedUnarchiver unarchivedObjectOfClass:class fromData:[NSData dataWithContentsOfURL:[self URL:key]] error:error];
 }
 
 + (BOOL)persistEntity:(id)object key:(NSString *)key error:(out NSError **)error {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:nil];
     NSDataWritingOptions options = NSDataWritingAtomic;
 #if TARGET_OS_IOS
     options |= NSDataWritingFileProtectionNone;

@@ -91,9 +91,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
             self.connection = [MLCSessionManager.session dataTaskWithRequest:authenticatedRequest completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable taskError) {
                 [self handleData:data response:response error:taskError];
             }];
-#if TARGET_OS_IPHONE
-            UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
-#endif
             [self.connection resume];
         }
     };
@@ -402,10 +399,6 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         httpResponse = (NSHTTPURLResponse *)response;
     }
-
-#if TARGET_OS_IPHONE
-    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
-#endif
 
     NSError *jsonError;
     id jsonObject = nil;
