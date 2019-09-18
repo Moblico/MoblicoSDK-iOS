@@ -31,11 +31,16 @@
 }
 
 + (id)retrieveEntityOfClass:(Class)class withKey:(NSString *)key error:(out NSError **)error {
-    return [NSKeyedUnarchiver unarchivedObjectOfClass:class fromData:[NSData dataWithContentsOfURL:[self URL:key]] error:error];
+    NSData *data = [NSData dataWithContentsOfURL:[self URL:key]];
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
+    return [unarchiver decodeTopLevelObjectOfClass:class forKey:NSKeyedArchiveRootObjectKey error:error];
 }
 
 + (BOOL)persistEntity:(id)object key:(NSString *)key error:(out NSError **)error {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:error];
+    if (!data) {
+        return NO;
+    }
     NSDataWritingOptions options = NSDataWritingAtomic;
 #if TARGET_OS_IOS
     options |= NSDataWritingFileProtectionNone;
