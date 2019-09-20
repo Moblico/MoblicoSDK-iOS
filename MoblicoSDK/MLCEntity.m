@@ -446,6 +446,30 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     return @{@"details": @"description"};
 }
 
++ (BOOL)entity:(MLCEntity *)entity equals:(MLCEntity *)otherEntity {
+    if (![entity isKindOfClass:[otherEntity class]]) {
+        return NO;
+    }
+
+    NSDictionary *properties = entity._properties;
+
+    NSArray *ignore = [self ignoredPropertiesDuringSerialization];
+
+    for (NSString *key in properties) {
+        if ([key isEqualToString:@"properties"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"description"] || [key hasPrefix:@"mlc_"] || [key hasPrefix:@"_"]) {
+            continue;
+        }
+        if ([ignore containsObject:key]) {
+            continue;
+        }
+        if (![[entity valueForKey:key] isEqual:[otherEntity valueForKey:key]]) {
+            return NO;
+        }
+    }
+
+    return YES;
+}
+
 + (NSDictionary *)serialize:(MLCEntity *)entityObject {
     if (![entityObject isKindOfClass:[MLCEntity class]]) {
         return nil;
@@ -693,12 +717,7 @@ return; \
 }
 
 - (BOOL)isEqual:(id)object {
-    if (![object isKindOfClass:[self class]]) {
-        return NO;
-    }
-    NSDictionary *this = [[self class] serialize:self];
-    NSDictionary *other = [[self class] serialize:object];
-    return [this isEqualToDictionary:other];
+    return [[self class] entity:self equals:object];
 }
 
 - (NSUInteger)hash {
