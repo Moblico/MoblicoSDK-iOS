@@ -31,9 +31,14 @@
 }
 
 + (id)retrieveEntityOfClass:(Class)class withKey:(NSString *)key error:(out NSError **)error {
-    NSData *data = [NSData dataWithContentsOfURL:[self URL:key]];
-    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
-    return [unarchiver decodeTopLevelObjectOfClass:class forKey:NSKeyedArchiveRootObjectKey error:error];
+    @try {
+        NSData *data = [NSData dataWithContentsOfURL:[self URL:key]];
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
+        return [unarchiver decodeTopLevelObjectOfClass:class forKey:NSKeyedArchiveRootObjectKey error:error];
+    } @catch (NSException *exception) {
+        NSLog(@"retrieveEntity exception %@", exception);
+    }
+    return nil;
 }
 
 + (BOOL)persistEntity:(id)object key:(NSString *)key error:(out NSError **)error {
