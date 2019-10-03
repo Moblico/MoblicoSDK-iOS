@@ -447,7 +447,7 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 }
 
 + (BOOL)entity:(MLCEntity *)entity equals:(MLCEntity *)otherEntity {
-    if (![entity isKindOfClass:[otherEntity class]]) {
+    if (![entity isEquivalent:otherEntity]) {
         return NO;
     }
 
@@ -462,7 +462,12 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
         if ([ignore containsObject:key]) {
             continue;
         }
-        if (![[entity valueForKey:key] isEqual:[otherEntity valueForKey:key]]) {
+        id entityValue = [entity valueForKey:key];
+        id otherValue = [otherEntity valueForKey:key];
+        if (!entityValue && !otherValue) {
+            continue;
+        }
+        if (![entityValue isEqual:otherValue]) {
             return NO;
         }
     }
@@ -718,6 +723,15 @@ return; \
 
 - (BOOL)isEqual:(id)object {
     return [[self class] entity:self equals:object];
+}
+
+- (BOOL)isEquivalent:(id)object {
+    if (![self isKindOfClass:[object class]]) {
+        return NO;
+    }
+
+    MLCEntity *otherEntity = (MLCEntity *)object;
+    return [self.uniqueIdentifier isEqual:otherEntity.uniqueIdentifier];
 }
 
 - (NSUInteger)hash {

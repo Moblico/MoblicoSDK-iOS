@@ -34,6 +34,7 @@ NS_SWIFT_NAME(Entity)
 + (NSString *)resourceName;
 
 + (NSString *)uniqueIdentifierKey;
+- (BOOL)isEquivalent:(id)object;
 
 @property (nonatomic, readonly, class, strong) MLCValidations *validations;
 - (BOOL)validate:(out NSError **)error;
