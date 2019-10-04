@@ -221,6 +221,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
             credentials = @{};
         }
 
+        SecItemDelete((__bridge CFDictionaryRef)self.genericPasswordQuery);
         self.keychainItemData[(__bridge id)kSecAttrAccount] = username;
         self.keychainItemData[(__bridge id)kSecValueData] = credentials;
 
