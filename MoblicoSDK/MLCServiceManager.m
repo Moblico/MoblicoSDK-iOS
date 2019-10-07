@@ -19,6 +19,7 @@
 #import "MLCAuthenticationToken.h"
 #import "MLCUser.h"
 #import "MLCStatus.h"
+#import "MLCKeychainPasswordItem.h"
 
 NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
 static NSString *const MLCServiceManagerTestingEnabledKey = @"MLCServiceManagerTestingEnabled";
@@ -30,8 +31,6 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 @interface MLCServiceManager ()
 
 @property (atomic, strong) MLCAuthenticationToken *authenticationToken;
-@property (atomic, readonly) NSMutableDictionary *keychainItemData;
-@property (atomic, readonly) NSDictionary *genericPasswordQuery;
 @property (atomic, readwrite, strong) MLCUser *currentUser;
 @property (atomic, readwrite, strong) NSString *childKeyword;
 @property (atomic, readonly, strong) NSString *serviceName;
@@ -41,8 +40,6 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
 @implementation MLCServiceManager {
     MLCAuthenticationToken *_authenticationToken;
     NSString *_serviceName;
-    NSDictionary *_genericPasswordQuery;
-    NSMutableDictionary *_keychainItemData;
     NSOperationQueue *_authenticationQueue;
 }
 
@@ -81,14 +78,17 @@ static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManager
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
-        NSString *username = sharedInstance.keychainItemData[(__bridge id)kSecAttrAccount];
-        NSDictionary *credentials = sharedInstance.keychainItemData[(__bridge id)kSecValueData];
 
-        if (username.length) {
+        NSArray *items = [MLCKeychainPasswordItem itemsWithService:sharedInstance.serviceName error:nil];
+        MLCKeychainPasswordItem *item = items.firstObject;
+        NSDictionary *credentials = (NSDictionary *)[item readDataOfClass:[NSDictionary class] error:nil];
+
+        if (credentials) {
             NSString *password = credentials[@"password"];
             NSString *childKeyword = credentials[@"childKeyword"];
 
-            [sharedInstance setCurrentUser:[MLCUser userWithUsername:username password:password] childKeyword:childKeyword];
+            MLCUser *user = [MLCUser userWithUsername:item.account password:password];
+            [sharedInstance setCurrentUser:user childKeyword:childKeyword];
         }
     });
 
@@ -221,11 +221,15 @@ static MLCServiceManagerConfiguration *_configuration = nil;
             credentials = @{};
         }
 
-        SecItemDelete((__bridge CFDictionaryRef)self.genericPasswordQuery);
-        self.keychainItemData[(__bridge id)kSecAttrAccount] = username;
-        self.keychainItemData[(__bridge id)kSecValueData] = credentials;
+        NSArray *items = [MLCKeychainPasswordItem itemsWithService:self.serviceName error:nil];
+        for (MLCKeychainPasswordItem *item in items) {
+            [MLCKeychainPasswordItem destroyItem:item error:nil];
+        }
 
-        [self writeToKeychain];
+        if (username.length && rememberCredentials) {
+            MLCKeychainPasswordItem *item = [MLCKeychainPasswordItem itemWithService:self.serviceName account:username];
+            [item saveData:credentials ofClass:[NSDictionary class] error:nil];
+        }
     }
 }
 
@@ -366,139 +370,6 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
 + (NSString *)sdkVersion {
     NSBundle *bundle = [NSBundle bundleForClass:[MLCServiceManager class]];
     return [bundle objectForInfoDictionaryKey:@"CFBundleVersion"] ?: @(MoblicoSDKVersionNumber).stringValue;
-}
-
-- (NSDictionary *)genericPasswordQuery {
-    @synchronized (self) {
-        if (!_genericPasswordQuery) {
-            _genericPasswordQuery = [@{(__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-                                       (__bridge id)kSecAttrService: self.serviceName,
-                                       (__bridge id)kSecAttrGeneric: @"com.moblico.SDK.credentials",
-                                       (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlock,
-                                       (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne,
-                                       (__bridge id)kSecReturnAttributes: (__bridge id)kCFBooleanTrue} mutableCopy];
-        }
-
-        return _genericPasswordQuery;
-    }
-}
-
-- (NSMutableDictionary *)keychainItemData {
-    @synchronized (self) {
-        if (_keychainItemData) return _keychainItemData;
-
-        NSDictionary *tempQuery = [NSDictionary dictionaryWithDictionary:self.genericPasswordQuery];
-
-        CFMutableDictionaryRef outDictionary = NULL;
-
-        OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)tempQuery, (CFTypeRef *)&outDictionary);
-
-        if (status == noErr) {
-            // load the saved data from Keychain.
-            _keychainItemData = [self secItemFormatToDictionary:(__bridge NSDictionary *)outDictionary];
-        } else {
-            _keychainItemData = [@{(__bridge id)kSecAttrAccount: @"",
-                                   (__bridge id)kSecAttrLabel: @"",
-                                   (__bridge id)kSecAttrDescription: @"",
-                                   (__bridge id)kSecValueData: @{},
-                                   (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlock,
-                                   (__bridge id)kSecAttrService: self.serviceName} mutableCopy];
-            id attrGeneric = self.genericPasswordQuery[(__bridge id)kSecAttrGeneric];
-            if (attrGeneric) {
-                _keychainItemData[(__bridge id)kSecAttrGeneric] = attrGeneric;
-            }
-        }
-
-        if (outDictionary) CFRelease(outDictionary);
-
-        return _keychainItemData;
-    }
-}
-
-- (NSMutableDictionary *)dictionaryToSecItemFormat:(NSDictionary *)dictionaryToConvert {
-    // The assumption is that this method will be called with a properly populated dictionary
-    // containing all the right key/value pairs for a SecItem.
-
-    // Create a dictionary to return populated with the attributes and data.
-    NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionaryWithDictionary:dictionaryToConvert];
-
-    // Add the Generic Password keychain item class attribute.
-    returnDictionary[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
-
-    // Convert the NSString to NSData to meet the requirements for the value type kSecValueData.
-    // This is where to store sensitive data that should be encrypted.
-    NSDictionary *credentials = dictionaryToConvert[(__bridge id)kSecValueData];
-    returnDictionary[(__bridge id)kSecValueData] = [NSKeyedArchiver archivedDataWithRootObject:credentials requiringSecureCoding:NO error:nil];
-
-    return returnDictionary;
-}
-
-- (NSMutableDictionary *)secItemFormatToDictionary:(NSDictionary *)dictionaryToConvert {
-    // The assumption is that this method will be called with a properly populated dictionary
-    // containing all the right key/value pairs for the UI element.
-
-    // Create a dictionary to return populated with the attributes and data.
-    NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionaryWithDictionary:dictionaryToConvert];
-
-    // Add the proper search key and class attribute.
-    returnDictionary[(__bridge id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
-    returnDictionary[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
-
-    // Acquire the password data from the attributes.
-    CFDataRef passwordData = NULL;
-
-    if (SecItemCopyMatching((__bridge CFDictionaryRef)returnDictionary, (CFTypeRef *)&passwordData) == noErr) {
-        // Remove the search, class, and identifier key/value, we don't need them anymore.
-        [returnDictionary removeObjectForKey:(__bridge id)kSecReturnData];
-
-        // Add the password to the dictionary, converting from NSData to NSString.
-        NSData *data = (__bridge NSData *)passwordData;
-        if (data != nil) {
-            @try {
-                returnDictionary[(__bridge id)kSecValueData] = (NSDictionary *)[NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:data error:nil];
-            }
-            @catch (NSException *exception) {
-                @throw exception;
-            }
-        }
-    } else {
-        // Don't do anything if nothing is found.
-        NSAssert(NO, @"Serious error, no matching item found in the keychain.\n");
-    }
-
-    if (passwordData) CFRelease(passwordData);
-
-    return returnDictionary;
-}
-
-- (BOOL)writeToKeychain {
-    CFDictionaryRef attributes = NULL;
-    NSMutableDictionary *updateItem = nil;
-    OSStatus result;
-
-    if (SecItemCopyMatching((__bridge CFDictionaryRef)self.genericPasswordQuery, (CFTypeRef *)&attributes) == noErr) {
-        // First we need the attributes from the Keychain.
-        updateItem = [NSMutableDictionary dictionaryWithDictionary:(__bridge NSDictionary *)attributes];
-        // Second we need to add the appropriate search key/values.
-        updateItem[(__bridge id)kSecClass] = self.genericPasswordQuery[(__bridge id)kSecClass];
-
-        // Lastly, we need to set up the updated attribute list being careful to remove the class.
-        NSMutableDictionary *tempCheck = [self dictionaryToSecItemFormat:self.keychainItemData];
-        [tempCheck removeObjectForKey:(__bridge id)kSecClass];
-
-        // An implicit assumption is that you can only update a single item at a time.
-
-        result = SecItemUpdate((__bridge CFDictionaryRef)updateItem, (__bridge CFDictionaryRef)tempCheck);
-        NSAssert(result == noErr, @"Couldn't update the Keychain Item. %@", @(result));
-    } else {
-        // No previous item found; add the new one.
-        result = SecItemAdd((__bridge CFDictionaryRef)[self dictionaryToSecItemFormat:self.keychainItemData], NULL);
-        NSAssert(result == noErr, @"Couldn't add the Keychain Item. %@", @(result));
-    }
-
-    if (attributes) CFRelease(attributes);
-
-    return result == noErr;
 }
 
 @end

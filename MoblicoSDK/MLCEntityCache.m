@@ -33,8 +33,10 @@
 + (id)retrieveEntityOfClass:(Class)class withKey:(NSString *)key error:(out NSError **)error {
     @try {
         NSData *data = [NSData dataWithContentsOfURL:[self URL:key]];
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
-        return [unarchiver decodeTopLevelObjectOfClass:class forKey:NSKeyedArchiveRootObjectKey error:error];
+        if (data) {
+            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
+            return [unarchiver decodeTopLevelObjectOfClass:class forKey:NSKeyedArchiveRootObjectKey error:error];
+        }
     } @catch (NSException *exception) {
         NSLog(@"retrieveEntity exception %@", exception);
     }
