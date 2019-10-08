@@ -48,12 +48,12 @@ NS_SWIFT_NAME(MLCServiceManager.Configuration)
 @property (nonatomic, copy, readonly) NSString *host;
 @property (nonatomic, copy, readonly, nullable) NSNumber *port;
 @property (nonatomic, copy, readonly) NSString *apiKey;
-@property (nonatomic, assign, readonly) BOOL secure;
+@property (nonatomic, assign, readonly, getter=isSSLDisabled) BOOL sslDisabled;
 
 + (instancetype)configurationWithAPIKey:(NSString *)apiKey NS_SWIFT_NAME(apiKey(_:));
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithHost:(NSString *)host port:(nullable NSNumber *)port apiKey:(NSString *)apiKey secure:(BOOL)secure NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithHost:(NSString *)host port:(nullable NSNumber *)port apiKey:(NSString *)apiKey sslDisabled:(BOOL)sslDisabled NS_DESIGNATED_INITIALIZER;
 
 @end
 
@@ -152,9 +152,6 @@ NS_SWIFT_NAME(ServiceManager)
 ///--------------------
 /// @name Configuration
 ///--------------------
-
-/// Indicates whether SSL should be used with service calls.
-@property (atomic, class, assign, getter=isSSLDisabled) BOOL SSLDisabled;
 
 /// Indicates whether the Moblico testing environment should be used.
 @property (atomic, class, assign, getter=isTestingEnabled) BOOL testingEnabled;

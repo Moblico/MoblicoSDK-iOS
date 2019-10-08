@@ -29,7 +29,6 @@ NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
 static NSString *const MLCServiceManagerTestingEnabledKey = @"MLCServiceManagerTestingEnabled";
 static NSString *const MLCServiceManagerLocalhostEnabledKey = @"MLCServiceManagerLocalhostEnabled";
 static NSString *const MLCServiceManagerLoggingEnabledKey = @"MLCServiceManagerLoggingEnabled";
-static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLDisabled";
 static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManagerPersistentToken";
 static NSString *const MLCServiceManagerPlatformNameKey = @"MLCServiceManagerPlatformName";
 
@@ -348,23 +347,6 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     }];
 }
 
-+ (void)setSSLDisabled:(BOOL)disabled {
-    @synchronized (self) {
-        [NSUserDefaults.standardUserDefaults setBool:disabled forKey:MLCServiceManagerSSLDisabledKey];
-        [NSUserDefaults.standardUserDefaults synchronize];
-    }
-}
-
-+ (BOOL)isSSLDisabled {
-    @synchronized (self) {
-        if (self.configuration) {
-            return !self.configuration.secure;
-        }
-
-        return [NSUserDefaults.standardUserDefaults boolForKey:MLCServiceManagerSSLDisabledKey];
-    }
-}
-
 static BOOL _persistentTokenEnabled = NO;
 
 + (void)setPersistentTokenEnabled:(BOOL)persistToken {
@@ -402,20 +384,20 @@ FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
 @implementation MLCServiceManagerConfiguration
 
 + (instancetype)configurationWithAPIKey:(NSString *)apiKey {
-    return [[self alloc] initWithHost:@"moblico.net" port:nil apiKey:apiKey secure:YES];
+    return [[self alloc] initWithHost:@"moblico.net" port:nil apiKey:apiKey sslDisabled:NO];
 }
 
 - (instancetype)init {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Use `- initWithHost:port:apiKey:secure:` instead" userInfo:nil];
 }
 
-- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port apiKey:(NSString *)apiKey secure:(BOOL)secure {
+- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port apiKey:(NSString *)apiKey sslDisabled:(BOOL)sslDisabled {
     self = [super init];
     if (self) {
         _host = host;
         _port = port;
         _apiKey = apiKey;
-        _secure = secure;
+        _sslDisabled = sslDisabled;
     }
     return self;
 }
