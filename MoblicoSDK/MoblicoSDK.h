@@ -42,6 +42,7 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 #import <MoblicoSDK/MLCDealsService.h>
 #import <MoblicoSDK/MLCEventsService.h>
 #import <MoblicoSDK/MLCGroupsService.h>
+#import <MoblicoSDK/MLCInboxMessagesService.h>
 #import <MoblicoSDK/MLCLeaderboardService.h>
 #import <MoblicoSDK/MLCListItemsService.h>
 #import <MoblicoSDK/MLCListsService.h>
@@ -74,6 +75,7 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 #import <MoblicoSDK/MLCEvent.h>
 #import <MoblicoSDK/MLCGroup.h>
 #import <MoblicoSDK/MLCImage.h>
+#import <MoblicoSDK/MLCInboxMessage.h>
 #import <MoblicoSDK/MLCLeader.h>
 #import <MoblicoSDK/MLCList.h>
 #import <MoblicoSDK/MLCListItem.h>

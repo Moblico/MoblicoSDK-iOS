@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B303B032345408C0027FFE0 /* MLCInboxMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B303B012345408C0027FFE0 /* MLCInboxMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5B303B042345408C0027FFE0 /* MLCInboxMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B303B022345408C0027FFE0 /* MLCInboxMessage.m */; };
+		5B303B072345425D0027FFE0 /* MLCInboxMessagesService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B303B052345425D0027FFE0 /* MLCInboxMessagesService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5B303B082345425D0027FFE0 /* MLCInboxMessagesService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B303B062345425D0027FFE0 /* MLCInboxMessagesService.m */; };
 		5B4457A21CBFF380003CFA64 /* MLCCredential.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4457A01CBFF380003CFA64 /* MLCCredential.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B4457A31CBFF380003CFA64 /* MLCCredential.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4457A11CBFF380003CFA64 /* MLCCredential.m */; };
 		5B4457A61CBFFE58003CFA64 /* MLCCredentialsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B4457A41CBFFE58003CFA64 /* MLCCredentialsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,6 +161,10 @@
 		5B2ABCD319631FFE006246CC /* MLCProductCategoriesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCProductCategoriesService.m; sourceTree = "<group>"; };
 		5B2ABCD819633EC3006246CC /* MLCProductsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCProductsService.h; sourceTree = "<group>"; };
 		5B2ABCD919633EC3006246CC /* MLCProductsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCProductsService.m; sourceTree = "<group>"; };
+		5B303B012345408C0027FFE0 /* MLCInboxMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLCInboxMessage.h; sourceTree = "<group>"; };
+		5B303B022345408C0027FFE0 /* MLCInboxMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLCInboxMessage.m; sourceTree = "<group>"; };
+		5B303B052345425D0027FFE0 /* MLCInboxMessagesService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLCInboxMessagesService.h; sourceTree = "<group>"; };
+		5B303B062345425D0027FFE0 /* MLCInboxMessagesService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLCInboxMessagesService.m; sourceTree = "<group>"; };
 		5B402AD5189F5E6400B302BB /* MLCUserTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCUserTransaction.h; sourceTree = "<group>"; };
 		5B402AD6189F5E6400B302BB /* MLCUserTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCUserTransaction.m; sourceTree = "<group>"; };
 		5B402ADF189F613000B302BB /* MLCUserTransactionsSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCUserTransactionsSummary.h; sourceTree = "<group>"; };
@@ -305,8 +313,6 @@
 				5B4A798416BB1E65000C39A4 /* MLCAffinitiesService.m */,
 				5BC1AB4A16BC646E00E91D79 /* MLCAuthenticationService.h */,
 				5BC1AB4B16BC646E00E91D79 /* MLCAuthenticationService.m */,
-				5B5F672216EFC4E100956B4A /* MLCGenericService.h */,
-				5B5F672316EFC4E100956B4A /* MLCGenericService.m */,
 				5BB56B52181AD1D300BCA9DB /* MLCCheckInService.h */,
 				5BB56B53181AD1D300BCA9DB /* MLCCheckInService.m */,
 				5BD938441E8B1EEB00B1FDC9 /* MLCConcurrentService.h */,
@@ -317,8 +323,12 @@
 				5B4A797516BAFD4D000C39A4 /* MLCDealsService.m */,
 				5B42707C16B7158600DE981C /* MLCEventsService.h */,
 				5B42707D16B7158600DE981C /* MLCEventsService.m */,
+				5B5F672216EFC4E100956B4A /* MLCGenericService.h */,
+				5B5F672316EFC4E100956B4A /* MLCGenericService.m */,
 				5BC206EA1867892F00E321AC /* MLCGroupsService.h */,
 				5BC206EB1867893000E321AC /* MLCGroupsService.m */,
+				5B303B052345425D0027FFE0 /* MLCInboxMessagesService.h */,
+				5B303B062345425D0027FFE0 /* MLCInboxMessagesService.m */,
 				5BC1AB3016BBABD500E91D79 /* MLCLeaderboardService.h */,
 				5BC1AB3116BBABD500E91D79 /* MLCLeaderboardService.m */,
 				5B7BF49F1D00937900F5388B /* MLCListItemsService.h */,
@@ -386,6 +396,8 @@
 				5BC206E7186786DB00E321AC /* MLCGroup.m */,
 				5B4A796816BAD19C000C39A4 /* MLCImage.h */,
 				5B4A796916BAD19C000C39A4 /* MLCImage.m */,
+				5B303B012345408C0027FFE0 /* MLCInboxMessage.h */,
+				5B303B022345408C0027FFE0 /* MLCInboxMessage.m */,
 				5B4A797116BAFCB8000C39A4 /* MLCLeader.h */,
 				5B4A797216BAFCB9000C39A4 /* MLCLeader.m */,
 				5B7BF4971D00932300F5388B /* MLCList.h */,
@@ -504,6 +516,7 @@
 				5BC7ABE91C6BE0BE003E4C9B /* MLCLeaderboardService.h in Headers */,
 				5BC7ABEA1C6BE0BE003E4C9B /* MLCUser.h in Headers */,
 				5BC7ABEB1C6BE0BE003E4C9B /* MLCProductCategoriesService.h in Headers */,
+				5B303B072345425D0027FFE0 /* MLCInboxMessagesService.h in Headers */,
 				5B7063891CDB9C2C00AE86A0 /* MLCLogger.h in Headers */,
 				5BC7ABEC1C6BE0BE003E4C9B /* MLCEvent.h in Headers */,
 				5BC7ABED1C6BE0BE003E4C9B /* MLCAuthenticationService.h in Headers */,
@@ -566,6 +579,7 @@
 				5BC7AC1E1C6BE0BE003E4C9B /* MLCGroupsService.h in Headers */,
 				5BC7AC1F1C6BE0BE003E4C9B /* MLCDealsService.h in Headers */,
 				5BC7AC201C6BE0BE003E4C9B /* MLCService.h in Headers */,
+				5B303B032345408C0027FFE0 /* MLCInboxMessage.h in Headers */,
 				5BC7AC211C6BE0BE003E4C9B /* MLCProduct.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -655,6 +669,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B70638B1CDBA04100AE86A0 /* MLCLogger.m in Sources */,
+				5B303B082345425D0027FFE0 /* MLCInboxMessagesService.m in Sources */,
 				5BD938471E8B1EEB00B1FDC9 /* MLCConcurrentService.m in Sources */,
 				5BC7ABAE1C6BE0BE003E4C9B /* MLCProductsService.m in Sources */,
 				5BC7ABAF1C6BE0BE003E4C9B /* MLCLeaderboardService.m in Sources */,
@@ -665,6 +680,7 @@
 				5BC7ABB21C6BE0BE003E4C9B /* MLCOutOfBandService.m in Sources */,
 				5BC7ABB31C6BE0BE003E4C9B /* MLCUserTransaction.m in Sources */,
 				5BC7ABB41C6BE0BE003E4C9B /* MLCMessage.m in Sources */,
+				5B303B042345408C0027FFE0 /* MLCInboxMessage.m in Sources */,
 				5BC7ABB51C6BE0BE003E4C9B /* MLCMerchant.m in Sources */,
 				5BC7ABB61C6BE0BE003E4C9B /* MLCEventsService.m in Sources */,
 				5BC7ABB71C6BE0BE003E4C9B /* MLCGroup.m in Sources */,
