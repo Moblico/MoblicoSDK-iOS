@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(EntityCache)
 @interface MLCEntityCache : NSObject
 
-+ (nullable id)retrieveEntityOfClass:(Class)class withKey:(NSString *)key error:(out NSError **)error;
++ (nullable id)retrieveEntityOfClasses:(NSSet<Class> *)classes withKey:(NSString *)key error:(out NSError **)error;
 
 + (BOOL)persistEntity:(id<NSCoding>)object key:(NSString *)key error:(out NSError **)error;
 

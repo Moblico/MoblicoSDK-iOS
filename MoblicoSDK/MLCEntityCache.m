@@ -30,12 +30,11 @@
     return [NSFileManager.defaultManager fileExistsAtPath:[self URL:key].path];
 }
 
-+ (id)retrieveEntityOfClass:(Class)class withKey:(NSString *)key error:(out NSError **)error {
++ (id)retrieveEntityOfClasses:(NSSet<Class> *)classes withKey:(NSString *)key error:(out NSError **)error {
     @try {
         NSData *data = [NSData dataWithContentsOfURL:[self URL:key]];
         if (data) {
-            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
-            return [unarchiver decodeTopLevelObjectOfClass:class forKey:NSKeyedArchiveRootObjectKey error:error];
+            return [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:data error:error];
         }
     } @catch (NSException *exception) {
         NSLog(@"retrieveEntity exception %@", exception);

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  Base class for all Moblico model objects.
  */
 NS_SWIFT_NAME(Entity)
-@interface MLCEntity : NSObject<NSCoding, NSCopying>
+@interface MLCEntity : NSObject<NSSecureCoding, NSCopying>
 @property (nonatomic, readonly, strong, nullable) NSString *uniqueIdentifier;
 
 - (nullable instancetype)initWithJSONObject:(nullable NSDictionary<NSString *, id> *)jsonObject;

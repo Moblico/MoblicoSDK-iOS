@@ -25,6 +25,10 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
 
 @implementation MLCEntity
 
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
 + (MLCValidations *)validations {
     MLCValidations *validations = objc_getAssociatedObject(self, @selector(validations));
     if (!validations) {
@@ -205,6 +209,11 @@ static void *MLCEntityKeyValueChangedContext = &MLCEntityKeyValueChangedContext;
     }
 
     [super setValue:value forKey:key];
+}
+
+- (void)setNilValueForKey:(NSString *)key {
+    MLCEntityLog(@"setNilValueForKey: %@", key);
+    [super setValue:@(0) forKey:key];
 }
 
 - (id)valueForKey:(NSString *)key {
