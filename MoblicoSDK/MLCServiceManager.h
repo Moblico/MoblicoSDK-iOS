@@ -164,6 +164,10 @@ NS_SWIFT_NAME(ServiceManager)
 
 /// Indicates whether the current authentication is persisted between launches.
 @property (atomic, class, assign, getter=isPersistentTokenEnabled) BOOL persistentTokenEnabled;
+
+/// Override the automatically detected platform.
+@property (atomic, class, copy, nullable) NSString *platformName;
+
 #pragma mark Information
 ///------------------
 /// @name Information

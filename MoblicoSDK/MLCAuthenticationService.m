@@ -20,13 +20,9 @@
 #import "MLCAuthenticationToken.h"
 #import "MLCUser.h"
 
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#endif
-
 @interface MLCAuthenticationService ()
 
-+ (instancetype)authenticateAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler;
++ (instancetype)authenticateAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword platformName:(NSString *)platformName handler:(MLCAuthenticationServiceResourceCompletionHandler)handler;
 
 @end
 
@@ -36,11 +32,11 @@
     return [MLCAuthenticationToken class];
 }
 
-+ (instancetype)authenticateAPIKey:(NSString *)apiKey user:(MLCUser *)user childKeyword:(NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler {
-    return [self authenticateAPIKey:apiKey username:user.username password:user.password social:user.social socialToken:user.socialToken childKeyword:childKeyword handler:handler];
++ (instancetype)authenticateAPIKey:(NSString *)apiKey user:(MLCUser *)user childKeyword:(NSString *)childKeyword platformName:(NSString *)platformName handler:(MLCAuthenticationServiceResourceCompletionHandler)handler {
+    return [self authenticateAPIKey:apiKey username:user.username password:user.password social:user.social socialToken:user.socialToken childKeyword:childKeyword platformName:platformName handler:handler];
 }
 
-+ (instancetype)authenticateAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler {
++ (instancetype)authenticateAPIKey:(NSString *)apiKey username:(NSString *)username password:(NSString *)password social:(NSString *)social socialToken:(NSString *)socialToken childKeyword:(NSString *)childKeyword platformName:(NSString *)platformName handler:(MLCAuthenticationServiceResourceCompletionHandler)handler {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"apikey"] = apiKey;
     parameters[@"username"] = username;
@@ -53,11 +49,9 @@
         parameters[@"password"] = password;
     }
 
-#if TARGET_OS_IPHONE
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![UIDevice.currentDevice.model isEqualToString:@"iPhone"]) {
-        parameters[@"platformName"] = @"iPhone";
+    if (platformName) {
+        parameters[@"platformName"] = platformName;
     }
-#endif
 
     return [self _read:[MLCAuthenticationToken collectionName] parameters:parameters handler:handler];
 }

@@ -26,7 +26,11 @@ MLCServiceCreateResourceCompletionHandler(MLCAuthenticationService, MLCAuthentic
 NS_SWIFT_NAME(AuthenticationService)
 @interface MLCAuthenticationService : MLCService
 
-+ (instancetype)authenticateAPIKey:(NSString *)apiKey user:(nullable MLCUser *)user childKeyword:(nullable NSString *)childKeyword handler:(MLCAuthenticationServiceResourceCompletionHandler)handler NS_SWIFT_NAME(authenticate(apiKey:user:childKeyword:handler:));
++ (instancetype)authenticateAPIKey:(NSString *)apiKey
+                              user:(nullable MLCUser *)user
+                      childKeyword:(nullable NSString *)childKeyword
+                      platformName:(nullable NSString *)platformName
+                           handler:(MLCAuthenticationServiceResourceCompletionHandler)handler NS_SWIFT_NAME(authenticate(apiKey:user:childKeyword:platformName:handler:));
 
 @end
 

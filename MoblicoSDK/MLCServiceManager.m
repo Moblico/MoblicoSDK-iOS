@@ -21,12 +21,17 @@
 #import "MLCStatus.h"
 #import "MLCKeychainPasswordItem.h"
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
+
 NSString *const MLCInvalidAPIKeyException = @"MLCInvalidAPIKeyException";
 static NSString *const MLCServiceManagerTestingEnabledKey = @"MLCServiceManagerTestingEnabled";
 static NSString *const MLCServiceManagerLocalhostEnabledKey = @"MLCServiceManagerLocalhostEnabled";
 static NSString *const MLCServiceManagerLoggingEnabledKey = @"MLCServiceManagerLoggingEnabled";
 static NSString *const MLCServiceManagerSSLDisabledKey = @"MLCServiceManagerSSLDisabled";
 static NSString *const MLCServiceManagerPersistentTokenKey = @"MLCServiceManagerPersistentToken";
+static NSString *const MLCServiceManagerPlatformNameKey = @"MLCServiceManagerPlatformName";
 
 @interface MLCServiceManager ()
 
@@ -264,6 +269,25 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     }
 }
 
++ (void)setPlatformName:(NSString *)platformName {
+    @synchronized (self) {
+        [NSUserDefaults.standardUserDefaults setObject:platformName forKey:MLCServiceManagerPlatformNameKey];
+        [NSUserDefaults.standardUserDefaults synchronize];
+    }
+}
+
++ (NSString *)platformName {
+    @synchronized (self) {
+        NSString *platformName = [NSUserDefaults.standardUserDefaults stringForKey:MLCServiceManagerPlatformNameKey];
+#if TARGET_OS_IPHONE
+        if (!platformName && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![UIDevice.currentDevice.model isEqualToString:@"iPhone"]) {
+            platformName = @"iPhone";
+        }
+#endif
+        return platformName;
+    }
+}
+
 - (void)_authenticateRequest:(NSURLRequest *)request handler:(MLCServiceManagerAuthenticationCompletionHandler)handler {
     NSMutableURLRequest *authenticatedRequest = [request mutableCopy];
     MLCAuthenticationToken *currentToken = self.authenticationToken;
@@ -275,8 +299,9 @@ static MLCServiceManagerConfiguration *_configuration = nil;
     } else {
         MLCUser *user = self.currentUser;
         NSString *childKeyword = self.childKeyword;
-        NSString *apiKey = [[self class] currentAPIKey];
-        MLCAuthenticationService *service = [MLCAuthenticationService authenticateAPIKey:apiKey user:user childKeyword:childKeyword handler:^(MLCAuthenticationToken *newToken, NSError *error) {
+        NSString *platformName = MLCServiceManager.platformName;
+        NSString *apiKey = MLCServiceManager.currentAPIKey;
+        MLCAuthenticationService *service = [MLCAuthenticationService authenticateAPIKey:apiKey user:user childKeyword:childKeyword platformName:platformName handler:^(MLCAuthenticationToken *newToken, NSError *error) {
             if (error) {
                 MLCStatus *status = error.userInfo[@"status"];
                 BOOL correctClass = [status isKindOfClass:[MLCStatus class]];
@@ -284,7 +309,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
                 BOOL currentUserIsSet = user != nil;
                 if (correctClass && correctStatusType && currentUserIsSet) {
                     [self setCurrentUser:nil childKeyword:self.childKeyword remember:YES];
-                    MLCAuthenticationService *retryService = [MLCAuthenticationService authenticateAPIKey:apiKey user:nil childKeyword:childKeyword handler:^(MLCAuthenticationToken *retryNewToken, NSError *retryError) {
+                    MLCAuthenticationService *retryService = [MLCAuthenticationService authenticateAPIKey:apiKey user:nil childKeyword:childKeyword platformName:platformName handler:^(MLCAuthenticationToken *retryNewToken, NSError *retryError) {
                         if (retryError) {
                             handler(nil, retryError);
                         } else {
