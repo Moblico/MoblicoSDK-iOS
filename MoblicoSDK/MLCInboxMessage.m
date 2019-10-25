@@ -22,12 +22,4 @@
     return @"inbox";
 }
 
-- (instancetype)initWithJSONObject:(NSDictionary<NSString *,id> *)jsonObject {
-    NSMutableDictionary *object = [jsonObject mutableCopy];
-    NSData *payloadData = [jsonObject[@"payload"] dataUsingEncoding:NSUTF8StringEncoding];
-    object[@"payload"] = payloadData ? [NSJSONSerialization JSONObjectWithData:payloadData options:0 error:nil] : nil;
-    self = [super initWithJSONObject:object];
-    return self;
-}
-
 @end
