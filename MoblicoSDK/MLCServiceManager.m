@@ -58,8 +58,7 @@ static NSString *const MLCServiceManagerPlatformNameKey = @"MLCServiceManagerPla
 - (NSString *)serviceName {
     @synchronized (self) {
         if (!_serviceName) {
-            NSString *appName = NSBundle.mainBundle.infoDictionary[@"CFBundleName"];
-            _serviceName = [@"com.moblico.SDK.credentials." stringByAppendingString:appName];
+            _serviceName = NSBundle.mainBundle.bundleIdentifier;
         }
         return _serviceName;
     }
