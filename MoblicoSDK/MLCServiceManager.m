@@ -20,6 +20,7 @@
 #import "MLCUser.h"
 #import "MLCStatus.h"
 #import "MLCKeychainPasswordItem.h"
+#import "MLCLogger.h"
 
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -83,9 +84,18 @@ static NSString *const MLCServiceManagerPlatformNameKey = @"MLCServiceManagerPla
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
 
-        NSArray *items = [MLCKeychainPasswordItem itemsWithService:sharedInstance.serviceName error:nil];
+        NSError *error;
+        NSArray *items = [MLCKeychainPasswordItem itemsWithService:sharedInstance.serviceName error:&error];
+        if (error) {
+            MLCLog(@"Error: %@", error);
+            error = nil;
+        }
         MLCKeychainPasswordItem *item = items.firstObject;
-        NSDictionary *credentials = (NSDictionary *)[item readDataOfClass:[NSDictionary class] error:nil];
+        NSDictionary *credentials = (NSDictionary *)[item readDataOfClass:[NSDictionary class] error:&error];
+        if (error) {
+            MLCLog(@"Error: %@", error);
+            error = nil;
+        }
 
         if (credentials) {
             NSString *password = credentials[@"password"];
@@ -225,14 +235,27 @@ static MLCServiceManagerConfiguration *_configuration = nil;
             credentials = @{};
         }
 
-        NSArray *items = [MLCKeychainPasswordItem itemsWithService:self.serviceName error:nil];
+        NSError *error;
+        NSArray *items = [MLCKeychainPasswordItem itemsWithService:self.serviceName error:&error];
+        if (error) {
+            MLCLog(@"Error: %@", error);
+            error = nil;
+        }
         for (MLCKeychainPasswordItem *item in items) {
-            [MLCKeychainPasswordItem destroyItem:item error:nil];
+            [MLCKeychainPasswordItem destroyItem:item error:&error];
+            if (error) {
+                MLCLog(@"Error: %@", error);
+                error = nil;
+            }
         }
 
         if (username.length && rememberCredentials) {
             MLCKeychainPasswordItem *item = [MLCKeychainPasswordItem itemWithService:self.serviceName account:username];
-            [item saveData:credentials ofClass:[NSDictionary class] error:nil];
+            [item saveData:credentials ofClass:[NSDictionary class] error:&error];
+            if (error) {
+                MLCLog(@"Error: %@", error);
+                error = nil;
+            }
         }
     }
 }
