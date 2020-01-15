@@ -108,17 +108,18 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     self.connection = nil;
 }
 
-+ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler {
++ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters contentType:(MLCServiceRequestMediaType)contentType handler:(MLCServiceInternalJSONCompletionHandler)handler {
     MLCService *service = [[self alloc] init];
     service.jsonCompletionHandler = handler;
-    service.request = [MLCServiceRequest requestWithMethod:method path:path parameters:parameters];
+    service.request = [MLCServiceRequest requestWithMethod:method path:path parameters:parameters contentType:contentType];
     return service;
 }
 
-+ (instancetype)_service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
++ (instancetype)_service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(NSDictionary *)parameters contentType:(MLCServiceRequestMediaType)contentType handler:(MLCServiceJSONCompletionHandler)handler {
     return [self serviceForMethod:method
                              path:path
                        parameters:parameters
+                      contentType:contentType
                           handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
                               handler(jsonObject, error);
                               service.dispatchGroup = nil;
@@ -133,6 +134,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodPOST
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
 
                               if (handler) {
@@ -157,6 +159,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodPOST
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               if (handler) {
                                   BOOL success;
@@ -186,6 +189,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodPUT
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
 
                               if (handler) {
@@ -214,6 +218,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodDELETE
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, NSHTTPURLResponse *response) {
                               if (handler) {
                                   BOOL success;
@@ -248,6 +253,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
                               dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                   MLCEntity *resource = [[service class] deserializeResource:jsonObject];
@@ -263,6 +269,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
                               BOOL success;
                               MLCStatus *status = [[MLCStatus alloc] initWithJSONObject:jsonObject];
@@ -296,6 +303,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:searchParameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *error, __unused NSHTTPURLResponse *response) {
                               NSInteger httpStatus = [error.userInfo[@"status"] httpStatus];
 

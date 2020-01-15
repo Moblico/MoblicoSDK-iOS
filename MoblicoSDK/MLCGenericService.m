@@ -40,7 +40,7 @@
 }
 
 + (instancetype)service:(NSString *)method path:(NSString *)path parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
-    return [self _service:method path:path parameters:parameters handler:handler];
+    return [self _service:method path:path parameters:parameters contentType:nil handler:handler];
 }
 
 + (instancetype)invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler {

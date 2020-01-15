@@ -174,7 +174,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     NSString *path = [[[self classForResource] collectionName] stringByAppendingPathComponent:uniqueIdentifier];
     path = [path stringByAppendingPathComponent:@"resetPassword"];
 
-    return [self _service:MLCServiceRequestMethodPOST path:path parameters:nil handler:^(id jsonObject, NSError *error) {
+    return [self _service:MLCServiceRequestMethodPOST path:path parameters:nil contentType:nil handler:^(id jsonObject, NSError *error) {
         MLCResetPassword *resetPassword = [[MLCResetPassword alloc] initWithJSONObject:jsonObject];
         handler(resetPassword, error);
     }];
@@ -214,6 +214,7 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     return [self serviceForMethod:MLCServiceRequestMethodGET
                              path:path
                        parameters:parameters
+                      contentType:nil
                           handler:^(MLCService *service, id jsonObject, NSError *serviceError, __unused NSHTTPURLResponse *response) {
                               dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                   NSString *username = jsonObject[@"username"];

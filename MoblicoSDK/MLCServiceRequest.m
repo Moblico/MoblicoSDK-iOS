@@ -39,6 +39,10 @@ MLCServiceRequestMethod const MLCServiceRequestMethodPOST = @"POST";
 MLCServiceRequestMethod const MLCServiceRequestMethodPUT = @"PUT";
 MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
 
+
+MLCServiceRequestMediaType const MLCServiceRequestMediaTypeJSON = @"application/json";
+MLCServiceRequestMediaType const MLCServiceRequestMediaTypeForm = @"application/x-www-form-urlencoded";
+
 @interface MLCServiceRequest ()
 
 @property (nonatomic, strong, readwrite) NSURLComponents *components;
@@ -157,7 +161,7 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     return ![method isEqualToString:MLCServiceRequestMethodGET] && ![method isEqualToString:MLCServiceRequestMethodDELETE];
 }
 
-+ (instancetype)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)servicePath parameters:(NSDictionary *)parameters {
++ (instancetype)requestWithMethod:(MLCServiceRequestMethod)method path:(NSString *)servicePath parameters:(NSDictionary *)parameters contentType:(nullable MLCServiceRequestMediaType)contentType {
     MLCServiceRequest *request = [[MLCServiceRequest alloc] init];
 
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
@@ -173,25 +177,20 @@ MLCServiceRequestMethod const MLCServiceRequestMethodDELETE = @"DELETE";
     components.host = MLCServiceManager.host;
     components.port = MLCServiceManager.configuration.port;
     components.path = path;
-    NSArray<NSURLQueryItem *> *percentEncodedQueryItems = [self queryItemsFromParameters:parameters];
-    if (@available(iOS 11.0, *)) {
-        components.percentEncodedQueryItems = percentEncodedQueryItems;
-    } else {
-        NSMutableArray<NSString *> *items = [[NSMutableArray<NSString *> alloc] init];
-        for (NSURLQueryItem *item in percentEncodedQueryItems) {
-            if (!item.value) {
-                [items addObject:item.name];
-            } else {
-                [items addObject:[NSString stringWithFormat:@"%@=%@", item.name, item.value]];
-            }
-        }
-        components.percentEncodedQuery = [items componentsJoinedByString:@"&"];
-    }
 
-    if (components.query.length && [self methodUsesBody:method]) {
-        headers[MLCServiceRequestHeaderKeyContentType] = @"application/x-www-form-urlencoded";
-        request.body = [components.query dataUsingEncoding:NSUTF8StringEncoding];
-        components.query = nil;
+    if (parameters.count) {
+        if ([self methodUsesBody:method]) {
+            headers[MLCServiceRequestHeaderKeyContentType] = contentType ?: MLCServiceRequestMediaTypeForm;
+            if ([contentType isEqualToString:MLCServiceRequestMediaTypeJSON]) {
+                request.body = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+            } else {
+                NSURLComponents *body = [[NSURLComponents alloc] init];
+                body.percentEncodedQueryItems = [self queryItemsFromParameters:parameters];
+                request.body = [body.query dataUsingEncoding:NSUTF8StringEncoding];
+            }
+        } else {
+            components.percentEncodedQueryItems = [self queryItemsFromParameters:parameters];
+        }
     }
 
     request.components = components;

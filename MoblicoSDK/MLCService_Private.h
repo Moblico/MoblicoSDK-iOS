@@ -42,7 +42,7 @@ typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id _
 + (instancetype)_invalidServiceWithError:(MLCServiceError *)error handler:(MLCServiceJSONCompletionHandler)handler;
 + (instancetype)_invalidServiceFailedWithError:(MLCServiceError *)error handler:(MLCServiceSuccessCompletionHandler)handler;
 
-+ (instancetype)_service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(nullable NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
++ (instancetype)_service:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(nullable NSDictionary<NSString *, id> *)parameters contentType:(nullable MLCServiceRequestMediaType)contentType handler:(MLCServiceJSONCompletionHandler)handler;
 
 + (instancetype)_create:(NSString *)path parameters:(nullable NSDictionary<NSString *, id> *)parameters handler:(nullable MLCServiceResourceCompletionHandler)handler;
 + (instancetype)createResource:(MLCEntity *)resource handler:(nullable MLCServiceResourceCompletionHandler)handler;
@@ -67,7 +67,7 @@ typedef void(^MLCServiceInternalJSONCompletionHandler)(MLCService *service, id _
 + (nullable NSArray<Class> *)scopeableResources;
 + (BOOL)canScopeResource:(MLCEntity *)resource;
 
-+ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(nullable NSDictionary<NSString *, id> *)parameters handler:(MLCServiceInternalJSONCompletionHandler)handler;
++ (instancetype)serviceForMethod:(MLCServiceRequestMethod)method path:(NSString *)path parameters:(nullable NSDictionary<NSString *, id> *)parameters contentType:(nullable MLCServiceRequestMediaType)contentType handler:(MLCServiceInternalJSONCompletionHandler)handler;
 
 + (nullable MLCEntity *)deserializeResource:(nullable NSDictionary<NSString *, id> *)resource;
 + (nullable NSArray<MLCEntity *> *)deserializeArray:(nullable NSArray<NSDictionary<NSString *, id> *> *)array;
