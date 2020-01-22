@@ -178,7 +178,7 @@ NSErrorUserInfoKey const MLCValidationDetailedErrorsKey = @"MLCValidationDetaile
     dispatch_once(&onceToken, ^{
         error = [self errorWithDomain:MLCValidationErrorDomain
                                  code:MLCValidationErrorUnknown
-                             userInfo:@{NSLocalizedDescriptionKey: @"Unknown error"}];
+                             userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Unknown error", nil)}];
     });
     return error;
 }
@@ -196,7 +196,7 @@ NSErrorUserInfoKey const MLCValidationDetailedErrorsKey = @"MLCValidationDetaile
 + (instancetype)errorWithMessage:(NSString *)message {
     return [self errorWithDomain:MLCValidationErrorDomain
                             code:MLCValidationErrorFailure
-                        userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(message, nil)}];
+                        userInfo:@{NSLocalizedDescriptionKey: message}];
 }
 
 @end
