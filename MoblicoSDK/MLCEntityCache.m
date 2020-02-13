@@ -8,22 +8,34 @@
 
 #import "MLCEntityCache.h"
 
+@interface MLCEntityCache ()
+@property (class, nonnull, copy, readonly) NSURL *cacheDirectoryURL;
+@end
+
+
 @implementation MLCEntityCache
 
-+ (NSURL *)documentsURL {
++ (NSURL *)cacheDirectoryURL {
     static dispatch_once_t onceToken;
-    static NSURL *documentsDirectory = nil;
+    static NSURL *cacheDirectoryURL = nil;
     dispatch_once(&onceToken, ^{
-        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-        documentsDirectory = paths.firstObject;
+        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask];
+        cacheDirectoryURL = [paths.firstObject URLByAppendingPathComponent:@"CachedEntities" isDirectory:YES];
+        NSError *error;
+        if (![NSFileManager.defaultManager createDirectoryAtURL:cacheDirectoryURL
+                                    withIntermediateDirectories:YES
+                                                     attributes:nil
+                                                          error:&error]) {
+            NSLog(@"Failed to create CachedEntities directory: %@", error.localizedDescription);
+        }
     });
 
-    return documentsDirectory;
+    return cacheDirectoryURL;
 }
 
 + (NSURL *)URL:(NSString *)key {
     NSString *component = [key stringByAppendingPathExtension:@"archive"];
-    return [[self documentsURL] URLByAppendingPathComponent:component];
+    return [self.cacheDirectoryURL URLByAppendingPathComponent:component isDirectory:NO];
 }
 
 + (BOOL)entityExistsWithKey:(NSString *)key {
@@ -54,33 +66,23 @@
     return [data writeToURL:[self URL:key] options:options error:error];
 }
 
-+ (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError **)error {
-    return [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:error];
++ (BOOL)clearEntityWithKey:(NSString *)key error:(out NSError **)outError {
+    NSError *error;
+    BOOL success = [NSFileManager.defaultManager removeItemAtURL:[self URL:key] error:&error];
+    if (!success && [error.domain isEqualToString:NSCocoaErrorDomain] && error.code == NSFileNoSuchFileError) {
+        // Calls to clearEntity should be idempotent, if the archive does not exist then there is no error.
+        success = YES;
+        error = nil;
+    }
+    if (outError != NULL) {
+        *outError = error;
+    }
+    return success;
 }
 
 + (BOOL)clearCache:(out NSError **)error {
-    __block BOOL hadError = YES;
-    NSArray *contents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:[self documentsURL]
-                                                    includingPropertiesForKeys:nil
-                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                         error:error];
-    if (!contents) {
-        return NO;
-    }
-
-    __block NSError *blockError;
-    [contents enumerateObjectsWithOptions:NSEnumerationConcurrent
-                               usingBlock:^(NSURL *fileURL, __unused NSUInteger idx, BOOL *stop) {
-                                   if (![NSFileManager.defaultManager removeItemAtURL:fileURL
-                                                                                error:&blockError]) {
-                                       *stop = YES;
-                                       hadError = YES;
-                                   }
-                               }];
-    if (error) {
-        *error = [blockError copy];
-    }
-    return !hadError;
+    NSURL *cacheDirectoryURL = self.cacheDirectoryURL;
+    return [NSFileManager.defaultManager removeItemAtURL:cacheDirectoryURL error:error] && [NSFileManager.defaultManager createDirectoryAtURL:cacheDirectoryURL withIntermediateDirectories:YES attributes:nil error:error];
 }
 
 @end
