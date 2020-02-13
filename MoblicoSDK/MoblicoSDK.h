@@ -17,8 +17,8 @@
 #import <Foundation/Foundation.h>
 
 #ifndef __APPCODE_IDE__
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 110000
-#error "iOS 11 is the minimum required Target Deployment for MoblicoSDK."
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 120000
+#error "iOS 12 is the minimum required Target Deployment for MoblicoSDK."
 #endif
 #endif
 
