@@ -43,15 +43,27 @@
 }
 
 + (instancetype)listGroups:(MLCGroupsServiceCollectionCompletionHandler)handler {
-    return [self findResourcesWithSearchParameters:@{@"registrable": @YES} handler:handler];
+    return [self listGroupsWithRegisterable:YES handler:handler];
+}
+
++ (instancetype)listGroupsWithRegisterable:(BOOL)registerable handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
+    return [self findResourcesWithSearchParameters:@{@"registrable": @(registerable)} handler:handler];
+}
+
++ (instancetype)listAllGroups:(MLCGroupsServiceCollectionCompletionHandler)handler {
+    return [self findResourcesWithSearchParameters:nil handler:handler];
 }
 
 + (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
-    return [self listGroupsForResource:user handler:handler];
+    return [self listGroupsForUser:user registerable:YES handler:handler];
 }
 
-+ (instancetype)listGroupsForResource:(MLCEntity *)resource handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
-    return [self findScopedResourcesForResource:resource searchParameters:@{@"registrable": @YES} handler:handler];
++ (instancetype)listGroupsForUser:(MLCUser *)user registerable:(BOOL)registerable handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
+    return [self findScopedResourcesForResource:user searchParameters:@{@"registrable": @(registerable)} handler:handler];
+}
+
++ (instancetype)listAllGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler {
+    return [self findScopedResourcesForResource:user searchParameters:nil handler:handler];
 }
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler {

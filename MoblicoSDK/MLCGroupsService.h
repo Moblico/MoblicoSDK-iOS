@@ -27,9 +27,13 @@ MLCServiceCreateCollectionCompletionHandler(MLCGroupsService, MLCGroup);
 NS_SWIFT_NAME(GroupsService)
 @interface MLCGroupsService : MLCService
 
-+ (instancetype)listGroups:(MLCGroupsServiceCollectionCompletionHandler)handler;
++ (instancetype)listGroups:(MLCGroupsServiceCollectionCompletionHandler)handler __attribute__((deprecated("Use `+ listGroupsWithRegisterable:handler:` instead.")));
++ (instancetype)listGroupsWithRegisterable:(BOOL)registerable handler:(MLCGroupsServiceCollectionCompletionHandler)handler;
++ (instancetype)listAllGroups:(MLCGroupsServiceCollectionCompletionHandler)handler;
 
-+ (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler;
++ (instancetype)listGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler __attribute__((deprecated("Use `+ listGroupsForUser:registerable:handler:` instead.")));
++ (instancetype)listGroupsForUser:(MLCUser *)user registerable:(BOOL)registerable handler:(MLCGroupsServiceCollectionCompletionHandler)handler;
++ (instancetype)listAllGroupsForUser:(MLCUser *)user handler:(MLCGroupsServiceCollectionCompletionHandler)handler;
 
 + (instancetype)addUser:(MLCUser *)user toGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
 + (instancetype)addCurrentUserToGroup:(MLCGroup *)group handler:(MLCServiceSuccessCompletionHandler)handler;
