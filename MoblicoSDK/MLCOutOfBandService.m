@@ -24,7 +24,12 @@
 }
 
 + (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler {
-    return [self outOfBandMethod:MLCServiceRequestMethodPOST endPoint:endPoint parameters:parameters contentType:nil handler:handler];
+    return [self create:endPoint parameters:parameters asJSON:NO handler:handler];
+}
+
++ (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters asJSON:(BOOL)JSON handler:(MLCServiceJSONCompletionHandler)handler {
+    MLCServiceRequestMediaType contentType = JSON ? MLCServiceRequestMediaTypeJSON : MLCServiceRequestMediaTypeForm;
+    return [self outOfBandMethod:MLCServiceRequestMethodPOST endPoint:endPoint parameters:parameters contentType:contentType handler:handler];
 }
 
 + (instancetype)outOfBandMethod:(MLCServiceRequestMethod)method endPoint:(NSString *)endPoint parameters:(NSDictionary *)parameters contentType:(MLCServiceRequestMediaType)contentType handler:(MLCServiceJSONCompletionHandler)handler {

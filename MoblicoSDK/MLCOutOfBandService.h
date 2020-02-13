@@ -25,6 +25,8 @@ NS_SWIFT_NAME(OutOfBandService)
 
 + (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters handler:(MLCServiceJSONCompletionHandler)handler;
 
++ (instancetype)create:(NSString *)endPoint parameters:(NSDictionary<NSString *, id> *)parameters asJSON:(BOOL)JSON handler:(MLCServiceJSONCompletionHandler)handler;
+
 @end
 
 NS_ASSUME_NONNULL_END
