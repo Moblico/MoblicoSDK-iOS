@@ -62,7 +62,7 @@
             _geoFenceRegion.notifyOnExit = YES;
         }
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
         if ([jsonObject[@"beaconNotificationEnabled"] boolValue]) {
             NSString *beaconIdentifier = jsonObject[@"beaconIdentifier"];
             NSArray<NSString *> *beacon = [beaconIdentifier componentsSeparatedByString:@","];

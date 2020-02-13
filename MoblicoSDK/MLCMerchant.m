@@ -25,7 +25,7 @@
             _attributes = @{};
         }
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
         if ([jsonObject[@"beaconRegionEnabled"] boolValue]) {
             NSString *identifier = [NSString stringWithFormat:@"%@-MERCHANT", @(_merchantId)];
             NSArray<NSString *> *beacon = [jsonObject[@"beaconIdentifier"] componentsSeparatedByString:@","];
