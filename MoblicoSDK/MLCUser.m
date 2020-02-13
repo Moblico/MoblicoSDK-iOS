@@ -177,12 +177,12 @@ static NSArray<NSString *> *_requiredParameters = nil;
 
 + (void)addValidations:(MLCValidations *)validations format:(NSString *)format caseSensitive:(BOOL)caseSensitive key:(NSString *)key named:(NSString *)keyName {
     NSMutableArray *rules = [NSMutableArray array];
-    MLCValidate *validPresence = [self validatePresenceOfRequiredKey:key withMessage:[NSString stringWithFormat:@"Your %@ is required.", keyName]];
+    MLCValidate *validPresence = [self validatePresenceOfRequiredKey:key withMessage:[NSString localizedStringWithFormat:NSLocalizedString(@"Your %@ is required.", @"Your {user field} is required."), keyName]];
     if (validPresence) {
         [rules addObject:validPresence];
     }
     if (format.length > 0) {
-        NSString *message = [NSString stringWithFormat:@"Please enter a valid %@.", keyName];
+        NSString *message = [NSString localizedStringWithFormat:NSLocalizedString(@"Please enter a valid %@.", @"Please enter a valid {user field}."), keyName];
         MLCValidate *validFormat = [MLCValidate validateFormat:format caseSensitive:caseSensitive message:message];
         if (validFormat) {
             [rules addObject:validFormat];

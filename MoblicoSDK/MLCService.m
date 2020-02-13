@@ -240,7 +240,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
     NSString *uniqueIdentifier = [MLCEntity stringFromValue:uniqueIdentifierObject];
 
     if (!uniqueIdentifier.length) {
-        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
+        NSString *description = [NSString localizedStringWithFormat:NSLocalizedString(@"Missing %@", nil), [[self classForResource] uniqueIdentifierKey]];
         MLCServiceError *error = [MLCServiceError missingParameterErrorWithDescription:description];
         return [self _invalidServiceWithError:error handler:handler];
     }
@@ -285,7 +285,7 @@ NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetail
 
 + (instancetype)findScopedResourcesForResource:(MLCEntity *)resource searchParameters:(NSDictionary *)searchParameters handler:(MLCServiceCollectionCompletionHandler)handler {
     if (![self canScopeResource:resource]) {
-        NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
+        NSString *description = [NSString localizedStringWithFormat:NSLocalizedString(@"Invalid scope for %@", nil), [[self classForResource] collectionName]];
         MLCServiceError *error = [MLCServiceError invalidParameterErrorWithDescription:description];
         return [self _invalidServiceWithError:error handler:handler];
     }
