@@ -25,6 +25,8 @@
 		5B7BF4A41D00937900F5388B /* MLCListItemsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7BF4A01D00937900F5388B /* MLCListItemsService.m */; };
 		5B7BF4A51D00937900F5388B /* MLCListsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B7BF4A11D00937900F5388B /* MLCListsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B7BF4A61D00937900F5388B /* MLCListsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7BF4A21D00937900F5388B /* MLCListsService.m */; };
+		5B91F8D323F749BF00289E1E /* MLCOrderManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B91F8D123F749BE00289E1E /* MLCOrderManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5B91F8D423F749BF00289E1E /* MLCOrderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B91F8D223F749BE00289E1E /* MLCOrderManager.m */; };
 		5BAB4AE21DECD9CB00441CE3 /* MLCScanService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BAB4AE01DECD9CB00441CE3 /* MLCScanService.m */; };
 		5BAB4AE31DECD9CB00441CE3 /* MLCScanService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BAB4AE11DECD9CB00441CE3 /* MLCScanService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BBC7A861F68E0AA0042D398 /* MLCServiceRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BBC7A841F68E0AA0042D398 /* MLCServiceRequest.h */; };
@@ -253,6 +255,8 @@
 		5B8147081B669CC600A36D4A /* MLCMerchant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCMerchant.m; sourceTree = "<group>"; };
 		5B81470D1B669FA400A36D4A /* MLCEntityCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCEntityCache.h; sourceTree = "<group>"; };
 		5B81470E1B669FA400A36D4A /* MLCEntityCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCEntityCache.m; sourceTree = "<group>"; };
+		5B91F8D123F749BE00289E1E /* MLCOrderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCOrderManager.h; sourceTree = "<group>"; };
+		5B91F8D223F749BE00289E1E /* MLCOrderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCOrderManager.m; sourceTree = "<group>"; };
 		5B96EBB118AE86DF004991BC /* MLCValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCValidation.h; sourceTree = "<group>"; };
 		5B96EBB218AE86DF004991BC /* MLCValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCValidation.m; sourceTree = "<group>"; };
 		5B96EBEB18B2E72C004991BC /* MLCOutOfBandService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCOutOfBandService.h; sourceTree = "<group>"; };
@@ -451,6 +455,8 @@
 				5B70638A1CDBA04100AE86A0 /* MLCLogger.m */,
 				5BEBE2DB19103F8B00779BC0 /* MLCMetricsManager.h */,
 				5BEBE2DC19103F8B00779BC0 /* MLCMetricsManager.m */,
+				5B91F8D123F749BE00289E1E /* MLCOrderManager.h */,
+				5B91F8D223F749BE00289E1E /* MLCOrderManager.m */,
 				5B4A798B16BB6644000C39A4 /* MLCServiceManager.h */,
 				5B4A798E16BB667B000C39A4 /* MLCServiceManager.m */,
 				5BBC7A841F68E0AA0042D398 /* MLCServiceRequest.h */,
@@ -520,6 +526,7 @@
 				5B7063891CDB9C2C00AE86A0 /* MLCLogger.h in Headers */,
 				5BC7ABEC1C6BE0BE003E4C9B /* MLCEvent.h in Headers */,
 				5BC7ABED1C6BE0BE003E4C9B /* MLCAuthenticationService.h in Headers */,
+				5B91F8D323F749BF00289E1E /* MLCOrderManager.h in Headers */,
 				5BC7ABEE1C6BE0BE003E4C9B /* MLCMediaService.h in Headers */,
 				5BC7ABEF1C6BE0BE003E4C9B /* MLCMessageService.h in Headers */,
 				5BBC7A861F68E0AA0042D398 /* MLCServiceRequest.h in Headers */,
@@ -693,6 +700,7 @@
 				5BC7ABBD1C6BE0BE003E4C9B /* MLCMetricsService.m in Sources */,
 				5BC7ABBE1C6BE0BE003E4C9B /* MLCAuthenticationToken.m in Sources */,
 				5BC7ABBF1C6BE0BE003E4C9B /* MLCUserTransactionsService.m in Sources */,
+				5B91F8D423F749BF00289E1E /* MLCOrderManager.m in Sources */,
 				5B7BF4A61D00937900F5388B /* MLCListsService.m in Sources */,
 				5BC7ABC01C6BE0BE003E4C9B /* MLCServiceManager.m in Sources */,
 				5BAB4AE21DECD9CB00441CE3 /* MLCScanService.m in Sources */,

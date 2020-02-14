@@ -97,6 +97,7 @@ FOUNDATION_EXPORT const unsigned char MoblicoSDKVersionString[];
 #import <MoblicoSDK/MLCUserTransactionsSummary.h>
 
 #import <MoblicoSDK/MLCMetricsManager.h>
+#import <MoblicoSDK/MLCOrderManager.h>
 
 #import <MoblicoSDK/MLCEntityCache.h>
 #import <MoblicoSDK/MLCKeychainPasswordItem.h>
