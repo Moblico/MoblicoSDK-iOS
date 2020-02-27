@@ -19,7 +19,7 @@
     static dispatch_once_t onceToken;
     static NSURL *cacheDirectoryURL = nil;
     dispatch_once(&onceToken, ^{
-        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask];
+        NSArray *paths = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
         cacheDirectoryURL = [paths.firstObject URLByAppendingPathComponent:@"CachedEntities" isDirectory:YES];
         NSError *error;
         if (![NSFileManager.defaultManager createDirectoryAtURL:cacheDirectoryURL
