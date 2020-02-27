@@ -7,6 +7,7 @@
 //
 
 #import "MLCOrderManager.h"
+#import <CommonCrypto/CommonDigest.h>
 
 static NSString *const OrderHistoryKey = @"orderHistory";
 
@@ -71,6 +72,43 @@ static NSString *_groupId = nil;
     if (!found) {
         MLCOrderItem *item = [[MLCOrderItem alloc] init];
         item.productId = partNumber;
+        item.quantity = quantity;
+        [orderItems addObject:item];
+    }
+
+    self.products = orderItems;
+    [self save];
+}
+
+- (NSString *)sha1Hash:(NSData *)data {
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
+        [output appendFormat:@"%02x", digest[i]];
+    }
+
+    return output;
+}
+
+- (void)addImage:(NSData *)imageData quantity:(NSInteger)quantity {
+    NSString *partNumber = [self sha1Hash:imageData];
+    NSMutableArray *orderItems = [self.products mutableCopy] ?: [NSMutableArray array];
+    BOOL found = NO;
+    for (MLCOrderItem *other in orderItems) {
+        if ([other.productId isEqualToString:partNumber]) {
+            other.quantity += quantity;
+            found = YES;
+            break;
+        }
+    }
+    if (!found) {
+        MLCOrderItem *item = [[MLCOrderItem alloc] init];
+        item.productId = partNumber;
+        item.imageData = imageData;
         item.quantity = quantity;
         [orderItems addObject:item];
     }
@@ -251,9 +289,15 @@ static NSString *_groupId = nil;
 
 @implementation MLCOrderItem
 
+- (id)copyWithZone:(nullable NSZone *)zone {
+    return [[[self class] allocWithZone:zone] initWithDictionay:self.dictionaryValue];
+}
+
 - (nonnull NSDictionary *)dictionaryValue {
     return @{
         @"productId": self.productId,
+        @"imageData": [self.imageData base64EncodedStringWithOptions:0] ?: @"",
+        @"label": self.label ?: @"",
         @"quantity": @(self.quantity)
     };
 }
@@ -262,9 +306,23 @@ static NSString *_groupId = nil;
     self = [super init];
     if (self) {
         self.productId = dictionary[@"productId"];
+        NSString *base64String = dictionary[@"imageData"];
+        if (base64String.length) {
+            self.imageData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
+        }
+        self.label = dictionary[@"label"];
         self.quantity = [(dictionary[@"quantity"] ?: @0) integerValue];
     }
     return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[MLCOrderItem class]]) {
+        return NO;
+    }
+    MLCOrderItem *other = (MLCOrderItem *)object;
+
+    return [self.dictionaryValue isEqualToDictionary:other.dictionaryValue];
 }
 
 @end

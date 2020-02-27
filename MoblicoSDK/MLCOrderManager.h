@@ -24,9 +24,11 @@ NS_SWIFT_NAME(CustomField)
 @end
 
 NS_SWIFT_NAME(OrderItem)
-@interface MLCOrderItem : NSObject <MLCDictionayConvertable>
+@interface MLCOrderItem : NSObject <MLCDictionayConvertable, NSCopying>
 @property (nonatomic, copy) NSString *productId;
 @property (nonatomic, assign) NSInteger quantity;
+@property (nonatomic, copy) NSData *imageData;
+@property (nonatomic, copy) NSString *label;
 @end
 
 NS_SWIFT_NAME(Order)
@@ -59,6 +61,7 @@ NS_SWIFT_NAME(OrderManager)
 - (void)clear;
 - (void)save;
 - (void)add:(NSString *)productId quantity:(NSInteger)quantity;
+- (void)addImage:(NSData *)imageData quantity:(NSInteger)quantity;
 - (void)removeItemAtIndex:(NSUInteger)idx;
 - (void)addCompletedOrder:(MLCOrder *)order;
 - (void)addPendingOrder:(MLCOrder *)order;
