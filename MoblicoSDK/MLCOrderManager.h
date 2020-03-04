@@ -28,7 +28,7 @@ NS_SWIFT_NAME(OrderItem)
 @property (nonatomic, copy) NSString *productId;
 @property (nonatomic, assign) NSInteger quantity;
 @property (nonatomic, copy) NSData *imageData;
-@property (nonatomic, copy) NSString *label;
+@property (nonatomic, copy) NSString *note;
 @end
 
 NS_SWIFT_NAME(Order)

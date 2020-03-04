@@ -297,7 +297,7 @@ static NSString *_groupId = nil;
     return @{
         @"productId": self.productId,
         @"imageData": [self.imageData base64EncodedStringWithOptions:0] ?: @"",
-        @"label": self.label ?: @"",
+        @"note": self.note ?: @"",
         @"quantity": @(self.quantity)
     };
 }
@@ -310,7 +310,7 @@ static NSString *_groupId = nil;
         if (base64String.length) {
             self.imageData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
         }
-        self.label = dictionary[@"label"];
+        self.note = dictionary[@"note"] ?: dictionary[@"label"];
         self.quantity = [(dictionary[@"quantity"] ?: @0) integerValue];
     }
     return self;

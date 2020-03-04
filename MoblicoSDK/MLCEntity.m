@@ -740,6 +740,9 @@ return; \
     }
 
     MLCEntity *otherEntity = (MLCEntity *)object;
+    if (self.uniqueIdentifier == otherEntity.uniqueIdentifier) {
+        return YES;
+    }
     return [self.uniqueIdentifier isEqual:otherEntity.uniqueIdentifier];
 }
 
