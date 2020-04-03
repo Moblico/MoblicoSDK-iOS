@@ -46,6 +46,8 @@ MLCServiceCreateCollectionCompletionHandler(MLCAdsService, MLCAd);
 NS_SWIFT_NAME(AdsService)
 @interface MLCAdsService : MLCService
 
+@property (nonatomic, class, getter=isEnabled) BOOL enabled;
+
 /**
  Retrieve a collection of ads.
 

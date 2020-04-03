@@ -24,6 +24,26 @@ MLCAdsServiceType const MLCAdsServiceTypeSponsor = @"AD_SPONSOR";
 
 @implementation MLCAdsService
 
+static BOOL _enabled = YES;
+
++ (BOOL)isEnabled {
+    return _enabled;
+}
+
++ (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+}
+
+- (void)start {
+    if (!MLCAdsService.isEnabled) {
+        if (self.jsonCompletionHandler) {
+            self.jsonCompletionHandler(self, nil, nil, nil);
+        }
+        return;
+    }
+    [super start];
+}
+
 + (Class)classForResource {
     return [MLCAd class];
 }
