@@ -75,7 +75,25 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 
     CFArrayRef queryResults = NULL;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&queryResults);
+    NSArray<NSString *> *accounts = [self accountsFromQueryResults:queryResults status:status error:error];
+    if (queryResults) {
+        CFRelease(queryResults);
+    }
 
+    if (!accounts) {
+        return nil;
+    }
+
+    NSMutableArray<MLCKeychainPasswordItem *> *items = [NSMutableArray arrayWithCapacity:accounts.count];
+    for (NSString *account in accounts) {
+        MLCKeychainPasswordItem *item = [[self alloc] initWithService:service account:account accessGroup:accessGroup];
+        [items addObject:item];
+    }
+
+    return items;
+}
+
++ (NSArray<NSString *> *)accountsFromQueryResults:(CFArrayRef)queryResults status:(OSStatus)status error:(NSError *__autoreleasing *)error {
     if (status == errSecItemNotFound) {
         return @[];
     }
@@ -91,7 +109,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         return @[];
     }
 
-    NSMutableArray<MLCKeychainPasswordItem *> *items = [NSMutableArray arrayWithCapacity:resultData.count];
+    NSMutableArray<NSString *> *accounts = [NSMutableArray arrayWithCapacity:resultData.count];
     for (id result in resultData) {
         if (![result isKindOfClass:[NSDictionary class]]) {
             if (error) *error = [MLCKeychainPasswordItemError invalidItem];
@@ -99,12 +117,10 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         }
 
         NSString *account = result[(__bridge NSString *)kSecAttrAccount];
-
-        MLCKeychainPasswordItem *item = [[self alloc] initWithService:service account:account accessGroup:accessGroup];
-        [items addObject:item];
+        [accounts addObject:account];
     }
 
-    return items;
+    return accounts;
 }
 
 - (BOOL)setObject:(id)obj forKey:(NSString *)key error:(out NSError **)error {
@@ -122,7 +138,19 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
 
     CFDictionaryRef queryResult = NULL;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&queryResult);
+    NSData *data = [self dataFromQueryResult:queryResult status:status error:error];
+    if (queryResult) {
+        CFRelease(queryResult);
+    }
 
+    if (!data) {
+        return nil;
+    }
+
+    return [NSKeyedUnarchiver unarchivedObjectOfClass:class fromData:data error:nil];;
+}
+
+- (NSData * _Nullable)dataFromQueryResult:(CFDictionaryRef)queryResult status:(OSStatus)status error:(NSError *__autoreleasing * _Nullable)error {
     if (status == errSecItemNotFound) {
         if (error) *error = [MLCKeychainPasswordItemError noData];
         return nil;
@@ -146,7 +174,7 @@ MLCKeychainPasswordItemMatchLimit const MLCKeychainPasswordItemMatchLimitAll = @
         return nil;
     }
 
-    return [NSKeyedUnarchiver unarchivedObjectOfClass:class fromData:data error:nil];
+    return data;
 }
 
 - (BOOL)saveData:(id<NSCoding>)data ofClass:(Class)class error:(out NSError **)error {
