@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCService.h>
-#import <MoblicoSDK/MLCMetric.h>
+#import "MLCService.h"
+#import "MLCMetric.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -474,6 +474,7 @@
 			children = (
 				5B13EEE616C199E000CFE2B5 /* README.md */,
 				5BECA8E716A850DF00F0E4B5 /* MoblicoSDK */,
+				5BECA8E816A850DF00F0E4B5 /* Framework */,
 				5BECA8E316A850DF00F0E4B5 /* Products */,
 			);
 			indentWidth = 4;
@@ -492,21 +493,20 @@
 		5BECA8E716A850DF00F0E4B5 /* MoblicoSDK */ = {
 			isa = PBXGroup;
 			children = (
-				5BECA8EA16A850DF00F0E4B5 /* MoblicoSDK.h */,
 				5BDD6B251F1D328D00EACCA1 /* Entities */,
 				5BDD6B241F1D327100EACCA1 /* Services */,
 				5BDD6B261F1D332A00EACCA1 /* Utility */,
-				5BECA8E816A850DF00F0E4B5 /* Supporting Files */,
 			);
 			path = MoblicoSDK;
 			sourceTree = "<group>";
 		};
-		5BECA8E816A850DF00F0E4B5 /* Supporting Files */ = {
+		5BECA8E816A850DF00F0E4B5 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				5BECA8EA16A850DF00F0E4B5 /* MoblicoSDK.h */,
 				5B0523CE1940F3650089C0E0 /* Info.plist */,
 			);
-			name = "Supporting Files";
+			path = Framework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -770,9 +770,13 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SWIFT_PACKAGE=0",
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = MoblicoSDK/Info.plist;
+				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
@@ -816,9 +820,13 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SWIFT_PACKAGE=0",
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = MoblicoSDK/Info.plist;
+				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;

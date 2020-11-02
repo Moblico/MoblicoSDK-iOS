@@ -394,7 +394,11 @@ static BOOL _persistentTokenEnabled = NO;
     return @"v4";
 }
 
+#if SWIFT_PACKAGE
+double MoblicoSDKVersionNumber = 2.0;
+#else
 FOUNDATION_EXPORT double MoblicoSDKVersionNumber;
+#endif
 
 + (NSString *)sdkVersion {
     NSBundle *bundle = [NSBundle bundleForClass:[MLCServiceManager class]];

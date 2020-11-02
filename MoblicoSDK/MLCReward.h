@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCDeal.h>
+#import "MLCDeal.h"
 
 /**
  Moblico rewards encompass many of the attributes of coupons,

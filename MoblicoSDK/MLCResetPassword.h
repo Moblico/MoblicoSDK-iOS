@@ -6,7 +6,7 @@
 //  Copyright © 2017 Moblico Solutions LLC. All rights reserved.
 //
 
-#import <MoblicoSDK/MLCEntity.h>
+#import "MLCEntity.h"
 
 @interface MLCResetPassword : MLCEntity
 @property (nonatomic, strong, nullable) NSURL *url;

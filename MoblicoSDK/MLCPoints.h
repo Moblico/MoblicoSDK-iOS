@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCEntity.h>
+#import "MLCEntity.h"
 
 /**
  A MLCPoints object represents points earned through affinity.

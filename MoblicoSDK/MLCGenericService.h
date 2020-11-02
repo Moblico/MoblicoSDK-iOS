@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCService.h>
+#import "MLCService.h"
 
 @class MLCEntity;
 

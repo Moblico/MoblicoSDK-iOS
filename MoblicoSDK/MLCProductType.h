@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCEntity.h>
+#import "MLCEntity.h"
 
 NS_SWIFT_NAME(ProductType)
 @interface MLCProductType : MLCEntity

@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCEntity.h>
+#import "MLCEntity.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif

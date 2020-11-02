@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#import <MoblicoSDK/MLCEntity.h>
+#import "MLCEntity.h"
 #import <CoreLocation/CoreLocation.h>
 
 NS_ASSUME_NONNULL_BEGIN
