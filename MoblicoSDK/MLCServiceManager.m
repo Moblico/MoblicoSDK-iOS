@@ -300,7 +300,7 @@ static MLCServiceManagerConfiguration *_configuration = nil;
 + (NSString *)platformName {
     @synchronized (self) {
         NSString *platformName = [NSUserDefaults.standardUserDefaults stringForKey:MLCServiceManagerPlatformNameKey];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_WATCH
         if (!platformName && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && ![UIDevice.currentDevice.model isEqualToString:@"iPhone"]) {
             platformName = @"iPhone";
         }

@@ -24,10 +24,6 @@
 
 #import "MLCLogger.h"
 
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#endif
-
 NSErrorDomain const MLCServiceErrorDomain = @"MLCServiceErrorDomain";
 NSErrorUserInfoKey const MLCServiceDetailedErrorsKey = @"MLCInvalidServiceDetailedErrorsKey";
 

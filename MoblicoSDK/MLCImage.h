@@ -16,14 +16,18 @@
 
 #import "MLCEntity.h"
 #import <CoreGraphics/CoreGraphics.h>
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_OSX
+#import <AppKit/AppKit.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 typedef void(^MLCImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.CompletionHandler);
+#elif TARGET_OS_OSX
+typedef void(^MLCImageCompletionHandler)(NSImage *_Nullable image, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 #else
 typedef void(^MLCImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error) NS_SWIFT_NAME(MLCImage.CompletionHandler);
 #endif
@@ -53,8 +57,10 @@ NS_SWIFT_NAME(Image)
 
 - (void)loadImage:(MLCImageCompletionHandler)handler;
 - (void)downloadImage:(MLCImageDownloadCompletionHandler)handler NS_SWIFT_NAME(download(_:));
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 @property (strong, nonatomic, readonly, nullable) UIImage *cachedImage;
+#elif TARGET_OS_OSX
+@property (strong, nonatomic, readonly, nullable) NSImage *cachedImage;
 #else
 @property (strong, nonatomic, readonly, nullable) NSData *cachedImage;
 #endif

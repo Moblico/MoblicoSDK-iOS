@@ -6,6 +6,8 @@ import PackageDescription
 let package = Package(name: "MoblicoSDK",
                       platforms: [.macOS(.v10_13),
                                   .iOS(.v12)],
+                                  .watchOS(.v4),
+                                  .tvOS(.v11)],
                       products: [.library(name: "MoblicoSDK",
                                           targets: ["MoblicoSDK"])],
                       targets: [.target(name: "MoblicoSDK",

@@ -15,14 +15,18 @@
  */
 
 #import "MLCEntity.h"
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_OSX
+#import <AppKit/AppKit.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 typedef void(^MLCMediaImageCompletionHandler)(UIImage *_Nullable image, NSError *_Nullable error) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
+#elif TARGET_OS_OSX
+typedef void(^MLCMediaImageCompletionHandler)(NSImage *_Nullable image, NSError *_Nullable error) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
 #else
 typedef void(^MLCMediaImageCompletionHandler)(NSData *_Nullable data, NSError *_Nullable error) NS_SWIFT_NAME(MLCMedia.ImageCompletionHandler);
 #endif
@@ -112,11 +116,16 @@ NS_SWIFT_NAME(Media)
  */
 @property (copy, nonatomic, nullable) NSString *externalId;
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 - (void)loadImage:(MLCMediaImageCompletionHandler)handler;
 @property (strong, nonatomic, readonly, nullable) UIImage *cachedImage;
 - (void)loadThumb:(MLCMediaImageCompletionHandler)handler;
 @property (strong, nonatomic, readonly, nullable) UIImage *cachedThumb;
+#elif TARGET_OS_OSX
+- (void)loadImage:(MLCMediaImageCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) NSImage *cachedImage;
+- (void)loadThumb:(MLCMediaImageCompletionHandler)handler;
+@property (strong, nonatomic, readonly, nullable) NSImage *cachedThumb;
 #else
 - (void)loadImage:(MLCMediaDataCompletionHandler)handler;
 @property (strong, nonatomic, readonly, nullable) NSData *cachedImage;

@@ -18,7 +18,9 @@
 #import "MLCServiceManager.h"
 #import "MLCEntity_Private.h"
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_WATCH
+#import <WatchKit/WatchKit.h>
+#elif TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #endif
 
@@ -60,7 +62,11 @@ MLCServiceRequestMediaType const MLCServiceRequestMediaTypeForm = @"application/
     dispatch_once(&onceToken, ^{
         NSString *locale = NSLocale.currentLocale.localeIdentifier;
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_WATCH
+        NSString *model = sanitize(WKInterfaceDevice.currentDevice.model);
+        NSString *systemName = sanitize(WKInterfaceDevice.currentDevice.systemName);
+        NSString *systemVersion = sanitize(WKInterfaceDevice.currentDevice.systemVersion);
+#elif TARGET_OS_IPHONE
         NSString *model = sanitize(UIDevice.currentDevice.model);
         NSString *systemName = sanitize(UIDevice.currentDevice.systemName);
         NSString *systemVersion = sanitize(UIDevice.currentDevice.systemVersion);

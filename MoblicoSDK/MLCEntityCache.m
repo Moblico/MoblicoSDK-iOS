@@ -60,7 +60,7 @@
         return NO;
     }
     NSDataWritingOptions options = NSDataWritingAtomic;
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
     options |= NSDataWritingFileProtectionNone;
 #endif
     return [data writeToURL:[self URL:key] options:options error:error];

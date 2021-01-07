@@ -86,8 +86,10 @@
         return nil;
     }
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
     return [[UIImage alloc] initWithData:data scale:2.0];
+#elif TARGET_OS_OSX
+    return [[NSImage alloc] initWithData:data];
 #else
     return data;
 #endif
@@ -181,9 +183,14 @@
 }
 
 - (void)loadImageFromURL:(NSURL *)url handler:(MLCMediaImageCompletionHandler)handler {
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
     return [self loadDataFromURL:url handler:^(NSData *data, NSError *error) {
         UIImage *image = [[UIImage alloc] initWithData:data scale:2.0];
+        handler(image, error);
+    }];
+#elif TARGET_OS_OSX
+    return [self loadDataFromURL:url handler:^(NSData *data, NSError *error) {
+        NSImage *image = [[NSImage alloc] initWithData:data];
         handler(image, error);
     }];
 #else
@@ -201,8 +208,10 @@
         return nil;
     }
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
     return [[UIImage alloc] initWithData:data scale:2.0];
+#elif TARGET_OS_OSX
+    return [[NSImage alloc] initWithData:data];
 #else
     return data;
 #endif

@@ -22,7 +22,9 @@
 #import "MLCCredential.h"
 #import "MLCResetPassword.h"
 
-#if TARGET_OS_IOS
+#if TARGET_OS_WATCH
+#import <WatchKit/WatchKit.h>
+#elif TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #endif
 
@@ -113,7 +115,11 @@ NSString *MLCDeviceIdFromDeviceToken(id token) {
     NSString *device = MLCDeviceIdFromDeviceToken(deviceToken);
     NSString *username = nil;
 
-#if TARGET_OS_IOS
+#if TARGET_OS_WATCH
+    if (@available(watchOS 6.2, *)) {
+        username = WKInterfaceDevice.currentDevice.identifierForVendor.UUIDString;
+    }
+#elif TARGET_OS_IPHONE
     username = UIDevice.currentDevice.identifierForVendor.UUIDString;
 #endif
 

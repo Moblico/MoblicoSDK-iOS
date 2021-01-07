@@ -76,12 +76,23 @@ typedef void(^MLCImageDataCompletionHandler)(NSData *data, NSURL *location, NSEr
     return self;
 }
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 + (UIImage *)imageFromData:(NSData *)data scale:(CGFloat)scale {
     if (!data) {
         return nil;
     }
     return [[UIImage alloc] initWithData:data scale:scale];
+}
+#elif TARGET_OS_OSX
++ (NSImage *)imageFromData:(NSData *)data scale:(CGFloat)scale {
+    if (!data) {
+        return nil;
+    }
+    NSImage *image = [[NSImage alloc] initWithData:data];
+    if (scale > 1.0) {
+        image.size = CGSizeMake(image.size.width / scale, image.size.height / scale);
+    }
+    return image;
 }
 #else
 + (id)imageFromData:(NSData *)data scale:(__unused CGFloat)scale {
