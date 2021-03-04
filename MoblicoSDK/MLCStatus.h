@@ -490,6 +490,9 @@ typedef NS_ENUM(NSInteger, MLCStatusType) {
 
     /// Cart has not been initiated.
     MLCStatusTypeCartNotInitialized = 154,
+
+    /// User data required.
+    MLCStatusTypeUserDataRequired = 155,
 } NS_SWIFT_NAME(StatusType);
 
 /**
