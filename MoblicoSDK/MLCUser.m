@@ -167,6 +167,10 @@ static NSArray<NSString *> *_requiredParameters = nil;
     [self addValidations:validations format:nil caseSensitive:NO key:key named:key];
 }
 
++ (void)addValidations:(MLCValidations *)validations key:(NSString *)key named:(NSString *)named {
+    [self addValidations:validations format:nil caseSensitive:NO key:key named:named];
+}
+
 + (void)addValidations:(MLCValidations *)validations format:(NSString *)format key:(NSString *)key {
     [self addValidations:validations format:format caseSensitive:NO key:key named:key];
 }
@@ -211,6 +215,15 @@ static NSArray<NSString *> *_requiredParameters = nil;
     [self addValidations:validations format:@"^(?:\\+?1[-.?]?)?\\(?([0-9]{3})\\)?[-.?]?([0-9]{3})[-.?]?([0-9]{4})$" key:@"phone" named:@"phone number"];
     [self addValidations:validations format:@"^[A-Z]{2}$" caseSensitive:YES key:@"stateOrProvince" named:@"state"];
 
+    [self addValidations:validations key:@"password"];
+    [self addValidations:validations key:@"dateOfBirth" named:@"date of birth"];
+    [self addValidations:validations key:@"nickName" named:@"nickname"];
+    [self addValidations:validations key:@"companyName" named:@"company name"];
+    [self addValidations:validations key:@"address1" named:@"address line 1"];
+    [self addValidations:validations key:@"address2" named:@"address line 2"];
+    [self addValidations:validations key:@"country"];
+    [self addValidations:validations key:@"city"];
+    [self addValidations:validations key:@"age"];
     [self addValidations:validations key:@"gender"];
 
     [validations appendRule:[[MLCValidate alloc] initWithMessage:@"A valid email address is required for Email Alerts."
