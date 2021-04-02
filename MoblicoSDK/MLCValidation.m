@@ -199,4 +199,16 @@ NSErrorUserInfoKey const MLCValidationDetailedErrorsKey = @"MLCValidationDetaile
                         userInfo:@{NSLocalizedDescriptionKey: message}];
 }
 
+- (NSString *)localizedDescription {
+	NSMutableArray *errorMessages = [[NSMutableArray alloc] init];
+	NSString *message = self.userInfo[NSLocalizedDescriptionKey];
+	if (message.length) {
+		[errorMessages addObject:message];
+	}
+	for (NSError *error in self.errors) {
+		[errorMessages addObject:error.localizedDescription];
+	}
+	return [errorMessages componentsJoinedByString:@"\n"];
+}
+
 @end
