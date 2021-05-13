@@ -113,14 +113,16 @@ static NSArray<NSString *> *_requiredParameters = nil;
     self = [super initWithJSONObject:jsonObject];
 
     if (self) {
-        NSDictionary *attributes = jsonObject[@"attributes"];
-        if (attributes) {
-            [self setSafeValue:attributes[@"attr1"] forKey:NSStringFromSelector(@selector(attr1))];
-            [self setSafeValue:attributes[@"attr2"] forKey:NSStringFromSelector(@selector(attr2))];
-            [self setSafeValue:attributes[@"attr3"] forKey:NSStringFromSelector(@selector(attr3))];
-            [self setSafeValue:attributes[@"attr4"] forKey:NSStringFromSelector(@selector(attr4))];
-            [self setSafeValue:attributes[@"attr5"] forKey:NSStringFromSelector(@selector(attr5))];
+        NSMutableDictionary *attributes = [(jsonObject[@"attributes"] ?: @{}) mutableCopy];
+        for (int i = 1; i <= 5; ++i) {
+            NSString *attr = [NSString stringWithFormat:@"attr%@", @(i)];
+            NSString *value = attributes[attr];
+            if (value) {
+                [self setSafeValue:value forKey:attr];
+                attributes[attr] = nil;
+            }
         }
+        [self setSafeValue:attributes forKey:NSStringFromSelector(@selector(attributes))];
 
         NSString *dateOfBirth = jsonObject[@"dateOfBirth"];
         if ([dateOfBirth isKindOfClass:[NSString class]]) {

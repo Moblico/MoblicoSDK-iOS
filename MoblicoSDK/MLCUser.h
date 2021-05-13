@@ -185,6 +185,7 @@ NS_SWIFT_NAME(User)
 @property (copy, nonatomic, nullable) NSString *attr3;
 @property (copy, nonatomic, nullable) NSString *attr4;
 @property (copy, nonatomic, nullable) NSString *attr5;
+@property (copy, nonatomic) NSDictionary<NSString *, NSString *> *attributes;
 
 @property (copy, nonatomic, nullable) NSString *externalId;
 @property (nonatomic) NSUInteger locationId;
