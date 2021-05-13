@@ -56,6 +56,7 @@ static NSString *_groupId = nil;
     self.orderHistory.currentOrder.products = @[];
     self.orderHistory.currentOrder.createDate = [NSDate date];
     self.orderHistory.currentOrder.comments = @"";
+    self.orderHistory.currentOrder.baseId = nil;
     [self save];
 }
 
