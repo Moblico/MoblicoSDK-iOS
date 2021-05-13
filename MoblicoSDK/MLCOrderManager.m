@@ -244,7 +244,7 @@ static NSString *_groupId = nil;
         [customFields addObject:customField.dictionaryValue];
     }
 
-    return @{
+    NSMutableDictionary *dictionaryValue = [@{
         @"firstName": self.firstName,
         @"lastName": self.lastName,
         @"emailAddress": self.emailAddress,
@@ -255,7 +255,13 @@ static NSString *_groupId = nil;
         @"emailToAddress": self.emailToAddress,
         @"createDate": self.createDate,
         @"lastUpdateDate": self.lastUpdateDate
-    };
+    } mutableCopy];
+
+    if (self.baseId.length > 0) {
+        dictionaryValue[@"baseId"] = self.baseId;
+    }
+
+    return dictionaryValue;
 }
 
 - (nonnull instancetype)initWithDictionay:(nonnull NSDictionary *)dictionary {
@@ -281,6 +287,8 @@ static NSString *_groupId = nil;
             [customFields addObject:[[MLCCustomField alloc] initWithDictionay:customField]];
         }
         self.customFields = customFields;
+
+        self.baseId = dictionary[@"baseId"];
     }
     return self;
 }
@@ -294,12 +302,18 @@ static NSString *_groupId = nil;
 }
 
 - (nonnull NSDictionary *)dictionaryValue {
-    return @{
+    NSMutableDictionary *dictionaryValue = [@{
         @"productId": self.productId,
         @"imageData": [self.imageData base64EncodedStringWithOptions:0] ?: @"",
         @"note": self.note ?: @"",
         @"quantity": @(self.quantity)
-    };
+    } mutableCopy];
+
+    if (self.baseQuantity > 0) {
+        dictionaryValue[@"baseQuantity"] = @(self.baseQuantity);
+    }
+
+    return dictionaryValue;
 }
 
 - (nonnull instancetype)initWithDictionay:(nonnull NSDictionary *)dictionary {
@@ -312,6 +326,7 @@ static NSString *_groupId = nil;
         }
         self.note = dictionary[@"note"] ?: dictionary[@"label"];
         self.quantity = [(dictionary[@"quantity"] ?: @0) integerValue];
+        self.baseQuantity = [(dictionary[@"baseQuantity"] ?: @0) integerValue];
     }
     return self;
 }
@@ -323,6 +338,15 @@ static NSString *_groupId = nil;
     MLCOrderItem *other = (MLCOrderItem *)object;
 
     return [self.dictionaryValue isEqualToDictionary:other.dictionaryValue];
+}
+
+- (NSString *)description {
+    NSMutableString *description = [super.description mutableCopy];
+    [description appendFormat:@" productId: %@ note: %@ quantity: %@ imageData: %@", self.productId, self.note, @(self.quantity), self.imageData];
+    if (self.baseQuantity > 0) {
+        [description appendFormat:@" baseQuantity: %@", @(self.baseQuantity)];
+    }
+    return description;
 }
 
 @end
@@ -343,6 +367,85 @@ static NSString *_groupId = nil;
         self.value = dictionary[@"value"];
     }
     return self;
+}
+
+@end
+
+@implementation MLCBaseOrder
+
+- (id)copyWithZone:(nullable NSZone *)zone {
+    return [[[self class] allocWithZone:zone] initWithDictionay:self.dictionaryValue];
+}
+
+- (nonnull NSDictionary *)dictionaryValue {
+    NSMutableArray *products = [NSMutableArray array];
+    for (MLCBaseOrderItem *product in self.products) {
+        [products addObject:product.dictionaryValue];
+    }
+
+    return @{
+        @"baseId": self.baseId,
+        @"products": products
+    };
+}
+
+- (nonnull instancetype)initWithDictionay:(nonnull NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        self.baseId = dictionary[@"baseId"] ?: @"";
+
+        NSMutableArray *products = [NSMutableArray array];
+        for (NSDictionary *orderItem in dictionary[@"products"]) {
+            [products addObject:[[MLCBaseOrderItem alloc] initWithDictionay:orderItem]];
+        }
+        self.products = products;
+    }
+    return self;
+}
+
+- (NSString *)description {
+    NSMutableString *description = [super.description mutableCopy];
+    [description appendFormat:@" baseId: %@ products: %@", self.baseId, self.products];
+    return description;
+}
+
+@end
+
+@implementation MLCBaseOrderItem
+
+- (id)copyWithZone:(nullable NSZone *)zone {
+    return [[[self class] allocWithZone:zone] initWithDictionay:self.dictionaryValue];
+}
+
+- (nonnull NSDictionary *)dictionaryValue {
+    return @{
+        @"productId": self.productId,
+        @"quantity": @(self.quantity),
+    };
+}
+
+- (nonnull instancetype)initWithDictionay:(nonnull NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        self.productId = dictionary[@"productId"];
+        self.quantity = [(dictionary[@"quantity"] ?: @0) integerValue];
+    }
+    return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[MLCBaseOrderItem class]]) {
+        return NO;
+    }
+    MLCBaseOrderItem *other = (MLCBaseOrderItem *)object;
+
+    return [self.dictionaryValue isEqualToDictionary:other.dictionaryValue];
+}
+
+- (NSString *)description {
+    NSMutableString *description = [super.description mutableCopy];
+    [description appendFormat:@" productId: %@ quantity: %@", self.productId, @(self.quantity)];
+    return description;
 }
 
 @end

@@ -27,6 +27,7 @@ NS_SWIFT_NAME(OrderItem)
 @interface MLCOrderItem : NSObject <MLCDictionayConvertable, NSCopying>
 @property (nonatomic, copy) NSString *productId;
 @property (nonatomic, assign) NSInteger quantity;
+@property (nonatomic, assign) NSInteger baseQuantity;
 @property (nonatomic, copy) NSData *imageData;
 @property (nonatomic, copy) NSString *note;
 @end
@@ -43,6 +44,7 @@ NS_SWIFT_NAME(Order)
 @property (nonatomic, copy) NSString *emailToAddress;
 @property (nonatomic, strong) NSDate *createDate;
 @property (nonatomic, strong) NSDate *lastUpdateDate;
+@property (nonatomic, copy, nullable) NSString *baseId;
 @end
 
 NS_SWIFT_NAME(OrderHistory)
@@ -50,6 +52,18 @@ NS_SWIFT_NAME(OrderHistory)
 @property (nonatomic, strong, null_resettable) MLCOrder *currentOrder;
 @property (nonatomic, copy) NSArray<MLCOrder *> *pendingOrders;
 @property (nonatomic, copy) NSArray<MLCOrder *> *completedOrders;
+@end
+
+NS_SWIFT_NAME(BaseOrderItem)
+@interface MLCBaseOrderItem : NSObject <MLCDictionayConvertable, NSCopying>
+@property (nonatomic, copy) NSString *productId;
+@property (nonatomic, assign) NSInteger quantity;
+@end
+
+NS_SWIFT_NAME(BaseOrder)
+@interface MLCBaseOrder : NSObject <MLCDictionayConvertable, NSCopying>
+@property (nonatomic, copy) NSString *baseId;
+@property (nonatomic, copy) NSArray<MLCBaseOrderItem *> *products;
 @end
 
 NS_SWIFT_NAME(OrderManager)
