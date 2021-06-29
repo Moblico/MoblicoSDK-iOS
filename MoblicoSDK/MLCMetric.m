@@ -26,6 +26,7 @@ MLCMetricType const MLCMetricTypeOutBackground = @"Out_Background";
 MLCMetricType const MLCMetricTypeEnterPage = @"Enter_Page";
 MLCMetricType const MLCMetricTypeExitPage = @"Exit_Page";
 MLCMetricType const MLCMetricTypeAdClick = @"Ad_Click";
+MLCMetricType const MLCMetricTypeAdAction = @"Ad_Action";
 MLCMetricType const MLCMetricTypeTracking = @"Tracking";
 MLCMetricType const MLCMetricTypeCustom = @"Custom";
 MLCMetricType const MLCMetricTypeViewDeal = @"View_Deal";

@@ -43,6 +43,9 @@ FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeExitPage;
 /// Specifies that the user has interacted with an ad.
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeAdClick;
 
+/// Specifies that an action has been performed as a result of a user interacting with an ad.
+FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeAdAction;
+
 /// Specifies a generic tracking metric.
 FOUNDATION_EXPORT MLCMetricType const MLCMetricTypeTracking;
 
